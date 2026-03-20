@@ -1,6 +1,5 @@
 package org.bukkit.entity;
 
-import java.net.InetSocketAddress;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.Instrument;
@@ -11,6 +10,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapView;
+
+import java.net.InetSocketAddress;
 
 /**
  * Represents a player, connected or not

@@ -1,7 +1,5 @@
 package org.bukkit.craftbukkit.entity;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet131;
@@ -27,6 +25,9 @@ import org.bukkit.craftbukkit.map.RenderData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.map.MapView;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 public class CraftPlayer extends CraftHumanEntity implements Player {
     public CraftPlayer(CraftServer server, EntityPlayer entity) {

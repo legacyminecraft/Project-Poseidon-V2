@@ -1,11 +1,9 @@
 package net.minecraft.server;
 
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTargetEvent;
-// CraftBukkit end
+
+import java.util.List;
 
 public class EntityPigZombie extends EntityZombie {
 

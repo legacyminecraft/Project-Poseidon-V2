@@ -1,14 +1,40 @@
 package org.bukkit.command;
 
-import org.bukkit.command.defaults.*;
+import org.bukkit.Server;
+import org.bukkit.command.defaults.BanCommand;
+import org.bukkit.command.defaults.BanIpCommand;
+import org.bukkit.command.defaults.DeopCommand;
+import org.bukkit.command.defaults.GiveCommand;
+import org.bukkit.command.defaults.HelpCommand;
+import org.bukkit.command.defaults.KickCommand;
+import org.bukkit.command.defaults.KillCommand;
+import org.bukkit.command.defaults.ListCommand;
+import org.bukkit.command.defaults.MeCommand;
+import org.bukkit.command.defaults.OpCommand;
+import org.bukkit.command.defaults.PardonCommand;
+import org.bukkit.command.defaults.PardonIpCommand;
+import org.bukkit.command.defaults.PluginsCommand;
+import org.bukkit.command.defaults.ReloadCommand;
+import org.bukkit.command.defaults.SaveCommand;
+import org.bukkit.command.defaults.SaveOffCommand;
+import org.bukkit.command.defaults.SaveOnCommand;
+import org.bukkit.command.defaults.SayCommand;
+import org.bukkit.command.defaults.StopCommand;
+import org.bukkit.command.defaults.TeleportCommand;
+import org.bukkit.command.defaults.TellCommand;
+import org.bukkit.command.defaults.TimeCommand;
+import org.bukkit.command.defaults.VanillaCommand;
+import org.bukkit.command.defaults.VersionCommand;
+import org.bukkit.command.defaults.WhitelistCommand;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
-import org.bukkit.Server;
+
 import static org.bukkit.util.Java15Compat.Arrays_copyOfRange;
 
 public class SimpleCommandMap implements CommandMap {

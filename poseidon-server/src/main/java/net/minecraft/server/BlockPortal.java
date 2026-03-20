@@ -1,11 +1,9 @@
 package net.minecraft.server;
 
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.world.PortalCreateEvent;
-// CraftBukkit end
+
+import java.util.Random;
 
 public class BlockPortal extends BlockBreakable {
 

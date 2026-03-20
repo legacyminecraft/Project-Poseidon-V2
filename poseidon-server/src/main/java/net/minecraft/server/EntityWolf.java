@@ -1,16 +1,14 @@
 package net.minecraft.server;
 
-import java.util.Iterator;
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityTargetEvent;
-// CraftBukkit end
+
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityWolf extends EntityAnimal {
 

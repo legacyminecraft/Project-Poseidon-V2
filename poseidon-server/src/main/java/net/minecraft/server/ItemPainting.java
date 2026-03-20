@@ -1,10 +1,8 @@
 package net.minecraft.server;
 
-// CraftBukkit start
+import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.painting.PaintingPlaceEvent;
-import org.bukkit.craftbukkit.block.CraftBlock;
-// CraftBukkit end
 
 public class ItemPainting extends Item {
 

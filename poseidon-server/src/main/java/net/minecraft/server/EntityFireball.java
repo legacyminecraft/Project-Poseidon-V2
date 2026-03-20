@@ -1,8 +1,5 @@
 package net.minecraft.server;
 
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Explosive;
@@ -11,7 +8,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-// CraftBukkit end
+
+import java.util.List;
 
 public class EntityFireball extends Entity {
 

@@ -1,12 +1,43 @@
 package org.bukkit;
 
+import org.bukkit.material.Bed;
+import org.bukkit.material.Button;
+import org.bukkit.material.Cake;
+import org.bukkit.material.Coal;
+import org.bukkit.material.Crops;
+import org.bukkit.material.DetectorRail;
+import org.bukkit.material.Diode;
+import org.bukkit.material.Dispenser;
+import org.bukkit.material.Door;
+import org.bukkit.material.Dye;
+import org.bukkit.material.Furnace;
+import org.bukkit.material.Jukebox;
+import org.bukkit.material.Ladder;
+import org.bukkit.material.Lever;
+import org.bukkit.material.LongGrass;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.PistonBaseMaterial;
+import org.bukkit.material.PistonExtensionMaterial;
+import org.bukkit.material.PoweredRail;
+import org.bukkit.material.PressurePlate;
+import org.bukkit.material.Pumpkin;
+import org.bukkit.material.Rails;
+import org.bukkit.material.RedstoneTorch;
+import org.bukkit.material.RedstoneWire;
+import org.bukkit.material.Sign;
+import org.bukkit.material.Stairs;
+import org.bukkit.material.Step;
+import org.bukkit.material.Torch;
+import org.bukkit.material.TrapDoor;
+import org.bukkit.material.Tree;
+import org.bukkit.material.Wool;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.material.*;
 
 /**
  * An enum of all material ids accepted by the official server + client

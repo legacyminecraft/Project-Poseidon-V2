@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import org.bukkit.event.player.PlayerPickupItemEvent; // CraftBukkit
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class EntityItem extends Entity {
 

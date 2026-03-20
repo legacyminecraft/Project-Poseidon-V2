@@ -9,9 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
-
-import java.util.UUID; // CraftBukkit
 
 public class PlayerNBTManager implements PlayerFileData, IDataManager {
 

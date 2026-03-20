@@ -1,15 +1,5 @@
 package net.minecraft.server;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-// CraftBukkit start
-import java.util.Random;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.util.LongHashset;
 import org.bukkit.craftbukkit.util.LongHashtable;
@@ -17,7 +7,10 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.generator.BlockPopulator;
-// CraftBukkit end
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class ChunkProviderServer implements IChunkProvider {
 

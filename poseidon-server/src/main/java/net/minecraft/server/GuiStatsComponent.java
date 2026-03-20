@@ -1,10 +1,10 @@
 package net.minecraft.server;
 
+import javax.swing.JComponent;
+import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import javax.swing.JComponent;
-import javax.swing.Timer;
 
 public class GuiStatsComponent extends JComponent {
 

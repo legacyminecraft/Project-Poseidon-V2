@@ -1,14 +1,12 @@
 package net.minecraft.server;
 
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.event.player.PlayerPreLoginEvent;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
-
-// CraftBukkit start
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.event.player.PlayerPreLoginEvent;
-// CraftBukkit end
 
 class ThreadLoginVerifier extends Thread {
 

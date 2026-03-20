@@ -2,8 +2,6 @@ package org.bukkit.event;
 
 import java.io.Serializable;
 
-import org.bukkit.entity.Projectile;
-
 /**
  * Represents an event
  */
@@ -667,7 +665,7 @@ public abstract class Event implements Serializable {
          */
         ENTITY_TAME (Category.LIVING_ENTITY),
         /**
-         * Called when a {@link Projectile} hits something
+         * Called when a Projectile hits something
          *
          * @see org.bukkit.event.entity.ProjectileHitEvent
          */

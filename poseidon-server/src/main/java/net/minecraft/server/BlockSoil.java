@@ -1,11 +1,9 @@
 package net.minecraft.server;
 
-import java.util.Random;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityInteractEvent;
-// CraftBukkit end
+
+import java.util.Random;
 
 public class BlockSoil extends Block {
 

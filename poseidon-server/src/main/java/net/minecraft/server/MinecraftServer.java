@@ -1,21 +1,5 @@
 package net.minecraft.server;
 
-import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-// CraftBukkit start
-import java.io.PrintStream;
-import java.net.UnknownHostException;
 import jline.ConsoleReader;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
@@ -30,7 +14,20 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginLoadOrder;
-// CraftBukkit end
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MinecraftServer implements Runnable, ICommandListener {
 

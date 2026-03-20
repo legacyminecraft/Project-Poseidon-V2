@@ -1,21 +1,14 @@
 package net.minecraft.server;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
-// CraftBukkit start
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.ChunkCompressionThread;
-import org.bukkit.craftbukkit.command.ColouredConsoleSender;
 import org.bukkit.Location;
 import org.bukkit.command.CommandException;
+import org.bukkit.craftbukkit.ChunkCompressionThread;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.TextWrapper;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.TextWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
@@ -30,7 +23,11 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-// CraftBukkit end
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class NetServerHandler extends NetHandler implements ICommandListener {
 

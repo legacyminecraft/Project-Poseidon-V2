@@ -1,20 +1,18 @@
 package net.minecraft.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
-// CraftBukkit start
 import org.bukkit.BlockChangeDelegate;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.craftbukkit.generator.CustomChunkGenerator;
 import org.bukkit.craftbukkit.generator.InternalChunkGenerator;
 import org.bukkit.craftbukkit.generator.NetherChunkGenerator;
 import org.bukkit.craftbukkit.generator.NormalChunkGenerator;
 import org.bukkit.craftbukkit.generator.SkyLandsChunkGenerator;
 import org.bukkit.event.weather.LightningStrikeEvent;
+import org.bukkit.generator.ChunkGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorldServer extends World implements BlockChangeDelegate {
-    // CraftBukkit end
 
     public ChunkProviderServer chunkProviderServer;
     public boolean weirdIsOpCache = false;
