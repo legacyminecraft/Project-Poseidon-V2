@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,7 +17,7 @@ public class Packet24MobSpawn extends Packet {
     public byte f;
     public byte g;
     private DataWatcher h;
-    private List<WatchableObject> i;
+    private @Nullable List<WatchableObject> i;
 
     public Packet24MobSpawn() {}
 

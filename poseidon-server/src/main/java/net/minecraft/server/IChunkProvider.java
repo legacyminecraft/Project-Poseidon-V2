@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public interface IChunkProvider {
 
     boolean isChunkLoaded(int i, int j);
@@ -10,7 +12,7 @@ public interface IChunkProvider {
 
     void getChunkAt(IChunkProvider ichunkprovider, int i, int j);
 
-    boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate);
+    boolean saveChunks(boolean flag, @Nullable IProgressUpdate iprogressupdate);
 
     boolean unloadChunks();
 

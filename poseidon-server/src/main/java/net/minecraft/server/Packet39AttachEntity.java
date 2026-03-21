@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,7 +13,7 @@ public class Packet39AttachEntity extends Packet {
 
     public Packet39AttachEntity() {}
 
-    public Packet39AttachEntity(Entity entity, Entity entity1) {
+    public Packet39AttachEntity(Entity entity, @Nullable Entity entity1) {
         this.a = entity.id;
         this.b = entity1 != null ? entity1.id : -1;
     }

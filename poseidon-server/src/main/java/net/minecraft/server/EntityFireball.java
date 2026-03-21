@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class EntityFireball extends Entity {
     private int i = 0;
     private boolean j = false;
     public int a = 0;
-    public EntityLiving shooter;
+    public @Nullable EntityLiving shooter;
     private int k;
     private int l = 0;
     public double c;
@@ -240,7 +241,7 @@ public class EntityFireball extends Entity {
         return true;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         this.af();
         if (entity != null) {
             Vec3D vec3d = entity.Z();

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Iterator;
 import java.util.Random;
 
@@ -161,7 +163,7 @@ public class BlockBed extends Block {
         world.setData(i, j, k, l);
     }
 
-    public static ChunkCoordinates f(World world, int i, int j, int k, int l) {
+    public static @Nullable ChunkCoordinates f(World world, int i, int j, int k, int l) {
         int i1 = world.getData(i, j, k);
         int j1 = c(i1);
 

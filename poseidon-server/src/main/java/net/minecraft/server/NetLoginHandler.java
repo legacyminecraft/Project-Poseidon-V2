@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.net.Socket;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -12,8 +14,8 @@ public class NetLoginHandler extends NetHandler {
     public boolean c = false;
     private MinecraftServer server;
     private int f = 0;
-    private String g = null;
-    private Packet1Login h = null;
+    private @Nullable String g = null;
+    private @Nullable Packet1Login h = null;
     private String i = "";
 
     public NetLoginHandler(MinecraftServer minecraftserver, Socket socket, String s) {
@@ -23,7 +25,7 @@ public class NetLoginHandler extends NetHandler {
     }
 
     // CraftBukkit start
-    public Socket getSocket() {
+    public @Nullable Socket getSocket() {
         return this.networkManager.socket;
     }
     // CraftBukkit end
@@ -104,7 +106,7 @@ public class NetLoginHandler extends NetHandler {
         this.c = true;
     }
 
-    public void a(String s, Object[] aobject) {
+    public void a(String s, Object @Nullable [] aobject) {
         a.info(this.b() + " lost connection");
         this.c = true;
     }

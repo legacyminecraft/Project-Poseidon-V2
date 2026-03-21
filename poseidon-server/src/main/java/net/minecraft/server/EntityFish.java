@@ -4,6 +4,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ public class EntityFish extends Entity {
     private int g = 0;
     private boolean h = false;
     public int a = 0;
-    public EntityHuman owner;
+    public @Nullable EntityHuman owner;
     private int i;
     private int j = 0;
     private int k = 0;
-    public Entity c = null;
+    public @Nullable Entity c = null;
     private int l;
     private double m;
     private double n;

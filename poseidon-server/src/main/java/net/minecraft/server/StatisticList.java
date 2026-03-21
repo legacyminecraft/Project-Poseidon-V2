@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -114,7 +116,7 @@ public class StatisticList {
         return astatistic;
     }
 
-    private static Statistic[] a(Statistic[] astatistic, String s, int i, int j, int k) {
+    private static Statistic[] a(Statistic @Nullable [] astatistic, String s, int i, int j, int k) {
         if (astatistic == null) {
             astatistic = new Statistic[32000];
         }

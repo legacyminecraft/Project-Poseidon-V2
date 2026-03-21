@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class ContainerWorkbench extends Container {
 
     public InventoryCrafting craftInventory = new InventoryCrafting(this, 3, 3);
@@ -68,7 +70,7 @@ public class ContainerWorkbench extends Container {
         return this.c.getTypeId(this.h, this.i, this.j) != Block.WORKBENCH.id ? false : entityhuman.e((double) this.h + 0.5D, (double) this.i + 0.5D, (double) this.j + 0.5D) <= 64.0D;
     }
 
-    public ItemStack a(int i) {
+    public @Nullable ItemStack a(int i) {
         ItemStack itemstack = null;
         Slot slot = this.e.get(i);
 

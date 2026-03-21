@@ -3,11 +3,12 @@ package net.minecraft.server;
 import org.bukkit.craftbukkit.TrigMath;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.jspecify.annotations.Nullable;
 
 public class EntityCreature extends EntityLiving {
 
-    public PathEntity pathEntity; // CraftBukkit - public
-    public Entity target; // CraftBukkit - public
+    public @Nullable PathEntity pathEntity; // CraftBukkit - public
+    public @Nullable Entity target; // CraftBukkit - public
     protected boolean e = false;
 
     public EntityCreature(World world) {
@@ -184,7 +185,7 @@ public class EntityCreature extends EntityLiving {
         return 0.0F;
     }
 
-    protected Entity findTarget() {
+    protected @Nullable Entity findTarget() {
         return null;
     }
 
@@ -200,11 +201,11 @@ public class EntityCreature extends EntityLiving {
         return this.pathEntity != null;
     }
 
-    public void setPathEntity(PathEntity pathentity) {
+    public void setPathEntity(@Nullable PathEntity pathentity) {
         this.pathEntity = pathentity;
     }
 
-    public Entity F() {
+    public @Nullable Entity F() {
         return this.target;
     }
 

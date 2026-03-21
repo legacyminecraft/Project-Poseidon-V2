@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -59,7 +61,7 @@ public class DataWatcher {
         return this.c;
     }
 
-    public static void a(List<WatchableObject> list, DataOutputStream dataoutputstream) throws IOException {
+    public static void a(@Nullable List<WatchableObject> list, DataOutputStream dataoutputstream) throws IOException {
         if (list != null) {
             Iterator<WatchableObject> iterator = list.iterator();
 
@@ -73,7 +75,7 @@ public class DataWatcher {
         dataoutputstream.writeByte(127);
     }
 
-    public ArrayList<WatchableObject> b() {
+    public @Nullable ArrayList<WatchableObject> b() {
         ArrayList<WatchableObject> arraylist = null;
 
         if (this.c) {
@@ -151,7 +153,7 @@ public class DataWatcher {
         }
     }
 
-    public static List<WatchableObject> a(DataInputStream datainputstream) throws IOException {
+    public static @Nullable List<WatchableObject> a(DataInputStream datainputstream) throws IOException {
         ArrayList<WatchableObject> arraylist = null;
 
         for (byte b0 = datainputstream.readByte(); b0 != 127; b0 = datainputstream.readByte()) {

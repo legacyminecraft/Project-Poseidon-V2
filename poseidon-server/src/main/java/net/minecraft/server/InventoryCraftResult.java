@@ -1,11 +1,13 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class InventoryCraftResult implements IInventory {
 
-    private ItemStack[] items = new ItemStack[1];
+    private @Nullable ItemStack[] items = new ItemStack[1];
 
     // CraftBukkit start
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
     // CraftBukkit end
@@ -16,7 +18,7 @@ public class InventoryCraftResult implements IInventory {
         return 1;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return this.items[i];
     }
 
@@ -24,7 +26,7 @@ public class InventoryCraftResult implements IInventory {
         return "Result";
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         if (this.items[i] != null) {
             ItemStack itemstack = this.items[i];
 
@@ -35,7 +37,7 @@ public class InventoryCraftResult implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         this.items[i] = itemstack;
     }
 

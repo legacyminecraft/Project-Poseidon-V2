@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutput;
@@ -15,7 +17,7 @@ public class ChunkRegionLoader implements IChunkLoader {
         this.a = file1;
     }
 
-    public Chunk a(World world, int i, int j) throws IOException {
+    public @Nullable Chunk a(World world, int i, int j) throws IOException {
         DataInputStream datainputstream = RegionFileCache.c(this.a, i, j);
 
         if (datainputstream != null) {

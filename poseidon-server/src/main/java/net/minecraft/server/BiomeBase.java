@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -103,7 +105,7 @@ public class BiomeBase {
         return f < 0.1F ? TUNDRA : (f1 < 0.2F ? (f < 0.5F ? TUNDRA : (f < 0.95F ? SAVANNA : DESERT)) : (f1 > 0.5F && f < 0.7F ? SWAMPLAND : (f < 0.5F ? TAIGA : (f < 0.97F ? (f1 < 0.35F ? SHRUBLAND : FOREST) : (f1 < 0.45F ? PLAINS : (f1 < 0.9F ? SEASONAL_FOREST : RAINFOREST))))));
     }
 
-    public List<BiomeMeta> a(EnumCreatureType enumcreaturetype) {
+    public @Nullable List<BiomeMeta> a(EnumCreatureType enumcreaturetype) {
         return enumcreaturetype == EnumCreatureType.MONSTER ? this.s : (enumcreaturetype == EnumCreatureType.CREATURE ? this.t : (enumcreaturetype == EnumCreatureType.WATER_CREATURE ? this.u : null));
     }
 

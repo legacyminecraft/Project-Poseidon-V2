@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,7 +12,7 @@ public class Packet102WindowClick extends Packet {
     public int b;
     public int c;
     public short d;
-    public ItemStack e;
+    public @Nullable ItemStack e;
     public boolean f;
 
     public Packet102WindowClick() {}

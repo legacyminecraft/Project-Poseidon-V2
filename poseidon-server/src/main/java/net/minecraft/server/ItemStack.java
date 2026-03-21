@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public final class ItemStack {
 
     public int count;
@@ -48,7 +50,7 @@ public final class ItemStack {
         return new ItemStack(this.id, i, this.damage);
     }
 
-    public Item getItem() {
+    public @Nullable Item getItem() {
         return Item.byId[this.id];
     }
 
@@ -171,7 +173,7 @@ public final class ItemStack {
         return new ItemStack(this.id, this.count, this.damage);
     }
 
-    public static boolean equals(ItemStack itemstack, ItemStack itemstack1) {
+    public static boolean equals(@Nullable ItemStack itemstack, @Nullable ItemStack itemstack1) {
         return itemstack == null && itemstack1 == null ? true : (itemstack != null && itemstack1 != null ? itemstack.d(itemstack1) : false);
     }
 
@@ -183,7 +185,7 @@ public final class ItemStack {
         return this.id == itemstack.id && this.damage == itemstack.damage;
     }
 
-    public static ItemStack b(ItemStack itemstack) {
+    public static @Nullable ItemStack b(@Nullable ItemStack itemstack) {
         return itemstack == null ? null : itemstack.cloneItemStack();
     }
 

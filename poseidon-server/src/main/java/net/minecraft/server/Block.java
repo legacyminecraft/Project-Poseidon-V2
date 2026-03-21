@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,7 +16,7 @@ public class Block {
     public static final StepSound j = new StepSoundStone("stone", 1.0F, 1.0F);
     public static final StepSound k = new StepSound("cloth", 1.0F, 1.0F);
     public static final StepSound l = new StepSoundSand("sand", 1.0F, 1.0F);
-    public static final Block[] byId = new Block[256];
+    public static final @Nullable Block[] byId = new Block[256];
     public static final boolean[] n = new boolean[256];
     public static final boolean[] o = new boolean[256];
     public static final boolean[] isTileEntity = new boolean[256];
@@ -134,7 +136,7 @@ public class Block {
     public float bz;
     public final Material material;
     public float frictionFactor;
-    private String name;
+    private @Nullable String name;
 
     protected Block(int i, Material material) {
         this.bq = true;
@@ -244,7 +246,7 @@ public class Block {
         }
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return AxisAlignedBB.b((double) i + this.minX, (double) j + this.minY, (double) k + this.minZ, (double) i + this.maxX, (double) j + this.maxY, (double) k + this.maxZ);
     }
 
@@ -324,11 +326,11 @@ public class Block {
         return 0;
     }
 
-    public float a(Entity entity) {
+    public float a(@Nullable Entity entity) {
         return this.durability / 5.0F;
     }
 
-    public MovingObjectPosition a(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1) {
+    public @Nullable MovingObjectPosition a(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1) {
         this.a(world, i, j, k);
         vec3d = vec3d.add(-i, -j, -k);
         vec3d1 = vec3d1.add(-i, -j, -k);
@@ -422,15 +424,15 @@ public class Block {
         }
     }
 
-    private boolean a(Vec3D vec3d) {
+    private boolean a(@Nullable Vec3D vec3d) {
         return vec3d == null ? false : vec3d.b >= this.minY && vec3d.b <= this.maxY && vec3d.c >= this.minZ && vec3d.c <= this.maxZ;
     }
 
-    private boolean b(Vec3D vec3d) {
+    private boolean b(@Nullable Vec3D vec3d) {
         return vec3d == null ? false : vec3d.a >= this.minX && vec3d.a <= this.maxX && vec3d.c >= this.minZ && vec3d.c <= this.maxZ;
     }
 
-    private boolean c(Vec3D vec3d) {
+    private boolean c(@Nullable Vec3D vec3d) {
         return vec3d == null ? false : vec3d.a >= this.minX && vec3d.a <= this.maxX && vec3d.b >= this.minY && vec3d.b <= this.maxY;
     }
 
@@ -494,7 +496,7 @@ public class Block {
         return StatisticCollector.a(this.l() + ".name");
     }
 
-    public String l() {
+    public @Nullable String l() {
         return this.name;
     }
 

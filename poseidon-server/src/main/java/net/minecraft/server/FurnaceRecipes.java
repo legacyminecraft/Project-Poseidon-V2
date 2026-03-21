@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ public class FurnaceRecipes {
         this.b.put(i, itemstack);
     }
 
-    public ItemStack a(int i) {
+    public @Nullable ItemStack a(int i) {
         return this.b.get(i);
     }
 

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,7 +12,7 @@ public class Packet15Place extends Packet {
     public int b;
     public int c;
     public int face;
-    public ItemStack itemstack;
+    public @Nullable ItemStack itemstack;
 
     public Packet15Place() {}
 

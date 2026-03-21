@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -68,7 +70,7 @@ public class EmptyChunk extends Chunk {
         return false;
     }
 
-    public TileEntity d(int i, int j, int k) {
+    public @Nullable TileEntity d(int i, int j, int k) {
         return null;
     }
 
@@ -84,7 +86,7 @@ public class EmptyChunk extends Chunk {
 
     public void f() {}
 
-    public void a(Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list) {}
+    public void a(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list) {}
 
     public void a(Class<? extends Entity> oclass, AxisAlignedBB axisalignedbb, List<Entity> list) {}
 

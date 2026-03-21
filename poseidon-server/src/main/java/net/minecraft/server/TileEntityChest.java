@@ -1,11 +1,13 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class TileEntityChest extends TileEntity implements IInventory {
 
-    private ItemStack[] items = new ItemStack[27]; // CraftBukkit
+    private @Nullable ItemStack[] items = new ItemStack[27]; // CraftBukkit
 
     // CraftBukkit start
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
     // CraftBukkit end
@@ -16,11 +18,11 @@ public class TileEntityChest extends TileEntity implements IInventory {
         return 27;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return this.items[i];
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         if (this.items[i] != null) {
             ItemStack itemstack;
 
@@ -43,7 +45,7 @@ public class TileEntityChest extends TileEntity implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         this.items[i] = itemstack;
         if (itemstack != null && itemstack.count > this.getMaxStackSize()) {
             itemstack.count = this.getMaxStackSize();

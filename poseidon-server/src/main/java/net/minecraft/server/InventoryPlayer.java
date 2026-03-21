@@ -1,20 +1,22 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class InventoryPlayer implements IInventory {
 
-    public ItemStack[] items = new ItemStack[36];
-    public ItemStack[] armor = new ItemStack[4];
+    public @Nullable ItemStack[] items = new ItemStack[36];
+    public @Nullable ItemStack[] armor = new ItemStack[4];
     public int itemInHandIndex = 0;
     public EntityHuman d; // CraftBukkit - private -> public
-    private ItemStack f;
+    private @Nullable ItemStack f;
     public boolean e = false;
 
     // CraftBukkit start
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
 
-    public ItemStack[] getArmorContents() {
+    public @Nullable ItemStack[] getArmorContents() {
         return this.armor;
     }
     // CraftBukkit end
@@ -23,7 +25,7 @@ public class InventoryPlayer implements IInventory {
         this.d = entityhuman;
     }
 
-    public ItemStack getItemInHand() {
+    public @Nullable ItemStack getItemInHand() {
         return this.itemInHandIndex < 9 && this.itemInHandIndex >= 0 ? this.items[this.itemInHandIndex] : null;
     }
 
@@ -159,8 +161,8 @@ public class InventoryPlayer implements IInventory {
         }
     }
 
-    public ItemStack splitStack(int i, int j) {
-        ItemStack[] aitemstack = this.items;
+    public @Nullable ItemStack splitStack(int i, int j) {
+        @Nullable ItemStack[] aitemstack = this.items;
 
         if (i >= this.items.length) {
             aitemstack = this.armor;
@@ -187,8 +189,8 @@ public class InventoryPlayer implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
-        ItemStack[] aitemstack = this.items;
+    public void setItem(int i, @Nullable ItemStack itemstack) {
+        @Nullable ItemStack[] aitemstack = this.items;
 
         if (i >= aitemstack.length) {
             i -= aitemstack.length;
@@ -258,8 +260,8 @@ public class InventoryPlayer implements IInventory {
         return this.items.length + 4;
     }
 
-    public ItemStack getItem(int i) {
-        ItemStack[] aitemstack = this.items;
+    public @Nullable ItemStack getItem(int i) {
+        @Nullable ItemStack[] aitemstack = this.items;
 
         if (i >= aitemstack.length) {
             i -= aitemstack.length;
@@ -353,12 +355,12 @@ public class InventoryPlayer implements IInventory {
         this.e = true;
     }
 
-    public void b(ItemStack itemstack) {
+    public void b(@Nullable ItemStack itemstack) {
         this.f = itemstack;
         this.d.a(itemstack);
     }
 
-    public ItemStack j() {
+    public @Nullable ItemStack j() {
         return this.f;
     }
 

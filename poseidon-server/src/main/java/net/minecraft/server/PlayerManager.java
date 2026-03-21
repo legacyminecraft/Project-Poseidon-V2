@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class PlayerManager {
         this.c.clear();
     }
 
-    private PlayerInstance a(int i, int j, boolean flag) {
+    private @Nullable PlayerInstance a(int i, int j, boolean flag) {
         long k = (long) i + 2147483647L | (long) j + 2147483647L << 32;
         PlayerInstance playerinstance = (PlayerInstance) this.b.a(k);
 

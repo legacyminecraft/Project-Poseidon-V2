@@ -1,12 +1,14 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
 public interface IDataManager {
 
-    WorldData c();
+    @Nullable WorldData c();
 
     void b();
 

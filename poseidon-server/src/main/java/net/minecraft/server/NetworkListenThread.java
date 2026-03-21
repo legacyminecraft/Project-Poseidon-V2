@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -18,7 +20,7 @@ public class NetworkListenThread {
     private ArrayList<NetServerHandler> h = new ArrayList<>();
     public MinecraftServer c;
 
-    public NetworkListenThread(MinecraftServer minecraftserver, InetAddress inetaddress, int i) throws IOException {
+    public NetworkListenThread(MinecraftServer minecraftserver, @Nullable InetAddress inetaddress, int i) throws IOException {
         this.c = minecraftserver;
         this.d = new ServerSocket(i, 0, inetaddress);
         this.d.setPerformancePreferences(0, 2, 1);

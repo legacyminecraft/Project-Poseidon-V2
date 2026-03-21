@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class ContainerChest extends Container {
 
     private IInventory a;
@@ -34,7 +36,7 @@ public class ContainerChest extends Container {
         return this.a.a_(entityhuman);
     }
 
-    public ItemStack a(int i) {
+    public @Nullable ItemStack a(int i) {
         ItemStack itemstack = null;
         Slot slot = this.e.get(i);
 

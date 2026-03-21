@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -193,7 +195,7 @@ public class EntityTrackerEntry {
                         entityplayer.netServerHandler.sendPacket(new Packet28EntityVelocity(this.tracker.id, this.tracker.motX, this.tracker.motY, this.tracker.motZ));
                     }
 
-                    ItemStack[] aitemstack = this.tracker.getEquipment();
+                    @Nullable ItemStack[] aitemstack = this.tracker.getEquipment();
 
                     if (aitemstack != null) {
                         for (int i = 0; i < aitemstack.length; ++i) {

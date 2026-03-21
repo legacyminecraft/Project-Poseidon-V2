@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class Pathfinder {
 
     private IBlockAccess a;
@@ -11,15 +13,15 @@ public class Pathfinder {
         this.a = iblockaccess;
     }
 
-    public PathEntity a(Entity entity, Entity entity1, float f) {
+    public @Nullable PathEntity a(Entity entity, Entity entity1, float f) {
         return this.a(entity, entity1.locX, entity1.boundingBox.b, entity1.locZ, f);
     }
 
-    public PathEntity a(Entity entity, int i, int j, int k, float f) {
+    public @Nullable PathEntity a(Entity entity, int i, int j, int k, float f) {
         return this.a(entity, (float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, f);
     }
 
-    private PathEntity a(Entity entity, double d0, double d1, double d2, float f) {
+    private @Nullable PathEntity a(Entity entity, double d0, double d1, double d2, float f) {
         this.b.a();
         this.c.a();
         PathPoint pathpoint = this.a(MathHelper.floor(entity.boundingBox.a), MathHelper.floor(entity.boundingBox.b), MathHelper.floor(entity.boundingBox.c));
@@ -30,7 +32,7 @@ public class Pathfinder {
         return pathentity;
     }
 
-    private PathEntity a(Entity entity, PathPoint pathpoint, PathPoint pathpoint1, PathPoint pathpoint2, float f) {
+    private @Nullable PathEntity a(Entity entity, PathPoint pathpoint, PathPoint pathpoint1, PathPoint pathpoint2, float f) {
         pathpoint.e = 0.0F;
         pathpoint.f = pathpoint.a(pathpoint1);
         pathpoint.g = pathpoint.f;
@@ -109,7 +111,7 @@ public class Pathfinder {
         return i;
     }
 
-    private PathPoint a(Entity entity, int i, int j, int k, PathPoint pathpoint, int l) {
+    private @Nullable PathPoint a(Entity entity, int i, int j, int k, PathPoint pathpoint, int l) {
         PathPoint pathpoint1 = null;
 
         if (this.a(entity, i, j, k, pathpoint) == 1) {

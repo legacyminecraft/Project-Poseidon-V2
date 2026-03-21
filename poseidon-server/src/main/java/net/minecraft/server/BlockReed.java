@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class BlockReed extends Block {
@@ -55,7 +57,7 @@ public class BlockReed extends Block {
         return this.canPlace(world, i, j, k);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakByWorldEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,7 +197,7 @@ public class EntityPainting extends Entity {
         return true;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (!this.dead && !this.world.isStatic) {
             // CraftBukkit start
             PaintingBreakByEntityEvent event = new PaintingBreakByEntityEvent((org.bukkit.entity.Painting) this.getBukkitEntity(), entity == null ? null : entity.getBukkitEntity());

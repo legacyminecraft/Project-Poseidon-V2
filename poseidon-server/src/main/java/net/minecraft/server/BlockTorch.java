@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class BlockTorch extends Block {
@@ -9,7 +11,7 @@ public class BlockTorch extends Block {
         this.a(true);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 
@@ -120,7 +122,7 @@ public class BlockTorch extends Block {
         }
     }
 
-    public MovingObjectPosition a(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1) {
+    public @Nullable MovingObjectPosition a(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1) {
         int l = world.getData(i, j, k) & 7;
         float f = 0.15F;
 

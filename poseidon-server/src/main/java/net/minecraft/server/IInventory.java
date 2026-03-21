@@ -1,14 +1,16 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public interface IInventory {
 
     int getSize();
 
-    ItemStack getItem(int i);
+    @Nullable ItemStack getItem(int i);
 
-    ItemStack splitStack(int i, int j);
+    @Nullable ItemStack splitStack(int i, int j);
 
-    void setItem(int i, ItemStack itemstack);
+    void setItem(int i, @Nullable ItemStack itemstack);
 
     String getName();
 
@@ -18,5 +20,5 @@ public interface IInventory {
 
     boolean a_(EntityHuman entityhuman);
 
-    public abstract ItemStack[] getContents(); // CraftBukkit
+    @Nullable ItemStack[] getContents(); // CraftBukkit
 }

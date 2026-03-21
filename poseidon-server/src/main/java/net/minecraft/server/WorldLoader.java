@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -15,7 +17,7 @@ public class WorldLoader implements Convertable {
         this.a = file1;
     }
 
-    public WorldData b(String s) {
+    public @Nullable WorldData b(String s) {
         File file1 = new File(this.a, s);
 
         if (!file1.exists()) {
@@ -50,7 +52,7 @@ public class WorldLoader implements Convertable {
         }
     }
 
-    protected static void a(File[] afile) {
+    protected static void a(File @Nullable [] afile) {
         for (int i = 0; i < afile.length; ++i) {
             if (afile[i].isDirectory()) {
                 a(afile[i].listFiles());

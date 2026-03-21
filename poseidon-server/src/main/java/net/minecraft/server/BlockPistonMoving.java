@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class BlockPistonMoving extends BlockContainer {
@@ -9,7 +11,7 @@ public class BlockPistonMoving extends BlockContainer {
         this.c(-1.0F);
     }
 
-    protected TileEntity a_() {
+    protected @Nullable TileEntity a_() {
         return null;
     }
 
@@ -74,7 +76,7 @@ public class BlockPistonMoving extends BlockContainer {
         return new TileEntityPiston(i, j, k, flag, flag1);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         TileEntityPiston tileentitypiston = this.b(world, i, j, k);
 
         if (tileentitypiston == null) {
@@ -118,7 +120,7 @@ public class BlockPistonMoving extends BlockContainer {
         }
     }
 
-    public AxisAlignedBB a(World world, int i, int j, int k, int l, float f, int i1) {
+    public @Nullable AxisAlignedBB a(World world, int i, int j, int k, int l, float f, int i1) {
         if (l != 0 && l != this.id) {
             AxisAlignedBB axisalignedbb = Block.byId[l].e(world, i, j, k);
 
@@ -138,7 +140,7 @@ public class BlockPistonMoving extends BlockContainer {
         }
     }
 
-    private TileEntityPiston b(IBlockAccess iblockaccess, int i, int j, int k) {
+    private @Nullable TileEntityPiston b(IBlockAccess iblockaccess, int i, int j, int k) {
         TileEntity tileentity = iblockaccess.getTileEntity(i, j, k);
 
         return tileentity != null && tileentity instanceof TileEntityPiston ? (TileEntityPiston) tileentity : null;

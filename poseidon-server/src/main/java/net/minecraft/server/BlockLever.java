@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 public class BlockLever extends Block {
 
@@ -8,7 +9,7 @@ public class BlockLever extends Block {
         super(i, j, Material.ORIENTABLE);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

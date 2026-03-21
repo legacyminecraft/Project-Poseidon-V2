@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 public class BlockTrapdoor extends Block {
 
@@ -25,7 +26,7 @@ public class BlockTrapdoor extends Block {
         return false;
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         this.a(world, i, j, k);
         return super.e(world, i, j, k);
     }
@@ -129,7 +130,7 @@ public class BlockTrapdoor extends Block {
         }
     }
 
-    public MovingObjectPosition a(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1) {
+    public @Nullable MovingObjectPosition a(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1) {
         this.a(world, i, j, k);
         return super.a(world, i, j, k, vec3d, vec3d1);
     }

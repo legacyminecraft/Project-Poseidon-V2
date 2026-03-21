@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class InventoryLargeChest implements IInventory {
 
     private String a;
@@ -7,8 +9,8 @@ public class InventoryLargeChest implements IInventory {
     private IInventory c;
 
     // CraftBukkit start
-    public ItemStack[] getContents() {
-        ItemStack[] result = new ItemStack[this.getSize()];
+    public @Nullable ItemStack[] getContents() {
+        @Nullable ItemStack[] result = new ItemStack[this.getSize()];
         for (int i = 0; i < result.length; i++) {
             result[i] = this.getItem(i);
         }
@@ -30,15 +32,15 @@ public class InventoryLargeChest implements IInventory {
         return this.a;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return i >= this.b.getSize() ? this.c.getItem(i - this.b.getSize()) : this.b.getItem(i);
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         return i >= this.b.getSize() ? this.c.splitStack(i - this.b.getSize(), j) : this.b.splitStack(i, j);
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         if (i >= this.b.getSize()) {
             this.c.setItem(i - this.b.getSize(), itemstack);
         } else {

@@ -9,12 +9,13 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.vehicle.VehicleUpdateEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class EntityMinecart extends Entity implements IInventory {
 
-    private ItemStack[] items;
+    private @Nullable ItemStack[] items;
     public int damage;
     public int b;
     public int c;
@@ -41,7 +42,7 @@ public class EntityMinecart extends Entity implements IInventory {
     public double flyingZ = 0.95;
     public double maxSpeed = 0.4D;
 
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
     // CraftBukkit end
@@ -68,7 +69,7 @@ public class EntityMinecart extends Entity implements IInventory {
         return entity.boundingBox;
     }
 
-    public AxisAlignedBB e_() {
+    public @Nullable AxisAlignedBB e_() {
         return null;
     }
 
@@ -94,7 +95,7 @@ public class EntityMinecart extends Entity implements IInventory {
         return (double) this.width * 0.0D - 0.30000001192092896D;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (!this.world.isStatic && !this.dead) {
             // CraftBukkit start
             Vehicle vehicle = (Vehicle) this.getBukkitEntity();
@@ -591,7 +592,7 @@ public class EntityMinecart extends Entity implements IInventory {
         }
     }
 
-    public Vec3D h(double d0, double d1, double d2) {
+    public @Nullable Vec3D h(double d0, double d1, double d2) {
         int i = MathHelper.floor(d0);
         int j = MathHelper.floor(d1);
         int k = MathHelper.floor(d2);
@@ -799,11 +800,11 @@ public class EntityMinecart extends Entity implements IInventory {
         return 27;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return this.items[i];
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         if (this.items[i] != null) {
             ItemStack itemstack;
 
@@ -824,7 +825,7 @@ public class EntityMinecart extends Entity implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         this.items[i] = itemstack;
         if (itemstack != null && itemstack.count > this.getMaxStackSize()) {
             itemstack.count = this.getMaxStackSize();

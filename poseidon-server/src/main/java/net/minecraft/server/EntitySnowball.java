@@ -5,6 +5,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class EntitySnowball extends Entity {
     private int e = 0;
     private boolean f = false;
     public int a = 0;
-    public EntityLiving shooter; // CraftBukkit - private -> public
+    public @Nullable EntityLiving shooter; // CraftBukkit - private -> public
     private int h;
     private int i = 0;
 

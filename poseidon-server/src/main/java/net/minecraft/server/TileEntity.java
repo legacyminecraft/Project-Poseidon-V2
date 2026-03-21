@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +47,7 @@ public class TileEntity {
 
     public void g_() {}
 
-    public static TileEntity c(NBTTagCompound nbttagcompound) {
+    public static @Nullable TileEntity c(NBTTagCompound nbttagcompound) {
         TileEntity tileentity = null;
 
         try {
@@ -77,7 +79,7 @@ public class TileEntity {
         }
     }
 
-    public Packet f() {
+    public @Nullable Packet f() {
         return null;
     }
 

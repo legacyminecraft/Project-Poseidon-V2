@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -152,7 +153,7 @@ public class ServerConfigurationManager {
         return playerQuitEvent.getQuitMessage(); // CraftBukkit
     }
 
-    public EntityPlayer a(NetLoginHandler netloginhandler, String s) {
+    public @Nullable EntityPlayer a(NetLoginHandler netloginhandler, String s) {
         // CraftBukkit start - note: this entire method needs to be changed
         // Instead of kicking then returning, we need to store the kick reason
         // in the event, check with plugins to see if it's ok, and THEN kick
@@ -202,7 +203,7 @@ public class ServerConfigurationManager {
         return this.moveToWorld(entityplayer, i, null);
     }
 
-    public EntityPlayer moveToWorld(EntityPlayer entityplayer, int i, Location location) {
+    public EntityPlayer moveToWorld(EntityPlayer entityplayer, int i, @Nullable Location location) {
         this.server.getTracker(entityplayer.dimension).untrackPlayer(entityplayer);
         // this.server.getTracker(entityplayer.dimension).untrackEntity(entityplayer); // CraftBukkit
         this.getPlayerManager(entityplayer.dimension).removePlayer(entityplayer);
@@ -535,7 +536,7 @@ public class ServerConfigurationManager {
         return this.h.contains(s.trim().toLowerCase());
     }
 
-    public EntityPlayer i(String s) {
+    public @Nullable EntityPlayer i(String s) {
         for (int i = 0; i < this.players.size(); ++i) {
             EntityPlayer entityplayer = this.players.get(i);
 
@@ -559,7 +560,7 @@ public class ServerConfigurationManager {
         this.sendPacketNearby(null, d0, d1, d2, d3, i, packet);
     }
 
-    public void sendPacketNearby(EntityHuman entityhuman, double d0, double d1, double d2, double d3, int i, Packet packet) {
+    public void sendPacketNearby(@Nullable EntityHuman entityhuman, double d0, double d1, double d2, double d3, int i, Packet packet) {
         for (int j = 0; j < this.players.size(); ++j) {
             EntityPlayer entityplayer = this.players.get(j);
 

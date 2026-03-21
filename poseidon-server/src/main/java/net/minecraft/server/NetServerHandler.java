@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     private boolean justTeleported = false;
 
     // For the packet15 hack :(
-    Long lastPacket;
+    @Nullable Long lastPacket;
 
     // Store the last block right clicked and what type it was
     private int lastMaterial;
@@ -616,7 +617,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         worldserver.weirdIsOpCache = false;
     }
 
-    public void a(String s, Object[] aobject) {
+    public void a(String s, Object @Nullable [] aobject) {
         if (this.disconnected) return; // CraftBukkit - rarely it would send a disconnect line twice
 
         a.info(this.player.name + " lost connection: " + s);
@@ -915,7 +916,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
                 this.n.put(this.player.activeContainer.windowId, packet102windowclick.d);
                 this.player.netServerHandler.sendPacket(new Packet106Transaction(packet102windowclick.a, packet102windowclick.d, false));
                 this.player.activeContainer.a(this.player, false);
-                ArrayList<ItemStack> arraylist = new ArrayList<>();
+                ArrayList<@Nullable ItemStack> arraylist = new ArrayList<>();
 
                 for (int i = 0; i < this.player.activeContainer.e.size(); ++i) {
                     arraylist.add(this.player.activeContainer.e.get(i).getItem());

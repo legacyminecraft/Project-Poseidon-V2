@@ -1,21 +1,20 @@
 package net.minecraft.server;
 
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
-// CraftBukkit end
+import org.jspecify.annotations.Nullable;
 
 public class TileEntityFurnace extends TileEntity implements IInventory {
 
-    private ItemStack[] items = new ItemStack[3];
+    private @Nullable ItemStack[] items = new ItemStack[3];
     public int burnTime = 0;
     public int ticksForCurrentFuel = 0;
     public int cookTime = 0;
 
     // CraftBukkit start
     private int lastTick = (int) (System.currentTimeMillis() / 50);
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
     // CraftBukkit end
@@ -26,11 +25,11 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
         return this.items.length;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return this.items[i];
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         if (this.items[i] != null) {
             ItemStack itemstack;
 
@@ -51,7 +50,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         this.items[i] = itemstack;
         if (itemstack != null && itemstack.count > this.getMaxStackSize()) {
             itemstack.count = this.getMaxStackSize();
@@ -232,7 +231,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
         }
     }
 
-    private int fuelTime(ItemStack itemstack) {
+    private int fuelTime(@Nullable ItemStack itemstack) {
         if (itemstack == null) {
             return 0;
         } else {

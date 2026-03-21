@@ -1,10 +1,12 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 
 public interface IChunkLoader {
 
-    Chunk a(World world, int i, int j) throws IOException;
+    @Nullable Chunk a(World world, int i, int j) throws IOException;
 
     void a(World world, Chunk chunk);
 

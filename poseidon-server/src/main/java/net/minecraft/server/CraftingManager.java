@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -126,7 +128,7 @@ public class CraftingManager {
             hashmap.put(character, itemstack1);
         }
 
-        ItemStack[] aitemstack = new ItemStack[j * k];
+        @Nullable ItemStack[] aitemstack = new ItemStack[j * k];
 
         for (int i1 = 0; i1 < j * k; ++i1) {
             char c0 = s.charAt(i1);
@@ -165,7 +167,7 @@ public class CraftingManager {
         this.b.add(new ShapelessRecipes(itemstack, arraylist));
     }
 
-    public ItemStack craft(InventoryCrafting inventorycrafting) {
+    public @Nullable ItemStack craft(InventoryCrafting inventorycrafting) {
         for (int i = 0; i < this.b.size(); ++i) {
             CraftingRecipe craftingrecipe = this.b.get(i);
 

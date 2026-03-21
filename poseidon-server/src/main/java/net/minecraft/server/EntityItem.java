@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.jspecify.annotations.Nullable;
 
 public class EntityItem extends Entity {
 
@@ -95,7 +96,7 @@ public class EntityItem extends Entity {
         this.damageEntity(null, i);
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         this.af();
         this.f -= i;
         if (this.f <= 0) {

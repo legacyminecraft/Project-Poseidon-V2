@@ -1,9 +1,8 @@
 package net.minecraft.server;
 
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTargetEvent;
-// CraftBukkit end
+import org.jspecify.annotations.Nullable;
 
 public class EntityGhast extends EntityFlying implements IMonster {
 
@@ -11,7 +10,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
     public double b;
     public double c;
     public double d;
-    private Entity target = null;
+    private @Nullable Entity target = null;
     private int h = 0;
     public int e = 0;
     public int f = 0;

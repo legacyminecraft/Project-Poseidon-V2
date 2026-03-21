@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -9,7 +11,7 @@ public class Statistic {
     public final int e;
     public final String f;
     public boolean g;
-    public String h;
+    public @Nullable String h;
     private final Counter a;
     private static NumberFormat b = NumberFormat.getIntegerInstance(Locale.US);
     public static Counter i = new UnknownCounter();

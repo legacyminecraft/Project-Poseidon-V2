@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,11 +10,11 @@ public class Packet103SetSlot extends Packet {
 
     public int a;
     public int b;
-    public ItemStack c;
+    public @Nullable ItemStack c;
 
     public Packet103SetSlot() {}
 
-    public Packet103SetSlot(int i, int j, ItemStack itemstack) {
+    public Packet103SetSlot(int i, int j, @Nullable ItemStack itemstack) {
         this.a = i;
         this.b = j;
         this.c = itemstack == null ? itemstack : itemstack.cloneItemStack();

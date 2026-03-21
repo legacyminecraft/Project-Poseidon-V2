@@ -1,10 +1,9 @@
 package net.minecraft.server;
 
-// CraftBukkit start
 import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.block.BlockPlaceEvent;
-// CraftBukkit end
+import org.jspecify.annotations.Nullable;
 
 public class ItemBlock extends Item {
 
@@ -117,7 +116,7 @@ public class ItemBlock extends Item {
         }
     }
 
-    public String a() {
+    public @Nullable String a() {
         return Block.byId[this.id].l();
     }
 }

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 class PacketCounter {
 
     private int a;
@@ -12,7 +14,7 @@ class PacketCounter {
         this.b += i;
     }
 
-    PacketCounter(EmptyClass1 emptyclass1) {
+    PacketCounter(@Nullable EmptyClass1 emptyclass1) {
         this();
     }
 }

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class ChunkProviderSky implements IChunkProvider {
@@ -169,7 +171,7 @@ public class ChunkProviderSky implements IChunkProvider {
         return chunk;
     }
 
-    private double[] a(double[] adouble, int i, int j, int k, int l, int i1, int j1) {
+    private double[] a(double @Nullable [] adouble, int i, int j, int k, int l, int i1, int j1) {
         if (adouble == null) {
             adouble = new double[l * i1 * j1];
         }
@@ -518,7 +520,7 @@ public class ChunkProviderSky implements IChunkProvider {
         BlockSand.instaFall = false;
     }
 
-    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
+    public boolean saveChunks(boolean flag, @Nullable IProgressUpdate iprogressupdate) {
         return true;
     }
 

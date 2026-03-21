@@ -7,6 +7,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.generator.BlockPopulator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +122,7 @@ public class ChunkProviderServer implements IChunkProvider {
         // CraftBukkit end
     }
 
-    public Chunk loadChunk(int i, int j) { // CraftBukkit - private -> public
+    public @Nullable Chunk loadChunk(int i, int j) { // CraftBukkit - private -> public
         if (this.e == null) {
             return null;
         } else {
@@ -192,7 +193,7 @@ public class ChunkProviderServer implements IChunkProvider {
         }
     }
 
-    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
+    public boolean saveChunks(boolean flag, @Nullable IProgressUpdate iprogressupdate) {
         int i = 0;
 
         for (int j = 0; j < this.chunkList.size(); ++j) {

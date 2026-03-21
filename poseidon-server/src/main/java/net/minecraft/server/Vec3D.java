@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +92,7 @@ public class Vec3D {
         return MathHelper.a(this.a * this.a + this.b * this.b + this.c * this.c);
     }
 
-    public Vec3D a(Vec3D vec3d, double d0) {
+    public @Nullable Vec3D a(Vec3D vec3d, double d0) {
         double d1 = vec3d.a - this.a;
         double d2 = vec3d.b - this.b;
         double d3 = vec3d.c - this.c;
@@ -104,7 +106,7 @@ public class Vec3D {
         }
     }
 
-    public Vec3D b(Vec3D vec3d, double d0) {
+    public @Nullable Vec3D b(Vec3D vec3d, double d0) {
         double d1 = vec3d.a - this.a;
         double d2 = vec3d.b - this.b;
         double d3 = vec3d.c - this.c;
@@ -118,7 +120,7 @@ public class Vec3D {
         }
     }
 
-    public Vec3D c(Vec3D vec3d, double d0) {
+    public @Nullable Vec3D c(Vec3D vec3d, double d0) {
         double d1 = vec3d.a - this.a;
         double d2 = vec3d.b - this.b;
         double d3 = vec3d.c - this.c;

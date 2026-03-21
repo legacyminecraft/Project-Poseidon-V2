@@ -9,6 +9,7 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.vehicle.VehicleUpdateEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class EntityBoat extends Entity {
         return (double) this.width * 0.0D - 0.30000001192092896D;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (!this.world.isStatic && !this.dead) {
             // CraftBukkit start
             Vehicle vehicle = (Vehicle) this.getBukkitEntity();

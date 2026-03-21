@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,7 +22,7 @@ public class BlockStairs extends Block {
         this.a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return super.e(world, i, j, k);
     }
 
@@ -68,7 +70,7 @@ public class BlockStairs extends Block {
         this.a.postBreak(world, i, j, k, l);
     }
 
-    public float a(Entity entity) {
+    public float a(@Nullable Entity entity) {
         return this.a.a(entity);
     }
 

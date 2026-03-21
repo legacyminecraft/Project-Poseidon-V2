@@ -6,6 +6,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.jspecify.annotations.Nullable;
 
 public class ItemInWorldManager {
 
@@ -199,7 +200,7 @@ public class ItemInWorldManager {
         }
     }
 
-    public boolean interact(EntityHuman entityhuman, World world, ItemStack itemstack, int i, int j, int k, int l) {
+    public boolean interact(EntityHuman entityhuman, World world, @Nullable ItemStack itemstack, int i, int j, int k, int l) {
         int i1 = world.getTypeId(i, j, k);
 
         // CraftBukkit start - Interact

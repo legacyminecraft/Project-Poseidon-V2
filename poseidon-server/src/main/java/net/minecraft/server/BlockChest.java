@@ -75,7 +75,7 @@ public class BlockChest extends BlockContainer {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        Object object = world.getTileEntity(i, j, k);
+        IInventory object = (IInventory) world.getTileEntity(i, j, k);
 
         if (world.e(i, j + 1, k)) {
             return true;
@@ -89,25 +89,25 @@ public class BlockChest extends BlockContainer {
             return true;
         } else {
             if (world.getTypeId(i - 1, j, k) == this.id) {
-                object = new InventoryLargeChest("Large chest", (TileEntityChest) world.getTileEntity(i - 1, j, k), (IInventory) object);
+                object = new InventoryLargeChest("Large chest", (TileEntityChest) world.getTileEntity(i - 1, j, k), object);
             }
 
             if (world.getTypeId(i + 1, j, k) == this.id) {
-                object = new InventoryLargeChest("Large chest", (IInventory) object, (TileEntityChest) world.getTileEntity(i + 1, j, k));
+                object = new InventoryLargeChest("Large chest", object, (TileEntityChest) world.getTileEntity(i + 1, j, k));
             }
 
             if (world.getTypeId(i, j, k - 1) == this.id) {
-                object = new InventoryLargeChest("Large chest", (TileEntityChest) world.getTileEntity(i, j, k - 1), (IInventory) object);
+                object = new InventoryLargeChest("Large chest", (TileEntityChest) world.getTileEntity(i, j, k - 1), object);
             }
 
             if (world.getTypeId(i, j, k + 1) == this.id) {
-                object = new InventoryLargeChest("Large chest", (IInventory) object, (TileEntityChest) world.getTileEntity(i, j, k + 1));
+                object = new InventoryLargeChest("Large chest", object, (TileEntityChest) world.getTileEntity(i, j, k + 1));
             }
 
             if (world.isStatic) {
                 return true;
             } else {
-                entityhuman.a((IInventory) object);
+                entityhuman.a(object);
                 return true;
             }
         }

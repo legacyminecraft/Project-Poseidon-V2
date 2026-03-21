@@ -3,6 +3,7 @@ package net.minecraft.server;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -24,7 +25,7 @@ public class BlockPressurePlate extends Block {
         return 20;
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

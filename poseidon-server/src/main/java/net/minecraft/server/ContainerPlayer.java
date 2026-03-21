@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class ContainerPlayer extends Container {
 
     public InventoryCrafting craftInventory;
@@ -73,7 +75,7 @@ public class ContainerPlayer extends Container {
         return true;
     }
 
-    public ItemStack a(int i) {
+    public @Nullable ItemStack a(int i) {
         ItemStack itemstack = null;
         Slot slot = this.e.get(i);
 

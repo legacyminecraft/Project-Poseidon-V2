@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
 
@@ -12,7 +13,7 @@ public class BlockSnow extends Block {
         this.a(true);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         int l = world.getData(i, j, k) & 7;
 
         return l >= 3 ? AxisAlignedBB.b((double) i + this.minX, (double) j + this.minY, (double) k + this.minZ, (double) i + this.maxX, (float) j + 0.5F, (double) k + this.maxZ) : null;

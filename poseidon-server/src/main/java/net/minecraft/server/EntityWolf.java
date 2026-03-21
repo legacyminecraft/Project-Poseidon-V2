@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -234,7 +235,7 @@ public class EntityWolf extends EntityAnimal {
         return this.isSitting() || this.g;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         this.setSitting(false);
         if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow)) {
             i = (i + 1) / 2;
@@ -307,7 +308,7 @@ public class EntityWolf extends EntityAnimal {
         }
     }
 
-    protected Entity findTarget() {
+    protected @Nullable Entity findTarget() {
         return this.isAngry() ? this.world.findNearbyPlayer(this, 16.0D) : null;
     }
 

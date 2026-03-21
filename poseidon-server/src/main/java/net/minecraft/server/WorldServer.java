@@ -8,6 +8,7 @@ import org.bukkit.craftbukkit.generator.NormalChunkGenerator;
 import org.bukkit.craftbukkit.generator.SkyLandsChunkGenerator;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.generator.ChunkGenerator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +110,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
         this.G.d(entity.id);
     }
 
-    public Entity getEntity(int i) {
+    public @Nullable Entity getEntity(int i) {
         return (Entity) this.G.a(i);
     }
 
@@ -138,7 +139,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
         this.server.getTracker(this.dimension).sendPacketToEntity(entity, packet38entitystatus);
     }
 
-    public Explosion createExplosion(Entity entity, double d0, double d1, double d2, float f, boolean flag) {
+    public Explosion createExplosion(@Nullable Entity entity, double d0, double d1, double d2, float f, boolean flag) {
         // CraftBukkit start
         Explosion explosion = super.createExplosion(entity, d0, d1, d2, f, flag);
 

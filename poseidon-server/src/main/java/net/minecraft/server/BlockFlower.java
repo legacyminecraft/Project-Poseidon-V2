@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class BlockFlower extends Block {
@@ -41,7 +43,7 @@ public class BlockFlower extends Block {
         return (world.k(i, j, k) >= 8 || world.isChunkLoaded(i, j, k)) && this.c(world.getTypeId(i, j - 1, k));
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

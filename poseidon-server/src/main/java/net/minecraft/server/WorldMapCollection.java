@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutput;
@@ -26,7 +28,7 @@ public class WorldMapCollection {
         this.b();
     }
 
-    public WorldMapBase a(Class<? extends WorldMapBase> oclass, String s) {
+    public @Nullable WorldMapBase a(Class<? extends WorldMapBase> oclass, String s) {
         WorldMapBase worldmapbase = this.b.get(s);
 
         if (worldmapbase != null) {

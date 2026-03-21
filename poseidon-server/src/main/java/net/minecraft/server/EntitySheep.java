@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class EntitySheep extends EntityAnimal {
@@ -17,7 +19,7 @@ public class EntitySheep extends EntityAnimal {
         this.datawatcher.a(16, (byte) 0);
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         return super.damageEntity(entity, i);
     }
 

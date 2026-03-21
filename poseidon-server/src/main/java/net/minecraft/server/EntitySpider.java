@@ -1,9 +1,8 @@
 package net.minecraft.server;
 
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTargetEvent;
-// CraftBukkit end
+import org.jspecify.annotations.Nullable;
 
 public class EntitySpider extends EntityMonster {
 
@@ -22,7 +21,7 @@ public class EntitySpider extends EntityMonster {
         return false;
     }
 
-    protected Entity findTarget() {
+    protected @Nullable Entity findTarget() {
         float f = this.c(1.0F);
 
         if (f < 0.5F) {

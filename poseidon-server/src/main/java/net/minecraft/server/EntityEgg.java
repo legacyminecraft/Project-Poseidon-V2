@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class EntityEgg extends Entity {
     private int e = 0;
     private boolean f = false;
     public int a = 0;
-    public EntityLiving thrower; // CraftBukkit - private -> public
+    public @Nullable EntityLiving thrower; // CraftBukkit - private -> public
     private int h;
     private int i = 0;
 

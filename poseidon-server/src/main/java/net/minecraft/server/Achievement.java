@@ -1,15 +1,17 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class Achievement extends Statistic {
 
     public final int a;
     public final int b;
-    public final Achievement c;
+    public final @Nullable Achievement c;
     private final String l;
     public final ItemStack d;
     private boolean m;
 
-    public Achievement(int i, String s, int j, int k, Item item, Achievement achievement) {
+    public Achievement(int i, String s, int j, int k, Item item, @Nullable Achievement achievement) {
         this(i, s, j, k, new ItemStack(item), achievement);
     }
 
@@ -17,7 +19,7 @@ public class Achievement extends Statistic {
         this(i, s, j, k, new ItemStack(block), achievement);
     }
 
-    public Achievement(int i, String s, int j, int k, ItemStack itemstack, Achievement achievement) {
+    public Achievement(int i, String s, int j, int k, ItemStack itemstack, @Nullable Achievement achievement) {
         super(5242880 + i, StatisticCollector.a("achievement." + s));
         this.d = itemstack;
         this.l = StatisticCollector.a("achievement." + s + ".desc");

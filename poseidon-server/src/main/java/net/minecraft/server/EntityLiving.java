@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public abstract class EntityLiving extends Entity {
     protected String texture = "/mob/char.png";
     protected boolean S = true;
     protected float T = 0.0F;
-    protected String U = null;
+    protected @Nullable String U = null;
     protected float V = 1.0F;
     protected int W = 0;
     protected float X = 0.0F;
@@ -63,7 +64,7 @@ public abstract class EntityLiving extends Entity {
     protected boolean aC = false;
     protected float aD = 0.0F;
     protected float aE = 0.7F;
-    private Entity b;
+    private @Nullable Entity b;
     protected int aF = 0;
 
     public EntityLiving(World world) {
@@ -334,7 +335,7 @@ public abstract class EntityLiving extends Entity {
         }
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (this.world.isStatic) {
             return false;
         } else {
@@ -404,15 +405,15 @@ public abstract class EntityLiving extends Entity {
         return 1.0F;
     }
 
-    protected String g() {
+    protected @Nullable String g() {
         return null;
     }
 
-    protected String h() {
+    protected @Nullable String h() {
         return "random.hurt";
     }
 
-    protected String i() {
+    protected @Nullable String i() {
         return "random.hurt";
     }
 
@@ -431,7 +432,7 @@ public abstract class EntityLiving extends Entity {
         }
     }
 
-    public void die(Entity entity) {
+    public void die(@Nullable Entity entity) {
         if (this.W >= 0 && entity != null) {
             entity.c(this, this.W);
         }
@@ -818,7 +819,7 @@ public abstract class EntityLiving extends Entity {
         return this.b != null;
     }
 
-    public Entity W() {
+    public @Nullable Entity W() {
         return this.b;
     }
 

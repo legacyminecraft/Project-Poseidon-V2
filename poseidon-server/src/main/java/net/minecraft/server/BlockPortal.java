@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.world.PortalCreateEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
 
@@ -11,7 +12,7 @@ public class BlockPortal extends BlockBreakable {
         super(i, j, Material.PORTAL, false);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

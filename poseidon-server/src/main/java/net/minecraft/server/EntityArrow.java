@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class EntityArrow extends Entity {
     private boolean inGround = false;
     public boolean fromPlayer = false;
     public int shake = 0;
-    public EntityLiving shooter;
+    public @Nullable EntityLiving shooter;
     private int j;
     private int k = 0;
 

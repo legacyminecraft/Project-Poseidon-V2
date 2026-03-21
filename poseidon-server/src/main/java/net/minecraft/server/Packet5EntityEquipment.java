@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,7 +15,7 @@ public class Packet5EntityEquipment extends Packet {
 
     public Packet5EntityEquipment() {}
 
-    public Packet5EntityEquipment(int i, int j, ItemStack itemstack) {
+    public Packet5EntityEquipment(int i, int j, @Nullable ItemStack itemstack) {
         this.a = i;
         this.b = j;
         if (itemstack == null) {

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.regex.Matcher;
@@ -21,7 +23,7 @@ class ChunkFileFilter implements FileFilter {
         }
     }
 
-    ChunkFileFilter(EmptyClass2 emptyclass2) {
+    ChunkFileFilter(@Nullable EmptyClass2 emptyclass2) {
         this();
     }
 }

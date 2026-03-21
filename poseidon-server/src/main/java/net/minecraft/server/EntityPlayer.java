@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -23,7 +24,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public Set<ChunkCoordIntPair> playerChunkCoordIntPairs = new HashSet<>();
     private int bL = -99999999;
     private int bM = 60;
-    private ItemStack[] bN = new ItemStack[] { null, null, null, null, null};
+    private @Nullable ItemStack[] bN = new @Nullable ItemStack[] { null, null, null, null, null};
     private int bO = 0;
     public boolean h;
 
@@ -53,10 +54,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     }
 
     public String displayName;
-    public org.bukkit.Location compassTarget;
+    public org.bukkit.@Nullable Location compassTarget;
     // CraftBukkit end
 
-    public void spawnIn(World world) {
+    public void spawnIn(@Nullable World world) {
         super.spawnIn(world);
         // CraftBukkit - world fallback code, either respawn location or global spawn
         if (world == null) {
@@ -86,7 +87,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.activeContainer.a((ICrafting) this);
     }
 
-    public ItemStack[] getEquipment() {
+    public @Nullable ItemStack[] getEquipment() {
         return this.bN;
     }
 
@@ -113,11 +114,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
     }
 
-    public ItemStack c_(int i) {
+    public @Nullable ItemStack c_(int i) {
         return i == 0 ? this.inventory.getItemInHand() : this.inventory.armor[i - 1];
     }
 
-    public void die(Entity entity) {
+    public void die(@Nullable Entity entity) {
         // CraftBukkit start
         java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<>();
 
@@ -156,7 +157,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         // CraftBukkit end
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (this.bM > 0) {
             return false;
         } else {
@@ -336,12 +337,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
     }
 
-    public void mount(Entity entity) {
+    public void mount(@Nullable Entity entity) {
         // CraftBukkit start
         this.setPassengerOf(entity);
     }
 
-    public void setPassengerOf(Entity entity) {
+    public void setPassengerOf(@Nullable Entity entity) {
         // mount(null) doesn't really fly for overloaded methods,
         // so this method is needed
 
@@ -394,7 +395,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.activeContainer.a((ICrafting) this);
     }
 
-    public void a(Container container, int i, ItemStack itemstack) {
+    public void a(Container container, int i, @Nullable ItemStack itemstack) {
         if (!(container.b(i) instanceof SlotResult)) {
             if (!this.h) {
                 this.netServerHandler.sendPacket(new Packet103SetSlot(container.windowId, i, itemstack));
@@ -406,7 +407,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.a(container, container.b());
     }
 
-    public void a(Container container, List<ItemStack> list) {
+    public void a(Container container, List<@Nullable ItemStack> list) {
         this.netServerHandler.sendPacket(new Packet104WindowItems(container.windowId, list));
         this.netServerHandler.sendPacket(new Packet103SetSlot(-1, -1, this.inventory.j()));
     }
@@ -415,7 +416,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.netServerHandler.sendPacket(new Packet105CraftProgressBar(container.windowId, i, j));
     }
 
-    public void a(ItemStack itemstack) {}
+    public void a(@Nullable ItemStack itemstack) {}
 
     public void y() {
         this.netServerHandler.sendPacket(new Packet101CloseWindow(this.activeContainer.windowId));

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +87,7 @@ class MinecartTrackLogic {
         return BlockMinecartTrack.g(this.b, i, j, k) ? true : (BlockMinecartTrack.g(this.b, i, j + 1, k) ? true : BlockMinecartTrack.g(this.b, i, j - 1, k));
     }
 
-    private MinecartTrackLogic a(ChunkPosition chunkposition) {
+    private @Nullable MinecartTrackLogic a(ChunkPosition chunkposition) {
         return BlockMinecartTrack.g(this.b, chunkposition.x, chunkposition.y, chunkposition.z) ? new MinecartTrackLogic(this.a, this.b, chunkposition.x, chunkposition.y, chunkposition.z) : (BlockMinecartTrack.g(this.b, chunkposition.x, chunkposition.y + 1, chunkposition.z) ? new MinecartTrackLogic(this.a, this.b, chunkposition.x, chunkposition.y + 1, chunkposition.z) : (BlockMinecartTrack.g(this.b, chunkposition.x, chunkposition.y - 1, chunkposition.z) ? new MinecartTrackLogic(this.a, this.b, chunkposition.x, chunkposition.y - 1, chunkposition.z) : null));
     }
 

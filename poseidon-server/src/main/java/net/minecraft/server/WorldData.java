@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 public class WorldData {
@@ -11,7 +13,7 @@ public class WorldData {
     private long e;
     private long f;
     private long g;
-    private NBTTagCompound h;
+    private @Nullable NBTTagCompound h;
     private int i;
     public String name; // CraftBukkit - private -> public
     private int k;
@@ -88,7 +90,7 @@ public class WorldData {
         return nbttagcompound;
     }
 
-    private void a(NBTTagCompound nbttagcompound, NBTTagCompound nbttagcompound1) {
+    private void a(NBTTagCompound nbttagcompound, @Nullable NBTTagCompound nbttagcompound1) {
         nbttagcompound.setLong("RandomSeed", this.a);
         nbttagcompound.a("SpawnX", this.b);
         nbttagcompound.a("SpawnY", this.c);

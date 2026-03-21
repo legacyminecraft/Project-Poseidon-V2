@@ -1,13 +1,15 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 class EntityListEntry {
 
     final int a;
     Object b;
-    EntityListEntry c;
+    @Nullable EntityListEntry c;
     final int d;
 
-    EntityListEntry(int i, int j, Object object, EntityListEntry entitylistentry) {
+    EntityListEntry(int i, int j, Object object, @Nullable EntityListEntry entitylistentry) {
         this.b = object;
         this.c = entitylistentry;
         this.a = j;

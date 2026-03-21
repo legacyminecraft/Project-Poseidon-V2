@@ -1,13 +1,15 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 class PlayerListEntry {
 
     final long a;
     Object b;
-    PlayerListEntry c;
+    @Nullable PlayerListEntry c;
     final int d;
 
-    PlayerListEntry(int i, long j, Object object, PlayerListEntry playerlistentry) {
+    PlayerListEntry(int i, long j, Object object, @Nullable PlayerListEntry playerlistentry) {
         this.b = object;
         this.c = playerlistentry;
         this.a = j;

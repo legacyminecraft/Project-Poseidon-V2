@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class PathPoint {
 
     public final int a;
@@ -10,7 +12,7 @@ public class PathPoint {
     float e;
     float f;
     float g;
-    PathPoint h;
+    @Nullable PathPoint h;
     public boolean i = false;
 
     public PathPoint(int i, int j, int k) {

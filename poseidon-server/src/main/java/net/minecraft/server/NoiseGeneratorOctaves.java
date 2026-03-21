@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class NoiseGeneratorOctaves extends NoiseGenerator {
@@ -28,7 +30,7 @@ public class NoiseGeneratorOctaves extends NoiseGenerator {
         return d2;
     }
 
-    public double[] a(double[] adouble, double d0, double d1, double d2, int i, int j, int k, double d3, double d4, double d5) {
+    public double[] a(double @Nullable [] adouble, double d0, double d1, double d2, int i, int j, int k, double d3, double d4, double d5) {
         if (adouble == null) {
             adouble = new double[i * j * k];
         } else {
@@ -47,7 +49,7 @@ public class NoiseGeneratorOctaves extends NoiseGenerator {
         return adouble;
     }
 
-    public double[] a(double[] adouble, int i, int j, int k, int l, double d0, double d1, double d2) {
+    public double[] a(double @Nullable [] adouble, int i, int j, int k, int l, double d0, double d1, double d2) {
         return this.a(adouble, i, 10.0D, j, k, 1, l, d0, 1.0D, d1);
     }
 }

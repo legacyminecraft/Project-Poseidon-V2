@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -22,8 +23,8 @@ public abstract class Entity {
     public int id;
     public double aH;
     public boolean aI;
-    public Entity passenger;
-    public Entity vehicle;
+    public @Nullable Entity passenger;
+    public @Nullable Entity vehicle;
     public World world;
     public double lastX;
     public double lastY;
@@ -636,7 +637,7 @@ public abstract class Entity {
         }
     }
 
-    public AxisAlignedBB e_() {
+    public @Nullable AxisAlignedBB e_() {
         return null;
     }
 
@@ -739,7 +740,7 @@ public abstract class Entity {
         }
     }
 
-    public void spawnIn(World world) {
+    public void spawnIn(@Nullable World world) {
         // CraftBukkit start
         if (world == null) {
             this.die();
@@ -852,7 +853,7 @@ public abstract class Entity {
         this.velocityChanged = true;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         this.af();
         return false;
     }
@@ -993,7 +994,7 @@ public abstract class Entity {
         // CraftBukkit end
     }
 
-    protected final String ag() {
+    protected final @Nullable String ag() {
         return EntityTypes.b(this);
     }
 
@@ -1070,7 +1071,7 @@ public abstract class Entity {
         return false;
     }
 
-    public AxisAlignedBB a_(Entity entity) {
+    public @Nullable AxisAlignedBB a_(Entity entity) {
         return null;
     }
 
@@ -1142,7 +1143,7 @@ public abstract class Entity {
         return (double) this.width * 0.75D;
     }
 
-    public void mount(Entity entity) {
+    public void mount(@Nullable Entity entity) {
         // CraftBukkit start
         this.setPassengerOf(entity);
     }
@@ -1156,7 +1157,7 @@ public abstract class Entity {
         return this.bukkitEntity;
     }
 
-    public void setPassengerOf(Entity entity) {
+    public void setPassengerOf(@Nullable Entity entity) {
         // b(null) doesn't really fly for overloaded methods,
         // so this method is needed
 
@@ -1202,13 +1203,13 @@ public abstract class Entity {
         }
     }
 
-    public Vec3D Z() {
+    public @Nullable Vec3D Z() {
         return null;
     }
 
     public void P() {}
 
-    public ItemStack[] getEquipment() {
+    public @Nullable ItemStack @Nullable [] getEquipment() {
         return null;
     }
 

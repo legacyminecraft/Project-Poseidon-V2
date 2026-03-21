@@ -1,11 +1,13 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class Item {
 
     protected static Random b = new Random();
-    public static Item[] byId = new Item[32000];
+    public static @Nullable Item[] byId = new Item[32000];
     public static Item IRON_SPADE = (new ItemSpade(0, EnumToolMaterial.IRON)).a(2, 5).a("shovelIron");
     public static Item IRON_PICKAXE = (new ItemPickaxe(1, EnumToolMaterial.IRON)).a(2, 6).a("pickaxeIron");
     public static Item IRON_AXE = (new ItemAxe(2, EnumToolMaterial.IRON)).a(2, 7).a("hatchetIron");
@@ -118,8 +120,8 @@ public class Item {
     protected int textureId;
     protected boolean bi = false;
     protected boolean bj = false;
-    private Item craftingResult = null;
-    private String name;
+    private @Nullable Item craftingResult = null;
+    private @Nullable String name;
 
     protected Item(int i) {
         this.id = 256 + i;
@@ -215,7 +217,7 @@ public class Item {
         return this;
     }
 
-    public String a() {
+    public @Nullable String a() {
         return this.name;
     }
 
@@ -228,7 +230,7 @@ public class Item {
         }
     }
 
-    public Item h() {
+    public @Nullable Item h() {
         return this.craftingResult;
     }
 

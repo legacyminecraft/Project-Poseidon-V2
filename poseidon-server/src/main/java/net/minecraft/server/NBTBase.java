@@ -1,12 +1,14 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
 public abstract class NBTBase {
 
-    private String a = null;
+    private @Nullable String a = null;
 
     public NBTBase() {}
 
@@ -47,7 +49,7 @@ public abstract class NBTBase {
         }
     }
 
-    public static NBTBase a(byte b0) {
+    public static @Nullable NBTBase a(byte b0) {
         switch (b0) {
         case 0:
             return new NBTTagEnd();

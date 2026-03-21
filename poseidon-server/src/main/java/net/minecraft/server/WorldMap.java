@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.map.CraftMapView;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,7 +174,7 @@ public class WorldMap extends WorldMapBase {
         }
     }
 
-    public byte[] a(ItemStack itemstack, World world, EntityHuman entityhuman) {
+    public byte @Nullable [] a(ItemStack itemstack, World world, EntityHuman entityhuman) {
         WorldMapHumanTracker worldmaphumantracker = this.j.get(entityhuman);
 
         if (worldmaphumantracker == null) {

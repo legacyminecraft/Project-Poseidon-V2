@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,7 +18,7 @@ public class ChunkLoader implements IChunkLoader {
         this.b = flag;
     }
 
-    private File a(int i, int j) {
+    private @Nullable File a(int i, int j) {
         String s = "c." + Integer.toString(i, 36) + "." + Integer.toString(j, 36) + ".dat";
         String s1 = Integer.toString(i & 63, 36);
         String s2 = Integer.toString(j & 63, 36);
@@ -43,7 +45,7 @@ public class ChunkLoader implements IChunkLoader {
         return !file1.exists() && !this.b ? null : file1;
     }
 
-    public Chunk a(World world, int i, int j) {
+    public @Nullable Chunk a(World world, int i, int j) {
         File file1 = this.a(i, j);
 
         if (file1 != null && file1.exists()) {

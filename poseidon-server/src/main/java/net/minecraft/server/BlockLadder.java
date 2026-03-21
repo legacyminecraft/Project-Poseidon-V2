@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class BlockLadder extends Block {
@@ -8,7 +10,7 @@ public class BlockLadder extends Block {
         super(i, j, Material.ORIENTABLE);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         int l = world.getData(i, j, k);
         float f = 0.125F;
 

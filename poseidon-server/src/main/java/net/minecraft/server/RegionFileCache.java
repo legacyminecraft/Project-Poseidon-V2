@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -68,13 +70,13 @@ public class RegionFileCache {
         return regionfile.a();
     }
 
-    public static DataInputStream c(File file1, int i, int j) {
+    public static @Nullable DataInputStream c(File file1, int i, int j) {
         RegionFile regionfile = a(file1, i, j);
 
         return regionfile.a(i & 31, j & 31);
     }
 
-    public static DataOutputStream d(File file1, int i, int j) {
+    public static @Nullable DataOutputStream d(File file1, int i, int j) {
         RegionFile regionfile = a(file1, i, j);
 
         return regionfile.b(i & 31, j & 31);

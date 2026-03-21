@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,7 +79,7 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
         return chunk == null ? this.getChunkAt(i, j) : chunk;
     }
 
-    private Chunk d(int i, int j) {
+    private @Nullable Chunk d(int i, int j) {
         if (this.d == null) {
             return null;
         } else {
@@ -129,7 +131,7 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
         }
     }
 
-    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate) {
+    public boolean saveChunks(boolean flag, @Nullable IProgressUpdate iprogressupdate) {
         int i = 0;
 
         for (int j = 0; j < this.f.size(); ++j) {

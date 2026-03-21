@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -18,7 +20,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
     private final File c;
     private final File d;
     private final long e = System.currentTimeMillis();
-    private UUID uuid = null; // CraftBukkit
+    private @Nullable UUID uuid = null; // CraftBukkit
 
     public PlayerNBTManager(File file1, String s, boolean flag) {
         this.b = new File(file1, s);
@@ -81,7 +83,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
         }
     }
 
-    public WorldData c() {
+    public @Nullable WorldData c() {
         File file1 = new File(this.b, "level.dat");
         NBTTagCompound nbttagcompound;
         NBTTagCompound nbttagcompound1;
@@ -197,7 +199,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
         }
     }
 
-    public NBTTagCompound a(String s) {
+    public @Nullable NBTTagCompound a(String s) {
         try {
             File file1 = new File(this.c, s + ".dat");
 

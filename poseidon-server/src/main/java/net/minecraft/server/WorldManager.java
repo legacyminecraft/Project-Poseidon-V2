@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class WorldManager implements IWorldAccess {
 
     private MinecraftServer server;
@@ -20,7 +22,7 @@ public class WorldManager implements IWorldAccess {
         this.server.getTracker(this.world.dimension).untrackEntity(entity); // CraftBukkit
     }
 
-    public void a(String s, double d0, double d1, double d2, float f, float f1) {}
+    public void a(@Nullable String s, double d0, double d1, double d2, float f, float f1) {}
 
     public void a(int i, int j, int k, int l, int i1, int j1) {}
 
@@ -30,13 +32,13 @@ public class WorldManager implements IWorldAccess {
         this.server.serverConfigurationManager.flagDirty(i, j, k, this.world.dimension); // CraftBukkit
     }
 
-    public void a(String s, int i, int j, int k) {}
+    public void a(@Nullable String s, int i, int j, int k) {}
 
     public void a(int i, int j, int k, TileEntity tileentity) {
         this.server.serverConfigurationManager.a(i, j, k, tileentity);
     }
 
-    public void a(EntityHuman entityhuman, int i, int j, int k, int l, int i1) {
+    public void a(@Nullable EntityHuman entityhuman, int i, int j, int k, int l, int i1) {
         this.server.serverConfigurationManager.sendPacketNearby(entityhuman, j, k, l, 64.0D, this.world.dimension, new Packet61(i, j, k, l, i1)); // CraftBukkit
     }
 }

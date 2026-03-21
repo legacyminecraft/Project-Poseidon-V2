@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,11 +10,11 @@ import java.util.List;
 public class Packet104WindowItems extends Packet {
 
     public int a;
-    public ItemStack[] b;
+    public @Nullable ItemStack[] b;
 
     public Packet104WindowItems() {}
 
-    public Packet104WindowItems(int i, List<ItemStack> list) {
+    public Packet104WindowItems(int i, List<@Nullable ItemStack> list) {
         this.a = i;
         this.b = new ItemStack[list.size()];
 

@@ -3,6 +3,7 @@ package net.minecraft.server;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.jspecify.annotations.Nullable;
 
 public class EntityCreeper extends EntityMonster {
 
@@ -81,7 +82,7 @@ public class EntityCreeper extends EntityMonster {
         return "mob.creeperdeath";
     }
 
-    public void die(Entity entity) {
+    public void die(@Nullable Entity entity) {
         super.die(entity);
         if (entity instanceof EntitySkeleton) {
             this.b(Item.GOLD_RECORD.id + this.random.nextInt(2), 1);

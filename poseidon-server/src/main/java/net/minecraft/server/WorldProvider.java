@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public abstract class WorldProvider {
 
     public World a;
@@ -66,7 +68,7 @@ public abstract class WorldProvider {
         return true;
     }
 
-    public static WorldProvider byDimension(int i) {
+    public static @Nullable WorldProvider byDimension(int i) {
         return i == -1 ? new WorldProviderHell() : (i == 0 ? new WorldProviderNormal() : (i == 1 ? new WorldProviderSky() : null));
     }
 }

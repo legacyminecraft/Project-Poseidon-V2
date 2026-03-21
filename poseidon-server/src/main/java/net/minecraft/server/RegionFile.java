@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -112,7 +114,7 @@ public class RegionFile {
         this.a(s, i, j, s1 + "\n");
     }
 
-    public synchronized DataInputStream a(int i, int j) {
+    public synchronized @Nullable DataInputStream a(int i, int j) {
         if (this.d(i, j)) {
             this.b("READ", i, j, "out of bounds");
             return null;
@@ -165,7 +167,7 @@ public class RegionFile {
         }
     }
 
-    public DataOutputStream b(int i, int j) {
+    public @Nullable DataOutputStream b(int i, int j) {
         return this.d(i, j) ? null : new DataOutputStream(new DeflaterOutputStream(new ChunkBuffer(this, i, j)));
     }
 

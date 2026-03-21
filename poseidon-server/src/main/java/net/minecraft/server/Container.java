@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.Set;
 
 public abstract class Container {
 
-    public List<ItemStack> d = new ArrayList<>();
+    public List<@Nullable ItemStack> d = new ArrayList<>();
     public List<Slot> e = new ArrayList<>();
     public int windowId = 0;
     private short a = 0;
@@ -32,8 +34,8 @@ public abstract class Container {
         }
     }
 
-    public List<ItemStack> b() {
-        ArrayList<ItemStack> arraylist = new ArrayList<>();
+    public List<@Nullable ItemStack> b() {
+        ArrayList<@Nullable ItemStack> arraylist = new ArrayList<>();
 
         for (int i = 0; i < this.e.size(); ++i) {
             arraylist.add(this.e.get(i).getItem());
@@ -58,7 +60,7 @@ public abstract class Container {
         }
     }
 
-    public Slot a(IInventory iinventory, int i) {
+    public @Nullable Slot a(IInventory iinventory, int i) {
         for (int j = 0; j < this.e.size(); ++j) {
             Slot slot = this.e.get(j);
 
@@ -74,13 +76,13 @@ public abstract class Container {
         return this.e.get(i);
     }
 
-    public ItemStack a(int i) {
+    public @Nullable ItemStack a(int i) {
         Slot slot = this.e.get(i);
 
         return slot != null ? slot.getItem() : null;
     }
 
-    public ItemStack a(int i, int j, boolean flag, EntityHuman entityhuman) {
+    public @Nullable ItemStack a(int i, int j, boolean flag, EntityHuman entityhuman) {
         ItemStack itemstack = null;
 
         if (j == 0 || j == 1) {

@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
 
@@ -20,7 +21,7 @@ public class BlockSign extends BlockContainer {
         this.a(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

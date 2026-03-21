@@ -1,11 +1,10 @@
 package net.minecraft.server;
 
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-// CraftBukkit end
+import org.jspecify.annotations.Nullable;
 
 public class EntityMonster extends EntityCreature implements IMonster {
 
@@ -33,13 +32,13 @@ public class EntityMonster extends EntityCreature implements IMonster {
         }
     }
 
-    protected Entity findTarget() {
+    protected @Nullable Entity findTarget() {
         EntityHuman entityhuman = this.world.findNearbyPlayer(this, 16.0D);
 
         return entityhuman != null && this.e(entityhuman) ? entityhuman : null;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (super.damageEntity(entity, i)) {
             if (this.passenger != entity && this.vehicle != entity) {
                 if (entity != this) {

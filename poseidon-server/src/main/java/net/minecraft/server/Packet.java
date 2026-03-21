@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -40,7 +42,7 @@ public abstract class Packet {
         }
     }
 
-    public static Packet a(int i) {
+    public static @Nullable Packet a(int i) {
         try {
             Class<? extends Packet> oclass = a.get(i);
 
@@ -57,7 +59,7 @@ public abstract class Packet {
     }
 
     // CraftBukkit - throws IOException
-    public static Packet a(DataInputStream datainputstream, boolean flag) throws IOException {
+    public static @Nullable Packet a(DataInputStream datainputstream, boolean flag) throws IOException {
         boolean flag1 = false;
         Packet packet = null;
 

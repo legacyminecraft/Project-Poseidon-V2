@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public abstract class BlockContainer extends Block {
 
     protected BlockContainer(int i, Material material) {
@@ -22,5 +24,5 @@ public abstract class BlockContainer extends Block {
         world.o(i, j, k);
     }
 
-    protected abstract TileEntity a_();
+    protected abstract @Nullable TileEntity a_();
 }

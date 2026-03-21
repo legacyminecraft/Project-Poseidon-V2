@@ -14,6 +14,7 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginLoadOrder;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
     private boolean isRunning = true;
     public boolean isStopped = false;
     int ticks = 0;
-    public String i;
+    public @Nullable String i;
     public int j;
     private List<IUpdatePlayerListBox> r = new ArrayList<>();
     private List<ServerCommand> s = Collections.synchronizedList(new ArrayList<>());

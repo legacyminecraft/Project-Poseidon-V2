@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public abstract class NetHandler {
 
     public NetHandler() {}
@@ -10,7 +12,7 @@ public abstract class NetHandler {
 
     public void a(Packet packet) {}
 
-    public void a(String s, Object[] aobject) {}
+    public void a(String s, Object @Nullable [] aobject) {}
 
     public void a(Packet255KickDisconnect packet255kickdisconnect) {
         this.a((Packet) packet255kickdisconnect);

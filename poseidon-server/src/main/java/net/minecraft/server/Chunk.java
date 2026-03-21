@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -399,7 +401,7 @@ public class Chunk {
         return j >= (this.heightMap[k << 4 | i] & 255);
     }
 
-    public TileEntity d(int i, int j, int k) {
+    public @Nullable TileEntity d(int i, int j, int k) {
         ChunkPosition chunkposition = new ChunkPosition(i, j, k);
         TileEntity tileentity = this.tileEntities.get(chunkposition);
 
@@ -505,7 +507,7 @@ public class Chunk {
         this.o = true;
     }
 
-    public void a(Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list) {
+    public void a(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list) {
         int i = MathHelper.floor((axisalignedbb.b - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.e + 2.0D) / 16.0D);
 

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +21,7 @@ public class EntityTypes {
         d.put(oclass, i);
     }
 
-    public static Entity a(String s, World world) {
+    public static @Nullable Entity a(String s, World world) {
         Entity entity = null;
 
         try {
@@ -35,7 +37,7 @@ public class EntityTypes {
         return entity;
     }
 
-    public static Entity a(NBTTagCompound nbttagcompound, World world) {
+    public static @Nullable Entity a(NBTTagCompound nbttagcompound, World world) {
         Entity entity = null;
 
         try {
@@ -61,7 +63,7 @@ public class EntityTypes {
         return d.get(entity.getClass());
     }
 
-    public static String b(Entity entity) {
+    public static @Nullable String b(Entity entity) {
         return b.get(entity.getClass());
     }
 

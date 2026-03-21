@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.jspecify.annotations.Nullable;
 
 public class EntitySquid extends EntityWaterAnimal {
 
@@ -34,15 +35,15 @@ public class EntitySquid extends EntityWaterAnimal {
         super.a(nbttagcompound);
     }
 
-    protected String g() {
+    protected @Nullable String g() {
         return null;
     }
 
-    protected String h() {
+    protected @Nullable String h() {
         return null;
     }
 
-    protected String i() {
+    protected @Nullable String i() {
         return null;
     }
 

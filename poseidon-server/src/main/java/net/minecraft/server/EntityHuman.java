@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -39,17 +40,17 @@ public abstract class EntityHuman extends EntityLiving {
     public boolean fauxSleeping;
     public String spawnWorld = "";
     // CraftBukkit end
-    public ChunkCoordinates A;
+    public @Nullable ChunkCoordinates A;
     public int sleepTicks; // CraftBukkit - private -> public
     public float B;
     public float C;
-    private ChunkCoordinates b;
-    private ChunkCoordinates c;
+    private @Nullable ChunkCoordinates b;
+    private @Nullable ChunkCoordinates c;
     public int D = 20;
     protected boolean E = false;
     public float F;
     private int d = 0;
-    public EntityFish hookedFish = null;
+    public @Nullable EntityFish hookedFish = null;
 
     public EntityHuman(World world) {
         super(world);
@@ -218,7 +219,7 @@ public abstract class EntityHuman extends EntityLiving {
         entity.b(this);
     }
 
-    public void die(Entity entity) {
+    public void die(@Nullable Entity entity) {
         super.die(entity);
         this.b(0.2F, 0.2F);
         this.setPosition(this.locX, this.locY, this.locZ);
@@ -252,11 +253,11 @@ public abstract class EntityHuman extends EntityLiving {
         this.a(this.inventory.splitStack(this.inventory.itemInHandIndex, 1), false);
     }
 
-    public void b(ItemStack itemstack) {
+    public void b(@Nullable ItemStack itemstack) {
         this.a(itemstack, false);
     }
 
-    public void a(ItemStack itemstack, boolean flag) {
+    public void a(@Nullable ItemStack itemstack, boolean flag) {
         if (itemstack != null) {
             EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY - 0.30000001192092896D + (double) this.t(), this.locZ, itemstack);
 
@@ -377,7 +378,7 @@ public abstract class EntityHuman extends EntityLiving {
         this.height = 1.62F;
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         this.ay = 0;
         if (this.health <= 0) {
             return false;
@@ -516,7 +517,7 @@ public abstract class EntityHuman extends EntityLiving {
         }
     }
 
-    public ItemStack G() {
+    public @Nullable ItemStack G() {
         return this.inventory.getItemInHand();
     }
 
@@ -584,7 +585,7 @@ public abstract class EntityHuman extends EntityLiving {
         }
     }
 
-    public void a(ItemStack itemstack) {}
+    public void a(@Nullable ItemStack itemstack) {}
 
     public void die() {
         super.die();
@@ -746,7 +747,7 @@ public abstract class EntityHuman extends EntityLiving {
         return this.world.getTypeId(this.A.x, this.A.y, this.A.z) == Block.BED.id;
     }
 
-    public static ChunkCoordinates getBed(World world, ChunkCoordinates chunkcoordinates) {
+    public static @Nullable ChunkCoordinates getBed(World world, ChunkCoordinates chunkcoordinates) {
         IChunkProvider ichunkprovider = world.o();
 
         ichunkprovider.getChunkAt(chunkcoordinates.x - 3 >> 4, chunkcoordinates.z - 3 >> 4);
@@ -772,11 +773,11 @@ public abstract class EntityHuman extends EntityLiving {
 
     public void a(String s) {}
 
-    public ChunkCoordinates getBed() {
+    public @Nullable ChunkCoordinates getBed() {
         return this.b;
     }
 
-    public void a(ChunkCoordinates chunkcoordinates) {
+    public void a(@Nullable ChunkCoordinates chunkcoordinates) {
         if (chunkcoordinates != null) {
             this.b = new ChunkCoordinates(chunkcoordinates);
             this.spawnWorld = this.world.worldData.name; // CraftBukkit

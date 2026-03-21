@@ -5,6 +5,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.material.MaterialData;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class BlockFire extends Block {
         this.b[i] = k;
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

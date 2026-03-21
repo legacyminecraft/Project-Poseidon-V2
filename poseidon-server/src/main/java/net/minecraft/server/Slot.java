@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class Slot {
 
     public final int index; // CraftBukkit - private -> public
@@ -23,7 +25,7 @@ public class Slot {
         return true;
     }
 
-    public ItemStack getItem() {
+    public @Nullable ItemStack getItem() {
         return this.inventory.getItem(this.index);
     }
 
@@ -31,7 +33,7 @@ public class Slot {
         return this.getItem() != null;
     }
 
-    public void c(ItemStack itemstack) {
+    public void c(@Nullable ItemStack itemstack) {
         this.inventory.setItem(this.index, itemstack);
         this.c();
     }
@@ -44,7 +46,7 @@ public class Slot {
         return this.inventory.getMaxStackSize();
     }
 
-    public ItemStack a(int i) {
+    public @Nullable ItemStack a(int i) {
         return this.inventory.splitStack(this.index, i);
     }
 

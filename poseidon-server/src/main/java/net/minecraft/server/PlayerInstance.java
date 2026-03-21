@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,7 +182,7 @@ class PlayerInstance {
         }
     }
 
-    private void sendTileEntity(TileEntity tileentity) {
+    private void sendTileEntity(@Nullable TileEntity tileentity) {
         if (tileentity != null) {
             Packet packet = tileentity.f();
 

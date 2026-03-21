@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class PathEntity {
 
     private final PathPoint[] b;
@@ -19,7 +21,7 @@ public class PathEntity {
         return this.c >= this.b.length;
     }
 
-    public PathPoint c() {
+    public @Nullable PathPoint c() {
         return this.a > 0 ? this.b[this.a - 1] : null;
     }
 

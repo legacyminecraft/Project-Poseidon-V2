@@ -3,6 +3,7 @@ package net.minecraft.server;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.map.RenderData;
 import org.bukkit.map.MapCursor;
+import org.jspecify.annotations.Nullable;
 
 public class WorldMapHumanTracker {
 
@@ -29,7 +30,7 @@ public class WorldMapHumanTracker {
         }
     }
 
-    public byte[] a(ItemStack itemstack) {
+    public byte @Nullable [] a(ItemStack itemstack) {
         int i;
         int j;
         

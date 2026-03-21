@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ public class BlockRedstoneWire extends Block {
         return this.textureId;
     }
 
-    public AxisAlignedBB e(World world, int i, int j, int k) {
+    public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
         return null;
     }
 

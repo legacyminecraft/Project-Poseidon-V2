@@ -1,9 +1,8 @@
 package net.minecraft.server;
 
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.MapInitializeEvent;
-// CraftBukkit end
+import org.jspecify.annotations.Nullable;
 
 public class ItemWorldMap extends ItemWorldMapBase {
 
@@ -238,7 +237,7 @@ public class ItemWorldMap extends ItemWorldMapBase {
         worldmap.a();
     }
 
-    public Packet b(ItemStack itemstack, World world, EntityHuman entityhuman) {
+    public @Nullable Packet b(ItemStack itemstack, World world, EntityHuman entityhuman) {
         byte[] abyte = this.a(itemstack, world).a(itemstack, world, entityhuman);
 
         return abyte == null ? null : new Packet131((short) Item.MAP.id, (short) itemstack.getData(), abyte);

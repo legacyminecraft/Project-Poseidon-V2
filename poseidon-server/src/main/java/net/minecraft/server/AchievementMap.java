@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class AchievementMap {
         }
     }
 
-    public static String a(int i) {
+    public static @Nullable String a(int i) {
         return a.b.get(i);
     }
 }

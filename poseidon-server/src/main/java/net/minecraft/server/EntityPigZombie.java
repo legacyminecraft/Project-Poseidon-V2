@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class EntityPigZombie extends EntityZombie {
         this.angerLevel = nbttagcompound.d("Anger");
     }
 
-    protected Entity findTarget() {
+    protected @Nullable Entity findTarget() {
         return this.angerLevel == 0 ? null : super.findTarget();
     }
 
@@ -50,7 +51,7 @@ public class EntityPigZombie extends EntityZombie {
         super.v();
     }
 
-    public boolean damageEntity(Entity entity, int i) {
+    public boolean damageEntity(@Nullable Entity entity, int i) {
         if (entity instanceof EntityHuman) {
             List<Entity> list = this.world.b(this, this.boundingBox.b(32.0D, 32.0D, 32.0D));
 

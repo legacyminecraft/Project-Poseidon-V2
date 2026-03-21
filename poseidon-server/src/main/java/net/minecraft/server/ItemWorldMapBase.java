@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class ItemWorldMapBase extends Item {
 
     protected ItemWorldMapBase(int i) {
@@ -10,7 +12,7 @@ public class ItemWorldMapBase extends Item {
         return true;
     }
 
-    public Packet b(ItemStack itemstack, World world, EntityHuman entityhuman) {
+    public @Nullable Packet b(ItemStack itemstack, World world, EntityHuman entityhuman) {
         return null;
     }
 }

@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -216,7 +218,7 @@ public class AxisAlignedBB {
         return b(this.a, this.b, this.c, this.d, this.e, this.f);
     }
 
-    public MovingObjectPosition a(Vec3D vec3d, Vec3D vec3d1) {
+    public @Nullable MovingObjectPosition a(Vec3D vec3d, Vec3D vec3d1) {
         Vec3D vec3d2 = vec3d.a(vec3d1, this.a);
         Vec3D vec3d3 = vec3d.a(vec3d1, this.d);
         Vec3D vec3d4 = vec3d.b(vec3d1, this.b);
@@ -307,15 +309,15 @@ public class AxisAlignedBB {
         }
     }
 
-    private boolean b(Vec3D vec3d) {
+    private boolean b(@Nullable Vec3D vec3d) {
         return vec3d == null ? false : vec3d.b >= this.b && vec3d.b <= this.e && vec3d.c >= this.c && vec3d.c <= this.f;
     }
 
-    private boolean c(Vec3D vec3d) {
+    private boolean c(@Nullable Vec3D vec3d) {
         return vec3d == null ? false : vec3d.a >= this.a && vec3d.a <= this.d && vec3d.c >= this.c && vec3d.c <= this.f;
     }
 
-    private boolean d(Vec3D vec3d) {
+    private boolean d(@Nullable Vec3D vec3d) {
         return vec3d == null ? false : vec3d.a >= this.a && vec3d.a <= this.d && vec3d.b >= this.b && vec3d.b <= this.e;
     }
 

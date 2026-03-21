@@ -1,8 +1,10 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class PlayerList {
 
-    private transient PlayerListEntry[] a = new PlayerListEntry[16];
+    private transient @Nullable PlayerListEntry[] a = new PlayerListEntry[16];
     private transient int b;
     private int c = 12;
     private final float d = 0.75F;
@@ -23,7 +25,7 @@ public class PlayerList {
         return i & j - 1;
     }
 
-    public Object a(long i) {
+    public @Nullable Object a(long i) {
         int j = e(i);
 
         for (PlayerListEntry playerlistentry = this.a[a(j, this.a.length)]; playerlistentry != null; playerlistentry = playerlistentry.c) {
@@ -50,7 +52,7 @@ public class PlayerList {
     }
 
     private void b(int i) {
-        PlayerListEntry[] aplayerlistentry = this.a;
+        @Nullable PlayerListEntry[] aplayerlistentry = this.a;
         int j = aplayerlistentry.length;
 
         if (j == 1073741824) {
@@ -65,7 +67,7 @@ public class PlayerList {
     }
 
     private void a(PlayerListEntry[] aplayerlistentry) {
-        PlayerListEntry[] aplayerlistentry1 = this.a;
+        @Nullable PlayerListEntry[] aplayerlistentry1 = this.a;
         int i = aplayerlistentry.length;
 
         for (int j = 0; j < aplayerlistentry1.length; ++j) {
@@ -88,13 +90,13 @@ public class PlayerList {
         }
     }
 
-    public Object b(long i) {
+    public @Nullable Object b(long i) {
         PlayerListEntry playerlistentry = this.c(i);
 
         return playerlistentry == null ? null : playerlistentry.b;
     }
 
-    final PlayerListEntry c(long i) {
+    final @Nullable PlayerListEntry c(long i) {
         int j = e(i);
         int k = a(j, this.a.length);
         PlayerListEntry playerlistentry = this.a[k];

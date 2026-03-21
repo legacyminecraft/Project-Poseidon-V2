@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class MovingObjectPosition {
 
     public EnumMovingObjectType type;
@@ -8,7 +10,7 @@ public class MovingObjectPosition {
     public int d;
     public int face;
     public Vec3D f;
-    public Entity entity;
+    public @Nullable Entity entity;
 
     public MovingObjectPosition(int i, int j, int k, int l, Vec3D vec3d) {
         this.type = EnumMovingObjectType.TILE;

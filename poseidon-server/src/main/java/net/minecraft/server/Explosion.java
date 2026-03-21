@@ -5,6 +5,7 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,13 +21,13 @@ public class Explosion {
     public double posX;
     public double posY;
     public double posZ;
-    public Entity source;
+    public @Nullable Entity source;
     public float size;
     public Set<ChunkPosition> blocks = new HashSet<>();
 
     public boolean wasCanceled = false; // CraftBukkit
 
-    public Explosion(World world, Entity entity, double d0, double d1, double d2, float f) {
+    public Explosion(World world, @Nullable Entity entity, double d0, double d1, double d2, float f) {
         this.world = world;
         this.source = entity;
         this.size = f;

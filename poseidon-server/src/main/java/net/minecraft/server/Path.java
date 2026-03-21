@@ -1,8 +1,10 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class Path {
 
-    private PathPoint[] a = new PathPoint[1024];
+    private @Nullable PathPoint[] a = new PathPoint[1024];
     private int b = 0;
 
     public Path() {}

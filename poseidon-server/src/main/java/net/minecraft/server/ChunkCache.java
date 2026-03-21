@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class ChunkCache implements IBlockAccess {
 
     private int a;
@@ -42,7 +44,7 @@ public class ChunkCache implements IBlockAccess {
         }
     }
 
-    public TileEntity getTileEntity(int i, int j, int k) {
+    public @Nullable TileEntity getTileEntity(int i, int j, int k) {
         int l = (i >> 4) - this.a;
         int i1 = (k >> 4) - this.b;
 

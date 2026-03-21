@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,10 +18,10 @@ public class NetworkManager {
     public static int b;
     public static int c;
     private Object g = new Object();
-    public Socket socket; // CraftBukkit - private -> public
+    public @Nullable Socket socket; // CraftBukkit - private -> public
     private final SocketAddress i;
-    private DataInputStream input;
-    private DataOutputStream output;
+    private @Nullable DataInputStream input;
+    private @Nullable DataOutputStream output;
     private boolean l = true;
     private List<Packet> m = Collections.synchronizedList(new ArrayList<>());
     private List<Packet> highPriorityQueue = Collections.synchronizedList(new ArrayList<>());
@@ -30,7 +32,7 @@ public class NetworkManager {
     private Thread s;
     private boolean t = false;
     private String u = "";
-    private Object[] v;
+    private Object @Nullable [] v;
     private int w = 0;
     private int x = 0;
     public static int[] d = new int[256];

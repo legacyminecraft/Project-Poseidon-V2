@@ -1,8 +1,10 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class EntityList {
 
-    private transient EntityListEntry[] a = new EntityListEntry[16];
+    private transient @Nullable EntityListEntry[] a = new EntityListEntry[16];
     private transient int b;
     private int c = 12;
     private final float d = 0.75F;
@@ -19,7 +21,7 @@ public class EntityList {
         return i & j - 1;
     }
 
-    public Object a(int i) {
+    public @Nullable Object a(int i) {
         int j = g(i);
 
         for (EntityListEntry entitylistentry = this.a[a(j, this.a.length)]; entitylistentry != null; entitylistentry = entitylistentry.c) {
@@ -35,7 +37,7 @@ public class EntityList {
         return this.c(i) != null;
     }
 
-    final EntityListEntry c(int i) {
+    final @Nullable EntityListEntry c(int i) {
         int j = g(i);
 
         for (EntityListEntry entitylistentry = this.a[a(j, this.a.length)]; entitylistentry != null; entitylistentry = entitylistentry.c) {
@@ -62,7 +64,7 @@ public class EntityList {
     }
 
     private void h(int i) {
-        EntityListEntry[] aentitylistentry = this.a;
+        @Nullable EntityListEntry[] aentitylistentry = this.a;
         int j = aentitylistentry.length;
 
         if (j == 1073741824) {
@@ -77,7 +79,7 @@ public class EntityList {
     }
 
     private void a(EntityListEntry[] aentitylistentry) {
-        EntityListEntry[] aentitylistentry1 = this.a;
+        @Nullable EntityListEntry[] aentitylistentry1 = this.a;
         int i = aentitylistentry.length;
 
         for (int j = 0; j < aentitylistentry1.length; ++j) {
@@ -100,13 +102,13 @@ public class EntityList {
         }
     }
 
-    public Object d(int i) {
+    public @Nullable Object d(int i) {
         EntityListEntry entitylistentry = this.e(i);
 
         return entitylistentry == null ? null : entitylistentry.b;
     }
 
-    final EntityListEntry e(int i) {
+    final @Nullable EntityListEntry e(int i) {
         int j = g(i);
         int k = a(j, this.a.length);
         EntityListEntry entitylistentry = this.a[k];
@@ -136,7 +138,7 @@ public class EntityList {
 
     public void a() {
         ++this.e;
-        EntityListEntry[] aentitylistentry = this.a;
+        @Nullable EntityListEntry[] aentitylistentry = this.a;
 
         for (int i = 0; i < aentitylistentry.length; ++i) {
             aentitylistentry[i] = null;

@@ -1,13 +1,15 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 public class InventoryCrafting implements IInventory {
 
-    private ItemStack[] items;
+    private @Nullable ItemStack[] items;
     private int b;
     private Container c;
 
     // CraftBukkit start
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
     // CraftBukkit end
@@ -24,11 +26,11 @@ public class InventoryCrafting implements IInventory {
         return this.items.length;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return i >= this.getSize() ? null : this.items[i];
     }
 
-    public ItemStack b(int i, int j) {
+    public @Nullable ItemStack b(int i, int j) {
         if (i >= 0 && i < this.b) {
             int k = i + j * this.b;
 
@@ -42,7 +44,7 @@ public class InventoryCrafting implements IInventory {
         return "Crafting";
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         if (this.items[i] != null) {
             ItemStack itemstack;
 
@@ -65,7 +67,7 @@ public class InventoryCrafting implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         this.items[i] = itemstack;
         this.c.a(this);
     }

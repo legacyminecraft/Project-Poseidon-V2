@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class WorldChunkManager {
@@ -33,7 +35,7 @@ public class WorldChunkManager {
         return this.d;
     }
 
-    public double[] a(double[] adouble, int i, int j, int k, int l) {
+    public double[] a(double @Nullable [] adouble, int i, int j, int k, int l) {
         if (adouble == null || adouble.length < k * l) {
             adouble = new double[k * l];
         }
@@ -66,7 +68,7 @@ public class WorldChunkManager {
         return adouble;
     }
 
-    public BiomeBase[] a(BiomeBase[] abiomebase, int i, int j, int k, int l) {
+    public BiomeBase[] a(BiomeBase @Nullable [] abiomebase, int i, int j, int k, int l) {
         if (abiomebase == null || abiomebase.length < k * l) {
             abiomebase = new BiomeBase[k * l];
         }

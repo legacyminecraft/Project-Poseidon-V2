@@ -1,14 +1,16 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Random;
 
 public class TileEntityDispenser extends TileEntity implements IInventory {
 
-    private ItemStack[] items = new ItemStack[9];
+    private @Nullable ItemStack[] items = new ItemStack[9];
     private Random b = new Random();
 
     // CraftBukkit start
-    public ItemStack[] getContents() {
+    public @Nullable ItemStack[] getContents() {
         return this.items;
     }
     // CraftBukkit end
@@ -19,11 +21,11 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
         return 9;
     }
 
-    public ItemStack getItem(int i) {
+    public @Nullable ItemStack getItem(int i) {
         return this.items[i];
     }
 
-    public ItemStack splitStack(int i, int j) {
+    public @Nullable ItemStack splitStack(int i, int j) {
         if (this.items[i] != null) {
             ItemStack itemstack;
 
@@ -62,7 +64,7 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
         return i;
     }
 
-    public ItemStack b() {
+    public @Nullable ItemStack b() {
         int i = this.findDispenseSlot();
         // CraftBukkit end
 
@@ -73,7 +75,7 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
         }
     }
 
-    public void setItem(int i, ItemStack itemstack) {
+    public void setItem(int i, @Nullable ItemStack itemstack) {
         this.items[i] = itemstack;
         if (itemstack != null && itemstack.count > this.getMaxStackSize()) {
             itemstack.count = this.getMaxStackSize();
