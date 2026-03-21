@@ -28,7 +28,7 @@ public class EntityPainting extends Entity {
         this.b = i;
         this.c = j;
         this.d = k;
-        ArrayList arraylist = new ArrayList();
+        ArrayList<EnumArt> arraylist = new ArrayList<>();
         EnumArt[] aenumart = EnumArt.values();
         int i1 = aenumart.length;
 
@@ -43,7 +43,7 @@ public class EntityPainting extends Entity {
         }
 
         if (arraylist.size() > 0) {
-            this.e = (EnumArt) arraylist.get(this.random.nextInt(arraylist.size()));
+            this.e = arraylist.get(this.random.nextInt(arraylist.size()));
         }
 
         this.b(l);
@@ -105,10 +105,10 @@ public class EntityPainting extends Entity {
         }
 
         f4 += this.c(this.e.C);
-        this.setPosition((double) f3, (double) f4, (double) f5);
+        this.setPosition(f3, f4, f5);
         float f7 = -0.00625F;
 
-        this.boundingBox.c((double) (f3 - f - f7), (double) (f4 - f1 - f7), (double) (f5 - f2 - f7), (double) (f3 + f + f7), (double) (f4 + f1 + f7), (double) (f5 + f2 + f7));
+        this.boundingBox.c(f3 - f - f7, f4 - f1 - f7, f5 - f2 - f7, f3 + f + f7, f4 + f1 + f7, f5 + f2 + f7);
     }
 
     private float c(int i) {
@@ -180,7 +180,7 @@ public class EntityPainting extends Entity {
                 }
             }
 
-            List list = this.world.b((Entity) this, this.boundingBox);
+            List<Entity> list = this.world.b(this, this.boundingBox);
 
             for (j1 = 0; j1 < list.size(); ++j1) {
                 if (list.get(j1) instanceof EntityPainting) {

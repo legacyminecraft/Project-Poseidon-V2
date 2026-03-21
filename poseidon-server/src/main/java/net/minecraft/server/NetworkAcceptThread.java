@@ -18,7 +18,7 @@ class NetworkAcceptThread extends Thread {
     }
 
     public void run() {
-        HashMap hashmap = new HashMap();
+        HashMap<InetAddress, Long> hashmap = new HashMap<>();
 
         while (this.b.b) {
             try {
@@ -27,11 +27,11 @@ class NetworkAcceptThread extends Thread {
                 if (socket != null) {
                     InetAddress inetaddress = socket.getInetAddress();
 
-                    if (hashmap.containsKey(inetaddress) && !"127.0.0.1".equals(inetaddress.getHostAddress()) && System.currentTimeMillis() - ((Long) hashmap.get(inetaddress)).longValue() < 5000L) {
-                        hashmap.put(inetaddress, Long.valueOf(System.currentTimeMillis()));
+                    if (hashmap.containsKey(inetaddress) && !"127.0.0.1".equals(inetaddress.getHostAddress()) && System.currentTimeMillis() - hashmap.get(inetaddress) < 5000L) {
+                        hashmap.put(inetaddress, System.currentTimeMillis());
                         socket.close();
                     } else {
-                        hashmap.put(inetaddress, Long.valueOf(System.currentTimeMillis()));
+                        hashmap.put(inetaddress, System.currentTimeMillis());
                         NetLoginHandler netloginhandler = new NetLoginHandler(this.a, socket, "Connection #" + NetworkListenThread.b(this.b));
 
                         NetworkListenThread.a(this.b, netloginhandler);

@@ -3,7 +3,6 @@ package net.minecraft.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
@@ -50,7 +49,7 @@ public class ChunkLoader implements IChunkLoader {
         if (file1 != null && file1.exists()) {
             try {
                 FileInputStream fileinputstream = new FileInputStream(file1);
-                NBTTagCompound nbttagcompound = CompressedStreamTools.a((InputStream) fileinputstream);
+                NBTTagCompound nbttagcompound = CompressedStreamTools.a(fileinputstream);
 
                 if (!nbttagcompound.hasKey("Level")) {
                     System.out.println("Chunk file at " + i + "," + j + " is missing level data, skipping");
@@ -128,37 +127,37 @@ public class ChunkLoader implements IChunkLoader {
         chunk.q = false;
         NBTTagList nbttaglist = new NBTTagList();
 
-        Iterator iterator;
+        Iterator<Entity> iterator;
         NBTTagCompound nbttagcompound1;
 
         for (int i = 0; i < chunk.entitySlices.length; ++i) {
             iterator = chunk.entitySlices[i].iterator();
 
             while (iterator.hasNext()) {
-                Entity entity = (Entity) iterator.next();
+                Entity entity = iterator.next();
 
                 chunk.q = true;
                 nbttagcompound1 = new NBTTagCompound();
                 if (entity.c(nbttagcompound1)) {
-                    nbttaglist.a((NBTBase) nbttagcompound1);
+                    nbttaglist.a(nbttagcompound1);
                 }
             }
         }
 
-        nbttagcompound.a("Entities", (NBTBase) nbttaglist);
+        nbttagcompound.a("Entities", nbttaglist);
         NBTTagList nbttaglist1 = new NBTTagList();
 
-        iterator = chunk.tileEntities.values().iterator();
+        Iterator<TileEntity> iterator1 = chunk.tileEntities.values().iterator();
 
-        while (iterator.hasNext()) {
-            TileEntity tileentity = (TileEntity) iterator.next();
+        while (iterator1.hasNext()) {
+            TileEntity tileentity = iterator1.next();
 
             nbttagcompound1 = new NBTTagCompound();
             tileentity.b(nbttagcompound1);
-            nbttaglist1.a((NBTBase) nbttagcompound1);
+            nbttaglist1.a(nbttagcompound1);
         }
 
-        nbttagcompound.a("TileEntities", (NBTBase) nbttaglist1);
+        nbttagcompound.a("TileEntities", nbttaglist1);
     }
 
     public static Chunk a(World world, NBTTagCompound nbttagcompound) {

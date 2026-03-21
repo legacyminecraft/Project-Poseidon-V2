@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-public class ChunkCoordinates implements Comparable {
+public class ChunkCoordinates implements Comparable<ChunkCoordinates> {
 
     public int x;
     public int y;
@@ -34,8 +34,7 @@ public class ChunkCoordinates implements Comparable {
         return this.x + this.z << 8 + this.y << 16;
     }
 
-    public int compareTo(Object o) {
-    	ChunkCoordinates chunkcoordinates = (ChunkCoordinates) o;
+    public int compareTo(ChunkCoordinates chunkcoordinates) {
         return this.y == chunkcoordinates.y ? (this.z == chunkcoordinates.z ? this.x - chunkcoordinates.x : this.z - chunkcoordinates.z) : this.y - chunkcoordinates.y;
     }
 
@@ -44,6 +43,6 @@ public class ChunkCoordinates implements Comparable {
         int i1 = this.y - j;
         int j1 = this.z - k;
 
-        return Math.sqrt((double) (l * l + i1 * i1 + j1 * j1));
+        return Math.sqrt(l * l + i1 * i1 + j1 * j1);
     }
 }

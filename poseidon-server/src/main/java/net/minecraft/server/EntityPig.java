@@ -14,7 +14,7 @@ public class EntityPig extends EntityAnimal {
     }
 
     protected void b() {
-        this.datawatcher.a(16, Byte.valueOf((byte) 0));
+        this.datawatcher.a(16, (byte) 0);
     }
 
     public void b(NBTTagCompound nbttagcompound) {
@@ -58,9 +58,9 @@ public class EntityPig extends EntityAnimal {
 
     public void setSaddle(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(16, Byte.valueOf((byte) 1));
+            this.datawatcher.watch(16, (byte) 1);
         } else {
-            this.datawatcher.watch(16, Byte.valueOf((byte) 0));
+            this.datawatcher.watch(16, (byte) 0);
         }
     }
 
@@ -87,7 +87,7 @@ public class EntityPig extends EntityAnimal {
     protected void a(float f) {
         super.a(f);
         if (f > 5.0F && this.passenger instanceof EntityHuman) {
-            ((EntityHuman) this.passenger).a((Statistic) AchievementList.u);
+            ((EntityHuman) this.passenger).a(AchievementList.u);
         }
     }
 }

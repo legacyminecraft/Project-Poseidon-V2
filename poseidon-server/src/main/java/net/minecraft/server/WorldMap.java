@@ -19,9 +19,9 @@ public class WorldMap extends WorldMapBase {
     public byte e;
     public byte[] f = new byte[16384];
     public int g;
-    public List h = new ArrayList();
-    private Map j = new HashMap();
-    public List i = new ArrayList();
+    public List<WorldMapHumanTracker> h = new ArrayList<>();
+    private Map<EntityHuman, WorldMapHumanTracker> j = new HashMap<>();
+    public List<WorldMapOrienter> i = new ArrayList<>();
 
     // CraftBukkit start
     public final CraftMapView mapView;
@@ -141,7 +141,7 @@ public class WorldMap extends WorldMapBase {
         this.i.clear();
 
         for (int i = 0; i < this.h.size(); ++i) {
-            WorldMapHumanTracker worldmaphumantracker1 = (WorldMapHumanTracker) this.h.get(i);
+            WorldMapHumanTracker worldmaphumantracker1 = this.h.get(i);
 
             if (!worldmaphumantracker1.trackee.dead && worldmaphumantracker1.trackee.inventory.c(itemstack)) {
                 float f = (float) (worldmaphumantracker1.trackee.locX - (double) this.b) / (float) (1 << this.e);
@@ -174,7 +174,7 @@ public class WorldMap extends WorldMapBase {
     }
 
     public byte[] a(ItemStack itemstack, World world, EntityHuman entityhuman) {
-        WorldMapHumanTracker worldmaphumantracker = (WorldMapHumanTracker) this.j.get(entityhuman);
+        WorldMapHumanTracker worldmaphumantracker = this.j.get(entityhuman);
 
         if (worldmaphumantracker == null) {
             return null;
@@ -189,7 +189,7 @@ public class WorldMap extends WorldMapBase {
         super.a();
 
         for (int l = 0; l < this.h.size(); ++l) {
-            WorldMapHumanTracker worldmaphumantracker = (WorldMapHumanTracker) this.h.get(l);
+            WorldMapHumanTracker worldmaphumantracker = this.h.get(l);
 
             if (worldmaphumantracker.b[i] < 0 || worldmaphumantracker.b[i] > j) {
                 worldmaphumantracker.b[i] = j;

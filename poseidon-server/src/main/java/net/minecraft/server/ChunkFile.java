@@ -3,7 +3,7 @@ package net.minecraft.server;
 import java.io.File;
 import java.util.regex.Matcher;
 
-class ChunkFile implements Comparable {
+class ChunkFile implements Comparable<ChunkFile> {
 
     private final File a;
     private final int b;
@@ -22,8 +22,7 @@ class ChunkFile implements Comparable {
         }
     }
 
-    public int compareTo(Object o) {
-    	ChunkFile chunkfile = (ChunkFile) o;
+    public int compareTo(ChunkFile chunkfile) {
         int i = this.b >> 5;
         int j = chunkfile.b >> 5;
 

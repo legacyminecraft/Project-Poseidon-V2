@@ -107,12 +107,12 @@ public abstract class BlockFluids extends Block {
                     l1 = this.b(iblockaccess, j1, j - 1, k1);
                     if (l1 >= 0) {
                         i2 = l1 - (l - 8);
-                        vec3d = vec3d.add((double) ((j1 - i) * i2), (double) ((j - j) * i2), (double) ((k1 - k) * i2));
+                        vec3d = vec3d.add((j1 - i) * i2, (j - j) * i2, (k1 - k) * i2);
                     }
                 }
             } else if (l1 >= 0) {
                 i2 = l1 - l;
-                vec3d = vec3d.add((double) ((j1 - i) * i2), (double) ((j - j) * i2), (double) ((k1 - k) * i2));
+                vec3d = vec3d.add((j1 - i) * i2, (j - j) * i2, (k1 - k) * i2);
             }
         }
 
@@ -225,7 +225,7 @@ public abstract class BlockFluids extends Block {
     }
 
     protected void h(World world, int i, int j, int k) {
-        world.makeSound((double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F), "random.fizz", 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+        world.makeSound((float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, "random.fizz", 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
         for (int l = 0; l < 8; ++l) {
             world.a("largesmoke", (double) i + Math.random(), (double) j + 1.2D, (double) k + Math.random(), 0.0D, 0.0D, 0.0D);

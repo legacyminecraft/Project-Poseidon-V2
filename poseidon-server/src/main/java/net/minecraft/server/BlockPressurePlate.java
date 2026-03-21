@@ -75,18 +75,18 @@ public class BlockPressurePlate extends Block {
         boolean flag = world.getData(i, j, k) == 1;
         boolean flag1 = false;
         float f = 0.125F;
-        List list = null;
+        List<Entity> list = null;
 
         if (this.a == EnumMobType.EVERYTHING) {
-            list = world.b((Entity) null, AxisAlignedBB.b((double) ((float) i + f), (double) j, (double) ((float) k + f), (double) ((float) (i + 1) - f), (double) j + 0.25D, (double) ((float) (k + 1) - f)));
+            list = world.b(null, AxisAlignedBB.b((float) i + f, j, (float) k + f, (float) (i + 1) - f, (double) j + 0.25D, (float) (k + 1) - f));
         }
 
         if (this.a == EnumMobType.MOBS) {
-            list = world.a(EntityLiving.class, AxisAlignedBB.b((double) ((float) i + f), (double) j, (double) ((float) k + f), (double) ((float) (i + 1) - f), (double) j + 0.25D, (double) ((float) (k + 1) - f)));
+            list = world.a(EntityLiving.class, AxisAlignedBB.b((float) i + f, j, (float) k + f, (float) (i + 1) - f, (double) j + 0.25D, (float) (k + 1) - f));
         }
 
         if (this.a == EnumMobType.PLAYERS) {
-            list = world.a(EntityHuman.class, AxisAlignedBB.b((double) ((float) i + f), (double) j, (double) ((float) k + f), (double) ((float) (i + 1) - f), (double) j + 0.25D, (double) ((float) (k + 1) - f)));
+            list = world.a(EntityHuman.class, AxisAlignedBB.b((float) i + f, j, (float) k + f, (float) (i + 1) - f, (double) j + 0.25D, (float) (k + 1) - f));
         }
 
         if (list.size() > 0) {
@@ -99,17 +99,15 @@ public class BlockPressurePlate extends Block {
 
         if (flag != flag1) {
             if (flag1) {
-                for (Object object: list) {
+                for (Entity object : list) {
                     if (object != null) {
                         org.bukkit.event.Cancellable cancellable;
 
                         if (object instanceof EntityHuman) {
                             cancellable = CraftEventFactory.callPlayerInteractEvent((EntityHuman) object, org.bukkit.event.block.Action.PHYSICAL, i, j, k, -1, null);
-                        } else if (object instanceof Entity) {
-                            cancellable = new EntityInteractEvent(((Entity) object).getBukkitEntity(), bworld.getBlockAt(i, j, k));
-                            manager.callEvent((EntityInteractEvent) cancellable);
                         } else {
-                            continue;
+                            cancellable = new EntityInteractEvent(object.getBukkitEntity(), bworld.getBlockAt(i, j, k));
+                            manager.callEvent((EntityInteractEvent) cancellable);
                         }
                         if (cancellable.isCancelled()) {
                             return;

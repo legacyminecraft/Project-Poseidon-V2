@@ -52,10 +52,10 @@ public class EntityPigZombie extends EntityZombie {
 
     public boolean damageEntity(Entity entity, int i) {
         if (entity instanceof EntityHuman) {
-            List list = this.world.b((Entity) this, this.boundingBox.b(32.0D, 32.0D, 32.0D));
+            List<Entity> list = this.world.b(this, this.boundingBox.b(32.0D, 32.0D, 32.0D));
 
             for (int j = 0; j < list.size(); ++j) {
-                Entity entity1 = (Entity) list.get(j);
+                Entity entity1 = list.get(j);
 
                 if (entity1 instanceof EntityPigZombie) {
                     EntityPigZombie entitypigzombie = (EntityPigZombie) entity1;

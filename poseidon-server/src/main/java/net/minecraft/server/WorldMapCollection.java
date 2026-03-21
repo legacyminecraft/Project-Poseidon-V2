@@ -7,7 +7,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,17 +17,17 @@ import java.util.Map;
 public class WorldMapCollection {
 
     private IDataManager a;
-    private Map b = new HashMap();
-    private List c = new ArrayList();
-    private Map d = new HashMap();
+    private Map<String, WorldMapBase> b = new HashMap<>();
+    private List<WorldMapBase> c = new ArrayList<>();
+    private Map<String, Short> d = new HashMap<>();
 
     public WorldMapCollection(IDataManager idatamanager) {
         this.a = idatamanager;
         this.b();
     }
 
-    public WorldMapBase a(Class oclass, String s) {
-        WorldMapBase worldmapbase = (WorldMapBase) this.b.get(s);
+    public WorldMapBase a(Class<? extends WorldMapBase> oclass, String s) {
+        WorldMapBase worldmapbase = this.b.get(s);
 
         if (worldmapbase != null) {
             return worldmapbase;
@@ -39,13 +38,13 @@ public class WorldMapCollection {
 
                     if (file1 != null && file1.exists()) {
                         try {
-                            worldmapbase = (WorldMapBase) oclass.getConstructor(new Class[] { String.class}).newInstance(new Object[] { s});
+                            worldmapbase = oclass.getConstructor(new Class[] { String.class}).newInstance(new Object[] { s});
                         } catch (Exception exception) {
                             throw new RuntimeException("Failed to instantiate " + oclass.toString(), exception);
                         }
 
                         FileInputStream fileinputstream = new FileInputStream(file1);
-                        NBTTagCompound nbttagcompound = CompressedStreamTools.a((InputStream) fileinputstream);
+                        NBTTagCompound nbttagcompound = CompressedStreamTools.a(fileinputstream);
 
                         fileinputstream.close();
                         worldmapbase.a(nbttagcompound.k("data"));
@@ -79,7 +78,7 @@ public class WorldMapCollection {
 
     public void a() {
         for (int i = 0; i < this.c.size(); ++i) {
-            WorldMapBase worldmapbase = (WorldMapBase) this.c.get(i);
+            WorldMapBase worldmapbase = this.c.get(i);
 
             if (worldmapbase.b()) {
                 this.a(worldmapbase);
@@ -125,17 +124,17 @@ public class WorldMapCollection {
                 NBTTagCompound nbttagcompound = CompressedStreamTools.a((DataInput) datainputstream);
 
                 datainputstream.close();
-                Iterator iterator = nbttagcompound.c().iterator();
+                Iterator<NBTBase> iterator = nbttagcompound.c().iterator();
 
                 while (iterator.hasNext()) {
-                    NBTBase nbtbase = (NBTBase) iterator.next();
+                    NBTBase nbtbase = iterator.next();
 
                     if (nbtbase instanceof NBTTagShort) {
                         NBTTagShort nbttagshort = (NBTTagShort) nbtbase;
                         String s = nbttagshort.b();
                         short short1 = nbttagshort.a;
 
-                        this.d.put(s, Short.valueOf(short1));
+                        this.d.put(s, short1);
                     }
                 }
             }
@@ -145,28 +144,28 @@ public class WorldMapCollection {
     }
 
     public int a(String s) {
-        Short oshort = (Short) this.d.get(s);
+        Short oshort = this.d.get(s);
 
         if (oshort == null) {
-            oshort = Short.valueOf((short) 0);
+            oshort = (short) 0;
         } else {
-            oshort = Short.valueOf((short) (oshort.shortValue() + 1));
+            oshort = (short) (oshort + 1);
         }
 
         this.d.put(s, oshort);
         if (this.a == null) {
-            return oshort.shortValue();
+            return oshort;
         } else {
             try {
                 File file1 = this.a.b("idcounts");
 
                 if (file1 != null) {
                     NBTTagCompound nbttagcompound = new NBTTagCompound();
-                    Iterator iterator = this.d.keySet().iterator();
+                    Iterator<String> iterator = this.d.keySet().iterator();
 
                     while (iterator.hasNext()) {
-                        String s1 = (String) iterator.next();
-                        short short1 = ((Short) this.d.get(s1)).shortValue();
+                        String s1 = iterator.next();
+                        short short1 = this.d.get(s1);
 
                         nbttagcompound.a(s1, short1);
                     }
@@ -180,7 +179,7 @@ public class WorldMapCollection {
                 exception.printStackTrace();
             }
 
-            return oshort.shortValue();
+            return oshort;
         }
     }
 }

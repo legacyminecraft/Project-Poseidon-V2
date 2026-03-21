@@ -107,10 +107,10 @@ public class EntityWeatherStorm extends EntityWeather {
 
         if (this.lifeTicks >= 0 && !this.isEffect) { // CraftBukkit
             double d0 = 3.0D;
-            List list = this.world.b((Entity) this, AxisAlignedBB.b(this.locX - d0, this.locY - d0, this.locZ - d0, this.locX + d0, this.locY + 6.0D + d0, this.locZ + d0));
+            List<Entity> list = this.world.b(this, AxisAlignedBB.b(this.locX - d0, this.locY - d0, this.locZ - d0, this.locX + d0, this.locY + 6.0D + d0, this.locZ + d0));
 
             for (int l = 0; l < list.size(); ++l) {
-                Entity entity = (Entity) list.get(l);
+                Entity entity = list.get(l);
 
                 entity.a(this);
             }

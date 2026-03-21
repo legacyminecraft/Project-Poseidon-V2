@@ -73,11 +73,11 @@ public class WorldServer extends World implements BlockChangeDelegate {
         return this.chunkProviderServer;
     }
 
-    public List getTileEntities(int i, int j, int k, int l, int i1, int j1) {
-        ArrayList arraylist = new ArrayList();
+    public List<TileEntity> getTileEntities(int i, int j, int k, int l, int i1, int j1) {
+        ArrayList<TileEntity> arraylist = new ArrayList<>();
 
         for (int k1 = 0; k1 < this.c.size(); ++k1) {
-            TileEntity tileentity = (TileEntity) this.c.get(k1);
+            TileEntity tileentity = this.c.get(k1);
 
             if (tileentity.x >= i && tileentity.y >= j && tileentity.z >= k && tileentity.x < l && tileentity.y < i1 && tileentity.z < j1) {
                 arraylist.add(tileentity);
@@ -159,7 +159,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
     public void playNote(int i, int j, int k, int l, int i1) {
         super.playNote(i, j, k, l, i1);
         // CraftBukkit
-        this.server.serverConfigurationManager.sendPacketNearby((double) i, (double) j, (double) k, 64.0D, this.dimension, new Packet54PlayNoteBlock(i, j, k, l, i1));
+        this.server.serverConfigurationManager.sendPacketNearby(i, j, k, 64.0D, this.dimension, new Packet54PlayNoteBlock(i, j, k, l, i1));
     }
 
     public void saveLevel() {
@@ -173,7 +173,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
         if (flag != this.v()) {
             // CraftBukkit start - only sending weather packets to those affected
             for (int i = 0; i < this.players.size(); ++i) {
-                if (((EntityPlayer) this.players.get(i)).world == this) {
+                if (this.players.get(i).world == this) {
                     ((EntityPlayer) this.players.get(i)).netServerHandler.sendPacket(new Packet70Bed(flag ? 2 : 1));
                 }
             }

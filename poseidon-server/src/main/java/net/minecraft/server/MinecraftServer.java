@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 public class MinecraftServer implements Runnable, ICommandListener {
 
     public static Logger log = Logger.getLogger("Minecraft");
-    public static HashMap trackerList = new HashMap();
+    public static HashMap<String, Integer> trackerList = new HashMap<>();
     public NetworkListenThread networkListenThread;
     public PropertyManager propertyManager;
     // public WorldServer[] worldServer; // CraftBukkit - removed!
@@ -43,8 +43,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
     int ticks = 0;
     public String i;
     public int j;
-    private List r = new ArrayList();
-    private List s = Collections.synchronizedList(new ArrayList());
+    private List<IUpdatePlayerListBox> r = new ArrayList<>();
+    private List<ServerCommand> s = Collections.synchronizedList(new ArrayList<>());
     // public EntityTracker[] tracker = new EntityTracker[2]; // CraftBukkit - removed!
     public boolean onlineMode;
     public boolean spawnAnimals;
@@ -52,7 +52,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
     public boolean allowFlight;
 
     // CraftBukkit start
-    public List<WorldServer> worlds = new ArrayList<WorldServer>();
+    public List<WorldServer> worlds = new ArrayList<>();
     public CraftServer server;
     public OptionSet options;
     public ColouredConsoleSender console;
@@ -138,7 +138,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
             try {
                 k = Long.parseLong(s2);
             } catch (NumberFormatException numberformatexception) {
-                k = (long) s2.hashCode();
+                k = s2.hashCode();
             }
         }
 
@@ -290,7 +290,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
         for (int i = 0; i < this.worlds.size(); ++i) {
             WorldServer worldserver = this.worlds.get(i);
 
-            worldserver.save(true, (IProgressUpdate) null);
+            worldserver.save(true, null);
             worldserver.saveLevel();
 
             WorldSaveEvent event = new WorldSaveEvent(worldserver.getWorld());
@@ -398,15 +398,15 @@ public class MinecraftServer implements Runnable, ICommandListener {
     }
 
     private void h() {
-        ArrayList arraylist = new ArrayList();
-        Iterator iterator = trackerList.keySet().iterator();
+        ArrayList<String> arraylist = new ArrayList<>();
+        Iterator<String> iterator = trackerList.keySet().iterator();
 
         while (iterator.hasNext()) {
-            String s = (String) iterator.next();
-            int i = ((Integer) trackerList.get(s)).intValue();
+            String s = iterator.next();
+            int i = trackerList.get(s);
 
             if (i > 0) {
-                trackerList.put(s, Integer.valueOf(i - 1));
+                trackerList.put(s, i - 1);
             } else {
                 arraylist.add(s);
             }
@@ -431,7 +431,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
                 if (this.ticks % 20 == 0) {
                     // CraftBukkit start - only send timeupdates to the people in that world
                     for (int i = 0; i < this.serverConfigurationManager.players.size(); ++i) {
-                        EntityPlayer entityplayer = (EntityPlayer) this.serverConfigurationManager.players.get(i);
+                        EntityPlayer entityplayer = this.serverConfigurationManager.players.get(i);
                         entityplayer.netServerHandler.sendPacket(new Packet4UpdateTime(entityplayer.getPlayerTime())); // Add support for per player time
                     }
                     // CraftBukkit end
@@ -457,7 +457,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
         // CraftBukkit end
 
         for (j = 0; j < this.r.size(); ++j) {
-            ((IUpdatePlayerListBox) this.r.get(j)).a();
+            this.r.get(j).a();
         }
 
         try {
@@ -473,7 +473,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
     public void b() {
         while (this.s.size() > 0) {
-            ServerCommand servercommand = (ServerCommand) this.s.remove(0);
+            ServerCommand servercommand = this.s.remove(0);
 
             // CraftBukkit start - ServerCommand for preprocessing
             ServerCommandEvent event = new ServerCommandEvent(this.console, servercommand.command);

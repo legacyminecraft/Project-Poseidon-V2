@@ -138,20 +138,20 @@ public class BlockDispenser extends BlockContainer {
             if (itemstack.id == Item.ARROW.id) {
                 EntityArrow entityarrow = new EntityArrow(world, d0, d1, d2);
 
-                entityarrow.a((double) b0, 0.10000000149011612D, (double) b1, 1.1F, 6.0F);
+                entityarrow.a(b0, 0.10000000149011612D, b1, 1.1F, 6.0F);
                 entityarrow.fromPlayer = true;
                 world.addEntity(entityarrow);
                 world.e(1002, i, j, k, 0);
             } else if (itemstack.id == Item.EGG.id) {
                 EntityEgg entityegg = new EntityEgg(world, d0, d1, d2);
 
-                entityegg.a((double) b0, 0.10000000149011612D, (double) b1, 1.1F, 6.0F);
+                entityegg.a(b0, 0.10000000149011612D, b1, 1.1F, 6.0F);
                 world.addEntity(entityegg);
                 world.e(1002, i, j, k, 0);
             } else if (itemstack.id == Item.SNOW_BALL.id) {
                 EntitySnowball entitysnowball = new EntitySnowball(world, d0, d1, d2);
 
-                entitysnowball.a((double) b0, 0.10000000149011612D, (double) b1, 1.1F, 6.0F);
+                entitysnowball.a(b0, 0.10000000149011612D, b1, 1.1F, 6.0F);
                 world.addEntity(entitysnowball);
                 world.e(1002, i, j, k, 0);
             } else {
@@ -229,12 +229,12 @@ public class BlockDispenser extends BlockContainer {
                     }
 
                     itemstack.count -= i1;
-                    EntityItem entityitem = new EntityItem(world, (double) ((float) i + f), (double) ((float) j + f1), (double) ((float) k + f2), new ItemStack(itemstack.id, i1, itemstack.getData()));
+                    EntityItem entityitem = new EntityItem(world, (float) i + f, (float) j + f1, (float) k + f2, new ItemStack(itemstack.id, i1, itemstack.getData()));
                     float f3 = 0.05F;
 
-                    entityitem.motX = (double) ((float) this.a.nextGaussian() * f3);
-                    entityitem.motY = (double) ((float) this.a.nextGaussian() * f3 + 0.2F);
-                    entityitem.motZ = (double) ((float) this.a.nextGaussian() * f3);
+                    entityitem.motX = (float) this.a.nextGaussian() * f3;
+                    entityitem.motY = (float) this.a.nextGaussian() * f3 + 0.2F;
+                    entityitem.motZ = (float) this.a.nextGaussian() * f3;
                     world.addEntity(entityitem);
                 }
             }

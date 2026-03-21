@@ -195,7 +195,7 @@ public class BlockPiston extends Block {
         }
     }
 
-    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist) {
+    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList<AxisAlignedBB> arraylist) {
         this.a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         super.a(world, i, j, k, axisalignedbb, arraylist);
     }

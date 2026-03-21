@@ -24,9 +24,9 @@ public class EntityItem extends Entity {
         }
         // CraftBukkit end
         this.yaw = (float) (Math.random() * 360.0D);
-        this.motX = (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D));
+        this.motX = (float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D);
         this.motY = 0.20000000298023224D;
-        this.motZ = (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D));
+        this.motZ = (float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D);
     }
 
     protected boolean n() {
@@ -55,8 +55,8 @@ public class EntityItem extends Entity {
         this.motY -= 0.03999999910593033D;
         if (this.world.getMaterial(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ)) == Material.LAVA) {
             this.motY = 0.20000000298023224D;
-            this.motX = (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
-            this.motZ = (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+            this.motX = (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+            this.motZ = (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
             this.world.makeSound(this, "random.fizz", 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
         }
 
@@ -73,9 +73,9 @@ public class EntityItem extends Entity {
             }
         }
 
-        this.motX *= (double) f;
+        this.motX *= f;
         this.motY *= 0.9800000190734863D;
-        this.motZ *= (double) f;
+        this.motZ *= f;
         if (this.onGround) {
             this.motY *= -0.5D;
         }
@@ -92,7 +92,7 @@ public class EntityItem extends Entity {
     }
 
     protected void burn(int i) {
-        this.damageEntity((Entity) null, i);
+        this.damageEntity(null, i);
     }
 
     public boolean damageEntity(Entity entity, int i) {
@@ -143,11 +143,11 @@ public class EntityItem extends Entity {
 
             if (this.pickupDelay == 0 && entityhuman.inventory.pickup(this.itemStack)) {
                 if (this.itemStack.id == Block.LOG.id) {
-                    entityhuman.a((Statistic) AchievementList.g);
+                    entityhuman.a(AchievementList.g);
                 }
 
                 if (this.itemStack.id == Item.LEATHER.id) {
-                    entityhuman.a((Statistic) AchievementList.t);
+                    entityhuman.a(AchievementList.t);
                 }
 
                 this.world.makeSound(this, "random.pop", 0.2F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);

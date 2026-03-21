@@ -58,7 +58,7 @@ public abstract class EntityHuman extends EntityLiving {
         this.height = 1.62F;
         ChunkCoordinates chunkcoordinates = world.getSpawn();
 
-        this.setPositionRotation((double) chunkcoordinates.x + 0.5D, (double) (chunkcoordinates.y + 1), (double) chunkcoordinates.z + 0.5D, 0.0F, 0.0F);
+        this.setPositionRotation((double) chunkcoordinates.x + 0.5D, chunkcoordinates.y + 1, (double) chunkcoordinates.z + 0.5D, 0.0F, 0.0F);
         this.health = 20;
         this.U = "humanoid";
         this.T = 180.0F;
@@ -68,7 +68,7 @@ public abstract class EntityHuman extends EntityLiving {
 
     protected void b() {
         super.b();
-        this.datawatcher.a(16, Byte.valueOf((byte) 0));
+        this.datawatcher.a(16, (byte) 0);
     }
 
     public void m_() {
@@ -200,11 +200,11 @@ public abstract class EntityHuman extends EntityLiving {
         this.o += (f - this.o) * 0.4F;
         this.aj += (f1 - this.aj) * 0.8F;
         if (this.health > 0) {
-            List list = this.world.b((Entity) this, this.boundingBox.b(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.world.b(this, this.boundingBox.b(1.0D, 0.0D, 1.0D));
 
             if (list != null) {
                 for (int i = 0; i < list.size(); ++i) {
-                    Entity entity = (Entity) list.get(i);
+                    Entity entity = list.get(i);
 
                     if (!entity.dead) {
                         this.i(entity);
@@ -229,8 +229,8 @@ public abstract class EntityHuman extends EntityLiving {
 
         this.inventory.h();
         if (entity != null) {
-            this.motX = (double) (-MathHelper.cos((this.af + this.yaw) * 3.1415927F / 180.0F) * 0.1F);
-            this.motZ = (double) (-MathHelper.sin((this.af + this.yaw) * 3.1415927F / 180.0F) * 0.1F);
+            this.motX = -MathHelper.cos((this.af + this.yaw) * 3.1415927F / 180.0F) * 0.1F;
+            this.motZ = -MathHelper.sin((this.af + this.yaw) * 3.1415927F / 180.0F) * 0.1F;
         } else {
             this.motX = this.motZ = 0.0D;
         }
@@ -268,20 +268,20 @@ public abstract class EntityHuman extends EntityLiving {
                 f1 = this.random.nextFloat() * 0.5F;
                 float f2 = this.random.nextFloat() * 3.1415927F * 2.0F;
 
-                entityitem.motX = (double) (-MathHelper.sin(f2) * f1);
-                entityitem.motZ = (double) (MathHelper.cos(f2) * f1);
+                entityitem.motX = -MathHelper.sin(f2) * f1;
+                entityitem.motZ = MathHelper.cos(f2) * f1;
                 entityitem.motY = 0.20000000298023224D;
             } else {
                 f = 0.3F;
-                entityitem.motX = (double) (-MathHelper.sin(this.yaw / 180.0F * 3.1415927F) * MathHelper.cos(this.pitch / 180.0F * 3.1415927F) * f);
-                entityitem.motZ = (double) (MathHelper.cos(this.yaw / 180.0F * 3.1415927F) * MathHelper.cos(this.pitch / 180.0F * 3.1415927F) * f);
-                entityitem.motY = (double) (-MathHelper.sin(this.pitch / 180.0F * 3.1415927F) * f + 0.1F);
+                entityitem.motX = -MathHelper.sin(this.yaw / 180.0F * 3.1415927F) * MathHelper.cos(this.pitch / 180.0F * 3.1415927F) * f;
+                entityitem.motZ = MathHelper.cos(this.yaw / 180.0F * 3.1415927F) * MathHelper.cos(this.pitch / 180.0F * 3.1415927F) * f;
+                entityitem.motY = -MathHelper.sin(this.pitch / 180.0F * 3.1415927F) * f + 0.1F;
                 f = 0.02F;
                 f1 = this.random.nextFloat() * 3.1415927F * 2.0F;
                 f *= this.random.nextFloat();
-                entityitem.motX += Math.cos((double) f1) * (double) f;
-                entityitem.motY += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                entityitem.motZ += Math.sin((double) f1) * (double) f;
+                entityitem.motX += Math.cos(f1) * (double) f;
+                entityitem.motY += (this.random.nextFloat() - this.random.nextFloat()) * 0.1F;
+                entityitem.motZ += Math.sin(f1) * (double) f;
             }
 
             // CraftBukkit start
@@ -351,7 +351,7 @@ public abstract class EntityHuman extends EntityLiving {
 
     public void b(NBTTagCompound nbttagcompound) {
         super.b(nbttagcompound);
-        nbttagcompound.a("Inventory", (NBTBase) this.inventory.a(new NBTTagList()));
+        nbttagcompound.a("Inventory", this.inventory.a(new NBTTagList()));
         nbttagcompound.a("Dimension", this.dimension);
         nbttagcompound.a("Sleeping", this.sleeping);
         nbttagcompound.a("SleepTimer", (short) this.sleepTicks);
@@ -403,7 +403,7 @@ public abstract class EntityHuman extends EntityLiving {
             if (i == 0) {
                 return false;
             } else {
-                Object object = entity;
+                Entity object = entity;
 
                 if (entity instanceof EntityArrow && ((EntityArrow) entity).shooter != null) {
                     object = ((EntityArrow) entity).shooter;
@@ -415,7 +415,7 @@ public abstract class EntityHuman extends EntityLiving {
 
                     // We handle projectiles in their individual classes!
                     if (!(entity.getBukkitEntity() instanceof Projectile)) {
-                        org.bukkit.entity.Entity damager = ((Entity) object).getBukkitEntity();
+                        org.bukkit.entity.Entity damager = object.getBukkitEntity();
                         org.bukkit.entity.Entity damagee = this.getBukkitEntity();
 
                         EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, EntityDamageEvent.DamageCause.ENTITY_ATTACK, i);
@@ -453,11 +453,11 @@ public abstract class EntityHuman extends EntityLiving {
             }
 
             if (!(entityliving instanceof EntityHuman) || this.j_()) {
-                List list = this.world.a(EntityWolf.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).b(16.0D, 4.0D, 16.0D));
-                Iterator iterator = list.iterator();
+                List<Entity> list = this.world.a(EntityWolf.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).b(16.0D, 4.0D, 16.0D));
+                Iterator<Entity> iterator = list.iterator();
 
                 while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
+                    Entity entity = iterator.next();
                     EntityWolf entitywolf1 = (EntityWolf) entity;
 
                     if (entitywolf1.isTamed() && entitywolf1.F() == null && this.name.equals(entitywolf1.getOwnerName()) && (!flag || !entitywolf1.isSitting())) {
@@ -521,11 +521,11 @@ public abstract class EntityHuman extends EntityLiving {
     }
 
     public void H() {
-        this.inventory.setItem(this.inventory.itemInHandIndex, (ItemStack) null);
+        this.inventory.setItem(this.inventory.itemInHandIndex, null);
     }
 
     public double I() {
-        return (double) (this.height - 0.5F);
+        return this.height - 0.5F;
     }
 
     public void w() {
@@ -657,9 +657,9 @@ public abstract class EntityHuman extends EntityLiving {
             }
 
             this.e(i1);
-            this.setPosition((double) ((float) i + f), (double) ((float) j + 0.9375F), (double) ((float) k + f1));
+            this.setPosition((float) i + f, (float) j + 0.9375F, (float) k + f1);
         } else {
-            this.setPosition((double) ((float) i + 0.5F), (double) ((float) j + 0.9375F), (double) ((float) k + 0.5F));
+            this.setPosition((float) i + 0.5F, (float) j + 0.9375F, (float) k + 0.5F);
         }
 
         this.sleeping = true;
@@ -707,7 +707,7 @@ public abstract class EntityHuman extends EntityLiving {
                 chunkcoordinates1 = new ChunkCoordinates(chunkcoordinates.x, chunkcoordinates.y + 1, chunkcoordinates.z);
             }
 
-            this.setPosition((double) ((float) chunkcoordinates1.x + 0.5F), (double) ((float) chunkcoordinates1.y + this.height + 0.1F), (double) ((float) chunkcoordinates1.z + 0.5F));
+            this.setPosition((float) chunkcoordinates1.x + 0.5F, (float) chunkcoordinates1.y + this.height + 0.1F, (float) chunkcoordinates1.z + 0.5F);
         }
 
         this.sleeping = false;
@@ -868,7 +868,7 @@ public abstract class EntityHuman extends EntityLiving {
 
     public void a(EntityLiving entityliving) {
         if (entityliving instanceof EntityMonster) {
-            this.a((Statistic) AchievementList.s);
+            this.a(AchievementList.s);
         }
     }
 

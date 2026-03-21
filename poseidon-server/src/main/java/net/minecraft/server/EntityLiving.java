@@ -120,7 +120,7 @@ public abstract class EntityLiving extends Entity {
             this.world.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                this.damageEntity((Entity) null, event.getDamage());
+                this.damageEntity(null, event.getDamage());
             }
             // CraftBukkit end
         }
@@ -149,7 +149,7 @@ public abstract class EntityLiving extends Entity {
                 this.world.getServer().getPluginManager().callEvent(event);
 
                 if (!event.isCancelled() && event.getDamage() != 0) {
-                    this.damageEntity((Entity) null, event.getDamage());
+                    this.damageEntity(null, event.getDamage());
                 }
                 // CraftBukkit end
             }
@@ -452,7 +452,7 @@ public abstract class EntityLiving extends Entity {
         int i = this.j();
 
         // CraftBukkit start - whole method
-        List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<org.bukkit.inventory.ItemStack>();
+        List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<>();
         int count = this.random.nextInt(3);
 
         if ((i > 0) && (count > 0)) {
@@ -476,7 +476,7 @@ public abstract class EntityLiving extends Entity {
 
     protected void a(float f) {
         super.a(f);
-        int i = (int) Math.ceil((double) (f - 3.0F));
+        int i = (int) Math.ceil(f - 3.0F);
 
         if (i > 0) {
             // CraftBukkit start
@@ -484,7 +484,7 @@ public abstract class EntityLiving extends Entity {
             this.world.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled() && event.getDamage() != 0) {
-                this.damageEntity((Entity) null, event.getDamage());
+                this.damageEntity(null, event.getDamage());
             }
             // CraftBukkit end
 
@@ -552,19 +552,19 @@ public abstract class EntityLiving extends Entity {
                 float f4 = 0.15F;
 
                 if (this.motX < (double) (-f4)) {
-                    this.motX = (double) (-f4);
+                    this.motX = -f4;
                 }
 
                 if (this.motX > (double) f4) {
-                    this.motX = (double) f4;
+                    this.motX = f4;
                 }
 
                 if (this.motZ < (double) (-f4)) {
-                    this.motZ = (double) (-f4);
+                    this.motZ = -f4;
                 }
 
                 if (this.motZ > (double) f4) {
-                    this.motZ = (double) f4;
+                    this.motZ = f4;
                 }
 
                 this.fallDistance = 0.0F;
@@ -584,8 +584,8 @@ public abstract class EntityLiving extends Entity {
 
             this.motY -= 0.08D;
             this.motY *= 0.9800000190734863D;
-            this.motX *= (double) f2;
-            this.motZ *= (double) f2;
+            this.motX *= f2;
+            this.motZ *= f2;
         }
 
         this.an = this.ao;
@@ -656,13 +656,13 @@ public abstract class EntityLiving extends Entity {
             --this.aq;
             this.setPosition(d0, d1, d2);
             this.c(this.yaw, this.pitch);
-            List list = this.world.getEntities(this, this.boundingBox.shrink(0.03125D, 0.0D, 0.03125D));
+            List<AxisAlignedBB> list = this.world.getEntities(this, this.boundingBox.shrink(0.03125D, 0.0D, 0.03125D));
 
             if (list.size() > 0) {
                 double d4 = 0.0D;
 
                 for (int i = 0; i < list.size(); ++i) {
-                    AxisAlignedBB axisalignedbb = (AxisAlignedBB) list.get(i);
+                    AxisAlignedBB axisalignedbb = list.get(i);
 
                     if (axisalignedbb.e > d4) {
                         d4 = axisalignedbb.e;
@@ -700,11 +700,11 @@ public abstract class EntityLiving extends Entity {
         this.aA *= 0.98F;
         this.aB *= 0.9F;
         this.a(this.az, this.aA);
-        List list1 = this.world.b((Entity) this, this.boundingBox.b(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+        List<Entity> list1 = this.world.b(this, this.boundingBox.b(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
         if (list1 != null && list1.size() > 0) {
             for (int j = 0; j < list1.size(); ++j) {
-                Entity entity = (Entity) list1.get(j);
+                Entity entity = list1.get(j);
 
                 if (entity.d_()) {
                     entity.collide(this);
@@ -758,7 +758,7 @@ public abstract class EntityLiving extends Entity {
         float f = 8.0F;
 
         if (this.random.nextFloat() < 0.02F) {
-            entityhuman = this.world.findNearbyPlayer(this, (double) f);
+            entityhuman = this.world.findNearbyPlayer(this, f);
             if (entityhuman != null) {
                 this.b = entityhuman;
                 this.aF = 10 + this.random.nextInt(20);
@@ -806,7 +806,7 @@ public abstract class EntityLiving extends Entity {
             d2 = (entity.boundingBox.b + entity.boundingBox.e) / 2.0D - (this.locY + (double) this.t());
         }
 
-        double d3 = (double) MathHelper.a(d0 * d0 + d1 * d1);
+        double d3 = MathHelper.a(d0 * d0 + d1 * d1);
         float f2 = (float) (Math.atan2(d1, d0) * 180.0D / 3.1415927410125732D) - 90.0F;
         float f3 = (float) (-(Math.atan2(d2, d3) * 180.0D / 3.1415927410125732D));
 
@@ -859,7 +859,7 @@ public abstract class EntityLiving extends Entity {
             return;
         }
 
-        this.damageEntity((Entity) null, event.getDamage());
+        this.damageEntity(null, event.getDamage());
         // CraftBukkit end
     }
 
@@ -878,7 +878,7 @@ public abstract class EntityLiving extends Entity {
             f2 = MathHelper.sin(-this.yaw * 0.017453292F - 3.1415927F);
             f3 = -MathHelper.cos(-this.pitch * 0.017453292F);
             f4 = MathHelper.sin(-this.pitch * 0.017453292F);
-            return Vec3D.create((double) (f2 * f3), (double) f4, (double) (f1 * f3));
+            return Vec3D.create(f2 * f3, f4, f1 * f3);
         } else {
             f1 = this.lastPitch + (this.pitch - this.lastPitch) * f;
             f2 = this.lastYaw + (this.yaw - this.lastYaw) * f;
@@ -887,7 +887,7 @@ public abstract class EntityLiving extends Entity {
             float f5 = -MathHelper.cos(-f1 * 0.017453292F);
             float f6 = MathHelper.sin(-f1 * 0.017453292F);
 
-            return Vec3D.create((double) (f4 * f5), (double) f6, (double) (f3 * f5));
+            return Vec3D.create(f4 * f5, f6, f3 * f5);
         }
     }
 

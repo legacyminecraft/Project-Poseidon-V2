@@ -38,8 +38,8 @@ public class WorldChunkManager {
             adouble = new double[k * l];
         }
 
-        adouble = this.e.a(adouble, (double) i, (double) j, k, l, 0.02500000037252903D, 0.02500000037252903D, 0.25D);
-        this.c = this.g.a(this.c, (double) i, (double) j, k, l, 0.25D, 0.25D, 0.5882352941176471D);
+        adouble = this.e.a(adouble, i, j, k, l, 0.02500000037252903D, 0.02500000037252903D, 0.25D);
+        this.c = this.g.a(this.c, i, j, k, l, 0.25D, 0.25D, 0.5882352941176471D);
         int i1 = 0;
 
         for (int j1 = 0; j1 < k; ++j1) {
@@ -71,9 +71,9 @@ public class WorldChunkManager {
             abiomebase = new BiomeBase[k * l];
         }
 
-        this.temperature = this.e.a(this.temperature, (double) i, (double) j, k, k, 0.02500000037252903D, 0.02500000037252903D, 0.25D);
-        this.rain = this.f.a(this.rain, (double) i, (double) j, k, k, 0.05000000074505806D, 0.05000000074505806D, 0.3333333333333333D);
-        this.c = this.g.a(this.c, (double) i, (double) j, k, k, 0.25D, 0.25D, 0.5882352941176471D);
+        this.temperature = this.e.a(this.temperature, i, j, k, k, 0.02500000037252903D, 0.02500000037252903D, 0.25D);
+        this.rain = this.f.a(this.rain, i, j, k, k, 0.05000000074505806D, 0.05000000074505806D, 0.3333333333333333D);
+        this.c = this.g.a(this.c, i, j, k, k, 0.25D, 0.25D, 0.5882352941176471D);
         int i1 = 0;
 
         for (int j1 = 0; j1 < k; ++j1) {
@@ -115,7 +115,7 @@ public class WorldChunkManager {
 
     // CraftBukkit start
     public double getHumidity(int x, int z) {
-        return this.f.a(this.rain, (double)x, (double)z, 1, 1, 0.05000000074505806D, 0.05000000074505806D, 0.3333333333333333D)[0];
+        return this.f.a(this.rain, x, z, 1, 1, 0.05000000074505806D, 0.05000000074505806D, 0.3333333333333333D)[0];
     }
     // CraftBukkit end
 }

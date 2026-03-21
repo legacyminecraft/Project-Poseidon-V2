@@ -29,15 +29,15 @@ import java.util.UUID;
 public class World implements IBlockAccess {
 
     public boolean a = false;
-    private List C = new ArrayList();
-    public List entityList = new ArrayList();
-    private List D = new ArrayList();
-    private TreeSet E = new TreeSet();
-    private Set F = new HashSet();
-    public List c = new ArrayList();
-    private List G = new ArrayList();
-    public List players = new ArrayList();
-    public List e = new ArrayList();
+    private List<MetadataChunkBlock> C = new ArrayList<>();
+    public List<Entity> entityList = new ArrayList<>();
+    private List<Entity> D = new ArrayList<>();
+    private TreeSet<NextTickListEntry> E = new TreeSet<>();
+    private Set<NextTickListEntry> F = new HashSet<>();
+    public List<TileEntity> c = new ArrayList<>();
+    private List<TileEntity> G = new ArrayList<>();
+    public List<EntityHuman> players = new ArrayList<>();
+    public List<Entity> e = new ArrayList<>();
     private long H = 16777215L;
     public int f = 0;
     protected int g = (new Random()).nextInt();
@@ -55,22 +55,22 @@ public class World implements IBlockAccess {
     public Random random = new Random();
     public boolean s = false;
     public WorldProvider worldProvider; // CraftBukkit - remove final
-    protected List u = new ArrayList();
+    protected List<IWorldAccess> u = new ArrayList<>();
     public IChunkProvider chunkProvider; // CraftBukkit - protected -> public
     protected final IDataManager w;
     public WorldData worldData; // CraftBukkit - protected -> public
     public boolean isLoading;
     private boolean J;
     public WorldMapCollection worldMaps;
-    private ArrayList K = new ArrayList();
+    private ArrayList<AxisAlignedBB> K = new ArrayList<>();
     private boolean L;
     private int M = 0;
     public boolean allowMonsters = true; // CraftBukkit - private -> public
     public boolean allowAnimals = true; // CraftBukkit - private -> public
     static int A = 0;
-    private Set P = new HashSet();
+    private Set<ChunkCoordIntPair> P = new HashSet<>();
     private int Q;
-    private List R;
+    private List<Entity> R;
     public boolean isStatic;
 
     public WorldChunkManager getWorldChunkManager() {
@@ -112,11 +112,11 @@ public class World implements IBlockAccess {
     public World(IDataManager idatamanager, String s, long i, WorldProvider worldprovider, ChunkGenerator gen, org.bukkit.World.Environment env) {
         this.generator = gen;
         this.world = new CraftWorld((WorldServer) this, gen, env);
-        tileEntitiesToUnload = new ArrayList<TileEntity>();
+        tileEntitiesToUnload = new ArrayList<>();
         // CraftBukkit end
 
         this.Q = this.random.nextInt(12000);
-        this.R = new ArrayList();
+        this.R = new ArrayList<>();
         this.isStatic = false;
         this.w = idatamanager;
         this.worldMaps = new WorldMapCollection(idatamanager);
@@ -167,10 +167,10 @@ public class World implements IBlockAccess {
         // CraftBukkit start
         if (this.generator != null) {
             Random rand = new Random(this.getSeed());
-            Location spawn = this.generator.getFixedSpawnLocation(((WorldServer) this).getWorld(), rand);
+            Location spawn = this.generator.getFixedSpawnLocation(this.getWorld(), rand);
 
             if (spawn != null) {
-                if (spawn.getWorld() != ((WorldServer) this).getWorld()) {
+                if (spawn.getWorld() != this.getWorld()) {
                     throw new IllegalStateException("Cannot set spawn point for " + this.worldData.name + " to be in another world (" + spawn.getWorld().getName() + ")");
                 } else {
                     this.worldData.setSpawn(spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ());
@@ -395,7 +395,7 @@ public class World implements IBlockAccess {
 
     public void notify(int i, int j, int k) {
         for (int l = 0; l < this.u.size(); ++l) {
-            ((IWorldAccess) this.u.get(l)).a(i, j, k);
+            this.u.get(l).a(i, j, k);
         }
     }
 
@@ -417,13 +417,13 @@ public class World implements IBlockAccess {
 
     public void i(int i, int j, int k) {
         for (int l = 0; l < this.u.size(); ++l) {
-            ((IWorldAccess) this.u.get(l)).a(i, j, k, i, j, k);
+            this.u.get(l).a(i, j, k, i, j, k);
         }
     }
 
     public void b(int i, int j, int k, int l, int i1, int j1) {
         for (int k1 = 0; k1 < this.u.size(); ++k1) {
-            ((IWorldAccess) this.u.get(k1)).a(i, j, k, l, i1, j1);
+            this.u.get(k1).a(i, j, k, l, i1, j1);
         }
     }
 
@@ -442,7 +442,7 @@ public class World implements IBlockAccess {
 
             if (block != null) {
                 // CraftBukkit start
-                CraftWorld world = ((WorldServer) this).getWorld();
+                CraftWorld world = this.getWorld();
                 if (world != null) {
                     BlockPhysicsEvent event = new BlockPhysicsEvent(world.getBlockAt(i, j, k), l);
                     this.getServer().getPluginManager().callEvent(event);
@@ -619,7 +619,7 @@ public class World implements IBlockAccess {
                         chunk.a(enumskyblock, i & 15, j, k & 15, l);
 
                         for (int i1 = 0; i1 < this.u.size(); ++i1) {
-                            ((IWorldAccess) this.u.get(i1)).a(i, j, k);
+                            this.u.get(i1).a(i, j, k);
                         }
                     }
                 }
@@ -762,19 +762,19 @@ public class World implements IBlockAccess {
 
                     Vec3D vec3d2 = Vec3D.create(vec3d.a, vec3d.b, vec3d.c);
 
-                    l = (int) (vec3d2.a = (double) MathHelper.floor(vec3d.a));
+                    l = (int) (vec3d2.a = MathHelper.floor(vec3d.a));
                     if (b0 == 5) {
                         --l;
                         ++vec3d2.a;
                     }
 
-                    i1 = (int) (vec3d2.b = (double) MathHelper.floor(vec3d.b));
+                    i1 = (int) (vec3d2.b = MathHelper.floor(vec3d.b));
                     if (b0 == 1) {
                         --i1;
                         ++vec3d2.b;
                     }
 
-                    j1 = (int) (vec3d2.c = (double) MathHelper.floor(vec3d.c));
+                    j1 = (int) (vec3d2.c = MathHelper.floor(vec3d.c));
                     if (b0 == 3) {
                         --j1;
                         ++vec3d2.c;
@@ -804,25 +804,25 @@ public class World implements IBlockAccess {
 
     public void makeSound(Entity entity, String s, float f, float f1) {
         for (int i = 0; i < this.u.size(); ++i) {
-            ((IWorldAccess) this.u.get(i)).a(s, entity.locX, entity.locY - (double) entity.height, entity.locZ, f, f1);
+            this.u.get(i).a(s, entity.locX, entity.locY - (double) entity.height, entity.locZ, f, f1);
         }
     }
 
     public void makeSound(double d0, double d1, double d2, String s, float f, float f1) {
         for (int i = 0; i < this.u.size(); ++i) {
-            ((IWorldAccess) this.u.get(i)).a(s, d0, d1, d2, f, f1);
+            this.u.get(i).a(s, d0, d1, d2, f, f1);
         }
     }
 
     public void a(String s, int i, int j, int k) {
         for (int l = 0; l < this.u.size(); ++l) {
-            ((IWorldAccess) this.u.get(l)).a(s, i, j, k);
+            this.u.get(l).a(s, i, j, k);
         }
     }
 
     public void a(String s, double d0, double d1, double d2, double d3, double d4, double d5) {
         for (int i = 0; i < this.u.size(); ++i) {
-            ((IWorldAccess) this.u.get(i)).a(s, d0, d1, d2, d3, d4, d5);
+            this.u.get(i).a(s, d0, d1, d2, d3, d4, d5);
         }
     }
 
@@ -881,23 +881,23 @@ public class World implements IBlockAccess {
 
     protected void c(Entity entity) {
         for (int i = 0; i < this.u.size(); ++i) {
-            ((IWorldAccess) this.u.get(i)).a(entity);
+            this.u.get(i).a(entity);
         }
     }
 
     protected void d(Entity entity) {
         for (int i = 0; i < this.u.size(); ++i) {
-            ((IWorldAccess) this.u.get(i)).b(entity);
+            this.u.get(i).b(entity);
         }
     }
 
     public void kill(Entity entity) {
         if (entity.passenger != null) {
-            entity.passenger.mount((Entity) null);
+            entity.passenger.mount(null);
         }
 
         if (entity.vehicle != null) {
-            entity.mount((Entity) null);
+            entity.mount(null);
         }
 
         entity.die();
@@ -929,7 +929,7 @@ public class World implements IBlockAccess {
         this.u.add(iworldaccess);
     }
 
-    public List getEntities(Entity entity, AxisAlignedBB axisalignedbb) {
+    public List<AxisAlignedBB> getEntities(Entity entity, AxisAlignedBB axisalignedbb) {
         this.K.clear();
         int i = MathHelper.floor(axisalignedbb.a);
         int j = MathHelper.floor(axisalignedbb.d + 1.0D);
@@ -953,16 +953,16 @@ public class World implements IBlockAccess {
         }
 
         double d0 = 0.25D;
-        List list = this.b(entity, axisalignedbb.b(d0, d0, d0));
+        List<Entity> list = this.b(entity, axisalignedbb.b(d0, d0, d0));
 
         for (int j2 = 0; j2 < list.size(); ++j2) {
-            AxisAlignedBB axisalignedbb1 = ((Entity) list.get(j2)).e_();
+            AxisAlignedBB axisalignedbb1 = list.get(j2).e_();
 
             if (axisalignedbb1 != null && axisalignedbb1.a(axisalignedbb)) {
                 this.K.add(axisalignedbb1);
             }
 
-            axisalignedbb1 = entity.a_((Entity) list.get(j2));
+            axisalignedbb1 = entity.a_(list.get(j2));
             if (axisalignedbb1 != null && axisalignedbb1.a(axisalignedbb)) {
                 this.K.add(axisalignedbb1);
             }
@@ -1060,7 +1060,7 @@ public class World implements IBlockAccess {
         Entity entity;
 
         for (i = 0; i < this.e.size(); ++i) {
-            entity = (Entity) this.e.get(i);
+            entity = this.e.get(i);
             // CraftBukkit start - fixed an NPE
             if (entity == null) {
                 continue;
@@ -1078,7 +1078,7 @@ public class World implements IBlockAccess {
         int k;
 
         for (i = 0; i < this.D.size(); ++i) {
-            entity = (Entity) this.D.get(i);
+            entity = this.D.get(i);
             j = entity.bH;
             k = entity.bJ;
             if (entity.bG && this.isChunkLoaded(j, k)) {
@@ -1087,13 +1087,13 @@ public class World implements IBlockAccess {
         }
 
         for (i = 0; i < this.D.size(); ++i) {
-            this.d((Entity) this.D.get(i));
+            this.d(this.D.get(i));
         }
 
         this.D.clear();
 
         for (i = 0; i < this.entityList.size(); ++i) {
-            entity = (Entity) this.entityList.get(i);
+            entity = this.entityList.get(i);
             if (entity.vehicle != null) {
                 if (!entity.vehicle.dead && entity.vehicle.passenger == entity) {
                     continue;
@@ -1120,10 +1120,10 @@ public class World implements IBlockAccess {
         }
 
         this.L = true;
-        Iterator iterator = this.c.iterator();
+        Iterator<TileEntity> iterator = this.c.iterator();
 
         while (iterator.hasNext()) {
-            TileEntity tileentity = (TileEntity) iterator.next();
+            TileEntity tileentity = iterator.next();
 
             if (!tileentity.g()) {
                 tileentity.g_();
@@ -1149,10 +1149,10 @@ public class World implements IBlockAccess {
         // Craftbukkit end
 
         if (!this.G.isEmpty()) {
-            Iterator iterator1 = this.G.iterator();
+            Iterator<TileEntity> iterator1 = this.G.iterator();
 
             while (iterator1.hasNext()) {
-                TileEntity tileentity1 = (TileEntity) iterator1.next();
+                TileEntity tileentity1 = iterator1.next();
 
                 if (!tileentity1.g()) {
                     // CraftBukkit - order matters, moved down
@@ -1179,7 +1179,7 @@ public class World implements IBlockAccess {
         }
     }
 
-    public void a(Collection collection) {
+    public void a(Collection<TileEntity> collection) {
         if (this.L) {
             this.G.addAll(collection);
         } else {
@@ -1222,11 +1222,11 @@ public class World implements IBlockAccess {
                 entity.locZ = entity.bq;
             }
 
-            if (Double.isNaN((double) entity.pitch) || Double.isInfinite((double) entity.pitch)) {
+            if (Double.isNaN(entity.pitch) || Double.isInfinite(entity.pitch)) {
                 entity.pitch = entity.lastPitch;
             }
 
-            if (Double.isNaN((double) entity.yaw) || Double.isInfinite((double) entity.yaw)) {
+            if (Double.isNaN(entity.yaw) || Double.isInfinite(entity.yaw)) {
                 entity.yaw = entity.lastYaw;
             }
 
@@ -1259,10 +1259,10 @@ public class World implements IBlockAccess {
     }
 
     public boolean containsEntity(AxisAlignedBB axisalignedbb) {
-        List list = this.b((Entity) null, axisalignedbb);
+        List<Entity> list = this.b(null, axisalignedbb);
 
         for (int i = 0; i < list.size(); ++i) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
 
             if (!entity.dead && entity.aI) {
                 return false;
@@ -1387,7 +1387,7 @@ public class World implements IBlockAccess {
                         Block block = Block.byId[this.getTypeId(k1, l1, i2)];
 
                         if (block != null && block.material == material) {
-                            double d0 = (double) ((float) (l1 + 1) - BlockFluids.c(this.getData(k1, l1, i2)));
+                            double d0 = (float) (l1 + 1) - BlockFluids.c(this.getData(k1, l1, i2));
 
                             if ((double) l >= d0) {
                                 flag = true;
@@ -1449,7 +1449,7 @@ public class World implements IBlockAccess {
 
                     if (block != null && block.material == material) {
                         int j2 = this.getData(k1, l1, i2);
-                        double d0 = (double) (l1 + 1);
+                        double d0 = l1 + 1;
 
                         if (j2 < 8) {
                             d0 = (double) (l1 + 1) - (double) j2 / 8.0D;
@@ -1610,7 +1610,7 @@ public class World implements IBlockAccess {
                         return flag;
                     }
 
-                    ((MetadataChunkBlock) this.C.remove(this.C.size() - 1)).a(this);
+                    this.C.remove(this.C.size() - 1).a(this);
                 }
 
                 flag = false;
@@ -1653,7 +1653,7 @@ public class World implements IBlockAccess {
                         }
 
                         for (int k2 = 0; k2 < j2; ++k2) {
-                            MetadataChunkBlock metadatachunkblock = (MetadataChunkBlock) this.C.get(this.C.size() - k2 - 1);
+                            MetadataChunkBlock metadatachunkblock = this.C.get(this.C.size() - k2 - 1);
 
                             if (metadatachunkblock.a == enumskyblock && metadatachunkblock.a(i, j, k, l, i1, j1)) {
                                 return;
@@ -1720,13 +1720,13 @@ public class World implements IBlockAccess {
             this.f = j;
 
             for (int k = 0; k < this.u.size(); ++k) {
-                ((IWorldAccess) this.u.get(k)).a();
+                this.u.get(k).a();
             }
         }
 
         i = this.worldData.f() + 1L;
         if (i % (long) this.p == 0L) {
-            this.save(false, (IProgressUpdate) null);
+            this.save(false, null);
         }
 
         this.worldData.a(i);
@@ -1853,7 +1853,7 @@ public class World implements IBlockAccess {
         int l;
 
         for (int i1 = 0; i1 < this.players.size(); ++i1) {
-            EntityHuman entityhuman = (EntityHuman) this.players.get(i1);
+            EntityHuman entityhuman = this.players.get(i1);
 
             i = MathHelper.floor(entityhuman.locX / 16.0D);
             j = MathHelper.floor(entityhuman.locZ / 16.0D);
@@ -1870,10 +1870,10 @@ public class World implements IBlockAccess {
             --this.Q;
         }
 
-        Iterator iterator = this.P.iterator();
+        Iterator<ChunkCoordIntPair> iterator = this.P.iterator();
 
         while (iterator.hasNext()) {
-            ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator.next();
+            ChunkCoordIntPair chunkcoordintpair = iterator.next();
 
             i = chunkcoordintpair.x * 16;
             j = chunkcoordintpair.z * 16;
@@ -1908,7 +1908,7 @@ public class World implements IBlockAccess {
                 j1 = j + (k >> 8 & 15);
                 k1 = this.e(l, j1);
                 if (this.s(l, k1, j1)) {
-                    this.strikeLightning(new EntityWeatherStorm(this, (double) l, (double) k1, (double) j1));
+                    this.strikeLightning(new EntityWeatherStorm(this, l, k1, j1));
                     this.m = 2;
                 }
             }
@@ -1977,7 +1977,7 @@ public class World implements IBlockAccess {
             }
 
             for (int j = 0; j < i; ++j) {
-                NextTickListEntry nextticklistentry = (NextTickListEntry) this.E.first();
+                NextTickListEntry nextticklistentry = this.E.first();
 
                 if (!flag && nextticklistentry.e > this.worldData.f()) {
                     break;
@@ -2000,7 +2000,7 @@ public class World implements IBlockAccess {
         }
     }
 
-    public List b(Entity entity, AxisAlignedBB axisalignedbb) {
+    public List<Entity> b(Entity entity, AxisAlignedBB axisalignedbb) {
         this.R.clear();
         int i = MathHelper.floor((axisalignedbb.a - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.d + 2.0D) / 16.0D);
@@ -2018,12 +2018,12 @@ public class World implements IBlockAccess {
         return this.R;
     }
 
-    public List a(Class oclass, AxisAlignedBB axisalignedbb) {
+    public List<Entity> a(Class<? extends Entity> oclass, AxisAlignedBB axisalignedbb) {
         int i = MathHelper.floor((axisalignedbb.a - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.d + 2.0D) / 16.0D);
         int k = MathHelper.floor((axisalignedbb.c - 2.0D) / 16.0D);
         int l = MathHelper.floor((axisalignedbb.f + 2.0D) / 16.0D);
-        ArrayList arraylist = new ArrayList();
+        ArrayList<Entity> arraylist = new ArrayList<>();
 
         for (int i1 = i; i1 <= j; ++i1) {
             for (int j1 = k; j1 <= l; ++j1) {
@@ -2042,15 +2042,15 @@ public class World implements IBlockAccess {
         }
 
         for (int l = 0; l < this.u.size(); ++l) {
-            ((IWorldAccess) this.u.get(l)).a(i, j, k, tileentity);
+            this.u.get(l).a(i, j, k, tileentity);
         }
     }
 
-    public int a(Class oclass) {
+    public int a(Class<?> oclass) {
         int i = 0;
 
         for (int j = 0; j < this.entityList.size(); ++j) {
-            Entity entity = (Entity) this.entityList.get(j);
+            Entity entity = this.entityList.get(j);
 
             if (oclass.isAssignableFrom(entity.getClass())) {
                 ++i;
@@ -2060,11 +2060,11 @@ public class World implements IBlockAccess {
         return i;
     }
 
-    public void a(List list) {
+    public void a(List<Entity> list) {
         // CraftBukkit start
         Entity entity = null;
         for (int i = 0; i < list.size(); ++i) {
-            entity = (Entity) list.get(i);
+            entity = list.get(i);
             // CraftBukkit start - fixed an NPE
             if (entity == null) {
                 continue;
@@ -2072,11 +2072,11 @@ public class World implements IBlockAccess {
             // CraftBukkit end
             this.entityList.add(entity);
             // CraftBukkit end
-            this.c((Entity) list.get(i));
+            this.c(list.get(i));
         }
     }
 
-    public void b(List list) {
+    public void b(List<Entity> list) {
         this.D.addAll(list);
     }
 
@@ -2175,7 +2175,7 @@ public class World implements IBlockAccess {
         EntityHuman entityhuman = null;
 
         for (int i = 0; i < this.players.size(); ++i) {
-            EntityHuman entityhuman1 = (EntityHuman) this.players.get(i);
+            EntityHuman entityhuman1 = this.players.get(i);
             // CraftBukkit start - fixed an NPE
             if (entityhuman1 == null || entityhuman1.dead) {
                 continue;
@@ -2194,8 +2194,8 @@ public class World implements IBlockAccess {
 
     public EntityHuman a(String s) {
         for (int i = 0; i < this.players.size(); ++i) {
-            if (s.equals(((EntityHuman) this.players.get(i)).name)) {
-                return (EntityHuman) this.players.get(i);
+            if (s.equals(this.players.get(i).name)) {
+                return this.players.get(i);
             }
         }
 
@@ -2264,8 +2264,8 @@ public class World implements IBlockAccess {
 
         NextTickListEntry nextticklistentry;
 
-        for (Iterator iterator = this.F.iterator(); iterator.hasNext(); nextticklistentry.e += j) {
-            nextticklistentry = (NextTickListEntry) iterator.next();
+        for (Iterator<NextTickListEntry> iterator = this.F.iterator(); iterator.hasNext(); nextticklistentry.e += j) {
+            nextticklistentry = iterator.next();
         }
 
         this.setTime(i);
@@ -2311,10 +2311,10 @@ public class World implements IBlockAccess {
 
     public void everyoneSleeping() {
         this.J = !this.players.isEmpty();
-        Iterator iterator = this.players.iterator();
+        Iterator<EntityHuman> iterator = this.players.iterator();
 
         while (iterator.hasNext()) {
-            EntityHuman entityhuman = (EntityHuman) iterator.next();
+            EntityHuman entityhuman = iterator.next();
 
             // CraftBukkit
             if (!entityhuman.isSleeping() && !entityhuman.fauxSleeping) {
@@ -2336,10 +2336,10 @@ public class World implements IBlockAccess {
 
     protected void s() {
         this.J = false;
-        Iterator iterator = this.players.iterator();
+        Iterator<EntityHuman> iterator = this.players.iterator();
 
         while (iterator.hasNext()) {
-            EntityHuman entityhuman = (EntityHuman) iterator.next();
+            EntityHuman entityhuman = iterator.next();
 
             if (entityhuman.isSleeping()) {
                 entityhuman.a(false, false, true);
@@ -2351,7 +2351,7 @@ public class World implements IBlockAccess {
 
     public boolean everyoneDeeplySleeping() {
         if (this.J && !this.isStatic) {
-            Iterator iterator = this.players.iterator();
+            Iterator<EntityHuman> iterator = this.players.iterator();
 
             // CraftBukkit - This allows us to assume that some people are in bed but not really, allowing time to pass in spite of AFKers
             boolean foundActualSleepers = false;
@@ -2364,7 +2364,7 @@ public class World implements IBlockAccess {
                     return foundActualSleepers;
                 }
 
-                entityhuman = (EntityHuman) iterator.next();
+                entityhuman = iterator.next();
                 // CraftBukkit start
                 if (entityhuman.isDeeplySleeping()) {
                     foundActualSleepers = true;
@@ -2412,7 +2412,7 @@ public class World implements IBlockAccess {
         this.worldMaps.a(s, worldmapbase);
     }
 
-    public WorldMapBase a(Class oclass, String s) {
+    public WorldMapBase a(Class<? extends WorldMapBase> oclass, String s) {
         return this.worldMaps.a(oclass, s);
     }
 
@@ -2421,12 +2421,12 @@ public class World implements IBlockAccess {
     }
 
     public void e(int i, int j, int k, int l, int i1) {
-        this.a((EntityHuman) null, i, j, k, l, i1);
+        this.a(null, i, j, k, l, i1);
     }
 
     public void a(EntityHuman entityhuman, int i, int j, int k, int l, int i1) {
         for (int j1 = 0; j1 < this.u.size(); ++j1) {
-            ((IWorldAccess) this.u.get(j1)).a(entityhuman, i, j, k, l, i1);
+            this.u.get(j1).a(entityhuman, i, j, k, l, i1);
         }
     }
 

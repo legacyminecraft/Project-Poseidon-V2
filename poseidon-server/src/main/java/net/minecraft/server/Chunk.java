@@ -20,8 +20,8 @@ public class Chunk {
     public int i;
     public final int x;
     public final int z;
-    public Map tileEntities;
-    public List[] entitySlices;
+    public Map<ChunkPosition, TileEntity> tileEntities;
+    public List<Entity>[] entitySlices;
     public boolean done;
     public boolean o;
     public boolean p;
@@ -29,7 +29,7 @@ public class Chunk {
     public long r;
 
     public Chunk(World world, int i, int j) {
-        this.tileEntities = new HashMap();
+        this.tileEntities = new HashMap<>();
         this.entitySlices = new List[8];
         this.done = false;
         this.o = false;
@@ -41,7 +41,7 @@ public class Chunk {
         this.heightMap = new byte[256];
 
         for (int k = 0; k < this.entitySlices.length; ++k) {
-            this.entitySlices[k] = new ArrayList();
+            this.entitySlices[k] = new ArrayList<>();
         }
 
         // CraftBukkit start
@@ -401,7 +401,7 @@ public class Chunk {
 
     public TileEntity d(int i, int j, int k) {
         ChunkPosition chunkposition = new ChunkPosition(i, j, k);
-        TileEntity tileentity = (TileEntity) this.tileEntities.get(chunkposition);
+        TileEntity tileentity = this.tileEntities.get(chunkposition);
 
         if (tileentity == null) {
             int l = this.getTypeId(i, j, k);
@@ -413,7 +413,7 @@ public class Chunk {
             BlockContainer blockcontainer = (BlockContainer) Block.byId[l];
 
             blockcontainer.c(this.world, this.x * 16 + i, j, this.z * 16 + k);
-            tileentity = (TileEntity) this.tileEntities.get(chunkposition);
+            tileentity = this.tileEntities.get(chunkposition);
         }
 
         if (tileentity != null && tileentity.g()) {
@@ -454,7 +454,7 @@ public class Chunk {
         ChunkPosition chunkposition = new ChunkPosition(i, j, k);
 
         if (this.c) {
-            TileEntity tileentity = (TileEntity) this.tileEntities.remove(chunkposition);
+            TileEntity tileentity = this.tileEntities.remove(chunkposition);
 
             if (tileentity != null) {
                 tileentity.h();
@@ -473,19 +473,19 @@ public class Chunk {
 
     public void removeEntities() {
         this.c = false;
-        Iterator iterator = this.tileEntities.values().iterator();
+        Iterator<TileEntity> iterator = this.tileEntities.values().iterator();
 
         while (iterator.hasNext()) {
-            TileEntity tileentity = (TileEntity) iterator.next();
+            TileEntity tileentity = iterator.next();
 
             world.markForRemoval(tileentity); // Craftbukkit
         }
 
         for (int i = 0; i < this.entitySlices.length; ++i) {
             // CraftBukkit start
-            java.util.Iterator<Object> iter = this.entitySlices[i].iterator();
+            java.util.Iterator<Entity> iter = this.entitySlices[i].iterator();
             while (iter.hasNext()) {
-                Entity entity = (Entity) iter.next();
+                Entity entity = iter.next();
                 int cx = org.bukkit.Location.locToBlock(entity.locX) >> 4;
                 int cz = org.bukkit.Location.locToBlock(entity.locZ) >> 4;
 
@@ -505,7 +505,7 @@ public class Chunk {
         this.o = true;
     }
 
-    public void a(Entity entity, AxisAlignedBB axisalignedbb, List list) {
+    public void a(Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list) {
         int i = MathHelper.floor((axisalignedbb.b - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.e + 2.0D) / 16.0D);
 
@@ -518,10 +518,10 @@ public class Chunk {
         }
 
         for (int k = i; k <= j; ++k) {
-            List list1 = this.entitySlices[k];
+            List<Entity> list1 = this.entitySlices[k];
 
             for (int l = 0; l < list1.size(); ++l) {
-                Entity entity1 = (Entity) list1.get(l);
+                Entity entity1 = list1.get(l);
 
                 if (entity1 != entity && entity1.boundingBox.a(axisalignedbb)) {
                     list.add(entity1);
@@ -530,7 +530,7 @@ public class Chunk {
         }
     }
 
-    public void a(Class oclass, AxisAlignedBB axisalignedbb, List list) {
+    public void a(Class<? extends Entity> oclass, AxisAlignedBB axisalignedbb, List<Entity> list) {
         int i = MathHelper.floor((axisalignedbb.b - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.e + 2.0D) / 16.0D);
 
@@ -543,10 +543,10 @@ public class Chunk {
         }
 
         for (int k = i; k <= j; ++k) {
-            List list1 = this.entitySlices[k];
+            List<Entity> list1 = this.entitySlices[k];
 
             for (int l = 0; l < list1.size(); ++l) {
-                Entity entity = (Entity) list1.get(l);
+                Entity entity = list1.get(l);
 
                 if (oclass.isAssignableFrom(entity.getClass()) && entity.boundingBox.a(axisalignedbb)) {
                     list.add(entity);

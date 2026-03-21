@@ -60,12 +60,12 @@ public class BlockChest extends BlockContainer {
                     }
 
                     itemstack.count -= i1;
-                    EntityItem entityitem = new EntityItem(world, (double) ((float) i + f), (double) ((float) j + f1), (double) ((float) k + f2), new ItemStack(itemstack.id, i1, itemstack.getData()));
+                    EntityItem entityitem = new EntityItem(world, (float) i + f, (float) j + f1, (float) k + f2, new ItemStack(itemstack.id, i1, itemstack.getData()));
                     float f3 = 0.05F;
 
-                    entityitem.motX = (double) ((float) this.a.nextGaussian() * f3);
-                    entityitem.motY = (double) ((float) this.a.nextGaussian() * f3 + 0.2F);
-                    entityitem.motZ = (double) ((float) this.a.nextGaussian() * f3);
+                    entityitem.motX = (float) this.a.nextGaussian() * f3;
+                    entityitem.motY = (float) this.a.nextGaussian() * f3 + 0.2F;
+                    entityitem.motZ = (float) this.a.nextGaussian() * f3;
                     world.addEntity(entityitem);
                 }
             }
@@ -75,7 +75,7 @@ public class BlockChest extends BlockContainer {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        Object object = (TileEntityChest) world.getTileEntity(i, j, k);
+        Object object = world.getTileEntity(i, j, k);
 
         if (world.e(i, j + 1, k)) {
             return true;

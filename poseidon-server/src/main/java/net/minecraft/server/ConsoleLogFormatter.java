@@ -16,7 +16,7 @@ final class ConsoleLogFormatter extends Formatter {
     public String format(LogRecord logrecord) {
         StringBuilder stringbuilder = new StringBuilder();
 
-        stringbuilder.append(this.a.format(Long.valueOf(logrecord.getMillis())));
+        stringbuilder.append(this.a.format(logrecord.getMillis()));
         Level level = logrecord.getLevel();
 
         if (level == Level.FINEST) {

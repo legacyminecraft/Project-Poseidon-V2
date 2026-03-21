@@ -47,15 +47,15 @@ public class BlockBed extends Block {
                     d2 = (d2 + (double) k + 0.5D) / 2.0D;
                 }
 
-                world.createExplosion((Entity) null, (double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F), 5.0F, true);
+                world.createExplosion(null, (float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, 5.0F, true);
                 return true;
             } else {
                 if (e(l)) {
                     EntityHuman entityhuman1 = null;
-                    Iterator iterator = world.players.iterator();
+                    Iterator<EntityHuman> iterator = world.players.iterator();
 
                     while (iterator.hasNext()) {
-                        EntityHuman entityhuman2 = (EntityHuman) iterator.next();
+                        EntityHuman entityhuman2 = iterator.next();
 
                         if (entityhuman2.isSleeping()) {
                             ChunkCoordinates chunkcoordinates = entityhuman2.A;

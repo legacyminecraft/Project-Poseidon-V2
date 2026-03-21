@@ -15,7 +15,7 @@ public class MathHelper {
     }
 
     public static final float c(float f) {
-        return (float) Math.sqrt((double) f);
+        return (float) Math.sqrt(f);
     }
 
     public static final float a(double d0) {

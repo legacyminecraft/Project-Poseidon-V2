@@ -11,8 +11,8 @@ public class MapGenCaves extends MapGenBase {
     }
 
     protected void a(int i, int j, byte[] abyte, double d0, double d1, double d2, float f, float f1, float f2, int k, int l, double d3) {
-        double d4 = (double) (i * 16 + 8);
-        double d5 = (double) (j * 16 + 8);
+        double d4 = i * 16 + 8;
+        double d5 = j * 16 + 8;
         float f3 = 0.0F;
         float f4 = 0.0F;
         Random random = new Random(this.b.nextLong());
@@ -38,9 +38,9 @@ public class MapGenCaves extends MapGenBase {
             float f5 = MathHelper.cos(f2);
             float f6 = MathHelper.sin(f2);
 
-            d0 += (double) (MathHelper.cos(f1) * f5);
-            d1 += (double) f6;
-            d2 += (double) (MathHelper.sin(f1) * f5);
+            d0 += MathHelper.cos(f1) * f5;
+            d1 += f6;
+            d2 += MathHelper.sin(f1) * f5;
             if (flag1) {
                 f2 *= 0.92F;
             } else {
@@ -62,8 +62,8 @@ public class MapGenCaves extends MapGenBase {
             if (flag || random.nextInt(4) != 0) {
                 double d8 = d0 - d4;
                 double d9 = d2 - d5;
-                double d10 = (double) (l - k);
-                double d11 = (double) (f + 2.0F + 16.0F);
+                double d10 = l - k;
+                double d11 = f + 2.0F + 16.0F;
 
                 if (d8 * d8 + d9 * d9 - d10 * d10 > d11 * d11) {
                     return;
@@ -178,9 +178,9 @@ public class MapGenCaves extends MapGenBase {
         }
 
         for (int j1 = 0; j1 < i1; ++j1) {
-            double d0 = (double) (i * 16 + this.b.nextInt(16));
-            double d1 = (double) this.b.nextInt(this.b.nextInt(120) + 8);
-            double d2 = (double) (j * 16 + this.b.nextInt(16));
+            double d0 = i * 16 + this.b.nextInt(16);
+            double d1 = this.b.nextInt(this.b.nextInt(120) + 8);
+            double d2 = j * 16 + this.b.nextInt(16);
             int k1 = 1;
 
             if (this.b.nextInt(4) == 0) {

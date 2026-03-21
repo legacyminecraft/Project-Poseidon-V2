@@ -21,9 +21,9 @@ public class NetworkManager {
     private DataInputStream input;
     private DataOutputStream output;
     private boolean l = true;
-    private List m = Collections.synchronizedList(new ArrayList());
-    private List highPriorityQueue = Collections.synchronizedList(new ArrayList());
-    private List lowPriorityQueue = Collections.synchronizedList(new ArrayList());
+    private List<Packet> m = Collections.synchronizedList(new ArrayList<>());
+    private List<Packet> highPriorityQueue = Collections.synchronizedList(new ArrayList<>());
+    private List<Packet> lowPriorityQueue = Collections.synchronizedList(new ArrayList<>());
     private NetHandler p;
     private boolean q = false;
     private Thread r;
@@ -97,10 +97,10 @@ public class NetworkManager {
             int i;
             int[] aint;
 
-            if (!this.highPriorityQueue.isEmpty() && (this.f == 0 || System.currentTimeMillis() - ((Packet) this.highPriorityQueue.get(0)).timestamp >= (long) this.f)) {
+            if (!this.highPriorityQueue.isEmpty() && (this.f == 0 || System.currentTimeMillis() - this.highPriorityQueue.get(0).timestamp >= (long) this.f)) {
                 object = this.g;
                 synchronized (this.g) {
-                    packet = (Packet) this.highPriorityQueue.remove(0);
+                    packet = this.highPriorityQueue.remove(0);
                     this.x -= packet.a() + 1;
                 }
 
@@ -112,10 +112,10 @@ public class NetworkManager {
             }
 
             // CraftBukkit - don't allow low priority packet to be sent unless it was placed in the queue before the first packet on the high priority queue
-            if ((flag || this.lowPriorityQueueDelay-- <= 0) && !this.lowPriorityQueue.isEmpty() && (this.highPriorityQueue.isEmpty() || ((Packet) this.highPriorityQueue.get(0)).timestamp > ((Packet) this.lowPriorityQueue.get(0)).timestamp)) {
+            if ((flag || this.lowPriorityQueueDelay-- <= 0) && !this.lowPriorityQueue.isEmpty() && (this.highPriorityQueue.isEmpty() || this.highPriorityQueue.get(0).timestamp > this.lowPriorityQueue.get(0).timestamp)) {
                 object = this.g;
                 synchronized (this.g) {
-                    packet = (Packet) this.lowPriorityQueue.remove(0);
+                    packet = this.lowPriorityQueue.remove(0);
                     this.x -= packet.a() + 1;
                 }
 
@@ -221,7 +221,7 @@ public class NetworkManager {
         int i = 100;
 
         while (!this.m.isEmpty() && i-- >= 0) {
-            Packet packet = (Packet) this.m.remove(0);
+            Packet packet = this.m.remove(0);
 
             packet.a(this.p);
         }

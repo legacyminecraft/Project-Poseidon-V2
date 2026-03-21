@@ -73,7 +73,7 @@ public class ConsoleCommandHandler {
                         worldserver = this.server.worlds.get(i);
                         boolean save = worldserver.canSave;
                         worldserver.canSave = false;
-                        worldserver.save(true, (IProgressUpdate) null);
+                        worldserver.save(true, null);
                         worldserver.canSave = save;
                     }
                     // CraftBukkit end
@@ -149,7 +149,7 @@ public class ConsoleCommandHandler {
                                 entityplayer = null;
 
                                 for (j = 0; j < serverconfigurationmanager.players.size(); ++j) {
-                                    EntityPlayer entityplayer1 = (EntityPlayer) serverconfigurationmanager.players.get(j);
+                                    EntityPlayer entityplayer1 = serverconfigurationmanager.players.get(j);
 
                                     if (entityplayer1.name.equalsIgnoreCase(s2)) {
                                         entityplayer = entityplayer1;
@@ -251,7 +251,7 @@ public class ConsoleCommandHandler {
                                                 if (!checkPermission(listener, "time.set")) return true; // Craftbukkit
                                                 for (k = 0; k < this.server.worlds.size(); ++k) { // CraftBukkit
                                                     worldserver1 = this.server.worlds.get(k); // CraftBukkit
-                                                    worldserver1.setTimeAndFixTicklists((long) j);
+                                                    worldserver1.setTimeAndFixTicklists(j);
                                                 }
 
                                                 this.print(s1, "Set time to " + j);
@@ -275,7 +275,7 @@ public class ConsoleCommandHandler {
                                             a.info("[" + s1 + "->" + astring[1] + "] " + s);
                                             s = "\u00A77" + s1 + " whispers " + s;
                                             a.info(s);
-                                            if (!serverconfigurationmanager.a(astring[1], (Packet) (new Packet3Chat(s)))) {
+                                            if (!serverconfigurationmanager.a(astring[1], new Packet3Chat(s))) {
                                                 icommandlistener.sendMessage("There\'s no player by that name online.");
                                             }
                                         }
@@ -316,13 +316,13 @@ public class ConsoleCommandHandler {
                 this.server.propertyManager.b("white-list", false);
             } else if ("list".equals(s2)) {
                 if (!checkPermission(listener, "whitelist.list")) return; // Craftbukkit
-                Set set = this.server.serverConfigurationManager.e();
+                Set<String> set = this.server.serverConfigurationManager.e();
                 String s3 = "";
 
                 String s4;
 
-                for (Iterator iterator = set.iterator(); iterator.hasNext(); s3 = s3 + s4 + " ") {
-                    s4 = (String) iterator.next();
+                for (Iterator<String> iterator = set.iterator(); iterator.hasNext(); s3 = s3 + s4 + " ") {
+                    s4 = iterator.next();
                 }
 
                 icommandlistener.sendMessage("White-listed players: " + s3);
@@ -397,7 +397,7 @@ public class ConsoleCommandHandler {
         }
         java.util.List<EntityPlayer> players = this.server.serverConfigurationManager.players;
         for (int i = 0; i < players.size(); ++i) {
-            EntityPlayer entityPlayer = (EntityPlayer) players.get(i);
+            EntityPlayer entityPlayer = players.get(i);
             if (sender != entityPlayer && this.server.serverConfigurationManager.isOp(entityPlayer.name)) {
                 entityPlayer.netServerHandler.sendPacket(packet3chat);
             }

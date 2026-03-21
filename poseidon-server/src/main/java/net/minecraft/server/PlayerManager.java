@@ -5,9 +5,9 @@ import java.util.List;
 
 public class PlayerManager {
 
-    public List managedPlayers = new ArrayList();
+    public List<EntityPlayer> managedPlayers = new ArrayList<>();
     private PlayerList b = new PlayerList();
-    private List c = new ArrayList();
+    private List<PlayerInstance> c = new ArrayList<>();
     private MinecraftServer server;
     private int e;
     private int f;
@@ -31,7 +31,7 @@ public class PlayerManager {
 
     public void flush() {
         for (int i = 0; i < this.c.size(); ++i) {
-            ((PlayerInstance) this.c.get(i)).a();
+            this.c.get(i).a();
         }
 
         this.c.clear();
@@ -160,7 +160,7 @@ public class PlayerManager {
                     final int z = j;
                     List<ChunkCoordIntPair> chunksToSend = entityplayer.chunkCoordIntPairQueue;
 
-                    java.util.Collections.sort(chunksToSend, new java.util.Comparator<ChunkCoordIntPair>() {
+                    java.util.Collections.sort(chunksToSend, new java.util.Comparator<>() {
                         public int compare(ChunkCoordIntPair a, ChunkCoordIntPair b) {
                             return Math.max(Math.abs(a.x - x), Math.abs(a.z - z)) - Math.max(Math.abs(b.x - x), Math.abs(b.z - z));
                         }
@@ -179,7 +179,7 @@ public class PlayerManager {
         return playermanager.b;
     }
 
-    static List b(PlayerManager playermanager) {
+    static List<PlayerInstance> b(PlayerManager playermanager) {
         return playermanager.c;
     }
 }

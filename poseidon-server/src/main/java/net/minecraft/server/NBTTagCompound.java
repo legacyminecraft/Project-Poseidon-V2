@@ -10,15 +10,15 @@ import java.util.Map;
 
 public class NBTTagCompound extends NBTBase {
 
-    private Map a = new HashMap();
+    private Map<String, NBTBase> a = new HashMap<>();
 
     public NBTTagCompound() {}
 
     void a(DataOutput dataoutput) throws IOException {
-        Iterator iterator = this.a.values().iterator();
+        Iterator<NBTBase> iterator = this.a.values().iterator();
 
         while (iterator.hasNext()) {
-            NBTBase nbtbase = (NBTBase) iterator.next();
+            NBTBase nbtbase = iterator.next();
 
             NBTBase.a(nbtbase, dataoutput);
         }
@@ -36,7 +36,7 @@ public class NBTTagCompound extends NBTBase {
         }
     }
 
-    public Collection c() {
+    public Collection<NBTBase> c() {
         return this.a.values();
     }
 

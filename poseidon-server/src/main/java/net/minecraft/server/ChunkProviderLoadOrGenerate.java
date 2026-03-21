@@ -9,12 +9,12 @@ import java.util.Set;
 
 public class ChunkProviderLoadOrGenerate implements IChunkProvider {
 
-    private Set a = new HashSet();
+    private Set<Integer> a = new HashSet<>();
     private Chunk b;
     private IChunkProvider c;
     private IChunkLoader d;
-    private Map e = new HashMap();
-    private List f = new ArrayList();
+    private Map<Integer, Chunk> e = new HashMap<>();
+    private List<Chunk> f = new ArrayList<>();
     private World g;
 
     public ChunkProviderLoadOrGenerate(World world, IChunkLoader ichunkloader, IChunkProvider ichunkprovider) {
@@ -25,14 +25,14 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
     }
 
     public boolean isChunkLoaded(int i, int j) {
-        return this.e.containsKey(Integer.valueOf(ChunkCoordIntPair.a(i, j)));
+        return this.e.containsKey(ChunkCoordIntPair.a(i, j));
     }
 
     public Chunk getChunkAt(int i, int j) {
         int k = ChunkCoordIntPair.a(i, j);
 
-        this.a.remove(Integer.valueOf(k));
-        Chunk chunk = (Chunk) this.e.get(Integer.valueOf(k));
+        this.a.remove(k);
+        Chunk chunk = this.e.get(k);
 
         if (chunk == null) {
             chunk = this.d(i, j);
@@ -44,7 +44,7 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
                 }
             }
 
-            this.e.put(Integer.valueOf(k), chunk);
+            this.e.put(k, chunk);
             this.f.add(chunk);
             if (chunk != null) {
                 chunk.loadNOP();
@@ -72,7 +72,7 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
     }
 
     public Chunk getOrCreateChunk(int i, int j) {
-        Chunk chunk = (Chunk) this.e.get(Integer.valueOf(ChunkCoordIntPair.a(i, j)));
+        Chunk chunk = this.e.get(ChunkCoordIntPair.a(i, j));
 
         return chunk == null ? this.getChunkAt(i, j) : chunk;
     }
@@ -133,7 +133,7 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
         int i = 0;
 
         for (int j = 0; j < this.f.size(); ++j) {
-            Chunk chunk = (Chunk) this.f.get(j);
+            Chunk chunk = this.f.get(j);
 
             if (flag && !chunk.p) {
                 this.a(chunk);
@@ -163,8 +163,8 @@ public class ChunkProviderLoadOrGenerate implements IChunkProvider {
     public boolean unloadChunks() {
         for (int i = 0; i < 100; ++i) {
             if (!this.a.isEmpty()) {
-                Integer integer = (Integer) this.a.iterator().next();
-                Chunk chunk = (Chunk) this.e.get(integer);
+                int integer = this.a.iterator().next();
+                Chunk chunk = this.e.get(integer);
 
                 chunk.removeEntities();
                 this.b(chunk);

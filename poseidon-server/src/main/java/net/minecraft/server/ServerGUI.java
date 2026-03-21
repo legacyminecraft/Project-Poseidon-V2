@@ -10,7 +10,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.logging.Logger;
 
@@ -31,7 +30,7 @@ public class ServerGUI extends JComponent implements ICommandListener {
 
         jframe.add(servergui);
         jframe.pack();
-        jframe.setLocationRelativeTo((Component) null);
+        jframe.setLocationRelativeTo(null);
         jframe.setVisible(true);
         jframe.addWindowListener(new ServerWindowAdapter(minecraftserver));
     }

@@ -28,10 +28,10 @@ public class WorldLoaderServer extends WorldLoader {
 
     public boolean convert(String s, IProgressUpdate iprogressupdate) {
         iprogressupdate.a(0);
-        ArrayList arraylist = new ArrayList();
-        ArrayList arraylist1 = new ArrayList();
-        ArrayList arraylist2 = new ArrayList();
-        ArrayList arraylist3 = new ArrayList();
+        ArrayList<ChunkFile> arraylist = new ArrayList<>();
+        ArrayList<File> arraylist1 = new ArrayList<>();
+        ArrayList<ChunkFile> arraylist2 = new ArrayList<>();
+        ArrayList<File> arraylist3 = new ArrayList<>();
         File file1 = new File(this.a, s);
         File file2 = new File(file1, "DIM-1");
 
@@ -60,9 +60,9 @@ public class WorldLoaderServer extends WorldLoader {
         return true;
     }
 
-    private void a(File file1, ArrayList arraylist, ArrayList arraylist1) {
-        ChunkFileFilter chunkfilefilter = new ChunkFileFilter((EmptyClass2) null);
-        ChunkFilenameFilter chunkfilenamefilter = new ChunkFilenameFilter((EmptyClass2) null);
+    private void a(File file1, ArrayList<ChunkFile> arraylist, ArrayList<File> arraylist1) {
+        ChunkFileFilter chunkfilefilter = new ChunkFileFilter(null);
+        ChunkFilenameFilter chunkfilenamefilter = new ChunkFilenameFilter(null);
         File[] afile = file1.listFiles(chunkfilefilter);
         File[] afile1 = afile;
         int i = afile.length;
@@ -90,13 +90,13 @@ public class WorldLoaderServer extends WorldLoader {
         }
     }
 
-    private void a(File file1, ArrayList arraylist, int i, int j, IProgressUpdate iprogressupdate) {
+    private void a(File file1, ArrayList<ChunkFile> arraylist, int i, int j, IProgressUpdate iprogressupdate) {
         Collections.sort(arraylist);
         byte[] abyte = new byte[4096];
-        Iterator iterator = arraylist.iterator();
+        Iterator<ChunkFile> iterator = arraylist.iterator();
 
         while (iterator.hasNext()) {
-            ChunkFile chunkfile = (ChunkFile) iterator.next();
+            ChunkFile chunkfile = iterator.next();
             int k = chunkfile.b();
             int l = chunkfile.c();
             RegionFile regionfile = RegionFileCache.a(file1, k, l);
@@ -129,11 +129,11 @@ public class WorldLoaderServer extends WorldLoader {
         RegionFileCache.a();
     }
 
-    private void a(ArrayList arraylist, int i, int j, IProgressUpdate iprogressupdate) {
-        Iterator iterator = arraylist.iterator();
+    private void a(ArrayList<File> arraylist, int i, int j, IProgressUpdate iprogressupdate) {
+        Iterator<File> iterator = arraylist.iterator();
 
         while (iterator.hasNext()) {
-            File file1 = (File) iterator.next();
+            File file1 = iterator.next();
             File[] afile = file1.listFiles();
 
             a(afile);

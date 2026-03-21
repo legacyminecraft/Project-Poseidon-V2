@@ -11,7 +11,7 @@ public class BlockFence extends Block {
     }
 
     public AxisAlignedBB e(World world, int i, int j, int k) {
-        return AxisAlignedBB.b((double) i, (double) j, (double) k, (double) (i + 1), (double) ((float) j + 1.5F), (double) (k + 1));
+        return AxisAlignedBB.b(i, j, k, i + 1, (float) j + 1.5F, k + 1);
     }
 
     public boolean a() {

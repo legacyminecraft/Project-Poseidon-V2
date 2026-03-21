@@ -26,7 +26,7 @@ public class EntityTrackerEntry {
     private boolean isMoving;
     private int t = 0;
     public boolean m = false;
-    public Set trackedPlayers = new HashSet();
+    public Set<EntityPlayer> trackedPlayers = new HashSet<>();
 
     public EntityTrackerEntry(Entity entity, int i, int j, boolean flag) {
         this.tracker = entity;
@@ -48,7 +48,7 @@ public class EntityTrackerEntry {
         return this.tracker.id;
     }
 
-    public void track(List list) {
+    public void track(List<EntityHuman> list) {
         this.m = false;
         if (!this.r || this.tracker.e(this.o, this.p, this.q) > 16.0D) {
             this.o = this.tracker.locX;
@@ -69,7 +69,7 @@ public class EntityTrackerEntry {
             int j1 = i - this.d;
             int k1 = j - this.e;
             int l1 = k - this.f;
-            Object object = null;
+            Packet object = null;
             boolean flag = Math.abs(i) >= 8 || Math.abs(j) >= 8 || Math.abs(k) >= 8;
             boolean flag1 = Math.abs(l - this.g) >= 8 || Math.abs(i1 - this.h) >= 8;
 
@@ -100,18 +100,18 @@ public class EntityTrackerEntry {
                     this.i = this.tracker.motX;
                     this.j = this.tracker.motY;
                     this.k = this.tracker.motZ;
-                    this.a((Packet) (new Packet28EntityVelocity(this.tracker.id, this.i, this.j, this.k)));
+                    this.a(new Packet28EntityVelocity(this.tracker.id, this.i, this.j, this.k));
                 }
             }
 
             if (object != null) {
-                this.a((Packet) object);
+                this.a(object);
             }
 
             DataWatcher datawatcher = this.tracker.aa();
 
             if (datawatcher.a()) {
-                this.b((Packet) (new Packet40EntityMetadata(this.tracker.id, datawatcher)));
+                this.b(new Packet40EntityMetadata(this.tracker.id, datawatcher));
             }
 
             if (flag) {
@@ -146,7 +146,7 @@ public class EntityTrackerEntry {
             }
 
             if(!cancelled) {
-                this.b((Packet) (new Packet28EntityVelocity(this.tracker)));
+                this.b(new Packet28EntityVelocity(this.tracker));
             }
             // CraftBukkit end
             this.tracker.velocityChanged = false;
@@ -154,10 +154,10 @@ public class EntityTrackerEntry {
     }
 
     public void a(Packet packet) {
-        Iterator iterator = this.trackedPlayers.iterator();
+        Iterator<EntityPlayer> iterator = this.trackedPlayers.iterator();
 
         while (iterator.hasNext()) {
-            EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+            EntityPlayer entityplayer = iterator.next();
 
             entityplayer.netServerHandler.sendPacket(packet);
         }
@@ -171,7 +171,7 @@ public class EntityTrackerEntry {
     }
 
     public void a() {
-        this.a((Packet) (new Packet29DestroyEntity(this.tracker.id)));
+        this.a(new Packet29DestroyEntity(this.tracker.id));
     }
 
     public void a(EntityPlayer entityplayer) {
@@ -216,9 +216,12 @@ public class EntityTrackerEntry {
         }
     }
 
-    public void scanPlayers(List list) {
+    public void scanPlayers(List<EntityHuman> list) {
         for (int i = 0; i < list.size(); ++i) {
-            this.b((EntityPlayer) list.get(i));
+            EntityHuman entityhuman = list.get(i);
+            if (entityhuman instanceof EntityPlayer) {
+                this.b((EntityPlayer) list.get(i));
+            }
         }
     }
 

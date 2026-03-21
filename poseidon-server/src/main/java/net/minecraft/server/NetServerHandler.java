@@ -6,7 +6,6 @@ import org.bukkit.command.CommandException;
 import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.TextWrapper;
-import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Player;
@@ -44,12 +43,12 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     private double y;
     private double z;
     private boolean checkMovement = true;
-    private Map n = new HashMap();
+    private Map<Integer, Short> n = new HashMap<>();
 
     public NetServerHandler(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
         this.minecraftServer = minecraftserver;
         this.networkManager = networkmanager;
-        networkmanager.a((NetHandler) this);
+        networkmanager.a(this);
         this.player = entityplayer;
         entityplayer.netServerHandler = this;
 
@@ -312,7 +311,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             }
 
             float f4 = 0.0625F;
-            boolean flag = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).size() == 0;
+            boolean flag = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).size() == 0;
 
             this.player.move(d4, d6, d7);
             d4 = d1 - this.player.locX;
@@ -333,14 +332,14 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             }
 
             this.player.setLocation(d1, d2, d3, f2, f3);
-            boolean flag2 = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).size() == 0;
+            boolean flag2 = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).size() == 0;
 
             if (flag && (flag1 || !flag2) && !this.player.isSleeping()) {
                 this.a(this.x, this.y, this.z, f2, f3);
                 return;
             }
 
-            AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().b((double) f4, (double) f4, (double) f4).a(0.0D, -0.55D, 0.0D);
+            AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().b(f4, f4, f4).a(0.0D, -0.55D, 0.0D);
 
             if (!this.minecraftServer.allowFlight && !worldserver.b(axisalignedbb)) {
                 if (d6 >= -0.03125D) {
@@ -862,7 +861,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         if (entity != null && this.player.e(entity) && this.player.g(entity) < 36.0D) {
             if (packet7useentity.c == 0) {
                 // CraftBukkit start
-                PlayerInteractEntityEvent event = new PlayerInteractEntityEvent((Player) this.getPlayer(), entity.getBukkitEntity());
+                PlayerInteractEntityEvent event = new PlayerInteractEntityEvent(this.getPlayer(), entity.getBukkitEntity());
                 this.server.getPluginManager().callEvent(event);
 
                 if (event.isCancelled()) {
@@ -913,13 +912,13 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
                 this.player.z();
                 this.player.h = false;
             } else {
-                this.n.put(Integer.valueOf(this.player.activeContainer.windowId), Short.valueOf(packet102windowclick.d));
+                this.n.put(this.player.activeContainer.windowId, packet102windowclick.d);
                 this.player.netServerHandler.sendPacket(new Packet106Transaction(packet102windowclick.a, packet102windowclick.d, false));
                 this.player.activeContainer.a(this.player, false);
-                ArrayList arraylist = new ArrayList();
+                ArrayList<ItemStack> arraylist = new ArrayList<>();
 
                 for (int i = 0; i < this.player.activeContainer.e.size(); ++i) {
-                    arraylist.add(((Slot) this.player.activeContainer.e.get(i)).getItem());
+                    arraylist.add(this.player.activeContainer.e.get(i).getItem());
                 }
 
                 this.player.a(this.player.activeContainer, arraylist);
@@ -930,9 +929,9 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     public void a(Packet106Transaction packet106transaction) {
         if (this.player.dead) return; // CraftBukkit
 
-        Short oshort = (Short) this.n.get(Integer.valueOf(this.player.activeContainer.windowId));
+        Short oshort = this.n.get(this.player.activeContainer.windowId);
 
-        if (oshort != null && packet106transaction.b == oshort.shortValue() && this.player.activeContainer.windowId == packet106transaction.a && !this.player.activeContainer.c(this.player)) {
+        if (oshort != null && packet106transaction.b == oshort && this.player.activeContainer.windowId == packet106transaction.a && !this.player.activeContainer.c(this.player)) {
             this.player.activeContainer.a(this.player, true);
         }
     }
@@ -986,7 +985,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
                 // CraftBukkit start
                 Player player = this.server.getPlayer(this.player);
-                SignChangeEvent event = new SignChangeEvent((CraftBlock) player.getWorld().getBlockAt(j, k, i), this.server.getPlayer(this.player), packet130updatesign.lines);
+                SignChangeEvent event = new SignChangeEvent(player.getWorld().getBlockAt(j, k, i), this.server.getPlayer(this.player), packet130updatesign.lines);
                 this.server.getPluginManager().callEvent(event);
 
                 if (!event.isCancelled()) {

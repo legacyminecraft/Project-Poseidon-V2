@@ -32,7 +32,7 @@ public class BlockStairs extends Block {
         return false;
     }
 
-    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist) {
+    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList<AxisAlignedBB> arraylist) {
         int l = world.getData(i, j, k);
 
         if (l == 0) {

@@ -60,9 +60,9 @@ public class BlockRedstoneOre extends Block {
         double d0 = 0.0625D;
 
         for (int l = 0; l < 6; ++l) {
-            double d1 = (double) ((float) i + random.nextFloat());
-            double d2 = (double) ((float) j + random.nextFloat());
-            double d3 = (double) ((float) k + random.nextFloat());
+            double d1 = (float) i + random.nextFloat();
+            double d2 = (float) j + random.nextFloat();
+            double d3 = (float) k + random.nextFloat();
 
             if (l == 0 && !world.p(i, j + 1, k)) {
                 d2 = (double) (j + 1) + d0;

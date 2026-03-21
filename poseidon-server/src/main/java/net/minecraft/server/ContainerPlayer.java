@@ -15,7 +15,7 @@ public class ContainerPlayer extends Container {
         this.resultInventory = new InventoryCraftResult();
         this.c = false;
         this.c = flag;
-        this.a((Slot) (new SlotResult(inventoryplayer.d, this.craftInventory, this.resultInventory, 0, 144, 36)));
+        this.a(new SlotResult(inventoryplayer.d, this.craftInventory, this.resultInventory, 0, 144, 36));
 
         int i;
         int j;
@@ -27,7 +27,7 @@ public class ContainerPlayer extends Container {
         }
 
         for (i = 0; i < 4; ++i) {
-            this.a((Slot) (new SlotArmor(this, inventoryplayer, inventoryplayer.getSize() - 1 - i, 8, 8 + i * 18, i)));
+            this.a(new SlotArmor(this, inventoryplayer, inventoryplayer.getSize() - 1 - i, 8, 8 + i * 18, i));
         }
 
         for (i = 0; i < 3; ++i) {
@@ -40,7 +40,7 @@ public class ContainerPlayer extends Container {
             this.a(new Slot(inventoryplayer, i, 8 + i * 18, 142));
         }
 
-        this.a((IInventory) this.craftInventory);
+        this.a(this.craftInventory);
     }
 
     public void a(IInventory iinventory) {
@@ -64,7 +64,7 @@ public class ContainerPlayer extends Container {
 
             if (itemstack != null) {
                 entityhuman.b(itemstack);
-                this.craftInventory.setItem(i, (ItemStack) null);
+                this.craftInventory.setItem(i, null);
             }
         }
     }
@@ -75,7 +75,7 @@ public class ContainerPlayer extends Container {
 
     public ItemStack a(int i) {
         ItemStack itemstack = null;
-        Slot slot = (Slot) this.e.get(i);
+        Slot slot = this.e.get(i);
 
         if (slot != null && slot.b()) {
             ItemStack itemstack1 = slot.getItem();
@@ -92,7 +92,7 @@ public class ContainerPlayer extends Container {
             }
 
             if (itemstack1.count == 0) {
-                slot.c((ItemStack) null);
+                slot.c(null);
             } else {
                 slot.c();
             }

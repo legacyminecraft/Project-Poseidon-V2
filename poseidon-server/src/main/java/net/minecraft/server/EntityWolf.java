@@ -30,9 +30,9 @@ public class EntityWolf extends EntityAnimal {
 
     protected void b() {
         super.b();
-        this.datawatcher.a(16, Byte.valueOf((byte) 0));
+        this.datawatcher.a(16, (byte) 0);
         this.datawatcher.a(17, "");
-        this.datawatcher.a(18, new Integer(this.health));
+        this.datawatcher.a(18, this.health);
     }
 
     protected boolean n() {
@@ -101,11 +101,11 @@ public class EntityWolf extends EntityAnimal {
                 this.setSitting(true);
             }
         } else if (this.target == null && !this.C() && !this.isTamed() && this.world.random.nextInt(100) == 0) {
-            List list = this.world.a(EntitySheep.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).b(16.0D, 4.0D, 16.0D));
+            List<Entity> list = this.world.a(EntitySheep.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).b(16.0D, 4.0D, 16.0D));
 
             if (!list.isEmpty()) {
                 // CraftBukkit start
-                Entity entity = (Entity) list.get(this.world.random.nextInt(list.size()));
+                Entity entity = list.get(this.world.random.nextInt(list.size()));
                 org.bukkit.entity.Entity bukkitTarget = entity == null ? null : entity.getBukkitEntity();
 
                 EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), bukkitTarget, EntityTargetEvent.TargetReason.RANDOM_TARGET);
@@ -123,7 +123,7 @@ public class EntityWolf extends EntityAnimal {
         }
 
         if (!this.world.isStatic) {
-            this.datawatcher.watch(18, Integer.valueOf(this.health));
+            this.datawatcher.watch(18, this.health);
         }
     }
 
@@ -195,7 +195,7 @@ public class EntityWolf extends EntityAnimal {
                     float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.length * 0.5F;
                     float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.length * 0.5F;
 
-                    this.world.a("splash", this.locX + (double) f1, (double) (f + 0.8F), this.locZ + (double) f2, this.motX, this.motY, this.motZ);
+                    this.world.a("splash", this.locX + (double) f1, f + 0.8F, this.locZ + (double) f2, this.motX, this.motY, this.motZ);
                 }
             }
         }
@@ -220,7 +220,7 @@ public class EntityWolf extends EntityAnimal {
             for (int l = 0; l <= 4; ++l) {
                 for (int i1 = 0; i1 <= 4; ++i1) {
                     if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.world.e(i + l, k - 1, j + i1) && !this.world.e(i + l, k, j + i1) && !this.world.e(i + l, k + 1, j + i1)) {
-                        this.setPositionRotation((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.yaw, this.pitch);
+                        this.setPositionRotation((float) (i + l) + 0.5F, k, (float) (j + i1) + 0.5F, this.yaw, this.pitch);
                         return;
                     }
                 }
@@ -240,7 +240,7 @@ public class EntityWolf extends EntityAnimal {
             i = (i + 1) / 2;
         }
 
-        if (!super.damageEntity((Entity) entity, i)) {
+        if (!super.damageEntity(entity, i)) {
             return false;
         } else {
             if (!this.isTamed() && !this.isAngry()) {
@@ -267,11 +267,11 @@ public class EntityWolf extends EntityAnimal {
                 }
 
                 if (entity instanceof EntityLiving) {
-                    List list = this.world.a(EntityWolf.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).b(16.0D, 4.0D, 16.0D));
-                    Iterator iterator = list.iterator();
+                    List<Entity> list = this.world.a(EntityWolf.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).b(16.0D, 4.0D, 16.0D));
+                    Iterator<Entity> iterator = list.iterator();
 
                     while (iterator.hasNext()) {
-                        Entity entity1 = (Entity) iterator.next();
+                        Entity entity1 = iterator.next();
                         EntityWolf entitywolf = (EntityWolf) entity1;
 
                         if (!entitywolf.isTamed() && entitywolf.target == null) {
@@ -285,7 +285,7 @@ public class EntityWolf extends EntityAnimal {
                                 if (event.getTarget() == null) {
                                     this.target = null;
                                 } else {
-                                    entitywolf.target = (Entity) entity;
+                                    entitywolf.target = entity;
                                     if (entity instanceof EntityHuman) {
                                         entitywolf.setAngry(true);
                                     }
@@ -300,7 +300,7 @@ public class EntityWolf extends EntityAnimal {
                     return true;
                 }
 
-                this.target = (Entity) entity;
+                this.target = entity;
             }
 
             return true;
@@ -352,7 +352,7 @@ public class EntityWolf extends EntityAnimal {
             if (itemstack != null && itemstack.id == Item.BONE.id && !this.isAngry()) {
                 --itemstack.count;
                 if (itemstack.count <= 0) {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, (ItemStack) null);
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
 
                 if (!this.world.isStatic) {
@@ -360,7 +360,7 @@ public class EntityWolf extends EntityAnimal {
                     if (this.random.nextInt(3) == 0 && !CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled()) {
                         // CraftBukkit end
                         this.setTamed(true);
-                        this.setPathEntity((PathEntity) null);
+                        this.setPathEntity(null);
                         this.setSitting(true);
                         this.health = 20;
                         this.setOwnerName(entityhuman.name);
@@ -381,7 +381,7 @@ public class EntityWolf extends EntityAnimal {
                 if (itemfood.l() && this.datawatcher.b(18) < 20) {
                     --itemstack.count;
                     if (itemstack.count <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, (ItemStack) null);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
 
                     this.b(((ItemFood) Item.PORK).k(), RegainReason.EATING);
@@ -393,7 +393,7 @@ public class EntityWolf extends EntityAnimal {
                 if (!this.world.isStatic) {
                     this.setSitting(!this.isSitting());
                     this.aC = false;
-                    this.setPathEntity((PathEntity) null);
+                    this.setPathEntity(null);
                 }
 
                 return true;
@@ -439,9 +439,9 @@ public class EntityWolf extends EntityAnimal {
         byte b0 = this.datawatcher.a(16);
 
         if (flag) {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 | 1)));
+            this.datawatcher.watch(16, (byte) (b0 | 1));
         } else {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 & -2)));
+            this.datawatcher.watch(16, (byte) (b0 & -2));
         }
     }
 
@@ -453,9 +453,9 @@ public class EntityWolf extends EntityAnimal {
         byte b0 = this.datawatcher.a(16);
 
         if (flag) {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 | 2)));
+            this.datawatcher.watch(16, (byte) (b0 | 2));
         } else {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 & -3)));
+            this.datawatcher.watch(16, (byte) (b0 & -3));
         }
     }
 
@@ -467,9 +467,9 @@ public class EntityWolf extends EntityAnimal {
         byte b0 = this.datawatcher.a(16);
 
         if (flag) {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 | 4)));
+            this.datawatcher.watch(16, (byte) (b0 | 4));
         } else {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 & -5)));
+            this.datawatcher.watch(16, (byte) (b0 & -5));
         }
     }
 }

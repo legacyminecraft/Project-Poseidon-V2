@@ -14,7 +14,7 @@ public class EntitySheep extends EntityAnimal {
 
     protected void b() {
         super.b();
-        this.datawatcher.a(16, new Byte((byte) 0));
+        this.datawatcher.a(16, (byte) 0);
     }
 
     public boolean damageEntity(Entity entity, int i) {
@@ -23,7 +23,7 @@ public class EntitySheep extends EntityAnimal {
 
     protected void q() {
         // CraftBukkit start - whole method
-        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<org.bukkit.inventory.ItemStack>();
+        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<>();
 
         if (!this.isSheared()) {
             loot.add(new org.bukkit.inventory.ItemStack(org.bukkit.Material.WOOL, 1, (short) 0, (byte) this.getColor()));
@@ -56,9 +56,9 @@ public class EntitySheep extends EntityAnimal {
                 for (int j = 0; j < i; ++j) {
                     EntityItem entityitem = this.a(new ItemStack(Block.WOOL.id, 1, this.getColor()), 1.0F);
 
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motY += this.random.nextFloat() * 0.05F;
+                    entityitem.motX += (this.random.nextFloat() - this.random.nextFloat()) * 0.1F;
+                    entityitem.motZ += (this.random.nextFloat() - this.random.nextFloat()) * 0.1F;
                 }
             }
 
@@ -99,7 +99,7 @@ public class EntitySheep extends EntityAnimal {
     public void setColor(int i) {
         byte b0 = this.datawatcher.a(16);
 
-        this.datawatcher.watch(16, Byte.valueOf((byte) (b0 & 240 | i & 15)));
+        this.datawatcher.watch(16, (byte) (b0 & 240 | i & 15));
     }
 
     public boolean isSheared() {
@@ -110,9 +110,9 @@ public class EntitySheep extends EntityAnimal {
         byte b0 = this.datawatcher.a(16);
 
         if (flag) {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 | 16)));
+            this.datawatcher.watch(16, (byte) (b0 | 16));
         } else {
-            this.datawatcher.watch(16, Byte.valueOf((byte) (b0 & -17)));
+            this.datawatcher.watch(16, (byte) (b0 & -17));
         }
     }
 

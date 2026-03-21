@@ -9,7 +9,7 @@ import java.util.Random;
 public class BlockRedstoneTorch extends BlockTorch {
 
     private boolean isOn = false;
-    private static List b = new ArrayList();
+    private static List<RedstoneUpdateInfo> b = new ArrayList<>();
 
     public int a(int i, int j) {
         return i == 1 ? Block.REDSTONE_WIRE.a(i, j) : super.a(i, j);
@@ -23,7 +23,7 @@ public class BlockRedstoneTorch extends BlockTorch {
         int l = 0;
 
         for (int i1 = 0; i1 < b.size(); ++i1) {
-            RedstoneUpdateInfo redstoneupdateinfo = (RedstoneUpdateInfo) b.get(i1);
+            RedstoneUpdateInfo redstoneupdateinfo = b.get(i1);
 
             if (redstoneupdateinfo.a == i && redstoneupdateinfo.b == j && redstoneupdateinfo.c == k) {
                 ++l;
@@ -91,7 +91,7 @@ public class BlockRedstoneTorch extends BlockTorch {
     public void a(World world, int i, int j, int k, Random random) {
         boolean flag = this.g(world, i, j, k);
 
-        while (b.size() > 0 && world.getTime() - ((RedstoneUpdateInfo) b.get(0)).d > 100L) {
+        while (b.size() > 0 && world.getTime() - b.get(0).d > 100L) {
             b.remove(0);
         }
 
@@ -117,7 +117,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 
                 world.setTypeIdAndData(i, j, k, Block.REDSTONE_TORCH_OFF.id, world.getData(i, j, k));
                 if (this.a(world, i, j, k, true)) {
-                    world.makeSound((double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F), "random.fizz", 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+                    world.makeSound((float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, "random.fizz", 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
                     for (int l = 0; l < 5; ++l) {
                         double d0 = (double) i + random.nextDouble() * 0.6D + 0.2D;

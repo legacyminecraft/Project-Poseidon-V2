@@ -217,7 +217,7 @@ public class InventoryPlayer implements IInventory {
                 nbttagcompound = new NBTTagCompound();
                 nbttagcompound.a("Slot", (byte) i);
                 this.items[i].a(nbttagcompound);
-                nbttaglist.a((NBTBase) nbttagcompound);
+                nbttaglist.a(nbttagcompound);
             }
         }
 
@@ -226,7 +226,7 @@ public class InventoryPlayer implements IInventory {
                 nbttagcompound = new NBTTagCompound();
                 nbttagcompound.a("Slot", (byte) (i + 100));
                 this.armor[i].a(nbttagcompound);
-                nbttaglist.a((NBTBase) nbttagcompound);
+                nbttaglist.a(nbttagcompound);
             }
         }
 

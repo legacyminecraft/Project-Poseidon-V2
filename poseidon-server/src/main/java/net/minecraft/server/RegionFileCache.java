@@ -12,18 +12,18 @@ import java.util.Map;
 
 public class RegionFileCache {
 
-    private static final Map a = new HashMap();
+    private static final Map<File, SoftReference<RegionFile>> a = new HashMap<>();
 
     private RegionFileCache() {}
 
     public static synchronized RegionFile a(File file1, int i, int j) {
         File file2 = new File(file1, "region");
         File file3 = new File(file2, "r." + (i >> 5) + "." + (j >> 5) + ".mcr");
-        Reference reference = (Reference) a.get(file3);
+        Reference<RegionFile> reference = a.get(file3);
         RegionFile regionfile;
 
         if (reference != null) {
-            regionfile = (RegionFile) reference.get();
+            regionfile = reference.get();
             if (regionfile != null) {
                 return regionfile;
             }
@@ -38,18 +38,18 @@ public class RegionFileCache {
         }
 
         regionfile = new RegionFile(file3);
-        a.put(file3, new SoftReference(regionfile));
+        a.put(file3, new SoftReference<>(regionfile));
         return regionfile;
     }
 
     public static synchronized void a() {
-        Iterator iterator = a.values().iterator();
+        Iterator<SoftReference<RegionFile>> iterator = a.values().iterator();
 
         while (iterator.hasNext()) {
-            Reference reference = (Reference) iterator.next();
+            Reference<RegionFile> reference = iterator.next();
 
             try {
-                RegionFile regionfile = (RegionFile) reference.get();
+                RegionFile regionfile = reference.get();
 
                 if (regionfile != null) {
                     regionfile.b();

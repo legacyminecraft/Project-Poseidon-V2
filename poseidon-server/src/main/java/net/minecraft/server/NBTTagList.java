@@ -8,14 +8,14 @@ import java.util.List;
 
 public class NBTTagList extends NBTBase {
 
-    private List a = new ArrayList();
+    private List<NBTBase> a = new ArrayList<>();
     private byte b;
 
     public NBTTagList() {}
 
     void a(DataOutput dataoutput) throws IOException {
         if (this.a.size() > 0) {
-            this.b = ((NBTBase) this.a.get(0)).a();
+            this.b = this.a.get(0).a();
         } else {
             this.b = 1;
         }
@@ -24,7 +24,7 @@ public class NBTTagList extends NBTBase {
         dataoutput.writeInt(this.a.size());
 
         for (int i = 0; i < this.a.size(); ++i) {
-            ((NBTBase) this.a.get(i)).a(dataoutput);
+            this.a.get(i).a(dataoutput);
         }
     }
 
@@ -32,7 +32,7 @@ public class NBTTagList extends NBTBase {
         this.b = datainput.readByte();
         int i = datainput.readInt();
 
-        this.a = new ArrayList();
+        this.a = new ArrayList<>();
 
         for (int j = 0; j < i; ++j) {
             NBTBase nbtbase = NBTBase.a(this.b);
@@ -56,7 +56,7 @@ public class NBTTagList extends NBTBase {
     }
 
     public NBTBase a(int i) {
-        return (NBTBase) this.a.get(i);
+        return this.a.get(i);
     }
 
     public int c() {

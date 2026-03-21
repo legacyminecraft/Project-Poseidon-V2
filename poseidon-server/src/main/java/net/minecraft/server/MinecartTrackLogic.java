@@ -10,13 +10,13 @@ class MinecartTrackLogic {
     private int d;
     private int e;
     private final boolean f;
-    private List g;
+    private List<ChunkPosition> g;
 
     final BlockMinecartTrack a;
 
     public MinecartTrackLogic(BlockMinecartTrack blockminecarttrack, World world, int i, int j, int k) {
         this.a = blockminecarttrack;
-        this.g = new ArrayList();
+        this.g = new ArrayList<>();
         this.b = world;
         this.c = i;
         this.d = j;
@@ -71,7 +71,7 @@ class MinecartTrackLogic {
 
     private void a() {
         for (int i = 0; i < this.g.size(); ++i) {
-            MinecartTrackLogic minecarttracklogic = this.a((ChunkPosition) this.g.get(i));
+            MinecartTrackLogic minecarttracklogic = this.a(this.g.get(i));
 
             if (minecarttracklogic != null && minecarttracklogic.b(this)) {
                 this.g.set(i, new ChunkPosition(minecarttracklogic.c, minecarttracklogic.d, minecarttracklogic.e));
@@ -91,7 +91,7 @@ class MinecartTrackLogic {
 
     private boolean b(MinecartTrackLogic minecarttracklogic) {
         for (int i = 0; i < this.g.size(); ++i) {
-            ChunkPosition chunkposition = (ChunkPosition) this.g.get(i);
+            ChunkPosition chunkposition = this.g.get(i);
 
             if (chunkposition.x == minecarttracklogic.c && chunkposition.z == minecarttracklogic.e) {
                 return true;
@@ -103,7 +103,7 @@ class MinecartTrackLogic {
 
     private boolean b(int i, int j, int k) {
         for (int l = 0; l < this.g.size(); ++l) {
-            ChunkPosition chunkposition = (ChunkPosition) this.g.get(l);
+            ChunkPosition chunkposition = this.g.get(l);
 
             if (chunkposition.x == i && chunkposition.z == k) {
                 return true;
@@ -143,7 +143,7 @@ class MinecartTrackLogic {
         } else if (this.g.size() == 0) {
             return true;
         } else {
-            ChunkPosition chunkposition = (ChunkPosition) this.g.get(0);
+            ChunkPosition chunkposition = this.g.get(0);
 
             return minecarttracklogic.d == this.d && chunkposition.y == this.d ? true : true;
         }
@@ -341,7 +341,7 @@ class MinecartTrackLogic {
             this.b.setData(this.c, this.d, this.e, i);
 
             for (int j = 0; j < this.g.size(); ++j) {
-                MinecartTrackLogic minecarttracklogic = this.a((ChunkPosition) this.g.get(j));
+                MinecartTrackLogic minecarttracklogic = this.a(this.g.get(j));
 
                 if (minecarttracklogic != null) {
                     minecarttracklogic.a();

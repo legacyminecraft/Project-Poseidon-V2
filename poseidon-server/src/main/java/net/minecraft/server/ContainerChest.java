@@ -36,7 +36,7 @@ public class ContainerChest extends Container {
 
     public ItemStack a(int i) {
         ItemStack itemstack = null;
-        Slot slot = (Slot) this.e.get(i);
+        Slot slot = this.e.get(i);
 
         if (slot != null && slot.b()) {
             ItemStack itemstack1 = slot.getItem();
@@ -49,7 +49,7 @@ public class ContainerChest extends Container {
             }
 
             if (itemstack1.count == 0) {
-                slot.c((ItemStack) null);
+                slot.c(null);
             } else {
                 slot.c();
             }

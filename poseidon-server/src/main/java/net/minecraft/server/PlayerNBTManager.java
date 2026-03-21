@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
@@ -89,7 +88,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
 
         if (file1.exists()) {
             try {
-                nbttagcompound = CompressedStreamTools.a((InputStream) (new FileInputStream(file1)));
+                nbttagcompound = CompressedStreamTools.a(new FileInputStream(file1));
                 nbttagcompound1 = nbttagcompound.k("Data");
                 return new WorldData(nbttagcompound1);
             } catch (Exception exception) {
@@ -100,7 +99,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
         file1 = new File(this.b, "level.dat_old");
         if (file1.exists()) {
             try {
-                nbttagcompound = CompressedStreamTools.a((InputStream) (new FileInputStream(file1)));
+                nbttagcompound = CompressedStreamTools.a(new FileInputStream(file1));
                 nbttagcompound1 = nbttagcompound.k("Data");
                 return new WorldData(nbttagcompound1);
             } catch (Exception exception1) {
@@ -111,7 +110,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
         return null;
     }
 
-    public void a(WorldData worlddata, List list) {
+    public void a(WorldData worlddata, List<EntityHuman> list) {
         NBTTagCompound nbttagcompound = worlddata.a(list);
         NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 
@@ -203,7 +202,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
             File file1 = new File(this.c, s + ".dat");
 
             if (file1.exists()) {
-                return CompressedStreamTools.a((InputStream) (new FileInputStream(file1)));
+                return CompressedStreamTools.a(new FileInputStream(file1));
             }
         } catch (Exception exception) {
             a.warning("Failed to load player data for " + s);

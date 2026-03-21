@@ -106,9 +106,9 @@ public class ChunkProviderHell implements IChunkProvider {
         byte b0 = 64;
         double d0 = 0.03125D;
 
-        this.p = this.l.a(this.p, (double) (i * 16), (double) (j * 16), 0.0D, 16, 16, 1, d0, d0, 1.0D);
-        this.q = this.l.a(this.q, (double) (i * 16), 109.0134D, (double) (j * 16), 16, 1, 16, d0, 1.0D, d0);
-        this.r = this.m.a(this.r, (double) (i * 16), (double) (j * 16), 0.0D, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
+        this.p = this.l.a(this.p, i * 16, j * 16, 0.0D, 16, 16, 1, d0, d0, 1.0D);
+        this.q = this.l.a(this.q, i * 16, 109.0134D, j * 16, 16, 1, 16, d0, 1.0D, d0);
+        this.r = this.m.a(this.r, i * 16, j * 16, 0.0D, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
 
         for (int k = 0; k < 16; ++k) {
             for (int l = 0; l < 16; ++l) {
@@ -201,11 +201,11 @@ public class ChunkProviderHell implements IChunkProvider {
         double d0 = 684.412D;
         double d1 = 2053.236D;
 
-        this.f = this.a.a(this.f, (double) i, (double) j, (double) k, l, 1, j1, 1.0D, 0.0D, 1.0D);
-        this.g = this.b.a(this.g, (double) i, (double) j, (double) k, l, 1, j1, 100.0D, 0.0D, 100.0D);
-        this.c = this.k.a(this.c, (double) i, (double) j, (double) k, l, i1, j1, d0 / 80.0D, d1 / 60.0D, d0 / 80.0D);
-        this.d = this.i.a(this.d, (double) i, (double) j, (double) k, l, i1, j1, d0, d1, d0);
-        this.e = this.j.a(this.e, (double) i, (double) j, (double) k, l, i1, j1, d0, d1, d0);
+        this.f = this.a.a(this.f, i, j, k, l, 1, j1, 1.0D, 0.0D, 1.0D);
+        this.g = this.b.a(this.g, i, j, k, l, 1, j1, 100.0D, 0.0D, 100.0D);
+        this.c = this.k.a(this.c, i, j, k, l, i1, j1, d0 / 80.0D, d1 / 60.0D, d0 / 80.0D);
+        this.d = this.i.a(this.d, i, j, k, l, i1, j1, d0, d1, d0);
+        this.e = this.j.a(this.e, i, j, k, l, i1, j1, d0, d1, d0);
         int k1 = 0;
         int l1 = 0;
         double[] adouble1 = new double[i1];
@@ -214,10 +214,10 @@ public class ChunkProviderHell implements IChunkProvider {
 
         for (i2 = 0; i2 < i1; ++i2) {
             adouble1[i2] = Math.cos((double) i2 * 3.141592653589793D * 6.0D / (double) i1) * 2.0D;
-            double d2 = (double) i2;
+            double d2 = i2;
 
             if (i2 > i1 / 2) {
-                d2 = (double) (i1 - 1 - i2);
+                d2 = i1 - 1 - i2;
             }
 
             if (d2 < 4.0D) {
@@ -282,7 +282,7 @@ public class ChunkProviderHell implements IChunkProvider {
                     double d11;
 
                     if (k2 > i1 - 4) {
-                        d11 = (double) ((float) (k2 - (i1 - 4)) / 3.0F);
+                        d11 = (float) (k2 - (i1 - 4)) / 3.0F;
                         d6 = d6 * (1.0D - d11) + -10.0D * d11;
                     }
 

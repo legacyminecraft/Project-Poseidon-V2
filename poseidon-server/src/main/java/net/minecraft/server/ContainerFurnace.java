@@ -37,7 +37,7 @@ public class ContainerFurnace extends Container {
         super.a();
 
         for (int i = 0; i < this.listeners.size(); ++i) {
-            ICrafting icrafting = (ICrafting) this.listeners.get(i);
+            ICrafting icrafting = this.listeners.get(i);
 
             if (this.b != this.a.cookTime) {
                 icrafting.a(this, 0, this.a.cookTime);
@@ -63,7 +63,7 @@ public class ContainerFurnace extends Container {
 
     public ItemStack a(int i) {
         ItemStack itemstack = null;
-        Slot slot = (Slot) this.e.get(i);
+        Slot slot = this.e.get(i);
 
         if (slot != null && slot.b()) {
             ItemStack itemstack1 = slot.getItem();
@@ -80,7 +80,7 @@ public class ContainerFurnace extends Container {
             }
 
             if (itemstack1.count == 0) {
-                slot.c((ItemStack) null);
+                slot.c(null);
             } else {
                 slot.c();
             }

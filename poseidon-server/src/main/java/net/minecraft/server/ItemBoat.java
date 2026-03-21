@@ -52,7 +52,7 @@ public class ItemBoat extends Item {
                         --j;
                     }
 
-                    world.addEntity(new EntityBoat(world, (double) ((float) i + 0.5F), (double) ((float) j + 1.0F), (double) ((float) k + 0.5F)));
+                    world.addEntity(new EntityBoat(world, (float) i + 0.5F, (float) j + 1.0F, (float) k + 0.5F));
                 }
 
                 --itemstack.count;

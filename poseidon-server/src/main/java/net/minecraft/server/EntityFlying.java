@@ -47,9 +47,9 @@ public class EntityFlying extends EntityLiving {
             }
 
             this.move(this.motX, this.motY, this.motZ);
-            this.motX *= (double) f2;
-            this.motY *= (double) f2;
-            this.motZ *= (double) f2;
+            this.motX *= f2;
+            this.motY *= f2;
+            this.motZ *= f2;
         }
 
         this.an = this.ao;

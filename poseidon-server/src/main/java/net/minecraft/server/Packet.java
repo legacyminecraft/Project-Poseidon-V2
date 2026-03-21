@@ -11,40 +11,40 @@ import java.util.Set;
 
 public abstract class Packet {
 
-    private static Map a = new HashMap();
-    private static Map b = new HashMap();
-    private static Set c = new HashSet();
-    private static Set d = new HashSet();
+    private static Map<Integer, Class<? extends Packet>> a = new HashMap<>();
+    private static Map<Class<? extends Packet>, Integer> b = new HashMap<>();
+    private static Set<Integer> c = new HashSet<>();
+    private static Set<Integer> d = new HashSet<>();
     public final long timestamp = System.currentTimeMillis();
     public boolean k = false;
-    private static HashMap e;
+    private static HashMap<Integer, PacketCounter> e;
     private static int f;
 
     public Packet() {}
 
-    static void a(int i, boolean flag, boolean flag1, Class oclass) {
-        if (a.containsKey(Integer.valueOf(i))) {
+    static void a(int i, boolean flag, boolean flag1, Class<? extends Packet> oclass) {
+        if (a.containsKey(i)) {
             throw new IllegalArgumentException("Duplicate packet id:" + i);
         } else if (b.containsKey(oclass)) {
             throw new IllegalArgumentException("Duplicate packet class:" + oclass);
         } else {
-            a.put(Integer.valueOf(i), oclass);
-            b.put(oclass, Integer.valueOf(i));
+            a.put(i, oclass);
+            b.put(oclass, i);
             if (flag) {
-                c.add(Integer.valueOf(i));
+                c.add(i);
             }
 
             if (flag1) {
-                d.add(Integer.valueOf(i));
+                d.add(i);
             }
         }
     }
 
     public static Packet a(int i) {
         try {
-            Class oclass = (Class) a.get(Integer.valueOf(i));
+            Class<? extends Packet> oclass = a.get(i);
 
-            return oclass == null ? null : (Packet) oclass.newInstance();
+            return oclass == null ? null : oclass.newInstance();
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("Skipping packet with id " + i);
@@ -53,7 +53,7 @@ public abstract class Packet {
     }
 
     public final int b() {
-        return ((Integer) b.get(this.getClass())).intValue();
+        return b.get(this.getClass());
     }
 
     // CraftBukkit - throws IOException
@@ -69,7 +69,7 @@ public abstract class Packet {
                 return null;
             }
 
-            if (flag && !d.contains(Integer.valueOf(i)) || !flag && !c.contains(Integer.valueOf(i))) {
+            if (flag && !d.contains(i) || !flag && !c.contains(i)) {
                 throw new IOException("Bad packet id " + i);
             }
 
@@ -94,11 +94,11 @@ public abstract class Packet {
         }
         // CraftBukkit end
 
-        PacketCounter packetcounter = (PacketCounter) e.get(Integer.valueOf(i));
+        PacketCounter packetcounter = e.get(i);
 
         if (packetcounter == null) {
-            packetcounter = new PacketCounter((EmptyClass1) null);
-            e.put(Integer.valueOf(i), packetcounter);
+            packetcounter = new PacketCounter(null);
+            e.put(i, packetcounter);
         }
 
         packetcounter.a(packet.a());
@@ -211,7 +211,7 @@ public abstract class Packet {
         a(131, true, false, Packet131.class);
         a(200, true, false, Packet200Statistic.class);
         a(255, true, true, Packet255KickDisconnect.class);
-        e = new HashMap();
+        e = new HashMap<>();
         f = 0;
     }
 }

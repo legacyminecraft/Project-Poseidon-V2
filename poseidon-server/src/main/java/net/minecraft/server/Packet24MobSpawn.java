@@ -15,7 +15,7 @@ public class Packet24MobSpawn extends Packet {
     public byte f;
     public byte g;
     private DataWatcher h;
-    private List i;
+    private List<WatchableObject> i;
 
     public Packet24MobSpawn() {}
 

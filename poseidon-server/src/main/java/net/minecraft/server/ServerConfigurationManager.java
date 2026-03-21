@@ -27,14 +27,14 @@ import java.util.logging.Logger;
 public class ServerConfigurationManager {
 
     public static Logger a = Logger.getLogger("Minecraft");
-    public List players = new ArrayList();
+    public List<EntityPlayer> players = new ArrayList<>();
     public MinecraftServer server; // CraftBukkit - private -> public
     // private PlayerManager[] d = new PlayerManager[2]; // CraftBukkit - removed
     public int maxPlayers; // CraftBukkit - private -> public
-    public Set banByName = new HashSet(); // CraftBukkit - private -> public
-    public Set banByIP = new HashSet(); // CraftBukkit - private -> public
-    private Set h = new HashSet();
-    private Set i = new HashSet();
+    public Set<String> banByName = new HashSet<>(); // CraftBukkit - private -> public
+    public Set<String> banByIP = new HashSet<>(); // CraftBukkit - private -> public
+    private Set<String> h = new HashSet<>();
+    private Set<String> i = new HashSet<>();
     private File j;
     private File k;
     private File l;
@@ -186,7 +186,7 @@ public class ServerConfigurationManager {
         }
 
         for (int i = 0; i < this.players.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(i);
+            EntityPlayer entityplayer = this.players.get(i);
 
             if (entityplayer.name.equalsIgnoreCase(s)) {
                 entityplayer.netServerHandler.disconnect("You logged in from another location");
@@ -318,7 +318,7 @@ public class ServerConfigurationManager {
 
     public void sendAll(Packet packet) {
         for (int i = 0; i < this.players.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(i);
+            EntityPlayer entityplayer = this.players.get(i);
 
             entityplayer.netServerHandler.sendPacket(packet);
         }
@@ -326,7 +326,7 @@ public class ServerConfigurationManager {
 
     public void a(Packet packet, int i) {
         for (int j = 0; j < this.players.size(); ++j) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(j);
+            EntityPlayer entityplayer = this.players.get(j);
 
             if (entityplayer.dimension == i) {
                 entityplayer.netServerHandler.sendPacket(packet);
@@ -342,7 +342,7 @@ public class ServerConfigurationManager {
                 s = s + ", ";
             }
 
-            s = s + ((EntityPlayer) this.players.get(i)).name;
+            s = s + this.players.get(i).name;
         }
 
         return s;
@@ -377,10 +377,10 @@ public class ServerConfigurationManager {
     private void h() {
         try {
             PrintWriter printwriter = new PrintWriter(new FileWriter(this.j, false));
-            Iterator iterator = this.banByName.iterator();
+            Iterator<String> iterator = this.banByName.iterator();
 
             while (iterator.hasNext()) {
-                String s = (String) iterator.next();
+                String s = iterator.next();
 
                 printwriter.println(s);
             }
@@ -420,10 +420,10 @@ public class ServerConfigurationManager {
     private void j() {
         try {
             PrintWriter printwriter = new PrintWriter(new FileWriter(this.k, false));
-            Iterator iterator = this.banByIP.iterator();
+            Iterator<String> iterator = this.banByIP.iterator();
 
             while (iterator.hasNext()) {
-                String s = (String) iterator.next();
+                String s = iterator.next();
 
                 printwriter.println(s);
             }
@@ -478,10 +478,10 @@ public class ServerConfigurationManager {
     private void l() {
         try {
             PrintWriter printwriter = new PrintWriter(new FileWriter(this.l, false));
-            Iterator iterator = this.h.iterator();
+            Iterator<String> iterator = this.h.iterator();
 
             while (iterator.hasNext()) {
-                String s = (String) iterator.next();
+                String s = iterator.next();
 
                 printwriter.println(s);
             }
@@ -512,10 +512,10 @@ public class ServerConfigurationManager {
     private void n() {
         try {
             PrintWriter printwriter = new PrintWriter(new FileWriter(this.m, false));
-            Iterator iterator = this.i.iterator();
+            Iterator<String> iterator = this.i.iterator();
 
             while (iterator.hasNext()) {
-                String s = (String) iterator.next();
+                String s = iterator.next();
 
                 printwriter.println(s);
             }
@@ -537,7 +537,7 @@ public class ServerConfigurationManager {
 
     public EntityPlayer i(String s) {
         for (int i = 0; i < this.players.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(i);
+            EntityPlayer entityplayer = this.players.get(i);
 
             if (entityplayer.name.equalsIgnoreCase(s)) {
                 return entityplayer;
@@ -556,12 +556,12 @@ public class ServerConfigurationManager {
     }
 
     public void sendPacketNearby(double d0, double d1, double d2, double d3, int i, Packet packet) {
-        this.sendPacketNearby((EntityHuman) null, d0, d1, d2, d3, i, packet);
+        this.sendPacketNearby(null, d0, d1, d2, d3, i, packet);
     }
 
     public void sendPacketNearby(EntityHuman entityhuman, double d0, double d1, double d2, double d3, int i, Packet packet) {
         for (int j = 0; j < this.players.size(); ++j) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(j);
+            EntityPlayer entityplayer = this.players.get(j);
 
             if (entityplayer != entityhuman && entityplayer.dimension == i) {
                 double d4 = d0 - entityplayer.locX;
@@ -579,7 +579,7 @@ public class ServerConfigurationManager {
         Packet3Chat packet3chat = new Packet3Chat(s);
 
         for (int i = 0; i < this.players.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(i);
+            EntityPlayer entityplayer = this.players.get(i);
 
             if (this.isOp(entityplayer.name)) {
                 entityplayer.netServerHandler.sendPacket(packet3chat);
@@ -600,7 +600,7 @@ public class ServerConfigurationManager {
 
     public void savePlayers() {
         for (int i = 0; i < this.players.size(); ++i) {
-            this.playerFileData.a((EntityHuman) this.players.get(i));
+            this.playerFileData.a(this.players.get(i));
         }
     }
 
@@ -616,7 +616,7 @@ public class ServerConfigurationManager {
         this.n();
     }
 
-    public Set e() {
+    public Set<String> e() {
         return this.i;
     }
 

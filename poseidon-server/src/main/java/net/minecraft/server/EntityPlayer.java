@@ -19,8 +19,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public ItemInWorldManager itemInWorldManager;
     public double d;
     public double e;
-    public List chunkCoordIntPairQueue = new LinkedList();
-    public Set playerChunkCoordIntPairs = new HashSet();
+    public List<ChunkCoordIntPair> chunkCoordIntPairQueue = new LinkedList<>();
+    public Set<ChunkCoordIntPair> playerChunkCoordIntPairs = new HashSet<>();
     private int bL = -99999999;
     private int bM = 60;
     private ItemStack[] bN = new ItemStack[] { null, null, null, null, null};
@@ -42,7 +42,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             j += this.random.nextInt(20) - 10;
         }
 
-        this.setPositionRotation((double) i + 0.5D, (double) k, (double) j + 0.5D, 0.0F, 0.0F);
+        this.setPositionRotation((double) i + 0.5D, k, (double) j + 0.5D, 0.0F, 0.0F);
         this.b = minecraftserver;
         this.bs = 0.0F;
         this.name = s;
@@ -119,7 +119,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     public void die(Entity entity) {
         // CraftBukkit start
-        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<org.bukkit.inventory.ItemStack>();
+        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<>();
 
         for (int i = 0; i < this.inventory.items.length; ++i) {
             if (this.inventory.items[i] != null) {
@@ -203,7 +203,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
 
         if (flag && !this.chunkCoordIntPairQueue.isEmpty()) {
-            ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) this.chunkCoordIntPairQueue.get(0);
+            ChunkCoordIntPair chunkcoordintpair = this.chunkCoordIntPairQueue.get(0);
 
             if (chunkcoordintpair != null) {
                 boolean flag1 = false;
@@ -217,10 +217,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
                     this.chunkCoordIntPairQueue.remove(chunkcoordintpair);
                     this.netServerHandler.sendPacket(new Packet51MapChunk(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, 16, 128, 16, worldserver));
-                    List list = worldserver.getTileEntities(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, chunkcoordintpair.x * 16 + 16, 128, chunkcoordintpair.z * 16 + 16);
+                    List<TileEntity> list = worldserver.getTileEntities(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, chunkcoordintpair.x * 16 + 16, 128, chunkcoordintpair.z * 16 + 16);
 
                     for (int j = 0; j < list.size(); ++j) {
-                        this.a((TileEntity) list.get(j));
+                        this.a(list.get(j));
                     }
                 }
             }
@@ -406,7 +406,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.a(container, container.b());
     }
 
-    public void a(Container container, List list) {
+    public void a(Container container, List<ItemStack> list) {
         this.netServerHandler.sendPacket(new Packet104WindowItems(container.windowId, list));
         this.netServerHandler.sendPacket(new Packet103SetSlot(-1, -1, this.inventory.j()));
     }

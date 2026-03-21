@@ -222,7 +222,7 @@ public class PortalTravelAgent {
         boolean flag;
 
         // CraftBukkit start - portal create event
-        java.util.Collection<org.bukkit.block.Block> blocks = new java.util.HashSet<org.bukkit.block.Block>();
+        java.util.Collection<org.bukkit.block.Block> blocks = new java.util.HashSet<>();
         // Find out what blocks the portal is going to modify, duplicated from below
         org.bukkit.World bworld = world.getWorld();
 

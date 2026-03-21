@@ -79,7 +79,7 @@ public class BlockTrapdoor extends Block {
 
         if (flag1 != flag) {
             world.setData(i, j, k, l ^ 4);
-            world.a((EntityHuman) null, 1003, i, j, k, 0);
+            world.a(null, 1003, i, j, k, 0);
         }
     }
 

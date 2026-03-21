@@ -54,7 +54,7 @@ public class BlockPortal extends BlockBreakable {
             return false;
         } else {
             // CraftBukkit start
-            java.util.Collection<org.bukkit.block.Block> blocks = new java.util.HashSet<org.bukkit.block.Block>();
+            java.util.Collection<org.bukkit.block.Block> blocks = new java.util.HashSet<>();
             org.bukkit.World bworld = world.getWorld();
             // CraftBukkit end
 

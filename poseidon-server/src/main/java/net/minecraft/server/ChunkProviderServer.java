@@ -20,8 +20,8 @@ public class ChunkProviderServer implements IChunkProvider {
     public IChunkProvider chunkProvider; // CraftBukkit
     private IChunkLoader e;
     public boolean forceChunkLoad = false;
-    public LongHashtable<Chunk> chunks = new LongHashtable<Chunk>();
-    public List chunkList = new ArrayList();
+    public LongHashtable<Chunk> chunks = new LongHashtable<>();
+    public List<Chunk> chunkList = new ArrayList<>();
     public WorldServer world;
     // CraftBukkit end
 
@@ -50,7 +50,7 @@ public class ChunkProviderServer implements IChunkProvider {
     public Chunk getChunkAt(int i, int j) {
         // CraftBukkit start
         this.unloadQueue.remove(i, j);
-        Chunk chunk = (Chunk) this.chunks.get(i, j);
+        Chunk chunk = this.chunks.get(i, j);
         boolean newChunk = false;
         // CraftBukkit end
 
@@ -106,7 +106,7 @@ public class ChunkProviderServer implements IChunkProvider {
 
     public Chunk getOrCreateChunk(int i, int j) {
         // CraftBukkit start
-        Chunk chunk = (Chunk) this.chunks.get(i, j);
+        Chunk chunk = this.chunks.get(i, j);
 
         chunk = chunk == null ? (!this.world.isLoading && !this.forceChunkLoad ? this.emptyChunk : this.getChunkAt(i, j)) : chunk;
         if (chunk == this.emptyChunk) return chunk;
@@ -196,7 +196,7 @@ public class ChunkProviderServer implements IChunkProvider {
         int i = 0;
 
         for (int j = 0; j < this.chunkList.size(); ++j) {
-            Chunk chunk = (Chunk) this.chunkList.get(j);
+            Chunk chunk = this.chunkList.get(j);
 
             if (flag && !chunk.p) {
                 this.saveChunkNOP(chunk);

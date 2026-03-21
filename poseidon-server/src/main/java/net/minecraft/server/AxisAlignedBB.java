@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AxisAlignedBB {
 
-    private static List g = new ArrayList();
+    private static List<AxisAlignedBB> g = new ArrayList<>();
     private static int h = 0;
     public double a;
     public double b;
@@ -27,7 +27,7 @@ public class AxisAlignedBB {
             g.add(a(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D));
         }
 
-        return ((AxisAlignedBB) g.get(h++)).c(d0, d1, d2, d3, d4, d5);
+        return g.get(h++).c(d0, d1, d2, d3, d4, d5);
     }
 
     private AxisAlignedBB(double d0, double d1, double d2, double d3, double d4, double d5) {

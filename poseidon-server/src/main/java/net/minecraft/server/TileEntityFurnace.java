@@ -94,11 +94,11 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 
                 nbttagcompound1.a("Slot", (byte) i);
                 this.items[i].a(nbttagcompound1);
-                nbttaglist.a((NBTBase) nbttagcompound1);
+                nbttaglist.a(nbttagcompound1);
             }
         }
 
-        nbttagcompound.a("Items", (NBTBase) nbttaglist);
+        nbttagcompound.a("Items", nbttaglist);
     }
 
     public int getMaxStackSize() {

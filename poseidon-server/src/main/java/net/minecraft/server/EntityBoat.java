@@ -266,7 +266,7 @@ public class EntityBoat extends Entity {
                 d6 = Math.sin((double) this.yaw * 3.141592653589793D / 180.0D);
 
                 for (int j = 0; (double) j < 1.0D + d4 * 60.0D; ++j) {
-                    double d7 = (double) (this.random.nextFloat() * 2.0F - 1.0F);
+                    double d7 = this.random.nextFloat() * 2.0F - 1.0F;
                     double d8 = (double) (this.random.nextInt(2) * 2 - 1) * 0.7D;
                     double d9;
                     double d10;
@@ -304,12 +304,12 @@ public class EntityBoat extends Entity {
             }
 
             this.pitch = 0.0F;
-            d5 = (double) this.yaw;
+            d5 = this.yaw;
             d6 = this.lastX - this.locX;
             double d11 = this.lastZ - this.locZ;
 
             if (d6 * d6 + d11 * d11 > 0.0010D) {
-                d5 = (double) ((float) (Math.atan2(d11, d6) * 180.0D / 3.141592653589793D));
+                d5 = (float) (Math.atan2(d11, d6) * 180.0D / 3.141592653589793D);
             }
 
             double d12;
@@ -349,12 +349,12 @@ public class EntityBoat extends Entity {
             }
             // CraftBukkit end
 
-            List list = this.world.b((Entity) this, this.boundingBox.b(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+            List<Entity> list = this.world.b(this, this.boundingBox.b(0.20000000298023224D, 0.0D, 0.20000000298023224D));
             int l;
 
             if (list != null && list.size() > 0) {
                 for (l = 0; l < list.size(); ++l) {
-                    Entity entity = (Entity) list.get(l);
+                    Entity entity = list.get(l);
 
                     if (entity != this.passenger && entity.d_() && entity instanceof EntityBoat) {
                         entity.collide(this);

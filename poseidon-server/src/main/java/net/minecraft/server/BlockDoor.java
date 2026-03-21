@@ -126,7 +126,7 @@ public class BlockDoor extends Block {
 
                 world.setData(i, j, k, l ^ 4);
                 world.b(i, j - 1, k, i, j, k);
-                world.a((EntityHuman) null, 1003, i, j, k, 0);
+                world.a(null, 1003, i, j, k, 0);
             }
         }
     }

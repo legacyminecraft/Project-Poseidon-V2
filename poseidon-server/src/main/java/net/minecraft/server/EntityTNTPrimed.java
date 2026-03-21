@@ -26,9 +26,9 @@ public class EntityTNTPrimed extends Entity {
         this.setPosition(d0, d1, d2);
         float f = (float) (Math.random() * 3.1415927410125732D * 2.0D);
 
-        this.motX = (double) (-MathHelper.sin(f * 3.1415927F / 180.0F) * 0.02F);
+        this.motX = -MathHelper.sin(f * 3.1415927F / 180.0F) * 0.02F;
         this.motY = 0.20000000298023224D;
-        this.motZ = (double) (-MathHelper.cos(f * 3.1415927F / 180.0F) * 0.02F);
+        this.motZ = -MathHelper.cos(f * 3.1415927F / 180.0F) * 0.02F;
         this.fuseTicks = 80;
         this.lastX = d0;
         this.lastY = d1;

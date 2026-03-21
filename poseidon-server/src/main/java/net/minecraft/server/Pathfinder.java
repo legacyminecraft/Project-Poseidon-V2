@@ -16,7 +16,7 @@ public class Pathfinder {
     }
 
     public PathEntity a(Entity entity, int i, int j, int k, float f) {
-        return this.a(entity, (double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F), f);
+        return this.a(entity, (float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, f);
     }
 
     private PathEntity a(Entity entity, double d0, double d1, double d2, float f) {

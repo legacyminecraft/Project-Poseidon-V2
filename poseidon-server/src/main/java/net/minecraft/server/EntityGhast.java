@@ -25,7 +25,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
 
     protected void b() {
         super.b();
-        this.datawatcher.a(16, Byte.valueOf((byte) 0));
+        this.datawatcher.a(16, (byte) 0);
     }
 
     public void m_() {
@@ -45,7 +45,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
         double d0 = this.b - this.locX;
         double d1 = this.c - this.locY;
         double d2 = this.d - this.locZ;
-        double d3 = (double) MathHelper.a(d0 * d0 + d1 * d1 + d2 * d2);
+        double d3 = MathHelper.a(d0 * d0 + d1 * d1 + d2 * d2);
 
         if (d3 < 1.0D || d3 > 60.0D) {
             this.b = this.locX + (double) ((this.random.nextFloat() * 2.0F - 1.0F) * 16.0F);
@@ -143,7 +143,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
             byte b1 = (byte) (this.f > 10 ? 1 : 0);
 
             if (b0 != b1) {
-                this.datawatcher.watch(16, Byte.valueOf(b1));
+                this.datawatcher.watch(16, b1);
             }
         }
     }

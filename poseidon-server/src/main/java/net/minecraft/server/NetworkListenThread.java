@@ -14,8 +14,8 @@ public class NetworkListenThread {
     private Thread e;
     public volatile boolean b = false;
     private int f = 0;
-    private ArrayList g = new ArrayList();
-    private ArrayList h = new ArrayList();
+    private ArrayList<NetLoginHandler> g = new ArrayList<>();
+    private ArrayList<NetServerHandler> h = new ArrayList<>();
     public MinecraftServer c;
 
     public NetworkListenThread(MinecraftServer minecraftserver, InetAddress inetaddress, int i) throws IOException {
@@ -43,7 +43,7 @@ public class NetworkListenThread {
         int i;
 
         for (i = 0; i < this.g.size(); ++i) {
-            NetLoginHandler netloginhandler = (NetLoginHandler) this.g.get(i);
+            NetLoginHandler netloginhandler = this.g.get(i);
 
             try {
                 netloginhandler.a();
@@ -60,7 +60,7 @@ public class NetworkListenThread {
         }
 
         for (i = 0; i < this.h.size(); ++i) {
-            NetServerHandler netserverhandler = (NetServerHandler) this.h.get(i);
+            NetServerHandler netserverhandler = this.h.get(i);
 
             try {
                 netserverhandler.a();

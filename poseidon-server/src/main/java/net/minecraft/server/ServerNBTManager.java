@@ -22,7 +22,7 @@ public class ServerNBTManager extends PlayerNBTManager {
         }
     }
 
-    public void a(WorldData worlddata, List list) {
+    public void a(WorldData worlddata, List<EntityHuman> list) {
         worlddata.a(19132);
         super.a(worlddata, list);
     }

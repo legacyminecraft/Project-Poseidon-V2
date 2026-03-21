@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class TileEntity {
 
-    private static Map a = new HashMap();
-    private static Map b = new HashMap();
+    private static Map<String, Class<? extends TileEntity>> a = new HashMap<>();
+    private static Map<Class<? extends TileEntity>, String> b = new HashMap<>();
     public World world;
     public int x;
     public int y;
@@ -15,7 +15,7 @@ public class TileEntity {
 
     public TileEntity() {}
 
-    private static void a(Class oclass, String s) {
+    private static void a(Class<? extends TileEntity> oclass, String s) {
         if (b.containsKey(s)) {
             throw new IllegalArgumentException("Duplicate id: " + s);
         } else {
@@ -31,7 +31,7 @@ public class TileEntity {
     }
 
     public void b(NBTTagCompound nbttagcompound) {
-        String s = (String) b.get(this.getClass());
+        String s = b.get(this.getClass());
 
         if (s == null) {
             throw new RuntimeException(this.getClass() + " is missing a mapping! This is a bug!");
@@ -49,10 +49,10 @@ public class TileEntity {
         TileEntity tileentity = null;
 
         try {
-            Class oclass = (Class) a.get(nbttagcompound.getString("id"));
+            Class<? extends TileEntity> oclass = a.get(nbttagcompound.getString("id"));
 
             if (oclass != null) {
-                tileentity = (TileEntity) oclass.newInstance();
+                tileentity = oclass.newInstance();
             }
         } catch (Exception exception) {
             exception.printStackTrace();

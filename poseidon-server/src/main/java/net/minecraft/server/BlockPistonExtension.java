@@ -59,7 +59,7 @@ public class BlockPistonExtension extends Block {
         return 0;
     }
 
-    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist) {
+    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList<AxisAlignedBB> arraylist) {
         int l = world.getData(i, j, k);
 
         switch (b(l)) {

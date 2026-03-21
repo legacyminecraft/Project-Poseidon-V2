@@ -13,7 +13,7 @@ public class TileEntityPiston extends TileEntity {
     private boolean j;
     private float k;
     private float l;
-    private static List m = new ArrayList();
+    private static List<Entity> m = new ArrayList<>();
 
     public TileEntityPiston() {}
 
@@ -59,16 +59,16 @@ public class TileEntityPiston extends TileEntity {
         AxisAlignedBB axisalignedbb = Block.PISTON_MOVING.a(this.world, this.x, this.y, this.z, this.a, f, this.c);
 
         if (axisalignedbb != null) {
-            List list = this.world.b((Entity) null, axisalignedbb);
+            List<Entity> list = this.world.b(null, axisalignedbb);
 
             if (!list.isEmpty()) {
                 m.addAll(list);
-                Iterator iterator = m.iterator();
+                Iterator<Entity> iterator = m.iterator();
 
                 while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
+                    Entity entity = iterator.next();
 
-                    entity.move((double) (f1 * (float) PistonBlockTextures.b[this.c]), (double) (f1 * (float) PistonBlockTextures.c[this.c]), (double) (f1 * (float) PistonBlockTextures.d[this.c]));
+                    entity.move(f1 * (float) PistonBlockTextures.b[this.c], f1 * (float) PistonBlockTextures.c[this.c], f1 * (float) PistonBlockTextures.d[this.c]);
                 }
 
                 m.clear();

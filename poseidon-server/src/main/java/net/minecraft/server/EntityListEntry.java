@@ -27,10 +27,10 @@ class EntityListEntry {
             return false;
         } else {
             EntityListEntry entitylistentry = (EntityListEntry) object;
-            Integer integer = Integer.valueOf(this.a());
-            Integer integer1 = Integer.valueOf(entitylistentry.a());
+            int integer = this.a();
+            int integer1 = entitylistentry.a();
 
-            if (integer == integer1 || integer != null && integer.equals(integer1)) {
+            if (integer == integer1) {
                 Object object1 = this.b();
                 Object object2 = entitylistentry.b();
 

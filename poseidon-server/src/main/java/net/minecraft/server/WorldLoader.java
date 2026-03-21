@@ -2,7 +2,6 @@ package net.minecraft.server;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 
 public class WorldLoader implements Convertable {
 
@@ -28,7 +27,7 @@ public class WorldLoader implements Convertable {
 
             if (file2.exists()) {
                 try {
-                    nbttagcompound = CompressedStreamTools.a((InputStream) (new FileInputStream(file2)));
+                    nbttagcompound = CompressedStreamTools.a(new FileInputStream(file2));
                     nbttagcompound1 = nbttagcompound.k("Data");
                     return new WorldData(nbttagcompound1);
                 } catch (Exception exception) {
@@ -39,7 +38,7 @@ public class WorldLoader implements Convertable {
             file2 = new File(file1, "level.dat_old");
             if (file2.exists()) {
                 try {
-                    nbttagcompound = CompressedStreamTools.a((InputStream) (new FileInputStream(file2)));
+                    nbttagcompound = CompressedStreamTools.a(new FileInputStream(file2));
                     nbttagcompound1 = nbttagcompound.k("Data");
                     return new WorldData(nbttagcompound1);
                 } catch (Exception exception1) {

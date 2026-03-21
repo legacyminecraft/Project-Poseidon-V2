@@ -66,7 +66,7 @@ public class WorldGenBigTree extends WorldGenerator {
 
                     if (this.a(aint1, aint2) == -1) {
                         int[] aint3 = new int[] { this.d[0], this.d[1], this.d[2]};
-                        double d3 = Math.sqrt(Math.pow((double) Math.abs(this.d[0] - aint1[0]), 2.0D) + Math.pow((double) Math.abs(this.d[2] - aint1[2]), 2.0D));
+                        double d3 = Math.sqrt(Math.pow(Math.abs(this.d[0] - aint1[0]), 2.0D) + Math.pow(Math.abs(this.d[2] - aint1[2]), 2.0D));
                         double d4 = d3 * this.i;
 
                         if ((double) aint1[1] - d4 > (double) l) {
@@ -140,7 +140,7 @@ public class WorldGenBigTree extends WorldGenerator {
             } else if (Math.abs(f1) >= f) {
                 f2 = 0.0F;
             } else {
-                f2 = (float) Math.sqrt(Math.pow((double) Math.abs(f), 2.0D) - Math.pow((double) Math.abs(f1), 2.0D));
+                f2 = (float) Math.sqrt(Math.pow(Math.abs(f), 2.0D) - Math.pow(Math.abs(f1), 2.0D));
             }
 
             f2 *= 0.5F;

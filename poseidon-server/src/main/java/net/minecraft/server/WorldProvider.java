@@ -67,6 +67,6 @@ public abstract class WorldProvider {
     }
 
     public static WorldProvider byDimension(int i) {
-        return (WorldProvider) (i == -1 ? new WorldProviderHell() : (i == 0 ? new WorldProviderNormal() : (i == 1 ? new WorldProviderSky() : null)));
+        return i == -1 ? new WorldProviderHell() : (i == 0 ? new WorldProviderNormal() : (i == 1 ? new WorldProviderSky() : null));
     }
 }

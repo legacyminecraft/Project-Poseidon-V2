@@ -5,7 +5,7 @@ import java.util.List;
 
 class PlayerInstance {
 
-    private List b;
+    private List<EntityPlayer> b;
     private int chunkX;
     private int chunkZ;
     private ChunkCoordIntPair location;
@@ -22,7 +22,7 @@ class PlayerInstance {
 
     public PlayerInstance(PlayerManager playermanager, int i, int j) {
         this.playerManager = playermanager;
-        this.b = new ArrayList();
+        this.b = new ArrayList<>();
         this.dirtyBlocks = new short[10];
         this.dirtyCount = 0;
         this.chunkX = i;
@@ -115,7 +115,7 @@ class PlayerInstance {
 
     public void sendAll(Packet packet) {
         for (int i = 0; i < this.b.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) this.b.get(i);
+            EntityPlayer entityplayer = this.b.get(i);
 
             if (entityplayer.playerChunkCoordIntPairs.contains(this.location)) {
                 entityplayer.netServerHandler.sendPacket(packet);
@@ -153,10 +153,10 @@ class PlayerInstance {
                     int j1 = this.m - this.l + 1;
 
                     this.sendAll(new Packet51MapChunk(i, j, k, l, i1, j1, worldserver));
-                    List list = worldserver.getTileEntities(i, j, k, i + l, j + i1, k + j1);
+                    List<TileEntity> list = worldserver.getTileEntities(i, j, k, i + l, j + i1, k + j1);
 
                     for (int k1 = 0; k1 < list.size(); ++k1) {
-                        this.sendTileEntity((TileEntity) list.get(k1));
+                        this.sendTileEntity(list.get(k1));
                     }
                 } else {
                     this.sendAll(new Packet52MultiBlockChange(this.chunkX, this.chunkZ, this.dirtyBlocks, this.dirtyCount, worldserver));

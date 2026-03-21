@@ -6,7 +6,7 @@ import java.util.Map;
 public class FurnaceRecipes {
 
     private static final FurnaceRecipes a = new FurnaceRecipes();
-    private Map b = new HashMap();
+    private Map<Integer, ItemStack> b = new HashMap<>();
 
     public static final FurnaceRecipes getInstance() {
         return a;
@@ -26,14 +26,14 @@ public class FurnaceRecipes {
     }
 
     public void registerRecipe(int i, ItemStack itemstack) {
-        this.b.put(Integer.valueOf(i), itemstack);
+        this.b.put(i, itemstack);
     }
 
     public ItemStack a(int i) {
-        return (ItemStack) this.b.get(Integer.valueOf(i));
+        return this.b.get(i);
     }
 
-    public Map b() {
+    public Map<Integer, ItemStack> b() {
         return this.b;
     }
 }

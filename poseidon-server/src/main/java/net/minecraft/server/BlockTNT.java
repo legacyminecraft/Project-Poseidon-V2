@@ -32,7 +32,7 @@ public class BlockTNT extends Block {
     }
 
     public void d(World world, int i, int j, int k) {
-        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F));
+        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F);
 
         entitytntprimed.fuseTicks = world.random.nextInt(entitytntprimed.fuseTicks / 4) + entitytntprimed.fuseTicks / 8;
         world.addEntity(entitytntprimed);
@@ -43,7 +43,7 @@ public class BlockTNT extends Block {
             if ((l & 1) == 0) {
                 this.a(world, i, j, k, new ItemStack(Block.TNT.id, 1, 0));
             } else {
-                EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F));
+                EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F);
 
                 world.addEntity(entitytntprimed);
                 world.makeSound(entitytntprimed, "random.fuse", 1.0F, 1.0F);

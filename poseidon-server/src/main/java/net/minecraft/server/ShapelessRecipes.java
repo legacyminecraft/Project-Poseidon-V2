@@ -7,9 +7,9 @@ import java.util.List;
 public class ShapelessRecipes implements CraftingRecipe {
 
     private final ItemStack a;
-    private final List b;
+    private final List<ItemStack> b;
 
-    public ShapelessRecipes(ItemStack itemstack, List list) {
+    public ShapelessRecipes(ItemStack itemstack, List<ItemStack> list) {
         this.a = itemstack;
         this.b = list;
     }
@@ -19,7 +19,7 @@ public class ShapelessRecipes implements CraftingRecipe {
     }
 
     public boolean a(InventoryCrafting inventorycrafting) {
-        ArrayList arraylist = new ArrayList(this.b);
+        ArrayList<ItemStack> arraylist = new ArrayList<>(this.b);
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
@@ -27,10 +27,10 @@ public class ShapelessRecipes implements CraftingRecipe {
 
                 if (itemstack != null) {
                     boolean flag = false;
-                    Iterator iterator = arraylist.iterator();
+                    Iterator<ItemStack> iterator = arraylist.iterator();
 
                     while (iterator.hasNext()) {
-                        ItemStack itemstack1 = (ItemStack) iterator.next();
+                        ItemStack itemstack1 = iterator.next();
 
                         if (itemstack.id == itemstack1.id && (itemstack1.getData() == -1 || itemstack.getData() == itemstack1.getData())) {
                             flag = true;

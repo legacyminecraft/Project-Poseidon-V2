@@ -29,7 +29,7 @@ public class ItemMinecart extends Item {
                 }
                 // CraftBukkit end
 
-                world.addEntity(new EntityMinecart(world, (double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F), this.a));
+                world.addEntity(new EntityMinecart(world, (float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, this.a));
             }
 
             --itemstack.count;

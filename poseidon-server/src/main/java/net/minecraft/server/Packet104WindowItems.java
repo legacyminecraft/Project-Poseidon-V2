@@ -12,12 +12,12 @@ public class Packet104WindowItems extends Packet {
 
     public Packet104WindowItems() {}
 
-    public Packet104WindowItems(int i, List list) {
+    public Packet104WindowItems(int i, List<ItemStack> list) {
         this.a = i;
         this.b = new ItemStack[list.size()];
 
         for (int j = 0; j < this.b.length; ++j) {
-            ItemStack itemstack = (ItemStack) list.get(j);
+            ItemStack itemstack = list.get(j);
 
             this.b[j] = itemstack == null ? null : itemstack.cloneItemStack();
         }

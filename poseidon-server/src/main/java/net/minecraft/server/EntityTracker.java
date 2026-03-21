@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class EntityTracker {
 
-    private Set a = new HashSet();
+    private Set<EntityTrackerEntry> a = new HashSet<>();
     private EntityList b = new EntityList();
     private MinecraftServer c;
     private int d;
@@ -24,10 +24,10 @@ public class EntityTracker {
         if (entity instanceof EntityPlayer) {
             this.a(entity, 512, 2);
             EntityPlayer entityplayer = (EntityPlayer) entity;
-            Iterator iterator = this.a.iterator();
+            Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
             while (iterator.hasNext()) {
-                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+                EntityTrackerEntry entitytrackerentry = iterator.next();
 
                 if (entitytrackerentry.tracker != entityplayer) {
                     entitytrackerentry.b(entityplayer);
@@ -88,10 +88,10 @@ public class EntityTracker {
     public synchronized void untrackEntity(Entity entity) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entity;
-            Iterator iterator = this.a.iterator();
+            Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
             while (iterator.hasNext()) {
-                EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+                EntityTrackerEntry entitytrackerentry = iterator.next();
 
                 entitytrackerentry.a(entityplayer);
             }
@@ -107,11 +107,11 @@ public class EntityTracker {
 
     // CraftBukkit - synchronized
     public synchronized void updatePlayers() {
-        ArrayList arraylist = new ArrayList();
-        Iterator iterator = this.a.iterator();
+        ArrayList<EntityPlayer> arraylist = new ArrayList<>();
+        Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
         while (iterator.hasNext()) {
-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+            EntityTrackerEntry entitytrackerentry = iterator.next();
 
             entitytrackerentry.track(this.c.getWorldServer(this.e).players);
             if (entitytrackerentry.m && entitytrackerentry.tracker instanceof EntityPlayer) {
@@ -120,11 +120,11 @@ public class EntityTracker {
         }
 
         for (int i = 0; i < arraylist.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) arraylist.get(i);
-            Iterator iterator1 = this.a.iterator();
+            EntityPlayer entityplayer = arraylist.get(i);
+            Iterator<EntityTrackerEntry> iterator1 = this.a.iterator();
 
             while (iterator1.hasNext()) {
-                EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry) iterator1.next();
+                EntityTrackerEntry entitytrackerentry1 = iterator1.next();
 
                 if (entitytrackerentry1.tracker != entityplayer) {
                     entitytrackerentry1.b(entityplayer);
@@ -153,10 +153,10 @@ public class EntityTracker {
 
     // CraftBukkit - synchronized
     public synchronized void untrackPlayer(EntityPlayer entityplayer) {
-        Iterator iterator = this.a.iterator();
+        Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
         while (iterator.hasNext()) {
-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+            EntityTrackerEntry entitytrackerentry = iterator.next();
 
             entitytrackerentry.c(entityplayer);
         }

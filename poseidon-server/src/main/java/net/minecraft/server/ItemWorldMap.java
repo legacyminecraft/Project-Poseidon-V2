@@ -26,7 +26,7 @@ public class ItemWorldMap extends ItemWorldMapBase {
             worldmap.e = 3;
             worldmap.map = (byte) world.worldProvider.dimension;
             worldmap.a();
-            world.a(s, (WorldMapBase) worldmap);
+            world.a(s, worldmap);
             
             // CraftBukkit start
             MapInitializeEvent event = new MapInitializeEvent(worldmap.mapView);
@@ -230,7 +230,7 @@ public class ItemWorldMap extends ItemWorldMapBase {
         String s = "map_" + itemstack.getData();
         WorldMap worldmap = new WorldMap(s);
 
-        world.a(s, (WorldMapBase) worldmap);
+        world.a(s, worldmap);
         worldmap.b = MathHelper.floor(entityhuman.locX);
         worldmap.c = MathHelper.floor(entityhuman.locZ);
         worldmap.e = 3;

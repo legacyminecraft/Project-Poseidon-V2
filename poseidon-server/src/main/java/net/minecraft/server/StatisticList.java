@@ -9,11 +9,11 @@ import java.util.Map;
 
 public class StatisticList {
 
-    protected static Map a = new HashMap();
-    public static List b = new ArrayList();
-    public static List c = new ArrayList();
-    public static List d = new ArrayList();
-    public static List e = new ArrayList();
+    protected static Map<Integer, Statistic> a = new HashMap<>();
+    public static List<Statistic> b = new ArrayList<>();
+    public static List<CounterStatistic> c = new ArrayList<>();
+    public static List<CraftingStatistic> d = new ArrayList<>();
+    public static List<CraftingStatistic> e = new ArrayList<>();
     public static Statistic f = (new CounterStatistic(1000, StatisticCollector.a("stat.startGame"))).e().d();
     public static Statistic g = (new CounterStatistic(1001, StatisticCollector.a("stat.createWorld"))).e().d();
     public static Statistic h = (new CounterStatistic(1002, StatisticCollector.a("stat.loadWorld"))).e().d();
@@ -64,33 +64,33 @@ public class StatisticList {
 
     public static void d() {
         if (G && H) {
-            HashSet hashset = new HashSet();
-            Iterator iterator = CraftingManager.getInstance().b().iterator();
+            HashSet<Integer> hashset = new HashSet<>();
+            Iterator<CraftingRecipe> iterator = CraftingManager.getInstance().b().iterator();
 
             while (iterator.hasNext()) {
-                CraftingRecipe craftingrecipe = (CraftingRecipe) iterator.next();
+                CraftingRecipe craftingrecipe = iterator.next();
 
-                hashset.add(Integer.valueOf(craftingrecipe.b().id));
+                hashset.add(craftingrecipe.b().id);
             }
 
-            iterator = FurnaceRecipes.getInstance().b().values().iterator();
+            Iterator<ItemStack> iterator1 = FurnaceRecipes.getInstance().b().values().iterator();
 
-            while (iterator.hasNext()) {
-                ItemStack itemstack = (ItemStack) iterator.next();
+            while (iterator1.hasNext()) {
+                ItemStack itemstack = iterator1.next();
 
-                hashset.add(Integer.valueOf(itemstack.id));
+                hashset.add(itemstack.id);
             }
 
             D = new Statistic[32000];
-            iterator = hashset.iterator();
+            Iterator<Integer> iterator2 = hashset.iterator();
 
-            while (iterator.hasNext()) {
-                Integer integer = (Integer) iterator.next();
+            while (iterator2.hasNext()) {
+                int integer = iterator2.next();
 
-                if (Item.byId[integer.intValue()] != null) {
-                    String s = StatisticCollector.a("stat.craftItem", new Object[] { Item.byId[integer.intValue()].j()});
+                if (Item.byId[integer] != null) {
+                    String s = StatisticCollector.a("stat.craftItem", new Object[] { Item.byId[integer].j()});
 
-                    D[integer.intValue()] = (new CraftingStatistic(16842752 + integer.intValue(), s, integer.intValue())).d();
+                    D[integer] = (new CraftingStatistic(16842752 + integer, s, integer)).d();
                 }
             }
 

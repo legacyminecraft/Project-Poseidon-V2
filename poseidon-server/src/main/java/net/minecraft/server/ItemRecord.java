@@ -16,7 +16,7 @@ public class ItemRecord extends Item {
                 return true;
             } else {
                 ((BlockJukeBox) Block.JUKEBOX).f(world, i, j, k, this.id);
-                world.a((EntityHuman) null, 1005, i, j, k, this.id);
+                world.a(null, 1005, i, j, k, this.id);
                 --itemstack.count;
                 return true;
             }

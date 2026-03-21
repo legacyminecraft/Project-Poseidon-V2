@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class BlockSign extends BlockContainer {
 
-    private Class a;
+    private Class<? extends TileEntitySign> a;
     private boolean b;
 
-    protected BlockSign(int i, Class oclass, boolean flag) {
+    protected BlockSign(int i, Class<? extends TileEntitySign> oclass, boolean flag) {
         super(i, Material.WOOD);
         this.b = flag;
         this.textureId = 4;
@@ -62,7 +62,7 @@ public class BlockSign extends BlockContainer {
 
     protected TileEntity a_() {
         try {
-            return (TileEntity) this.a.newInstance();
+            return this.a.newInstance();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

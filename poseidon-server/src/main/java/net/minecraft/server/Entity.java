@@ -118,7 +118,7 @@ public abstract class Entity {
         this.bG = false;
         this.world = world;
         this.setPosition(0.0D, 0.0D, 0.0D);
-        this.datawatcher.a(0, Byte.valueOf((byte) 0));
+        this.datawatcher.a(0, (byte) 0);
         this.b();
     }
 
@@ -221,13 +221,13 @@ public abstract class Entity {
                 for (i = 0; (float) i < 1.0F + this.length * 20.0F; ++i) {
                     f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.length;
                     f3 = (this.random.nextFloat() * 2.0F - 1.0F) * this.length;
-                    this.world.a("bubble", this.locX + (double) f2, (double) (f1 + 1.0F), this.locZ + (double) f3, this.motX, this.motY - (double) (this.random.nextFloat() * 0.2F), this.motZ);
+                    this.world.a("bubble", this.locX + (double) f2, f1 + 1.0F, this.locZ + (double) f3, this.motX, this.motY - (double) (this.random.nextFloat() * 0.2F), this.motZ);
                 }
 
                 for (i = 0; (float) i < 1.0F + this.length * 20.0F; ++i) {
                     f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.length;
                     f3 = (this.random.nextFloat() * 2.0F - 1.0F) * this.length;
-                    this.world.a("splash", this.locX + (double) f2, (double) (f1 + 1.0F), this.locZ + (double) f3, this.motX, this.motY, this.motZ);
+                    this.world.a("splash", this.locX + (double) f2, f1 + 1.0F, this.locZ + (double) f3, this.motX, this.motY, this.motZ);
                 }
             }
 
@@ -254,10 +254,10 @@ public abstract class Entity {
                         this.world.getServer().getPluginManager().callEvent(event);
 
                         if (!event.isCancelled()) {
-                            this.damageEntity((Entity) null, event.getDamage());
+                            this.damageEntity(null, event.getDamage());
                         }
                     } else {
-                        this.damageEntity((Entity) null, 1);
+                        this.damageEntity(null, 1);
                     }
                     // CraftBukkit end
                 }
@@ -296,7 +296,7 @@ public abstract class Entity {
                 server.getPluginManager().callEvent(event);
 
                 if (!event.isCancelled()) {
-                    this.damageEntity((Entity) null, event.getDamage());
+                    this.damageEntity(null, event.getDamage());
                 }
 
                 if (this.fireTicks <= 0) {
@@ -315,7 +315,7 @@ public abstract class Entity {
             }
             // CraftBukkit end
 
-            this.damageEntity((Entity) null, 4);
+            this.damageEntity(null, 4);
             this.fireTicks = 600;
         }
     }
@@ -326,7 +326,7 @@ public abstract class Entity {
 
     public boolean d(double d0, double d1, double d2) {
         AxisAlignedBB axisalignedbb = this.boundingBox.c(d0, d1, d2);
-        List list = this.world.getEntities(this, axisalignedbb);
+        List<AxisAlignedBB> list = this.world.getEntities(this, axisalignedbb);
 
         return list.size() > 0 ? false : !this.world.c(axisalignedbb);
     }
@@ -382,10 +382,10 @@ public abstract class Entity {
                 }
             }
 
-            List list = this.world.getEntities(this, this.boundingBox.a(d0, d1, d2));
+            List<AxisAlignedBB> list = this.world.getEntities(this, this.boundingBox.a(d0, d1, d2));
 
             for (int i = 0; i < list.size(); ++i) {
-                d1 = ((AxisAlignedBB) list.get(i)).b(this.boundingBox, d1);
+                d1 = list.get(i).b(this.boundingBox, d1);
             }
 
             this.boundingBox.d(0.0D, d1, 0.0D);
@@ -400,7 +400,7 @@ public abstract class Entity {
             int j;
 
             for (j = 0; j < list.size(); ++j) {
-                d0 = ((AxisAlignedBB) list.get(j)).a(this.boundingBox, d0);
+                d0 = list.get(j).a(this.boundingBox, d0);
             }
 
             this.boundingBox.d(d0, 0.0D, 0.0D);
@@ -411,7 +411,7 @@ public abstract class Entity {
             }
 
             for (j = 0; j < list.size(); ++j) {
-                d2 = ((AxisAlignedBB) list.get(j)).c(this.boundingBox, d2);
+                d2 = list.get(j).c(this.boundingBox, d2);
             }
 
             this.boundingBox.d(0.0D, 0.0D, d2);
@@ -431,7 +431,7 @@ public abstract class Entity {
                 double d11 = d2;
 
                 d0 = d5;
-                d1 = (double) this.bs;
+                d1 = this.bs;
                 d2 = d7;
                 AxisAlignedBB axisalignedbb1 = this.boundingBox.clone();
 
@@ -439,7 +439,7 @@ public abstract class Entity {
                 list = this.world.getEntities(this, this.boundingBox.a(d5, d1, d7));
 
                 for (k = 0; k < list.size(); ++k) {
-                    d1 = ((AxisAlignedBB) list.get(k)).b(this.boundingBox, d1);
+                    d1 = list.get(k).b(this.boundingBox, d1);
                 }
 
                 this.boundingBox.d(0.0D, d1, 0.0D);
@@ -450,7 +450,7 @@ public abstract class Entity {
                 }
 
                 for (k = 0; k < list.size(); ++k) {
-                    d0 = ((AxisAlignedBB) list.get(k)).a(this.boundingBox, d0);
+                    d0 = list.get(k).a(this.boundingBox, d0);
                 }
 
                 this.boundingBox.d(d0, 0.0D, 0.0D);
@@ -461,7 +461,7 @@ public abstract class Entity {
                 }
 
                 for (k = 0; k < list.size(); ++k) {
-                    d2 = ((AxisAlignedBB) list.get(k)).c(this.boundingBox, d2);
+                    d2 = list.get(k).c(this.boundingBox, d2);
                 }
 
                 this.boundingBox.d(0.0D, 0.0D, d2);
@@ -476,10 +476,10 @@ public abstract class Entity {
                     d1 = 0.0D;
                     d0 = 0.0D;
                 } else {
-                    d1 = (double) (-this.bs);
+                    d1 = -this.bs;
 
                     for (k = 0; k < list.size(); ++k) {
-                        d1 = ((AxisAlignedBB) list.get(k)).b(this.boundingBox, d1);
+                        d1 = list.get(k).b(this.boundingBox, d1);
                     }
 
                     this.boundingBox.d(0.0D, d1, 0.0D);
@@ -654,7 +654,7 @@ public abstract class Entity {
                 i = event.getDamage();
             }
             // CraftBukkit end
-            this.damageEntity((Entity) null, i);
+            this.damageEntity(null, i);
         }
     }
 
@@ -715,8 +715,8 @@ public abstract class Entity {
             float f4 = MathHelper.sin(this.yaw * 3.1415927F / 180.0F);
             float f5 = MathHelper.cos(this.yaw * 3.1415927F / 180.0F);
 
-            this.motX += (double) (f * f5 - f1 * f4);
-            this.motZ += (double) (f1 * f5 + f * f4);
+            this.motX += f * f5 - f1 * f4;
+            this.motZ += f1 * f5 + f * f4;
         }
     }
 
@@ -757,7 +757,7 @@ public abstract class Entity {
         this.lastYaw = this.yaw = f;
         this.lastPitch = this.pitch = f1;
         this.br = 0.0F;
-        double d3 = (double) (this.lastYaw - f);
+        double d3 = this.lastYaw - f;
 
         if (d3 < -180.0D) {
             this.lastYaw += 360.0F;
@@ -801,7 +801,7 @@ public abstract class Entity {
         double d4 = this.locY - d1;
         double d5 = this.locZ - d2;
 
-        return (double) MathHelper.a(d3 * d3 + d4 * d4 + d5 * d5);
+        return MathHelper.a(d3 * d3 + d4 * d4 + d5 * d5);
     }
 
     public double g(Entity entity) {
@@ -821,7 +821,7 @@ public abstract class Entity {
             double d2 = MathHelper.a(d0, d1);
 
             if (d2 >= 0.009999999776482582D) {
-                d2 = (double) MathHelper.a(d2);
+                d2 = MathHelper.a(d2);
                 d0 /= d2;
                 d1 /= d2;
                 double d3 = 1.0D / d2;
@@ -834,8 +834,8 @@ public abstract class Entity {
                 d1 *= d3;
                 d0 *= 0.05000000074505806D;
                 d1 *= 0.05000000074505806D;
-                d0 *= (double) (1.0F - this.bu);
-                d1 *= (double) (1.0F - this.bu);
+                d0 *= 1.0F - this.bu;
+                d1 *= 1.0F - this.bu;
                 this.b(-d0, 0.0D, -d1);
                 entity.b(d0, 0.0D, d1);
             }
@@ -880,8 +880,8 @@ public abstract class Entity {
     }
 
     public void d(NBTTagCompound nbttagcompound) {
-        nbttagcompound.a("Pos", (NBTBase) this.a(new double[] { this.locX, this.locY + (double) this.br, this.locZ}));
-        nbttagcompound.a("Motion", (NBTBase) this.a(new double[] { this.motX, this.motY, this.motZ}));
+        nbttagcompound.a("Pos", this.a(new double[] { this.locX, this.locY + (double) this.br, this.locZ}));
+        nbttagcompound.a("Motion", this.a(new double[] { this.motX, this.motY, this.motZ}));
 
         // CraftBukkit start - checking for NaN pitch/yaw and resetting to zero
         // TODO: make sure this is the best way to address this.
@@ -894,7 +894,7 @@ public abstract class Entity {
         }
         // CraftBukkit end
 
-        nbttagcompound.a("Rotation", (NBTBase) this.a(new float[] { this.yaw, this.pitch}));
+        nbttagcompound.a("Rotation", this.a(new float[] { this.yaw, this.pitch}));
         nbttagcompound.a("FallDistance", this.fallDistance);
         nbttagcompound.a("Fire", (short) this.fireTicks);
         nbttagcompound.a("Air", (short) this.airTicks);
@@ -1009,7 +1009,7 @@ public abstract class Entity {
         for (int j = 0; j < i; ++j) {
             double d0 = adouble1[j];
 
-            nbttaglist.a((NBTBase) (new NBTTagDouble(d0)));
+            nbttaglist.a(new NBTTagDouble(d0));
         }
 
         return nbttaglist;
@@ -1023,7 +1023,7 @@ public abstract class Entity {
         for (int j = 0; j < i; ++j) {
             float f = afloat1[j];
 
-            nbttaglist.a((NBTBase) (new NBTTagFloat(f)));
+            nbttaglist.a(new NBTTagFloat(f));
         }
 
         return nbttaglist;
@@ -1084,9 +1084,9 @@ public abstract class Entity {
             this.m_();
             if (this.vehicle != null) {
                 this.vehicle.f();
-                this.e += (double) (this.vehicle.yaw - this.vehicle.lastYaw);
+                this.e += this.vehicle.yaw - this.vehicle.lastYaw;
 
-                for (this.d += (double) (this.vehicle.pitch - this.vehicle.lastPitch); this.e >= 180.0D; this.e -= 360.0D) {
+                for (this.d += this.vehicle.pitch - this.vehicle.lastPitch; this.e >= 180.0D; this.e -= 360.0D) {
                     ;
                 }
 
@@ -1107,19 +1107,19 @@ public abstract class Entity {
                 float f = 10.0F;
 
                 if (d0 > (double) f) {
-                    d0 = (double) f;
+                    d0 = f;
                 }
 
                 if (d0 < (double) (-f)) {
-                    d0 = (double) (-f);
+                    d0 = -f;
                 }
 
                 if (d1 > (double) f) {
-                    d1 = (double) f;
+                    d1 = f;
                 }
 
                 if (d1 < (double) (-f)) {
-                    d1 = (double) (-f);
+                    d1 = -f;
                 }
 
                 this.e -= d0;
@@ -1135,7 +1135,7 @@ public abstract class Entity {
     }
 
     public double I() {
-        return (double) this.height;
+        return this.height;
     }
 
     public double m() {
@@ -1228,9 +1228,9 @@ public abstract class Entity {
         byte b0 = this.datawatcher.a(0);
 
         if (flag) {
-            this.datawatcher.watch(0, Byte.valueOf((byte) (b0 | 1 << i)));
+            this.datawatcher.watch(0, (byte) (b0 | 1 << i));
         } else {
-            this.datawatcher.watch(0, Byte.valueOf((byte) (b0 & ~(1 << i))));
+            this.datawatcher.watch(0, (byte) (b0 & ~(1 << i)));
         }
     }
 
@@ -1305,27 +1305,27 @@ public abstract class Entity {
             float f = this.random.nextFloat() * 0.2F + 0.1F;
 
             if (b0 == 0) {
-                this.motX = (double) (-f);
+                this.motX = -f;
             }
 
             if (b0 == 1) {
-                this.motX = (double) f;
+                this.motX = f;
             }
 
             if (b0 == 2) {
-                this.motY = (double) (-f);
+                this.motY = -f;
             }
 
             if (b0 == 3) {
-                this.motY = (double) f;
+                this.motY = f;
             }
 
             if (b0 == 4) {
-                this.motZ = (double) (-f);
+                this.motZ = -f;
             }
 
             if (b0 == 5) {
-                this.motZ = (double) f;
+                this.motZ = f;
             }
         }
 

@@ -116,9 +116,9 @@ public class ChunkProviderGenerate implements IChunkProvider {
         byte b0 = 64;
         double d0 = 0.03125D;
 
-        this.r = this.n.a(this.r, (double) (i * 16), (double) (j * 16), 0.0D, 16, 16, 1, d0, d0, 1.0D);
-        this.s = this.n.a(this.s, (double) (i * 16), 109.0134D, (double) (j * 16), 16, 1, 16, d0, 1.0D, d0);
-        this.t = this.o.a(this.t, (double) (i * 16), (double) (j * 16), 0.0D, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
+        this.r = this.n.a(this.r, i * 16, j * 16, 0.0D, 16, 16, 1, d0, d0, 1.0D);
+        this.s = this.n.a(this.s, i * 16, 109.0134D, j * 16, 16, 1, 16, d0, 1.0D, d0);
+        this.t = this.o.a(this.t, i * 16, j * 16, 0.0D, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
 
         for (int k = 0; k < 16; ++k) {
             for (int l = 0; l < 16; ++l) {
@@ -221,9 +221,9 @@ public class ChunkProviderGenerate implements IChunkProvider {
 
         this.g = this.a.a(this.g, i, k, l, j1, 1.121D, 1.121D, 0.5D);
         this.h = this.b.a(this.h, i, k, l, j1, 200.0D, 200.0D, 0.5D);
-        this.d = this.m.a(this.d, (double) i, (double) j, (double) k, l, i1, j1, d0 / 80.0D, d1 / 160.0D, d0 / 80.0D);
-        this.e = this.k.a(this.e, (double) i, (double) j, (double) k, l, i1, j1, d0, d1, d0);
-        this.f = this.l.a(this.f, (double) i, (double) j, (double) k, l, i1, j1, d0, d1, d0);
+        this.d = this.m.a(this.d, i, j, k, l, i1, j1, d0 / 80.0D, d1 / 160.0D, d0 / 80.0D);
+        this.e = this.k.a(this.e, i, j, k, l, i1, j1, d0, d1, d0);
+        this.f = this.l.a(this.f, i, j, k, l, i1, j1, d0, d1, d0);
         int k1 = 0;
         int l1 = 0;
         int i2 = 16 / l;
@@ -303,7 +303,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 
                     d8 -= d9;
                     if (j3 > i1 - 4) {
-                        double d13 = (double) ((float) (j3 - (i1 - 4)) / 3.0F);
+                        double d13 = (float) (j3 - (i1 - 4)) / 3.0F;
 
                         d8 = d8 * (1.0D - d13) + -10.0D * d13;
                     }

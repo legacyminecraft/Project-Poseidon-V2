@@ -59,9 +59,9 @@ public class NoiseGeneratorPerlin extends NoiseGenerator {
         int i1 = j & 255;
         int j1 = k & 255;
 
-        d3 -= (double) i;
-        d4 -= (double) j;
-        d5 -= (double) k;
+        d3 -= i;
+        d4 -= j;
+        d5 -= k;
         double d6 = d3 * d3 * d3 * (d3 * (d3 * 6.0D - 15.0D) + 10.0D);
         double d7 = d4 * d4 * d4 * (d4 * (d4 * 6.0D - 15.0D) + 10.0D);
         double d8 = d5 * d5 * d5 * (d5 * (d5 * 6.0D - 15.0D) + 10.0D);
@@ -133,7 +133,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator {
 
                 int i3 = l2 & 255;
 
-                d7 -= (double) l2;
+                d7 -= l2;
                 d8 = d7 * d7 * d7 * (d7 * (d7 * 6.0D - 15.0D) + 10.0D);
 
                 for (j1 = 0; j1 < k; ++j1) {
@@ -144,7 +144,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator {
                     }
 
                     l1 = k1 & 255;
-                    d9 -= (double) k1;
+                    d9 -= k1;
                     d10 = d9 * d9 * d9 * (d9 * (d9 * 6.0D - 15.0D) + 10.0D);
                     l = this.d[i3] + 0;
                     int j3 = this.d[l] + l1;
@@ -185,7 +185,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator {
                 }
 
                 l1 = k1 & 255;
-                d9 -= (double) k1;
+                d9 -= k1;
                 d10 = d9 * d9 * d9 * (d9 * (d9 * 6.0D - 15.0D) + 10.0D);
 
                 for (int l3 = 0; l3 < k; ++l3) {
@@ -198,7 +198,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator {
 
                     int j4 = i4 & 255;
 
-                    d18 -= (double) i4;
+                    d18 -= i4;
                     double d19 = d18 * d18 * d18 * (d18 * (d18 * 6.0D - 15.0D) + 10.0D);
 
                     for (int k4 = 0; k4 < j; ++k4) {
@@ -211,7 +211,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator {
 
                         int i5 = l4 & 255;
 
-                        d20 -= (double) l4;
+                        d20 -= l4;
                         double d21 = d20 * d20 * d20 * (d20 * (d20 * 6.0D - 15.0D) + 10.0D);
 
                         if (k4 == 0 || i5 != i1) {

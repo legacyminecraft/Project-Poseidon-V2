@@ -56,7 +56,7 @@ public class EntitySquid extends EntityWaterAnimal {
 
     protected void q() {
         // CraftBukkit start - whole method
-        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<org.bukkit.inventory.ItemStack>();
+        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<>();
 
         int count = this.random.nextInt(3) + 1;
         if (count > 0) {
@@ -116,16 +116,16 @@ public class EntitySquid extends EntityWaterAnimal {
             }
 
             if (!this.Y) {
-                this.motX = (double) (this.n * this.k);
-                this.motY = (double) (this.o * this.k);
-                this.motZ = (double) (this.p * this.k);
+                this.motX = this.n * this.k;
+                this.motY = this.o * this.k;
+                this.motZ = this.p * this.k;
             }
 
             f = MathHelper.a(this.motX * this.motX + this.motZ * this.motZ);
             this.K += (-((float) Math.atan2(this.motX, this.motZ)) * 180.0F / 3.1415927F - this.K) * 0.1F;
             this.yaw = this.K;
             this.c += 3.1415927F * this.m * 1.5F;
-            this.a += (-((float) Math.atan2((double) f, this.motY)) * 180.0F / 3.1415927F - this.a) * 0.1F;
+            this.a += (-((float) Math.atan2(f, this.motY)) * 180.0F / 3.1415927F - this.a) * 0.1F;
         } else {
             this.i = MathHelper.abs(MathHelper.sin(this.g)) * 3.1415927F * 0.25F;
             if (!this.Y) {

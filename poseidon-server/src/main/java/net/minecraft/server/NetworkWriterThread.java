@@ -44,7 +44,7 @@ class NetworkWriterThread extends Thread {
                     }
                 } catch (IOException ioexception) {
                     if (!NetworkManager.f(this.a)) {
-                        NetworkManager.a(this.a, (Exception) ioexception);
+                        NetworkManager.a(this.a, ioexception);
                     }
 
                     ioexception.printStackTrace();

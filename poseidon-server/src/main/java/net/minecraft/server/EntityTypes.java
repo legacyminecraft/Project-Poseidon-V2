@@ -5,28 +5,28 @@ import java.util.Map;
 
 public class EntityTypes {
 
-    private static Map a = new HashMap();
-    private static Map b = new HashMap();
-    private static Map c = new HashMap();
-    private static Map d = new HashMap();
+    private static Map<String, Class<? extends Entity>> a = new HashMap<>();
+    private static Map<Class<? extends Entity>, String> b = new HashMap<>();
+    private static Map<Integer, Class<? extends Entity>> c = new HashMap<>();
+    private static Map<Class<? extends Entity>, Integer> d = new HashMap<>();
 
     public EntityTypes() {}
 
-    private static void a(Class oclass, String s, int i) {
+    private static void a(Class<? extends Entity> oclass, String s, int i) {
         a.put(s, oclass);
         b.put(oclass, s);
-        c.put(Integer.valueOf(i), oclass);
-        d.put(oclass, Integer.valueOf(i));
+        c.put(i, oclass);
+        d.put(oclass, i);
     }
 
     public static Entity a(String s, World world) {
         Entity entity = null;
 
         try {
-            Class oclass = (Class) a.get(s);
+            Class<? extends Entity> oclass = a.get(s);
 
             if (oclass != null) {
-                entity = (Entity) oclass.getConstructor(new Class[] { World.class}).newInstance(new Object[] { world});
+                entity = oclass.getConstructor(new Class[] { World.class}).newInstance(new Object[] { world});
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -39,10 +39,10 @@ public class EntityTypes {
         Entity entity = null;
 
         try {
-            Class oclass = (Class) a.get(nbttagcompound.getString("id"));
+            Class<? extends Entity> oclass = a.get(nbttagcompound.getString("id"));
 
             if (oclass != null) {
-                entity = (Entity) oclass.getConstructor(new Class[] { World.class}).newInstance(new Object[] { world});
+                entity = oclass.getConstructor(new Class[] { World.class}).newInstance(new Object[] { world});
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -58,11 +58,11 @@ public class EntityTypes {
     }
 
     public static int a(Entity entity) {
-        return ((Integer) d.get(entity.getClass())).intValue();
+        return d.get(entity.getClass());
     }
 
     public static String b(Entity entity) {
-        return (String) b.get(entity.getClass());
+        return b.get(entity.getClass());
     }
 
     static {

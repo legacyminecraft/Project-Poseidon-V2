@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-public class NextTickListEntry implements Comparable {
+public class NextTickListEntry implements Comparable<NextTickListEntry> {
 
     private static long f = 0L;
     public int a;
@@ -11,7 +11,7 @@ public class NextTickListEntry implements Comparable {
     private long g;
 
     public NextTickListEntry(int i, int j, int k, int l) {
-        this.g = (long) (f++);
+        this.g = f++;
         this.a = i;
         this.b = j;
         this.c = k;
@@ -37,8 +37,7 @@ public class NextTickListEntry implements Comparable {
         return this;
     }
 
-    public int compareTo(Object o) {
-    	NextTickListEntry nextticklistentry = (NextTickListEntry) o;
+    public int compareTo(NextTickListEntry nextticklistentry) {
         return this.e < nextticklistentry.e ? -1 : (this.e > nextticklistentry.e ? 1 : (this.g < nextticklistentry.g ? -1 : (this.g > nextticklistentry.g ? 1 : 0)));
     }
 }

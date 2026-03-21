@@ -36,7 +36,7 @@ public class BlockCactus extends Block {
     public AxisAlignedBB e(World world, int i, int j, int k) {
         float f = 0.0625F;
 
-        return AxisAlignedBB.b((double) ((float) i + f), (double) j, (double) ((float) k + f), (double) ((float) (i + 1) - f), (double) ((float) (j + 1) - f), (double) ((float) (k + 1) - f));
+        return AxisAlignedBB.b((float) i + f, j, (float) k + f, (float) (i + 1) - f, (float) (j + 1) - f, (float) (k + 1) - f);
     }
 
     public int a(int i) {
@@ -88,12 +88,12 @@ public class BlockCactus extends Block {
             world.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                entity.damageEntity((Entity) null, event.getDamage());
+                entity.damageEntity(null, event.getDamage());
             }
             return;
         }
         // CraftBukkit end
 
-        entity.damageEntity((Entity) null, 1);
+        entity.damageEntity(null, 1);
     }
 }

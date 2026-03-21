@@ -52,7 +52,7 @@ public class EntityFireball extends Entity {
         d0 += this.random.nextGaussian() * 0.4D;
         d1 += this.random.nextGaussian() * 0.4D;
         d2 += this.random.nextGaussian() * 0.4D;
-        double d3 = (double) MathHelper.a(d0 * d0 + d1 * d1 + d2 * d2);
+        double d3 = MathHelper.a(d0 * d0 + d1 * d1 + d2 * d2);
 
         this.c = d0 / d3 * 0.1D;
         this.d = d1 / d3 * 0.1D;
@@ -79,9 +79,9 @@ public class EntityFireball extends Entity {
             }
 
             this.j = false;
-            this.motX *= (double) (this.random.nextFloat() * 0.2F);
-            this.motY *= (double) (this.random.nextFloat() * 0.2F);
-            this.motZ *= (double) (this.random.nextFloat() * 0.2F);
+            this.motX *= this.random.nextFloat() * 0.2F;
+            this.motY *= this.random.nextFloat() * 0.2F;
+            this.motZ *= this.random.nextFloat() * 0.2F;
             this.k = 0;
             this.l = 0;
         } else {
@@ -99,15 +99,15 @@ public class EntityFireball extends Entity {
         }
 
         Entity entity = null;
-        List list = this.world.b((Entity) this, this.boundingBox.a(this.motX, this.motY, this.motZ).b(1.0D, 1.0D, 1.0D));
+        List<Entity> list = this.world.b(this, this.boundingBox.a(this.motX, this.motY, this.motZ).b(1.0D, 1.0D, 1.0D));
         double d0 = 0.0D;
 
         for (int j = 0; j < list.size(); ++j) {
-            Entity entity1 = (Entity) list.get(j);
+            Entity entity1 = list.get(j);
 
             if (entity1.l_() && (entity1 != this.shooter || this.l >= 25)) {
                 float f = 0.3F;
-                AxisAlignedBB axisalignedbb = entity1.boundingBox.b((double) f, (double) f, (double) f);
+                AxisAlignedBB axisalignedbb = entity1.boundingBox.b(f, f, f);
                 MovingObjectPosition movingobjectposition1 = axisalignedbb.a(vec3d, vec3d1);
 
                 if (movingobjectposition1 != null) {
@@ -178,7 +178,7 @@ public class EntityFireball extends Entity {
 
         this.yaw = (float) (Math.atan2(this.motX, this.motZ) * 180.0D / 3.1415927410125732D);
 
-        for (this.pitch = (float) (Math.atan2(this.motY, (double) f1) * 180.0D / 3.1415927410125732D); this.pitch - this.lastPitch < -180.0F; this.lastPitch -= 360.0F) {
+        for (this.pitch = (float) (Math.atan2(this.motY, f1) * 180.0D / 3.1415927410125732D); this.pitch - this.lastPitch < -180.0F; this.lastPitch -= 360.0F) {
             ;
         }
 
@@ -211,9 +211,9 @@ public class EntityFireball extends Entity {
         this.motX += this.c;
         this.motY += this.d;
         this.motZ += this.e;
-        this.motX *= (double) f2;
-        this.motY *= (double) f2;
-        this.motZ *= (double) f2;
+        this.motX *= f2;
+        this.motY *= f2;
+        this.motZ *= f2;
         this.world.a("smoke", this.locX, this.locY + 0.5D, this.locZ, 0.0D, 0.0D, 0.0D);
         this.setPosition(this.locX, this.locY, this.locZ);
     }

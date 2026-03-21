@@ -8,7 +8,7 @@ import java.util.List;
 public class Packet40EntityMetadata extends Packet {
 
     public int a;
-    private List b;
+    private List<WatchableObject> b;
 
     public Packet40EntityMetadata() {}
 

@@ -78,7 +78,7 @@ public class EntityCreature extends EntityLiving {
         this.pitch = 0.0F;
         if (this.pathEntity != null && this.random.nextInt(100) != 0) {
             Vec3D vec3d = this.pathEntity.a(this);
-            double d0 = (double) (this.length * 2.0F);
+            double d0 = this.length * 2.0F;
 
             while (vec3d != null && vec3d.d(this.locX, vec3d.b, this.locZ) < d0 * d0) {
                 this.pathEntity.a();

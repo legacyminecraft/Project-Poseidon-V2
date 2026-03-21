@@ -82,7 +82,7 @@ public class EntitySkeleton extends EntityMonster {
 
     protected void q() {
         // CraftBukkit start - whole method
-        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<org.bukkit.inventory.ItemStack>();
+        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<>();
 
         int count = this.random.nextInt(3);
         if (count > 0) {
