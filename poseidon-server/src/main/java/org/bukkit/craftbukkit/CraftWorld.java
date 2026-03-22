@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit;
 
-import com.google.common.collect.MapMaker;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.EntityArrow;
@@ -98,13 +97,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentMap;
 
 public class CraftWorld implements World {
     private final WorldServer world;
     private Environment environment;
     private final CraftServer server = (CraftServer)Bukkit.getServer();
-    private ConcurrentMap<Integer, CraftChunk> unloadedChunks = new MapMaker().weakValues().makeMap();
+    //private ConcurrentMap<Integer, CraftChunk> unloadedChunks = new MapMaker().weakValues().makeMap(); // Poseidon
     private final ChunkGenerator generator;
     private final List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
 
@@ -117,14 +115,16 @@ public class CraftWorld implements World {
         environment = env;
     }
 
-    public void preserveChunk(CraftChunk chunk) {
+    // Poseidon start - remove chunk cache
+    /*public void preserveChunk(CraftChunk chunk) {
         chunk.breakLink();
         unloadedChunks.put((chunk.getX() << 16) + chunk.getZ(), chunk);
     }
 
     public Chunk popPreservedChunk(int x, int z) {
         return unloadedChunks.remove((x << 16) + z);
-    }
+    }*/
+    // Poseidon end
 
     public Block getBlockAt(int x, int y, int z) {
         return getChunkAt(x >> 4, z >> 4).getBlock(x & 0xF, y & 0x7F, z & 0xF);
@@ -225,7 +225,7 @@ public class CraftWorld implements World {
             world.chunkProviderServer.saveChunkNOP(chunk);
         }
 
-        preserveChunk((CraftChunk) chunk.bukkitChunk);
+        //preserveChunk((CraftChunk) chunk.bukkitChunk); // Poseidon
         world.chunkProviderServer.unloadQueue.remove(x, z);
         world.chunkProviderServer.chunks.remove(x, z);
         world.chunkProviderServer.chunkList.remove(chunk);

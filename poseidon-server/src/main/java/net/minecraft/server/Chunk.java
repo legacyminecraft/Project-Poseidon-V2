@@ -47,11 +47,7 @@ public class Chunk {
         }
 
         // CraftBukkit start
-        org.bukkit.craftbukkit.CraftWorld cworld = this.world.getWorld();
-        this.bukkitChunk = (cworld == null) ? null : cworld.popPreservedChunk(i, j);
-        if (this.bukkitChunk == null) {
-            this.bukkitChunk = new org.bukkit.craftbukkit.CraftChunk(this);
-        }
+        this.bukkitChunk = new org.bukkit.craftbukkit.CraftChunk(this);
     }
 
     public org.bukkit.Chunk bukkitChunk;

@@ -43,9 +43,11 @@ public class CraftChunk implements Chunk {
         return c;
     }
 
-    void breakLink() {
+    // Poseidon start - remove chunk cache
+    /*void breakLink() {
         weakChunk.clear();
-    }
+    }*/
+    // Poseidon end
 
     public int getX() {
         return x;
