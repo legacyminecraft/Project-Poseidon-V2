@@ -9,6 +9,7 @@ import org.bukkit.craftbukkit.TextWrapper;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.StorageMinecart;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
@@ -853,6 +854,14 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
         if (entity != null && this.player.e(entity) && this.player.g(entity) < 36.0D) {
             if (packet7useentity.c == 0) {
+                // Poseidon start - fix minecart dupe
+                Player player = this.getPlayer();
+                org.bukkit.entity.Entity interacted = entity.getBukkitEntity();
+                if (player.isInsideVehicle() && interacted instanceof StorageMinecart) {
+                    return;
+                }
+                // Poseidon end
+
                 // CraftBukkit start
                 PlayerInteractEntityEvent event = new PlayerInteractEntityEvent(this.getPlayer(), entity.getBukkitEntity());
                 this.server.getPluginManager().callEvent(event);
