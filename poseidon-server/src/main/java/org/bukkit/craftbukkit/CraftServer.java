@@ -83,7 +83,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class CraftServer implements Server {
-    private final String serverName = "Craftbukkit";
+    private final String serverName = "Project Poseidon"; // Poseidon - rebrand
     private final String serverVersion;
     private final String protocolVersion = "1.7.3";
     private final ServicesManager servicesManager = new SimpleServicesManager();
