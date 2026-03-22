@@ -659,7 +659,7 @@ public abstract class EntityLiving extends Entity {
             this.c(this.yaw, this.pitch);
             List<AxisAlignedBB> list = this.world.getEntities(this, this.boundingBox.shrink(0.03125D, 0.0D, 0.03125D));
 
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 double d4 = 0.0D;
 
                 for (int i = 0; i < list.size(); ++i) {
@@ -703,7 +703,7 @@ public abstract class EntityLiving extends Entity {
         this.a(this.az, this.aA);
         List<Entity> list1 = this.world.b(this, this.boundingBox.b(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
-        if (list1 != null && list1.size() > 0) {
+        if (list1 != null && !list1.isEmpty()) {
             for (int j = 0; j < list1.size(); ++j) {
                 Entity entity = list1.get(j);
 
@@ -799,9 +799,7 @@ public abstract class EntityLiving extends Entity {
         double d1 = entity.locZ - this.locZ;
         double d2;
 
-        if (entity instanceof EntityLiving) {
-            EntityLiving entityliving = (EntityLiving) entity;
-
+        if (entity instanceof EntityLiving entityliving) {
             d2 = this.locY + (double) this.t() - (entityliving.locY + (double) entityliving.t());
         } else {
             d2 = (entity.boundingBox.b + entity.boundingBox.e) / 2.0D - (this.locY + (double) this.t());
@@ -848,7 +846,7 @@ public abstract class EntityLiving extends Entity {
     public void X() {}
 
     public boolean d() {
-        return this.world.containsEntity(this.boundingBox) && this.world.getEntities(this, this.boundingBox).size() == 0 && !this.world.c(this.boundingBox);
+        return this.world.containsEntity(this.boundingBox) && this.world.getEntities(this, this.boundingBox).isEmpty() && !this.world.c(this.boundingBox);
     }
 
     protected void Y() {

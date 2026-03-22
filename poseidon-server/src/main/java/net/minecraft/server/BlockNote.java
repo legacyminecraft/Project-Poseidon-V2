@@ -26,15 +26,14 @@ public class BlockNote extends BlockContainer {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        if (world.isStatic) {
-            return true;
-        } else {
+        if (!world.isStatic) {
             TileEntityNote tileentitynote = (TileEntityNote) world.getTileEntity(i, j, k);
 
             tileentitynote.a();
             tileentitynote.play(world, i, j, k);
-            return true;
         }
+
+        return true;
     }
 
     public void b(World world, int i, int j, int k, EntityHuman entityhuman) {

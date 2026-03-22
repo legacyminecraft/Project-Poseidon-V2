@@ -167,9 +167,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                     return false;
                 }
 
-                if (entity instanceof EntityArrow) {
-                    EntityArrow entityarrow = (EntityArrow) entity;
-
+                if (entity instanceof EntityArrow entityarrow) {
                     if (entityarrow.shooter instanceof EntityHuman) {
                         return false;
                     }
@@ -207,11 +205,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             ChunkCoordIntPair chunkcoordintpair = this.chunkCoordIntPairQueue.get(0);
 
             if (chunkcoordintpair != null) {
-                boolean flag1 = false;
-
-                if (this.netServerHandler.b() + ChunkCompressionThread.getPlayerQueueSize(this) < 4) { // CraftBukkit - Add check against Chunk Packets in the ChunkCompressionThread.
-                    flag1 = true;
-                }
+                // CraftBukkit - Add check against Chunk Packets in the ChunkCompressionThread.
+                boolean flag1 = this.netServerHandler.b() + ChunkCompressionThread.getPlayerQueueSize(this) < 4;
 
                 if (flag1) {
                     WorldServer worldserver = this.b.getWorldServer(this.dimension);

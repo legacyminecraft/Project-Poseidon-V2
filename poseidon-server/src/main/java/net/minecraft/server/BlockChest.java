@@ -34,11 +34,11 @@ public class BlockChest extends BlockContainer {
             ++l;
         }
 
-        return l > 1 ? false : (this.g(world, i - 1, j, k) ? false : (this.g(world, i + 1, j, k) ? false : (this.g(world, i, j, k - 1) ? false : !this.g(world, i, j, k + 1))));
+        return l <= 1 && (!this.g(world, i - 1, j, k) && (!this.g(world, i + 1, j, k) && (!this.g(world, i, j, k - 1) && !this.g(world, i, j, k + 1))));
     }
 
     private boolean g(World world, int i, int j, int k) {
-        return world.getTypeId(i, j, k) != this.id ? false : (world.getTypeId(i - 1, j, k) == this.id ? true : (world.getTypeId(i + 1, j, k) == this.id ? true : (world.getTypeId(i, j, k - 1) == this.id ? true : world.getTypeId(i, j, k + 1) == this.id)));
+        return world.getTypeId(i, j, k) == this.id && (world.getTypeId(i - 1, j, k) == this.id || (world.getTypeId(i + 1, j, k) == this.id || (world.getTypeId(i, j, k - 1) == this.id || world.getTypeId(i, j, k + 1) == this.id)));
     }
 
     public void remove(World world, int i, int j, int k) {
@@ -104,12 +104,11 @@ public class BlockChest extends BlockContainer {
                 object = new InventoryLargeChest("Large chest", object, (TileEntityChest) world.getTileEntity(i, j, k + 1));
             }
 
-            if (world.isStatic) {
-                return true;
-            } else {
+            if (!world.isStatic) {
                 entityhuman.a(object);
-                return true;
             }
+
+            return true;
         }
     }
 

@@ -84,7 +84,7 @@ class MinecartTrackLogic {
     }
 
     private boolean a(int i, int j, int k) {
-        return BlockMinecartTrack.g(this.b, i, j, k) ? true : (BlockMinecartTrack.g(this.b, i, j + 1, k) ? true : BlockMinecartTrack.g(this.b, i, j - 1, k));
+        return BlockMinecartTrack.g(this.b, i, j, k) || (BlockMinecartTrack.g(this.b, i, j + 1, k) || BlockMinecartTrack.g(this.b, i, j - 1, k));
     }
 
     private @Nullable MinecartTrackLogic a(ChunkPosition chunkposition) {
@@ -142,12 +142,10 @@ class MinecartTrackLogic {
             return true;
         } else if (this.g.size() == 2) {
             return false;
-        } else if (this.g.size() == 0) {
+        } else if (this.g.isEmpty()) {
             return true;
         } else {
-            ChunkPosition chunkposition = this.g.get(0);
-
-            return minecarttracklogic.d == this.d && chunkposition.y == this.d ? true : true;
+            return true;
         }
     }
 

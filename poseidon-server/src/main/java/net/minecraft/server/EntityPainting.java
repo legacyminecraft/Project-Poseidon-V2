@@ -43,7 +43,7 @@ public class EntityPainting extends Entity {
             }
         }
 
-        if (arraylist.size() > 0) {
+        if (!arraylist.isEmpty()) {
             this.e = arraylist.get(this.random.nextInt(arraylist.size()));
         }
 
@@ -136,7 +136,7 @@ public class EntityPainting extends Entity {
     }
 
     public boolean h() {
-        if (this.world.getEntities(this, this.boundingBox).size() > 0) {
+        if (!this.world.getEntities(this, this.boundingBox).isEmpty()) {
             return false;
         } else {
             int i = this.e.B / 16;

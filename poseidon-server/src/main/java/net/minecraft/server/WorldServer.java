@@ -43,7 +43,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
         }
         // CraftBukkit end */
 
-        if (entity.passenger == null || !(entity.passenger instanceof EntityHuman)) {
+        if (!(entity.passenger instanceof EntityHuman)) {
             super.entityJoinedWorld(entity, flag);
         }
     }

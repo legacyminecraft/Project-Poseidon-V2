@@ -29,17 +29,15 @@ public class TileEntityChest extends TileEntity implements IInventory {
             if (this.items[i].count <= j) {
                 itemstack = this.items[i];
                 this.items[i] = null;
-                this.update();
-                return itemstack;
             } else {
                 itemstack = this.items[i].a(j);
                 if (this.items[i].count == 0) {
                     this.items[i] = null;
                 }
-
-                this.update();
-                return itemstack;
             }
+
+            this.update();
+            return itemstack;
         } else {
             return null;
         }
@@ -96,6 +94,6 @@ public class TileEntityChest extends TileEntity implements IInventory {
     }
 
     public boolean a_(EntityHuman entityhuman) {
-        return this.world.getTileEntity(this.x, this.y, this.z) != this ? false : entityhuman.e((double) this.x + 0.5D, (double) this.y + 0.5D, (double) this.z + 0.5D) <= 64.0D;
+        return this.world.getTileEntity(this.x, this.y, this.z) == this && entityhuman.e((double) this.x + 0.5D, (double) this.y + 0.5D, (double) this.z + 0.5D) <= 64.0D;
     }
 }

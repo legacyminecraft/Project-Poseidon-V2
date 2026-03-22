@@ -56,14 +56,13 @@ public class BlockFurnace extends BlockContainer {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        if (world.isStatic) {
-            return true;
-        } else {
+        if (!world.isStatic) {
             TileEntityFurnace tileentityfurnace = (TileEntityFurnace) world.getTileEntity(i, j, k);
 
             entityhuman.a(tileentityfurnace);
-            return true;
         }
+
+        return true;
     }
 
     public static void a(boolean flag, World world, int i, int j, int k) {

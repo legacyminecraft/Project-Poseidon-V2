@@ -14,7 +14,7 @@ public class NBTTagList extends NBTBase {
     public NBTTagList() {}
 
     void a(DataOutput dataoutput) throws IOException {
-        if (this.a.size() > 0) {
+        if (!this.a.isEmpty()) {
             this.b = this.a.get(0).a();
         } else {
             this.b = 1;
@@ -47,7 +47,7 @@ public class NBTTagList extends NBTBase {
     }
 
     public String toString() {
-        return "" + this.a.size() + " entries of type " + NBTBase.b(this.b);
+        return this.a.size() + " entries of type " + NBTBase.b(this.b);
     }
 
     public void a(NBTBase nbtbase) {

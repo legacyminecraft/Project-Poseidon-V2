@@ -52,20 +52,17 @@ public class WorldGenBigTree extends WorldGenerator {
             int j1 = 0;
             float f = this.a(i1);
 
-            if (f < 0.0F) {
-                --j;
-                --i1;
-            } else {
+            if (!(f < 0.0F)) {
                 for (double d0 = 0.5D; j1 < i; ++j1) {
                     double d1 = this.j * (double) f * ((double) this.b.nextFloat() + 0.328D);
                     double d2 = (double) this.b.nextFloat() * 2.0D * 3.14159D;
                     int k1 = MathHelper.floor(d1 * Math.sin(d2) + (double) this.d[0] + d0);
                     int l1 = MathHelper.floor(d1 * Math.cos(d2) + (double) this.d[2] + d0);
-                    int[] aint1 = new int[] { k1, j, l1};
-                    int[] aint2 = new int[] { k1, j + this.n, l1};
+                    int[] aint1 = new int[]{k1, j, l1};
+                    int[] aint2 = new int[]{k1, j + this.n, l1};
 
                     if (this.a(aint1, aint2) == -1) {
-                        int[] aint3 = new int[] { this.d[0], this.d[1], this.d[2]};
+                        int[] aint3 = new int[]{this.d[0], this.d[1], this.d[2]};
                         double d3 = Math.sqrt(Math.pow(Math.abs(this.d[0] - aint1[0]), 2.0D) + Math.pow(Math.abs(this.d[2] - aint1[2]), 2.0D));
                         double d4 = d3 * this.i;
 
@@ -84,10 +81,10 @@ public class WorldGenBigTree extends WorldGenerator {
                         }
                     }
                 }
-
-                --j;
-                --i1;
             }
+
+            --j;
+            --i1;
         }
 
         this.o = new int[k][4];
@@ -110,19 +107,17 @@ public class WorldGenBigTree extends WorldGenerator {
             while (k1 <= i1) {
                 double d0 = Math.sqrt(Math.pow((double) Math.abs(j1) + 0.5D, 2.0D) + Math.pow((double) Math.abs(k1) + 0.5D, 2.0D));
 
-                if (d0 > (double) f) {
-                    ++k1;
-                } else {
+                if (!(d0 > (double) f)) {
                     aint1[b2] = aint[b2] + k1;
                     int l1 = this.c.getTypeId(aint1[0], aint1[1], aint1[2]);
 
-                    if (l1 != 0 && l1 != 18) {
-                        ++k1;
-                    } else {
+                    if (l1 == 0 || l1 == 18) {
                         this.c.setRawTypeId(aint1[0], aint1[1], aint1[2], l);
-                        ++k1;
                     }
+
                 }
+
+                ++k1;
             }
         }
     }
@@ -232,8 +227,8 @@ public class WorldGenBigTree extends WorldGenerator {
             ++aint[2];
             ++aint1[2];
             this.a(aint, aint1, 17);
-            aint[0] += -1;
-            aint1[0] += -1;
+            aint[0] -= 1;
+            aint1[0] -= 1;
             this.a(aint, aint1, 17);
         }
     }

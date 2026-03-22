@@ -8,9 +8,7 @@ public class ItemSaddle extends Item {
     }
 
     public void a(ItemStack itemstack, EntityLiving entityliving) {
-        if (entityliving instanceof EntityPig) {
-            EntityPig entitypig = (EntityPig) entityliving;
-
+        if (entityliving instanceof EntityPig entitypig) {
             if (!entitypig.hasSaddle()) {
                 entitypig.setSaddle(true);
                 --itemstack.count;

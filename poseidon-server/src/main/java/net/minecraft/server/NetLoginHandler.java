@@ -116,7 +116,7 @@ public class NetLoginHandler extends NetHandler {
     }
 
     public String b() {
-        return this.g != null ? this.g + " [" + this.networkManager.getSocketAddress().toString() + "]" : this.networkManager.getSocketAddress().toString();
+        return this.g != null ? this.g + " [" + this.networkManager.getSocketAddress() + "]" : this.networkManager.getSocketAddress().toString();
     }
 
     public boolean c() {

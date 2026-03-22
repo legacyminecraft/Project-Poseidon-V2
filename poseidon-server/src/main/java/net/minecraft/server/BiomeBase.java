@@ -114,7 +114,7 @@ public class BiomeBase {
     }
 
     public boolean d() {
-        return this.v ? false : this.w;
+        return !this.v && this.w;
     }
 
     static {

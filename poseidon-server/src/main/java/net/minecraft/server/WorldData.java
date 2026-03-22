@@ -77,7 +77,7 @@ public class WorldData {
         EntityHuman entityhuman = null;
         NBTTagCompound nbttagcompound1 = null;
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             entityhuman = list.get(0);
         }
 

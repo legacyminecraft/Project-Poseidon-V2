@@ -19,11 +19,9 @@ public class ConsoleCommandHandler {
 
     // Craftbukkit start
     private boolean hasPermission(ICommandListener listener, String perm) {
-        if (listener instanceof ServerCommandListener) {
-            ServerCommandListener serv = (ServerCommandListener)listener;
+        if (listener instanceof ServerCommandListener serv) {
             return serv.getSender().hasPermission(perm);
-        } else if (listener instanceof NetServerHandler) {
-            NetServerHandler net = (NetServerHandler)listener;
+        } else if (listener instanceof NetServerHandler net) {
             return net.getPlayer().hasPermission(perm);
         } else if ((listener instanceof ServerGUI) || (listener instanceof MinecraftServer)) {
             return server.console.hasPermission(perm);
@@ -160,7 +158,7 @@ public class ConsoleCommandHandler {
                                     entityplayer.netServerHandler.disconnect("Kicked by admin");
                                     this.print(s1, "Kicking " + entityplayer.name);
                                 } else {
-                                    icommandlistener.sendMessage("Can\'t find user " + s2 + ". No kick.");
+                                    icommandlistener.sendMessage("Can't find user " + s2 + ". No kick.");
                                 }
                             } else {
                                 EntityPlayer entityplayer2;
@@ -173,9 +171,9 @@ public class ConsoleCommandHandler {
                                         entityplayer = serverconfigurationmanager.i(astring[1]);
                                         entityplayer2 = serverconfigurationmanager.i(astring[2]);
                                         if (entityplayer == null) {
-                                            icommandlistener.sendMessage("Can\'t find user " + astring[1] + ". No tp.");
+                                            icommandlistener.sendMessage("Can't find user " + astring[1] + ". No tp.");
                                         } else if (entityplayer2 == null) {
-                                            icommandlistener.sendMessage("Can\'t find user " + astring[2] + ". No tp.");
+                                            icommandlistener.sendMessage("Can't find user " + astring[2] + ". No tp.");
                                         } else if (entityplayer.dimension != entityplayer2.dimension) {
                                             icommandlistener.sendMessage("User " + astring[1] + " and " + astring[2] + " are in different dimensions. No tp.");
                                         } else {
@@ -219,13 +217,13 @@ public class ConsoleCommandHandler {
 
                                                     entityplayer2.b(new ItemStack(k, l, 0));
                                                 } else {
-                                                    icommandlistener.sendMessage("There\'s no item with id " + k);
+                                                    icommandlistener.sendMessage("There's no item with id " + k);
                                                 }
                                             } catch (NumberFormatException numberformatexception) {
-                                                icommandlistener.sendMessage("There\'s no item with id " + astring[2]);
+                                                icommandlistener.sendMessage("There's no item with id " + astring[2]);
                                             }
                                         } else {
-                                            icommandlistener.sendMessage("Can\'t find user " + s3);
+                                            icommandlistener.sendMessage("Can't find user " + s3);
                                         }
                                     } else if (s.toLowerCase().startsWith("time ")) {
                                         astring = s.split(" ");
@@ -276,7 +274,7 @@ public class ConsoleCommandHandler {
                                             s = "\u00A77" + s1 + " whispers " + s;
                                             a.info(s);
                                             if (!serverconfigurationmanager.a(astring[1], new Packet3Chat(s))) {
-                                                icommandlistener.sendMessage("There\'s no player by that name online.");
+                                                icommandlistener.sendMessage("There's no player by that name online.");
                                             }
                                         }
                                     } else if (s.toLowerCase().startsWith("whitelist ")) {
@@ -389,10 +387,10 @@ public class ConsoleCommandHandler {
     private void informOps(String msg) {
         Packet3Chat packet3chat = new Packet3Chat(msg);
         EntityPlayer sender = null;
-        if (this.listener instanceof ServerCommandListener) {
-            org.bukkit.command.CommandSender commandSender = ((ServerCommandListener) this.listener).getSender();
-            if (commandSender instanceof CraftPlayer) {
-                sender = ((CraftPlayer) commandSender).getHandle();
+        if (this.listener instanceof ServerCommandListener servercommandlistener) {
+            org.bukkit.command.CommandSender commandSender = servercommandlistener.getSender();
+            if (commandSender instanceof CraftPlayer craftplayer) {
+                sender = craftplayer.getHandle();
             }
         }
         java.util.List<EntityPlayer> players = this.server.serverConfigurationManager.players;

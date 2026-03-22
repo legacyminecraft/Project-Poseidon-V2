@@ -35,11 +35,9 @@ public class PathPoint {
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof PathPoint)) {
+        if (!(object instanceof PathPoint pathpoint)) {
             return false;
         } else {
-            PathPoint pathpoint = (PathPoint) object;
-
             return this.j == pathpoint.j && this.a == pathpoint.a && this.b == pathpoint.b && this.c == pathpoint.c;
         }
     }

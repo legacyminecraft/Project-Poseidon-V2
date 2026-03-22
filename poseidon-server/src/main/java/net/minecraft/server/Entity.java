@@ -130,7 +130,7 @@ public abstract class Entity {
     }
 
     public boolean equals(Object object) {
-        return object instanceof Entity ? ((Entity) object).id == this.id : false;
+        return object instanceof Entity entity && entity.id == this.id;
     }
 
     public int hashCode() {
@@ -329,7 +329,7 @@ public abstract class Entity {
         AxisAlignedBB axisalignedbb = this.boundingBox.c(d0, d1, d2);
         List<AxisAlignedBB> list = this.world.getEntities(this, axisalignedbb);
 
-        return list.size() > 0 ? false : !this.world.c(axisalignedbb);
+        return list.isEmpty() && !this.world.c(axisalignedbb);
     }
 
     public void move(double d0, double d1, double d2) {
@@ -362,7 +362,7 @@ public abstract class Entity {
             if (flag) {
                 double d8;
 
-                for (d8 = 0.05D; d0 != 0.0D && this.world.getEntities(this, this.boundingBox.c(d0, -1.0D, 0.0D)).size() == 0; d5 = d0) {
+                for (d8 = 0.05D; d0 != 0.0D && this.world.getEntities(this, this.boundingBox.c(d0, -1.0D, 0.0D)).isEmpty(); d5 = d0) {
                     if (d0 < d8 && d0 >= -d8) {
                         d0 = 0.0D;
                     } else if (d0 > 0.0D) {
@@ -372,7 +372,7 @@ public abstract class Entity {
                     }
                 }
 
-                for (; d2 != 0.0D && this.world.getEntities(this, this.boundingBox.c(0.0D, -1.0D, d2)).size() == 0; d7 = d2) {
+                for (; d2 != 0.0D && this.world.getEntities(this, this.boundingBox.c(0.0D, -1.0D, d2)).isEmpty(); d7 = d2) {
                     if (d2 < d8 && d2 >= -d8) {
                         d2 = 0.0D;
                     } else if (d2 > 0.0D) {
@@ -527,8 +527,7 @@ public abstract class Entity {
             int j1;
 
             // CraftBukkit start
-            if ((this.positionChanged) && (this.getBukkitEntity() instanceof Vehicle)) {
-                Vehicle vehicle = (Vehicle) this.getBukkitEntity();
+            if ((this.positionChanged) && (this.getBukkitEntity() instanceof Vehicle vehicle)) {
                 org.bukkit.block.Block block = this.world.getWorld().getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY - 0.20000000298023224D - (double) this.height), MathHelper.floor(this.locZ));
 
                 if (d5 > d0) {
@@ -881,8 +880,8 @@ public abstract class Entity {
     }
 
     public void d(NBTTagCompound nbttagcompound) {
-        nbttagcompound.a("Pos", this.a(new double[] { this.locX, this.locY + (double) this.br, this.locZ}));
-        nbttagcompound.a("Motion", this.a(new double[] { this.motX, this.motY, this.motZ}));
+        nbttagcompound.a("Pos", this.a(this.locX, this.locY + (double) this.br, this.locZ));
+        nbttagcompound.a("Motion", this.a(this.motX, this.motY, this.motZ));
 
         // CraftBukkit start - checking for NaN pitch/yaw and resetting to zero
         // TODO: make sure this is the best way to address this.
@@ -895,7 +894,7 @@ public abstract class Entity {
         }
         // CraftBukkit end
 
-        nbttagcompound.a("Rotation", this.a(new float[] { this.yaw, this.pitch}));
+        nbttagcompound.a("Rotation", this.a(this.yaw, this.pitch));
         nbttagcompound.a("FallDistance", this.fallDistance);
         nbttagcompound.a("Fire", (short) this.fireTicks);
         nbttagcompound.a("Air", (short) this.airTicks);
@@ -971,7 +970,7 @@ public abstract class Entity {
         // CraftBukkit end
 
         // CraftBukkit start - reset world
-        if (this instanceof EntityPlayer) {
+        if (this instanceof EntityPlayer entityPlayer) {
             org.bukkit.Server server = Bukkit.getServer();
             org.bukkit.World bworld = null;
 
@@ -985,7 +984,6 @@ public abstract class Entity {
                 bworld = server.getWorld(worldName);
             }
             if (bworld == null) {
-                EntityPlayer entityPlayer = (EntityPlayer) this;
                 bworld = ((org.bukkit.craftbukkit.CraftServer) server).getServer().getWorldServer(entityPlayer.dimension).getWorld();
             }
 
@@ -1052,7 +1050,7 @@ public abstract class Entity {
 
     public boolean K() {
         for (int i = 0; i < 8; ++i) {
-            float f = ((float) ((i >> 0) % 2) - 0.5F) * this.length * 0.9F;
+            float f = ((float) (i % 2) - 0.5F) * this.length * 0.9F;
             float f1 = ((float) ((i >> 1) % 2) - 0.5F) * 0.1F;
             float f2 = ((float) ((i >> 2) % 2) - 0.5F) * this.length * 0.9F;
             int j = MathHelper.floor(this.locX + (double) f);
@@ -1167,8 +1165,8 @@ public abstract class Entity {
         if (entity == null) {
             if (this.vehicle != null) {
                 // CraftBukkit start
-                if ((this.getBukkitEntity() instanceof LivingEntity) && (this.vehicle.getBukkitEntity() instanceof Vehicle)) {
-                    VehicleExitEvent event = new VehicleExitEvent((Vehicle) this.vehicle.getBukkitEntity(), (LivingEntity) this.getBukkitEntity());
+                if ((this.getBukkitEntity() instanceof LivingEntity livingentity) && (this.vehicle.getBukkitEntity() instanceof Vehicle vehicle)) {
+                    VehicleExitEvent event = new VehicleExitEvent(vehicle, livingentity);
                     this.world.getServer().getPluginManager().callEvent(event);
                 }
                 // CraftBukkit end
@@ -1180,8 +1178,8 @@ public abstract class Entity {
             this.vehicle = null;
         } else if (this.vehicle == entity) {
             // CraftBukkit start
-            if ((this.getBukkitEntity() instanceof LivingEntity) && (this.vehicle.getBukkitEntity() instanceof Vehicle)) {
-                VehicleExitEvent event = new VehicleExitEvent((Vehicle) this.vehicle.getBukkitEntity(), (LivingEntity) this.getBukkitEntity());
+            if ((this.getBukkitEntity() instanceof LivingEntity livingentity) && (this.vehicle.getBukkitEntity() instanceof Vehicle vehicle)) {
+                VehicleExitEvent event = new VehicleExitEvent(vehicle, livingentity);
                 this.world.getServer().getPluginManager().callEvent(event);
             }
             // CraftBukkit end

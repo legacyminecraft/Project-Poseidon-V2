@@ -90,11 +90,7 @@ public class BlockMinecartTrack extends Block {
                 j1 = i1 & 7;
             }
 
-            boolean flag = false;
-
-            if (!world.e(i, j - 1, k)) {
-                flag = true;
-            }
+            boolean flag = !world.e(i, j - 1, k);
 
             if (j1 == 2 && !world.e(i + 1, j, k)) {
                 flag = true;
@@ -219,7 +215,7 @@ public class BlockMinecartTrack extends Block {
                 j1 = 0;
             }
 
-            return this.a(world, i, j, k, flag, i1, j1) ? true : flag1 && this.a(world, i, j - 1, k, flag, i1, j1);
+            return this.a(world, i, j, k, flag, i1, j1) || flag1 && this.a(world, i, j - 1, k, flag, i1, j1);
         }
     }
 

@@ -22,9 +22,7 @@ public class ItemHoe extends Item {
             Block block = Block.SOIL;
 
             world.makeSound((float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, block.stepSound.getName(), (block.stepSound.getVolume1() + 1.0F) / 2.0F, block.stepSound.getVolume2() * 0.8F);
-            if (world.isStatic) {
-                return true;
-            } else {
+            if (!world.isStatic) {
                 CraftBlockState blockState = CraftBlockState.getBlockState(world, i, j, k); // CraftBukkit
 
                 world.setTypeId(i, j, k, block.id);
@@ -39,8 +37,9 @@ public class ItemHoe extends Item {
                 // CraftBukkit end
 
                 itemstack.damage(1, entityhuman);
-                return true;
             }
+
+            return true;
         }
     }
 }

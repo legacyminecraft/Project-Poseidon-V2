@@ -30,7 +30,7 @@ public class EntityPigZombie extends EntityZombie {
     }
 
     public boolean d() {
-        return this.world.spawnMonsters > 0 && this.world.containsEntity(this.boundingBox) && this.world.getEntities(this, this.boundingBox).size() == 0 && !this.world.c(this.boundingBox);
+        return this.world.spawnMonsters > 0 && this.world.containsEntity(this.boundingBox) && this.world.getEntities(this, this.boundingBox).isEmpty() && !this.world.c(this.boundingBox);
     }
 
     public void b(NBTTagCompound nbttagcompound) {
@@ -58,9 +58,7 @@ public class EntityPigZombie extends EntityZombie {
             for (int j = 0; j < list.size(); ++j) {
                 Entity entity1 = list.get(j);
 
-                if (entity1 instanceof EntityPigZombie) {
-                    EntityPigZombie entitypigzombie = (EntityPigZombie) entity1;
-
+                if (entity1 instanceof EntityPigZombie entitypigzombie) {
                     entitypigzombie.d(entity);
                 }
             }

@@ -19,11 +19,11 @@ public class BlockDiode extends Block {
     }
 
     public boolean canPlace(World world, int i, int j, int k) {
-        return !world.e(i, j - 1, k) ? false : super.canPlace(world, i, j, k);
+        return world.e(i, j - 1, k) && super.canPlace(world, i, j, k);
     }
 
     public boolean f(World world, int i, int j, int k) {
-        return !world.e(i, j - 1, k) ? false : super.f(world, i, j, k);
+        return world.e(i, j - 1, k) && super.f(world, i, j, k);
     }
 
     public void a(World world, int i, int j, int k, Random random) {
@@ -60,7 +60,7 @@ public class BlockDiode extends Block {
         } else {
             int i1 = iblockaccess.getData(i, j, k) & 3;
 
-            return i1 == 0 && l == 3 ? true : (i1 == 1 && l == 4 ? true : (i1 == 2 && l == 2 ? true : i1 == 3 && l == 5));
+            return i1 == 0 && l == 3 || (i1 == 1 && l == 4 || (i1 == 2 && l == 2 || i1 == 3 && l == 5));
         }
     }
 
@@ -84,22 +84,13 @@ public class BlockDiode extends Block {
     private boolean f(World world, int i, int j, int k, int l) {
         int i1 = l & 3;
 
-        switch (i1) {
-        case 0:
-            return world.isBlockFaceIndirectlyPowered(i, j, k + 1, 3) || world.getTypeId(i, j, k + 1) == Block.REDSTONE_WIRE.id && world.getData(i, j, k + 1) > 0;
-
-        case 1:
-            return world.isBlockFaceIndirectlyPowered(i - 1, j, k, 4) || world.getTypeId(i - 1, j, k) == Block.REDSTONE_WIRE.id && world.getData(i - 1, j, k) > 0;
-
-        case 2:
-            return world.isBlockFaceIndirectlyPowered(i, j, k - 1, 2) || world.getTypeId(i, j, k - 1) == Block.REDSTONE_WIRE.id && world.getData(i, j, k - 1) > 0;
-
-        case 3:
-            return world.isBlockFaceIndirectlyPowered(i + 1, j, k, 5) || world.getTypeId(i + 1, j, k) == Block.REDSTONE_WIRE.id && world.getData(i + 1, j, k) > 0;
-
-        default:
-            return false;
-        }
+        return switch (i1) {
+            case 0 -> world.isBlockFaceIndirectlyPowered(i, j, k + 1, 3) || world.getTypeId(i, j, k + 1) == Block.REDSTONE_WIRE.id && world.getData(i, j, k + 1) > 0;
+            case 1 -> world.isBlockFaceIndirectlyPowered(i - 1, j, k, 4) || world.getTypeId(i - 1, j, k) == Block.REDSTONE_WIRE.id && world.getData(i - 1, j, k) > 0;
+            case 2 -> world.isBlockFaceIndirectlyPowered(i, j, k - 1, 2) || world.getTypeId(i, j, k - 1) == Block.REDSTONE_WIRE.id && world.getData(i, j, k - 1) > 0;
+            case 3 -> world.isBlockFaceIndirectlyPowered(i + 1, j, k, 5) || world.getTypeId(i + 1, j, k) == Block.REDSTONE_WIRE.id && world.getData(i + 1, j, k) > 0;
+            default -> false;
+        };
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {

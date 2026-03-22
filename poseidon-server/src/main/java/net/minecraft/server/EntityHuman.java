@@ -340,7 +340,7 @@ public abstract class EntityHuman extends EntityLiving {
 
         // CraftBukkit start
         this.spawnWorld = nbttagcompound.getString("SpawnWorld");
-        if (this.spawnWorld == "") {
+        if (this.spawnWorld.equals("")) {
             this.spawnWorld = this.world.getServer().getWorlds().get(0).getName();
         }
         // CraftBukkit end
@@ -406,8 +406,8 @@ public abstract class EntityHuman extends EntityLiving {
             } else {
                 Entity object = entity;
 
-                if (entity instanceof EntityArrow && ((EntityArrow) entity).shooter != null) {
-                    object = ((EntityArrow) entity).shooter;
+                if (entity instanceof EntityArrow entityarrow && entityarrow.shooter != null) {
+                    object = entityarrow.shooter;
                 }
 
                 if (object instanceof EntityLiving) {
@@ -445,9 +445,7 @@ public abstract class EntityHuman extends EntityLiving {
 
     protected void a(EntityLiving entityliving, boolean flag) {
         if (!(entityliving instanceof EntityCreeper) && !(entityliving instanceof EntityGhast)) {
-            if (entityliving instanceof EntityWolf) {
-                EntityWolf entitywolf = (EntityWolf) entityliving;
-
+            if (entityliving instanceof EntityWolf entitywolf) {
                 if (entitywolf.isTamed() && this.name.equals(entitywolf.getOwnerName())) {
                     return;
                 }
@@ -506,8 +504,8 @@ public abstract class EntityHuman extends EntityLiving {
         if (!entity.a(this)) {
             ItemStack itemstack = this.G();
 
-            if (itemstack != null && entity instanceof EntityLiving) {
-                itemstack.a((EntityLiving) entity);
+            if (itemstack != null && entity instanceof EntityLiving entityliving) {
+                itemstack.a(entityliving);
                 // CraftBukkit - bypass infinite items; <= 0 -> == 0
                 if (itemstack.count == 0) {
                     itemstack.a(this);
@@ -545,7 +543,7 @@ public abstract class EntityHuman extends EntityLiving {
             // CraftBukkit start - Don't call the event when the entity is human since it will be called with damageEntity
             if (entity instanceof EntityLiving && !(entity instanceof EntityHuman)) {
                 org.bukkit.entity.Entity damager = this.getBukkitEntity();
-                org.bukkit.entity.Entity damagee = (entity == null) ? null : entity.getBukkitEntity();
+                org.bukkit.entity.Entity damagee = entity.getBukkitEntity();
 
                 EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager, damagee, EntityDamageEvent.DamageCause.ENTITY_ATTACK, i);
                 this.world.getServer().getPluginManager().callEvent(event);
@@ -566,8 +564,8 @@ public abstract class EntityHuman extends EntityLiving {
 
             ItemStack itemstack = this.G();
 
-            if (itemstack != null && entity instanceof EntityLiving) {
-                itemstack.a((EntityLiving) entity, this);
+            if (itemstack != null && entity instanceof EntityLiving entityliving) {
+                itemstack.a(entityliving, this);
                 // CraftBukkit - bypass infinite items; <= 0 -> == 0
                 if (itemstack.count == 0) {
                     itemstack.a(this);
@@ -575,9 +573,9 @@ public abstract class EntityHuman extends EntityLiving {
                 }
             }
 
-            if (entity instanceof EntityLiving) {
+            if (entity instanceof EntityLiving entityliving) {
                 if (entity.T()) {
-                    this.a((EntityLiving) entity, true);
+                    this.a(entityliving, true);
                 }
 
                 this.a(StatisticList.w, i);
@@ -619,8 +617,7 @@ public abstract class EntityHuman extends EntityLiving {
         }
 
         // CraftBukkit start
-        if (this.getBukkitEntity() instanceof Player) {
-            Player player = (Player) this.getBukkitEntity();
+        if (this.getBukkitEntity() instanceof Player player) {
             org.bukkit.block.Block bed = this.world.getWorld().getBlockAt(i, j, k);
 
             PlayerBedEnterEvent event = new PlayerBedEnterEvent(player, bed);
@@ -717,9 +714,7 @@ public abstract class EntityHuman extends EntityLiving {
         }
 
         // CraftBukkit start
-        if (this.getBukkitEntity() instanceof Player) {
-            Player player = (Player) this.getBukkitEntity();
-
+        if (this.getBukkitEntity() instanceof Player player) {
             org.bukkit.block.Block bed;
             if (chunkcoordinates != null) {
                 bed = this.world.getWorld().getBlockAt(chunkcoordinates.x, chunkcoordinates.y, chunkcoordinates.z);
@@ -757,9 +752,7 @@ public abstract class EntityHuman extends EntityLiving {
         if (world.getTypeId(chunkcoordinates.x, chunkcoordinates.y, chunkcoordinates.z) != Block.BED.id) {
             return null;
         } else {
-            ChunkCoordinates chunkcoordinates1 = BlockBed.f(world, chunkcoordinates.x, chunkcoordinates.y, chunkcoordinates.z, 0);
-
-            return chunkcoordinates1;
+            return BlockBed.f(world, chunkcoordinates.x, chunkcoordinates.y, chunkcoordinates.z, 0);
         }
     }
 
@@ -843,17 +836,18 @@ public abstract class EntityHuman extends EntityLiving {
             int i = Math.round(MathHelper.a(d0 * d0 + d1 * d1 + d2 * d2) * 100.0F);
 
             if (i > 0) {
-                if (this.vehicle instanceof EntityMinecart) {
-                    this.a(StatisticList.r, i);
-                    if (this.c == null) {
-                        this.c = new ChunkCoordinates(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ));
-                    } else if (this.c.a(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ)) >= 1000.0D) {
-                        this.a(AchievementList.q, 1);
+                switch (this.vehicle) {
+                    case EntityMinecart _ -> {
+                        this.a(StatisticList.r, i);
+                        if (this.c == null) {
+                            this.c = new ChunkCoordinates(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ));
+                        } else if (this.c.a(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ)) >= 1000.0D) {
+                            this.a(AchievementList.q, 1);
+                        }
                     }
-                } else if (this.vehicle instanceof EntityBoat) {
-                    this.a(StatisticList.s, i);
-                } else if (this.vehicle instanceof EntityPig) {
-                    this.a(StatisticList.t, i);
+                    case EntityBoat _ -> this.a(StatisticList.s, i);
+                    case EntityPig _ -> this.a(StatisticList.t, i);
+                    default -> {}
                 }
             }
         }

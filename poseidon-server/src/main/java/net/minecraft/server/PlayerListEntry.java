@@ -2,6 +2,8 @@ package net.minecraft.server;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 class PlayerListEntry {
 
     final long a;
@@ -25,10 +27,7 @@ class PlayerListEntry {
     }
 
     public final boolean equals(Object object) {
-        if (!(object instanceof PlayerListEntry)) {
-            return false;
-        } else {
-            PlayerListEntry playerlistentry = (PlayerListEntry) object;
+        if (object instanceof PlayerListEntry playerlistentry) {
             long olong = this.a();
             long olong1 = playerlistentry.a();
 
@@ -36,13 +35,11 @@ class PlayerListEntry {
                 Object object1 = this.b();
                 Object object2 = playerlistentry.b();
 
-                if (object1 == object2 || object1 != null && object1.equals(object2)) {
-                    return true;
-                }
+                return Objects.equals(object1, object2);
             }
-
-            return false;
         }
+
+        return false;
     }
 
     public final int hashCode() {

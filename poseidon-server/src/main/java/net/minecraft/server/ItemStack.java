@@ -125,8 +125,8 @@ public final class ItemStack {
         if (this.d()) {
             this.damage += i;
             if (this.damage > this.i()) {
-                if (entity instanceof EntityHuman) {
-                    ((EntityHuman) entity).a(StatisticList.F[this.id], 1);
+                if (entity instanceof EntityHuman entityhuman) {
+                    entityhuman.a(StatisticList.F[this.id], 1);
                 }
 
                 --this.count;
@@ -174,11 +174,11 @@ public final class ItemStack {
     }
 
     public static boolean equals(@Nullable ItemStack itemstack, @Nullable ItemStack itemstack1) {
-        return itemstack == null && itemstack1 == null ? true : (itemstack != null && itemstack1 != null ? itemstack.d(itemstack1) : false);
+        return itemstack == null && itemstack1 == null || (itemstack != null && itemstack1 != null && itemstack.d(itemstack1));
     }
 
     private boolean d(ItemStack itemstack) {
-        return this.count != itemstack.count ? false : (this.id != itemstack.id ? false : this.damage == itemstack.damage);
+        return this.count == itemstack.count && (this.id == itemstack.id && this.damage == itemstack.damage);
     }
 
     public boolean doMaterialsMatch(ItemStack itemstack) {

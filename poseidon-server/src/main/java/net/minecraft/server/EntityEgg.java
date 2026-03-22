@@ -199,57 +199,23 @@ public class EntityEgg extends Entity {
 
             if (hatching) {
                 for (int k = 0; k < numHatching; k++) {
-                    Entity entity = null;
-                    switch (hatchingType) {
-                        case CHICKEN:
-                            entity = new EntityChicken(this.world);
-                            break;
-                        case COW:
-                            entity = new EntityCow(this.world);
-                            break;
-                        case CREEPER:
-                            entity = new EntityCreeper(this.world);
-                            break;
-                        case GHAST:
-                            entity = new EntityGhast(this.world);
-                            break;
-                        case GIANT:
-                            entity = new EntityGiantZombie(this.world);
-                            break;
-                        case PIG:
-                            entity = new EntityPig(this.world);
-                            break;
-                        case PIG_ZOMBIE:
-                            entity = new EntityPigZombie(this.world);
-                            break;
-                        case SHEEP:
-                            entity = new EntitySheep(this.world);
-                            break;
-                        case SKELETON:
-                            entity = new EntitySkeleton(this.world);
-                            break;
-                        case SPIDER:
-                            entity = new EntitySpider(this.world);
-                            break;
-                        case ZOMBIE:
-                            entity = new EntityZombie(this.world);
-                            break;
-                        case SQUID:
-                            entity = new EntitySquid(this.world);
-                            break;
-                        case SLIME:
-                            entity = new EntitySlime(this.world);
-                            break;
-                        case WOLF:
-                            entity = new EntityWolf(this.world);
-                            break;
-                        case MONSTER:
-                            entity = new EntityMonster(this.world);
-                            break;
-                        default:
-                            entity = new EntityChicken(this.world);
-                            break;
-                    }
+                    Entity entity = switch (hatchingType) {
+                        case COW -> new EntityCow(this.world);
+                        case CREEPER -> new EntityCreeper(this.world);
+                        case GHAST -> new EntityGhast(this.world);
+                        case GIANT -> new EntityGiantZombie(this.world);
+                        case PIG -> new EntityPig(this.world);
+                        case PIG_ZOMBIE -> new EntityPigZombie(this.world);
+                        case SHEEP -> new EntitySheep(this.world);
+                        case SKELETON -> new EntitySkeleton(this.world);
+                        case SPIDER -> new EntitySpider(this.world);
+                        case ZOMBIE -> new EntityZombie(this.world);
+                        case SQUID -> new EntitySquid(this.world);
+                        case SLIME -> new EntitySlime(this.world);
+                        case WOLF -> new EntityWolf(this.world);
+                        case MONSTER -> new EntityMonster(this.world);
+                        default -> new EntityChicken(this.world);
+                    };
 
                     // The world we're spawning in accepts this creature
                     boolean isAnimal = entity instanceof EntityAnimal || entity instanceof EntityWaterAnimal;

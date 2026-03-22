@@ -51,17 +51,15 @@ public class InventoryCrafting implements IInventory {
             if (this.items[i].count <= j) {
                 itemstack = this.items[i];
                 this.items[i] = null;
-                this.c.a(this);
-                return itemstack;
             } else {
                 itemstack = this.items[i].a(j);
                 if (this.items[i].count == 0) {
                     this.items[i] = null;
                 }
-
-                this.c.a(this);
-                return itemstack;
             }
+
+            this.c.a(this);
+            return itemstack;
         } else {
             return null;
         }

@@ -10,7 +10,7 @@ public enum EnumCreatureType {
 
     private static final EnumCreatureType[] h = new EnumCreatureType[] { MONSTER, CREATURE, WATER_CREATURE};
 
-    private EnumCreatureType(String s, int i, Class<? extends IAnimal> oclass, int j, Material material, boolean flag) {
+    EnumCreatureType(String s, int i, Class<? extends IAnimal> oclass, int j, Material material, boolean flag) {
         this.d = oclass;
         this.e = j;
         this.f = material;

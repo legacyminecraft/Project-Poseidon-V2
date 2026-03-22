@@ -44,11 +44,7 @@ public class BlockPressurePlate extends Block {
     public void c(World world, int i, int j, int k) {}
 
     public void doPhysics(World world, int i, int j, int k, int l) {
-        boolean flag = false;
-
-        if (!world.e(i, j - 1, k)) {
-            flag = true;
-        }
+        boolean flag = !world.e(i, j - 1, k);
 
         if (flag) {
             this.g(world, i, j, k, world.getData(i, j, k));
@@ -90,7 +86,7 @@ public class BlockPressurePlate extends Block {
             list = world.a(EntityHuman.class, AxisAlignedBB.b((float) i + f, j, (float) k + f, (float) (i + 1) - f, (double) j + 0.25D, (float) (k + 1) - f));
         }
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             flag1 = true;
         }
 
@@ -104,8 +100,8 @@ public class BlockPressurePlate extends Block {
                     if (object != null) {
                         org.bukkit.event.Cancellable cancellable;
 
-                        if (object instanceof EntityHuman) {
-                            cancellable = CraftEventFactory.callPlayerInteractEvent((EntityHuman) object, org.bukkit.event.block.Action.PHYSICAL, i, j, k, -1, null);
+                        if (object instanceof EntityHuman entityhuman) {
+                            cancellable = CraftEventFactory.callPlayerInteractEvent(entityhuman, org.bukkit.event.block.Action.PHYSICAL, i, j, k, -1, null);
                         } else {
                             cancellable = new EntityInteractEvent(object.getBukkitEntity(), bworld.getBlockAt(i, j, k));
                             manager.callEvent((EntityInteractEvent) cancellable);
@@ -172,7 +168,7 @@ public class BlockPressurePlate extends Block {
     }
 
     public boolean d(World world, int i, int j, int k, int l) {
-        return world.getData(i, j, k) == 0 ? false : l == 1;
+        return world.getData(i, j, k) != 0 && l == 1;
     }
 
     public boolean isPowerSource() {

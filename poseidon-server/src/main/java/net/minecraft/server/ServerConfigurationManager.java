@@ -93,7 +93,7 @@ public class ServerConfigurationManager {
 
     public int a() {
         // CraftBukkit start
-        if (this.server.worlds.size() == 0) {
+        if (this.server.worlds.isEmpty()) {
             return this.server.propertyManager.getInt("view-distance", 10) * 16 - 16;
         }
         return this.server.worlds.get(0).manager.getFurthestViewableBlock();
@@ -114,7 +114,7 @@ public class ServerConfigurationManager {
 
         worldserver.chunkProviderServer.getChunkAt((int) entityplayer.locX >> 4, (int) entityplayer.locZ >> 4);
 
-        while (worldserver.getEntities(entityplayer, entityplayer.boundingBox).size() != 0) {
+        while (!worldserver.getEntities(entityplayer, entityplayer.boundingBox).isEmpty()) {
             entityplayer.setPosition(entityplayer.locX, entityplayer.locY + 1.0D, entityplayer.locZ);
         }
 
@@ -250,7 +250,7 @@ public class ServerConfigurationManager {
 
         worldserver.chunkProviderServer.getChunkAt((int) entityplayer1.locX >> 4, (int) entityplayer1.locZ >> 4);
 
-        while (worldserver.getEntities(entityplayer1, entityplayer1.boundingBox).size() != 0) {
+        while (!worldserver.getEntities(entityplayer1, entityplayer1.boundingBox).isEmpty()) {
             entityplayer1.setPosition(entityplayer1.locX, entityplayer1.locY + 1.0D, entityplayer1.locZ);
         }
 

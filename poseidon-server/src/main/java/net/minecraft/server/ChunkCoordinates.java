@@ -21,11 +21,9 @@ public class ChunkCoordinates implements Comparable<ChunkCoordinates> {
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof ChunkCoordinates)) {
+        if (!(object instanceof ChunkCoordinates chunkcoordinates)) {
             return false;
         } else {
-            ChunkCoordinates chunkcoordinates = (ChunkCoordinates) object;
-
             return this.x == chunkcoordinates.x && this.y == chunkcoordinates.y && this.z == chunkcoordinates.z;
         }
     }

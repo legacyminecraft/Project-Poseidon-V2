@@ -59,7 +59,6 @@ public class EntitySpider extends EntityMonster {
                 } else {
                     this.target = ((CraftEntity) event.getTarget()).getHandle();
                 }
-                return;
             }
             // CraftBukkit end
         } else {

@@ -89,7 +89,7 @@ public abstract class Container {
             InventoryPlayer inventoryplayer = entityhuman.inventory;
 
             if (i == -999) {
-                if (inventoryplayer.j() != null && i == -999) {
+                if (inventoryplayer.j() != null) {
                     if (j == 0) {
                         entityhuman.b(inventoryplayer.j());
                         inventoryplayer.b((ItemStack) null);

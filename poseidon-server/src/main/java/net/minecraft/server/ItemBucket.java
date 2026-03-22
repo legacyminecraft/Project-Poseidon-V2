@@ -34,9 +34,7 @@ public class ItemBucket extends Item {
         Vec3D vec3d1 = vec3d.add((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
         MovingObjectPosition movingobjectposition = world.rayTrace(vec3d, vec3d1, this.a == 0);
 
-        if (movingobjectposition == null) {
-            return itemstack;
-        } else {
+        if (movingobjectposition != null) {
             if (movingobjectposition.type == EnumMovingObjectType.TILE) {
                 int i = movingobjectposition.b;
                 int j = movingobjectposition.c;
@@ -160,8 +158,8 @@ public class ItemBucket extends Item {
                 return new ItemStack(itemInHand.getTypeId(), itemInHand.getAmount(), data);
                 // CraftBukkit end
             }
-
-            return itemstack;
         }
+
+        return itemstack;
     }
 }

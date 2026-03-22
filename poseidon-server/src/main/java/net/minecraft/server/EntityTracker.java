@@ -21,44 +21,31 @@ public class EntityTracker {
 
     // CraftBukkit - synchronized
     public synchronized void track(Entity entity) {
-        if (entity instanceof EntityPlayer) {
-            this.a(entity, 512, 2);
-            EntityPlayer entityplayer = (EntityPlayer) entity;
-            Iterator<EntityTrackerEntry> iterator = this.a.iterator();
+        switch (entity) {
+            case EntityPlayer entityplayer -> {
+                this.a(entity, 512, 2);
+                Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
-            while (iterator.hasNext()) {
-                EntityTrackerEntry entitytrackerentry = iterator.next();
+                while (iterator.hasNext()) {
+                    EntityTrackerEntry entitytrackerentry = iterator.next();
 
-                if (entitytrackerentry.tracker != entityplayer) {
-                    entitytrackerentry.b(entityplayer);
+                    if (entitytrackerentry.tracker != entityplayer) {
+                        entitytrackerentry.b(entityplayer);
+                    }
                 }
             }
-        } else if (entity instanceof EntityFish) {
-            this.a(entity, 64, 5, true);
-        } else if (entity instanceof EntityArrow) {
-            this.a(entity, 64, 20, false);
-        } else if (entity instanceof EntityFireball) {
-            this.a(entity, 64, 10, false);
-        } else if (entity instanceof EntitySnowball) {
-            this.a(entity, 64, 10, true);
-        } else if (entity instanceof EntityEgg) {
-            this.a(entity, 64, 10, true);
-        } else if (entity instanceof EntityItem) {
-            this.a(entity, 64, 20, true);
-        } else if (entity instanceof EntityMinecart) {
-            this.a(entity, 160, 5, true);
-        } else if (entity instanceof EntityBoat) {
-            this.a(entity, 160, 5, true);
-        } else if (entity instanceof EntitySquid) {
-            this.a(entity, 160, 3, true);
-        } else if (entity instanceof IAnimal) {
-            this.a(entity, 160, 3);
-        } else if (entity instanceof EntityTNTPrimed) {
-            this.a(entity, 160, 10, true);
-        } else if (entity instanceof EntityFallingSand) {
-            this.a(entity, 160, 20, true);
-        } else if (entity instanceof EntityPainting) {
-            this.a(entity, 160, Integer.MAX_VALUE, false);
+            case EntityFish _ -> this.a(entity, 64, 5, true);
+            case EntityArrow _ -> this.a(entity, 64, 20, false);
+            case EntityFireball _ -> this.a(entity, 64, 10, false);
+            case EntitySnowball _, EntityEgg _ -> this.a(entity, 64, 10, true);
+            case EntityItem _ -> this.a(entity, 64, 20, true);
+            case EntityMinecart _, EntityBoat _ -> this.a(entity, 160, 5, true);
+            case EntitySquid _ -> this.a(entity, 160, 3, true);
+            case IAnimal _ -> this.a(entity, 160, 3);
+            case EntityTNTPrimed _ -> this.a(entity, 160, 10, true);
+            case EntityFallingSand _ -> this.a(entity, 160, 20, true);
+            case EntityPainting _ -> this.a(entity, 160, Integer.MAX_VALUE, false);
+            default -> {}
         }
     }
 
@@ -86,8 +73,7 @@ public class EntityTracker {
 
     // CraftBukkit - synchronized
     public synchronized void untrackEntity(Entity entity) {
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) entity;
+        if (entity instanceof EntityPlayer entityplayer) {
             Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
             while (iterator.hasNext()) {

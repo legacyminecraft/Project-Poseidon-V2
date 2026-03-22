@@ -120,7 +120,7 @@ public class PlayerManager {
         int i1 = i - k;
         int j1 = j - l;
 
-        return i1 >= -this.f && i1 <= this.f ? j1 >= -this.f && j1 <= this.f : false;
+        return i1 >= -this.f && i1 <= this.f && j1 >= -this.f && j1 <= this.f;
     }
 
     public void movePlayer(EntityPlayer entityplayer) {
@@ -162,10 +162,8 @@ public class PlayerManager {
                     final int z = j;
                     List<ChunkCoordIntPair> chunksToSend = entityplayer.chunkCoordIntPairQueue;
 
-                    java.util.Collections.sort(chunksToSend, new java.util.Comparator<>() {
-                        public int compare(ChunkCoordIntPair a, ChunkCoordIntPair b) {
-                            return Math.max(Math.abs(a.x - x), Math.abs(a.z - z)) - Math.max(Math.abs(b.x - x), Math.abs(b.z - z));
-                        }
+                    java.util.Collections.sort(chunksToSend, (a, b) -> {
+                        return Math.max(Math.abs(a.x - x), Math.abs(a.z - z)) - Math.max(Math.abs(b.x - x), Math.abs(b.z - z));
                     });
                 }
                 // CraftBukkit end

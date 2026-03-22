@@ -137,6 +137,6 @@ public class NBTTagCompound extends NBTBase {
     }
 
     public String toString() {
-        return "" + this.a.size() + " entries";
+        return this.a.size() + " entries";
     }
 }

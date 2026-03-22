@@ -16,7 +16,7 @@ public class BlockSoil extends Block {
     }
 
     public AxisAlignedBB e(World world, int i, int j, int k) {
-        return AxisAlignedBB.b(i + 0, j + 0, k + 0, i + 1, j + 1, k + 1);
+        return AxisAlignedBB.b(i, j, k, i + 1, j + 1, k + 1);
     }
 
     public boolean a() {
@@ -51,8 +51,8 @@ public class BlockSoil extends Block {
         if (world.random.nextInt(4) == 0) {
             // CraftBukkit start - Interact Soil
             org.bukkit.event.Cancellable cancellable;
-            if (entity instanceof EntityHuman) {
-                cancellable = CraftEventFactory.callPlayerInteractEvent((EntityHuman) entity, org.bukkit.event.block.Action.PHYSICAL, i, j, k, -1, null);
+            if (entity instanceof EntityHuman entityhuman) {
+                cancellable = CraftEventFactory.callPlayerInteractEvent(entityhuman, org.bukkit.event.block.Action.PHYSICAL, i, j, k, -1, null);
             } else {
                 cancellable = new EntityInteractEvent(entity.getBukkitEntity(), world.getWorld().getBlockAt(i, j, k));
                 world.getServer().getPluginManager().callEvent((EntityInteractEvent) cancellable);

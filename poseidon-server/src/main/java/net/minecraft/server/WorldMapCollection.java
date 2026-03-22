@@ -31,18 +31,16 @@ public class WorldMapCollection {
     public @Nullable WorldMapBase a(Class<? extends WorldMapBase> oclass, String s) {
         WorldMapBase worldmapbase = this.b.get(s);
 
-        if (worldmapbase != null) {
-            return worldmapbase;
-        } else {
+        if (worldmapbase == null) {
             if (this.a != null) {
                 try {
                     File file1 = this.a.b(s);
 
                     if (file1 != null && file1.exists()) {
                         try {
-                            worldmapbase = oclass.getConstructor(new Class[] { String.class}).newInstance(new Object[] { s});
+                            worldmapbase = oclass.getConstructor(new Class[]{String.class}).newInstance(s);
                         } catch (Exception exception) {
-                            throw new RuntimeException("Failed to instantiate " + oclass.toString(), exception);
+                            throw new RuntimeException("Failed to instantiate " + oclass, exception);
                         }
 
                         FileInputStream fileinputstream = new FileInputStream(file1);
@@ -60,14 +58,14 @@ public class WorldMapCollection {
                 this.b.put(s, worldmapbase);
                 this.c.add(worldmapbase);
             }
-
-            return worldmapbase;
         }
+
+        return worldmapbase;
     }
 
     public void a(String s, WorldMapBase worldmapbase) {
         if (worldmapbase == null) {
-            throw new RuntimeException("Can\'t set null data");
+            throw new RuntimeException("Can't set null data");
         } else {
             if (this.b.containsKey(s)) {
                 this.c.remove(this.b.remove(s));
@@ -131,8 +129,7 @@ public class WorldMapCollection {
                 while (iterator.hasNext()) {
                     NBTBase nbtbase = iterator.next();
 
-                    if (nbtbase instanceof NBTTagShort) {
-                        NBTTagShort nbttagshort = (NBTTagShort) nbtbase;
+                    if (nbtbase instanceof NBTTagShort nbttagshort) {
                         String s = nbttagshort.b();
                         short short1 = nbttagshort.a;
 
@@ -155,9 +152,7 @@ public class WorldMapCollection {
         }
 
         this.d.put(s, oshort);
-        if (this.a == null) {
-            return oshort;
-        } else {
+        if (this.a != null) {
             try {
                 File file1 = this.a.b("idcounts");
 
@@ -180,8 +175,8 @@ public class WorldMapCollection {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
-
-            return oshort;
         }
+
+        return oshort;
     }
 }

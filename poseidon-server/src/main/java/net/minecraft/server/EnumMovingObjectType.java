@@ -6,5 +6,5 @@ public enum EnumMovingObjectType {
 
     private static final EnumMovingObjectType[] c = new EnumMovingObjectType[] { TILE, ENTITY};
 
-    private EnumMovingObjectType(String s, int i) {}
+    EnumMovingObjectType(String s, int i) {}
 }

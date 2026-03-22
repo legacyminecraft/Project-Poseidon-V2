@@ -88,9 +88,7 @@ public class InventoryPlayer implements IInventory {
             k = this.k();
         }
 
-        if (k < 0) {
-            return j;
-        } else {
+        if (k >= 0) {
             if (this.items[k] == null) {
                 this.items[k] = new ItemStack(i, 0, itemstack.getData());
             }
@@ -105,15 +103,14 @@ public class InventoryPlayer implements IInventory {
                 l = this.getMaxStackSize() - this.items[k].count;
             }
 
-            if (l == 0) {
-                return j;
-            } else {
+            if (l != 0) {
                 j -= l;
                 this.items[k].count += l;
                 this.items[k].b = 5;
-                return j;
             }
         }
+
+        return j;
     }
 
     public void f() {
@@ -175,15 +172,14 @@ public class InventoryPlayer implements IInventory {
             if (aitemstack[i].count <= j) {
                 itemstack = aitemstack[i];
                 aitemstack[i] = null;
-                return itemstack;
             } else {
                 itemstack = aitemstack[i].a(j);
                 if (aitemstack[i].count == 0) {
                     aitemstack[i] = null;
                 }
-
-                return itemstack;
             }
+
+            return itemstack;
         } else {
             return null;
         }
@@ -291,7 +287,7 @@ public class InventoryPlayer implements IInventory {
         } else {
             ItemStack itemstack = this.getItem(this.itemInHandIndex);
 
-            return itemstack != null ? itemstack.b(block) : false;
+            return itemstack != null && itemstack.b(block);
         }
     }
 
@@ -365,7 +361,7 @@ public class InventoryPlayer implements IInventory {
     }
 
     public boolean a_(EntityHuman entityhuman) {
-        return this.d.dead ? false : entityhuman.g(this.d) <= 64.0D;
+        return !this.d.dead && entityhuman.g(this.d) <= 64.0D;
     }
 
     public boolean c(ItemStack itemstack) {

@@ -29,11 +29,11 @@ public class BlockButton extends Block {
     }
 
     public boolean canPlace(World world, int i, int j, int k, int l) {
-        return l == 2 && world.e(i, j, k + 1) ? true : (l == 3 && world.e(i, j, k - 1) ? true : (l == 4 && world.e(i + 1, j, k) ? true : l == 5 && world.e(i - 1, j, k)));
+        return l == 2 && world.e(i, j, k + 1) || (l == 3 && world.e(i, j, k - 1) || (l == 4 && world.e(i + 1, j, k) || l == 5 && world.e(i - 1, j, k)));
     }
 
     public boolean canPlace(World world, int i, int j, int k) {
-        return world.e(i - 1, j, k) ? true : (world.e(i + 1, j, k) ? true : (world.e(i, j, k - 1) ? true : world.e(i, j, k + 1)));
+        return world.e(i - 1, j, k) || (world.e(i + 1, j, k) || (world.e(i, j, k - 1) || world.e(i, j, k + 1)));
     }
 
     public void postPlace(World world, int i, int j, int k, int l) {
@@ -63,11 +63,7 @@ public class BlockButton extends Block {
     public void doPhysics(World world, int i, int j, int k, int l) {
         if (this.h(world, i, j, k)) {
             int i1 = world.getData(i, j, k) & 7;
-            boolean flag = false;
-
-            if (!world.e(i - 1, j, k) && i1 == 1) {
-                flag = true;
-            }
+            boolean flag = !world.e(i - 1, j, k) && i1 == 1;
 
             if (!world.e(i + 1, j, k) && i1 == 2) {
                 flag = true;
@@ -131,9 +127,7 @@ public class BlockButton extends Block {
         int i1 = l & 7;
         int j1 = 8 - (l & 8);
 
-        if (j1 == 0) {
-            return true;
-        } else {
+        if (j1 != 0) {
             // CraftBukkit start
             org.bukkit.block.Block block = world.getWorld().getBlockAt(i, j, k);
             int old = (j1 != 8) ? 1 : 0;
@@ -164,8 +158,9 @@ public class BlockButton extends Block {
             }
 
             world.c(i, j, k, this.id, this.c());
-            return true;
         }
+
+        return true;
     }
 
     public void remove(World world, int i, int j, int k) {
@@ -203,7 +198,7 @@ public class BlockButton extends Block {
         } else {
             int j1 = i1 & 7;
 
-            return j1 == 5 && l == 1 ? true : (j1 == 4 && l == 2 ? true : (j1 == 3 && l == 3 ? true : (j1 == 2 && l == 4 ? true : j1 == 1 && l == 5)));
+            return j1 == 5 && l == 1 || (j1 == 4 && l == 2 || (j1 == 3 && l == 3 || (j1 == 2 && l == 4 || j1 == 1 && l == 5)));
         }
     }
 

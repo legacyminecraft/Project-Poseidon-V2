@@ -86,17 +86,13 @@ public class BlockDoor extends Block {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        if (this.material == Material.ORE) {
-            return true;
-        } else {
+        if (this.material != Material.ORE) {
             int l = world.getData(i, j, k);
 
             if ((l & 8) != 0) {
                 if (world.getTypeId(i, j - 1, k) == this.id) {
                     this.interact(world, i, j - 1, k, entityhuman);
                 }
-
-                return true;
             } else {
                 if (world.getTypeId(i, j + 1, k) == this.id) {
                     world.setData(i, j + 1, k, (l ^ 4) + 8);
@@ -105,9 +101,10 @@ public class BlockDoor extends Block {
                 world.setData(i, j, k, l ^ 4);
                 world.b(i, j - 1, k, i, j, k);
                 world.a(entityhuman, 1003, i, j, k, 0);
-                return true;
             }
         }
+
+        return true;
     }
 
     public void setDoor(World world, int i, int j, int k, boolean flag) {
@@ -199,7 +196,7 @@ public class BlockDoor extends Block {
     }
 
     public boolean canPlace(World world, int i, int j, int k) {
-        return j >= 127 ? false : world.e(i, j - 1, k) && super.canPlace(world, i, j, k) && super.canPlace(world, i, j + 1, k);
+        return j < 127 && world.e(i, j - 1, k) && super.canPlace(world, i, j, k) && super.canPlace(world, i, j + 1, k);
     }
 
     public static boolean e(int i) {

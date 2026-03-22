@@ -29,9 +29,7 @@ public class ItemBoat extends Item {
         Vec3D vec3d1 = vec3d.add((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
         MovingObjectPosition movingobjectposition = world.rayTrace(vec3d, vec3d1, true);
 
-        if (movingobjectposition == null) {
-            return itemstack;
-        } else {
+        if (movingobjectposition != null) {
             if (movingobjectposition.type == EnumMovingObjectType.TILE) {
                 int i = movingobjectposition.b;
                 int j = movingobjectposition.c;
@@ -55,8 +53,8 @@ public class ItemBoat extends Item {
 
                 --itemstack.count;
             }
-
-            return itemstack;
         }
+
+        return itemstack;
     }
 }

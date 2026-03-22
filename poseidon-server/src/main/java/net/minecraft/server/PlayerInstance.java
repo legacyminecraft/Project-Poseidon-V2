@@ -51,7 +51,7 @@ class PlayerInstance {
     public void b(EntityPlayer entityplayer) {
         if (this.b.contains(entityplayer)) {
             this.b.remove(entityplayer);
-            if (this.b.size() == 0) {
+            if (this.b.isEmpty()) {
                 long i = (long) this.chunkX + 2147483647L | (long) this.chunkZ + 2147483647L << 32;
 
                 PlayerManager.a(this.playerManager).b(i);

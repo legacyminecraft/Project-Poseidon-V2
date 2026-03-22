@@ -223,7 +223,7 @@ public class Explosion {
                 d3 *= d7;
                 d4 *= d7;
                 d5 *= d7;
-                this.world.a("explode", (d0 + this.posX * 1.0D) / 2.0D, (d1 + this.posY * 1.0D) / 2.0D, (d2 + this.posZ * 1.0D) / 2.0D, d3, d4, d5);
+                this.world.a("explode", (d0 + this.posX) / 2.0D, (d1 + this.posY) / 2.0D, (d2 + this.posZ) / 2.0D, d3, d4, d5);
                 this.world.a("smoke", d0, d1, d2, d3, d4, d5);
             }
 

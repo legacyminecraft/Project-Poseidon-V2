@@ -61,14 +61,13 @@ public class BlockDispenser extends BlockContainer {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        if (world.isStatic) {
-            return true;
-        } else {
+        if (!world.isStatic) {
             TileEntityDispenser tileentitydispenser = (TileEntityDispenser) world.getTileEntity(i, j, k);
 
             entityhuman.a(tileentitydispenser);
-            return true;
         }
+
+        return true;
     }
 
     // CraftBukkit - private -> public

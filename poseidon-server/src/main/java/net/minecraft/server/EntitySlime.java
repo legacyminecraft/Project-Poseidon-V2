@@ -90,7 +90,7 @@ public class EntitySlime extends EntityLiving implements IMonster {
 
             this.a = 1.0F;
             this.az = 1.0F - this.random.nextFloat() * 2.0F;
-            this.aA = (float) (1 * this.getSize());
+            this.aA = (float) (this.getSize());
         } else {
             this.aC = false;
             if (this.onGround) {

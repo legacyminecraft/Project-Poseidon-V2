@@ -80,14 +80,13 @@ public class BlockBed extends Block {
 
                 if (enumbederror == EnumBedError.OK) {
                     a(world, i, j, k, true);
-                    return true;
                 } else {
                     if (enumbederror == EnumBedError.NOT_POSSIBLE_NOW) {
                         entityhuman.a("tile.bed.noSleep");
                     }
-
-                    return true;
                 }
+
+                return true;
             }
         }
     }

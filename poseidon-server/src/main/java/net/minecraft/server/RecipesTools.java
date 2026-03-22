@@ -16,10 +16,10 @@ public class RecipesTools {
             for (int j = 0; j < this.b.length - 1; ++j) {
                 Item item = (Item) this.b[j + 1][i];
 
-                craftingmanager.registerShapedRecipe(new ItemStack(item), new Object[] { this.a[j], '#', Item.STICK, 'X', object});
+                craftingmanager.registerShapedRecipe(new ItemStack(item), this.a[j], '#', Item.STICK, 'X', object);
             }
         }
 
-        craftingmanager.registerShapedRecipe(new ItemStack(Item.SHEARS), new Object[] { " #", "# ", '#', Item.IRON_INGOT});
+        craftingmanager.registerShapedRecipe(new ItemStack(Item.SHEARS), " #", "# ", '#', Item.IRON_INGOT);
     }
 }

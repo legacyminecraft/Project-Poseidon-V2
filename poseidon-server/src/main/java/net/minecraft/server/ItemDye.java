@@ -72,8 +72,7 @@ public class ItemDye extends Item {
     }
 
     public void a(ItemStack itemstack, EntityLiving entityliving) {
-        if (entityliving instanceof EntitySheep) {
-            EntitySheep entitysheep = (EntitySheep) entityliving;
+        if (entityliving instanceof EntitySheep entitysheep) {
             int i = BlockCloth.c(itemstack.getData());
 
             if (!entitysheep.isSheared() && entitysheep.getColor() != i) {

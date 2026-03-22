@@ -90,7 +90,7 @@ public class StatisticList {
                 int integer = iterator2.next();
 
                 if (Item.byId[integer] != null) {
-                    String s = StatisticCollector.a("stat.craftItem", new Object[] { Item.byId[integer].j()});
+                    String s = StatisticCollector.a("stat.craftItem", Item.byId[integer].j());
 
                     D[integer] = (new CraftingStatistic(16842752 + integer, s, integer)).d();
                 }
@@ -105,7 +105,7 @@ public class StatisticList {
 
         for (int j = 0; j < 256; ++j) {
             if (Block.byId[j] != null && Block.byId[j].m()) {
-                String s1 = StatisticCollector.a(s, new Object[] { Block.byId[j].k()});
+                String s1 = StatisticCollector.a(s, Block.byId[j].k());
 
                 astatistic[j] = (new CraftingStatistic(i + j, s1, j)).d();
                 e.add((CraftingStatistic) astatistic[j]);
@@ -123,7 +123,7 @@ public class StatisticList {
 
         for (int l = j; l < k; ++l) {
             if (Item.byId[l] != null) {
-                String s1 = StatisticCollector.a(s, new Object[] { Item.byId[l].j()});
+                String s1 = StatisticCollector.a(s, Item.byId[l].j());
 
                 astatistic[l] = (new CraftingStatistic(i + l, s1, l)).d();
                 if (l >= Block.byId.length) {
@@ -143,7 +143,7 @@ public class StatisticList {
 
         for (int l = j; l < k; ++l) {
             if (Item.byId[l] != null && Item.byId[l].f()) {
-                String s1 = StatisticCollector.a(s, new Object[] { Item.byId[l].j()});
+                String s1 = StatisticCollector.a(s, Item.byId[l].j());
 
                 astatistic[l] = (new CraftingStatistic(i + l, s1, l)).d();
             }

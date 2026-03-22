@@ -230,7 +230,7 @@ public class World implements IBlockAccess {
     }
 
     public boolean isLoaded(int i, int j, int k) {
-        return j >= 0 && j < 128 ? this.isChunkLoaded(i >> 4, k >> 4) : false;
+        return j >= 0 && j < 128 && this.isChunkLoaded(i >> 4, k >> 4);
     }
 
     public boolean areChunksLoaded(int i, int j, int k, int l) {
@@ -793,14 +793,10 @@ public class World implements IBlockAccess {
                         }
                     }
                 }
-
-                return null;
-            } else {
-                return null;
             }
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public void makeSound(Entity entity, @Nullable String s, float f, float f1) {
@@ -842,21 +838,17 @@ public class World implements IBlockAccess {
     // CraftBukkit end
         int i = MathHelper.floor(entity.locX / 16.0D);
         int j = MathHelper.floor(entity.locZ / 16.0D);
-        boolean flag = false;
-
-        if (entity instanceof EntityHuman) {
-            flag = true;
-        }
+        boolean flag = entity instanceof EntityHuman;
 
         // CraftBukkit start
-        if (entity instanceof EntityLiving && !(entity instanceof EntityPlayer)) {
-            CreatureSpawnEvent event = CraftEventFactory.callCreatureSpawnEvent((EntityLiving) entity, spawnReason);
+        if (entity instanceof EntityLiving entityliving && !(entity instanceof EntityPlayer)) {
+            CreatureSpawnEvent event = CraftEventFactory.callCreatureSpawnEvent(entityliving, spawnReason);
 
             if (event.isCancelled()) {
                 return false;
             }
-        } else if (entity instanceof EntityItem) {
-            ItemSpawnEvent event = CraftEventFactory.callItemSpawnEvent((EntityItem) entity);
+        } else if (entity instanceof EntityItem entityitem) {
+            ItemSpawnEvent event = CraftEventFactory.callItemSpawnEvent(entityitem);
             if (event.isCancelled()) {
                 return false;
             }
@@ -866,9 +858,7 @@ public class World implements IBlockAccess {
         if (!flag && !this.isChunkLoaded(i, j)) {
             return false;
         } else {
-            if (entity instanceof EntityHuman) {
-                EntityHuman entityhuman = (EntityHuman) entity;
-
+            if (entity instanceof EntityHuman entityhuman) {
                 this.players.add(entityhuman);
                 this.everyoneSleeping();
             }
@@ -902,16 +892,16 @@ public class World implements IBlockAccess {
         }
 
         entity.die();
-        if (entity instanceof EntityHuman) {
-            this.players.remove((EntityHuman) entity);
+        if (entity instanceof EntityHuman entityhuman) {
+            this.players.remove(entityhuman);
             this.everyoneSleeping();
         }
     }
 
     public void removeEntity(Entity entity) {
         entity.die();
-        if (entity instanceof EntityHuman) {
-            this.players.remove((EntityHuman) entity);
+        if (entity instanceof EntityHuman entityhuman) {
+            this.players.remove(entityhuman);
             this.everyoneSleeping();
         }
 
@@ -1584,13 +1574,13 @@ public class World implements IBlockAccess {
     public boolean p(int i, int j, int k) {
         Block block = Block.byId[this.getTypeId(i, j, k)];
 
-        return block == null ? false : block.a();
+        return block != null && block.a();
     }
 
     public boolean e(int i, int j, int k) {
         Block block = Block.byId[this.getTypeId(i, j, k)];
 
-        return block == null ? false : block.material.h() && block.b();
+        return block != null && block.material.h() && block.b();
     }
 
     public boolean doLighting() {
@@ -1604,7 +1594,7 @@ public class World implements IBlockAccess {
             try {
                 int i = 500;
 
-                while (this.C.size() > 0) {
+                while (!this.C.isEmpty()) {
                     --i;
                     if (i <= 0) {
                         flag = true;
@@ -1669,7 +1659,6 @@ public class World implements IBlockAccess {
                         this.C.clear();
                     }
 
-                    return;
                 }
             } finally {
                 --A;
@@ -1709,7 +1698,7 @@ public class World implements IBlockAccess {
         }
 
         // CraftBukkit start - Only call spawner if we have players online and the world allows for mobs or animals
-        if ((this.allowMonsters || this.allowAnimals) && (this instanceof WorldServer && this.getServer().getHandle().players.size() > 0)) {
+        if ((this.allowMonsters || this.allowAnimals) && (this instanceof WorldServer && !this.getServer().getHandle().players.isEmpty())) {
             SpawnerCreature.spawnEntities(this, this.allowMonsters, this.allowAnimals);
         }
         // CraftBukkit end
@@ -1997,7 +1986,7 @@ public class World implements IBlockAccess {
                 }
             }
 
-            return this.E.size() != 0;
+            return !this.E.isEmpty();
         }
     }
 
@@ -2146,11 +2135,11 @@ public class World implements IBlockAccess {
     public boolean isBlockFacePowered(int i, int j, int k, int l) {
         int i1 = this.getTypeId(i, j, k);
 
-        return i1 == 0 ? false : Block.byId[i1].d(this, i, j, k, l);
+        return i1 != 0 && Block.byId[i1].d(this, i, j, k, l);
     }
 
     public boolean isBlockPowered(int i, int j, int k) {
-        return this.isBlockFacePowered(i, j - 1, k, 0) ? true : (this.isBlockFacePowered(i, j + 1, k, 1) ? true : (this.isBlockFacePowered(i, j, k - 1, 2) ? true : (this.isBlockFacePowered(i, j, k + 1, 3) ? true : (this.isBlockFacePowered(i - 1, j, k, 4) ? true : this.isBlockFacePowered(i + 1, j, k, 5)))));
+        return this.isBlockFacePowered(i, j - 1, k, 0) || (this.isBlockFacePowered(i, j + 1, k, 1) || (this.isBlockFacePowered(i, j, k - 1, 2) || (this.isBlockFacePowered(i, j, k + 1, 3) || (this.isBlockFacePowered(i - 1, j, k, 4) || this.isBlockFacePowered(i + 1, j, k, 5)))));
     }
 
     public boolean isBlockFaceIndirectlyPowered(int i, int j, int k, int l) {
@@ -2159,12 +2148,12 @@ public class World implements IBlockAccess {
         } else {
             int i1 = this.getTypeId(i, j, k);
 
-            return i1 == 0 ? false : Block.byId[i1].a(this, i, j, k, l);
+            return i1 != 0 && Block.byId[i1].a(this, i, j, k, l);
         }
     }
 
     public boolean isBlockIndirectlyPowered(int i, int j, int k) {
-        return this.isBlockFaceIndirectlyPowered(i, j - 1, k, 0) ? true : (this.isBlockFaceIndirectlyPowered(i, j + 1, k, 1) ? true : (this.isBlockFaceIndirectlyPowered(i, j, k - 1, 2) ? true : (this.isBlockFaceIndirectlyPowered(i, j, k + 1, 3) ? true : (this.isBlockFaceIndirectlyPowered(i - 1, j, k, 4) ? true : this.isBlockFaceIndirectlyPowered(i + 1, j, k, 5)))));
+        return this.isBlockFaceIndirectlyPowered(i, j - 1, k, 0) || (this.isBlockFaceIndirectlyPowered(i, j + 1, k, 1) || (this.isBlockFaceIndirectlyPowered(i, j, k - 1, 2) || (this.isBlockFaceIndirectlyPowered(i, j, k + 1, 3) || (this.isBlockFaceIndirectlyPowered(i - 1, j, k, 4) || this.isBlockFaceIndirectlyPowered(i + 1, j, k, 5)))));
     }
 
     public @Nullable EntityHuman findNearbyPlayer(Entity entity, double d0) {
@@ -2372,11 +2361,9 @@ public class World implements IBlockAccess {
                 }
             } while (entityhuman.isDeeplySleeping() || entityhuman.fauxSleeping);
             // CraftBukkit end
-
-            return false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public float c(float f) {
@@ -2405,7 +2392,7 @@ public class World implements IBlockAccess {
         } else {
             BiomeBase biomebase = this.getWorldChunkManager().getBiome(i, k);
 
-            return biomebase.c() ? false : biomebase.d();
+            return !biomebase.c() && biomebase.d();
         }
     }
 

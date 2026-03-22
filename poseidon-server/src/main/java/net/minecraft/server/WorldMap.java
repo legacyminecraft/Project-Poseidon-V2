@@ -180,9 +180,7 @@ public class WorldMap extends WorldMapBase {
         if (worldmaphumantracker == null) {
             return null;
         } else {
-            byte[] abyte = worldmaphumantracker.a(itemstack);
-
-            return abyte;
+            return worldmaphumantracker.a(itemstack);
         }
     }
 

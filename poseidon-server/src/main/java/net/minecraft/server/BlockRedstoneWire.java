@@ -296,7 +296,7 @@ public class BlockRedstoneWire extends Block {
     }
 
     public boolean d(World world, int i, int j, int k, int l) {
-        return !this.a ? false : this.a(world, i, j, k, l);
+        return this.a && this.a(world, i, j, k, l);
     }
 
     public boolean a(IBlockAccess iblockaccess, int i, int j, int k, int l) {
@@ -330,7 +330,7 @@ public class BlockRedstoneWire extends Block {
                 }
             }
 
-            return !flag2 && !flag1 && !flag && !flag3 && l >= 2 && l <= 5 ? true : (l == 2 && flag2 && !flag && !flag1 ? true : (l == 3 && flag3 && !flag && !flag1 ? true : (l == 4 && flag && !flag2 && !flag3 ? true : l == 5 && flag1 && !flag2 && !flag3)));
+            return !flag2 && !flag1 && !flag && !flag3 && l >= 2 && l <= 5 || (l == 2 && flag2 && !flag && !flag1 || (l == 3 && flag3 && !flag && !flag1 || (l == 4 && flag && !flag2 && !flag3 || l == 5 && flag1 && !flag2 && !flag3)));
         }
     }
 

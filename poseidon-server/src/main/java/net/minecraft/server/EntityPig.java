@@ -84,8 +84,8 @@ public class EntityPig extends EntityAnimal {
 
     protected void a(float f) {
         super.a(f);
-        if (f > 5.0F && this.passenger instanceof EntityHuman) {
-            ((EntityHuman) this.passenger).a(AchievementList.u);
+        if (f > 5.0F && this.passenger instanceof EntityHuman entityhuman) {
+            entityhuman.a(AchievementList.u);
         }
     }
 }

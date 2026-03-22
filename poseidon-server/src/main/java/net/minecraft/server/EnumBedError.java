@@ -6,5 +6,5 @@ public enum EnumBedError {
 
     private static final EnumBedError[] f = new EnumBedError[] { OK, NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW, TOO_FAR_AWAY, OTHER_PROBLEM};
 
-    private EnumBedError(String s, int i) {}
+    EnumBedError(String s, int i) {}
 }

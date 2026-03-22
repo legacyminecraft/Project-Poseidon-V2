@@ -12,14 +12,13 @@ public class ItemRecord extends Item {
 
     public boolean a(ItemStack itemstack, EntityHuman entityhuman, World world, int i, int j, int k, int l) {
         if (world.getTypeId(i, j, k) == Block.JUKEBOX.id && world.getData(i, j, k) == 0) {
-            if (world.isStatic) {
-                return true;
-            } else {
+            if (!world.isStatic) {
                 ((BlockJukeBox) Block.JUKEBOX).f(world, i, j, k, this.id);
                 world.a(null, 1005, i, j, k, this.id);
                 --itemstack.count;
-                return true;
             }
+
+            return true;
         } else {
             return false;
         }

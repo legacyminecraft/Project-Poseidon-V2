@@ -57,7 +57,7 @@ public class EntityWolf extends EntityAnimal {
         this.setSitting(nbttagcompound.m("Sitting"));
         String s = nbttagcompound.getString("Owner");
 
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             this.setOwnerName(s);
             this.setTamed(true);
         }
@@ -134,8 +134,7 @@ public class EntityWolf extends EntityAnimal {
         if (this.V() && !this.C() && !this.isAngry()) {
             Entity entity = this.W();
 
-            if (entity instanceof EntityHuman) {
-                EntityHuman entityhuman = (EntityHuman) entity;
+            if (entity instanceof EntityHuman entityhuman) {
                 ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
                 if (itemstack != null) {
@@ -247,7 +246,7 @@ public class EntityWolf extends EntityAnimal {
             if (!this.isTamed() && !this.isAngry()) {
                 if (entity instanceof EntityHuman) {
                     // CraftBukkit start
-                    org.bukkit.entity.Entity bukkitTarget = entity == null ? null : entity.getBukkitEntity();
+                    org.bukkit.entity.Entity bukkitTarget = entity.getBukkitEntity();
 
                     EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), bukkitTarget, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY);
                     this.world.getServer().getPluginManager().callEvent(event);
@@ -263,8 +262,8 @@ public class EntityWolf extends EntityAnimal {
                     // CraftBukkit end
                 }
 
-                if (entity instanceof EntityArrow && ((EntityArrow) entity).shooter != null) {
-                    entity = ((EntityArrow) entity).shooter;
+                if (entity instanceof EntityArrow entityarrow && entityarrow.shooter != null) {
+                    entity = entityarrow.shooter;
                 }
 
                 if (entity instanceof EntityLiving) {
@@ -277,7 +276,7 @@ public class EntityWolf extends EntityAnimal {
 
                         if (!entitywolf.isTamed() && entitywolf.target == null) {
                             // CraftBukkit start
-                            org.bukkit.entity.Entity bukkitTarget = entity == null ? null : entity.getBukkitEntity();
+                            org.bukkit.entity.Entity bukkitTarget = entity.getBukkitEntity();
 
                             EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), bukkitTarget, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY);
                             this.world.getServer().getPluginManager().callEvent(event);
@@ -297,7 +296,7 @@ public class EntityWolf extends EntityAnimal {
                     }
                 }
             } else if (entity != this && entity != null) {
-                if (this.isTamed() && entity instanceof EntityHuman && ((EntityHuman) entity).name.equalsIgnoreCase(this.getOwnerName())) {
+                if (this.isTamed() && entity instanceof EntityHuman entityhuman && entityhuman.name.equalsIgnoreCase(this.getOwnerName())) {
                     return true;
                 }
 
@@ -376,9 +375,7 @@ public class EntityWolf extends EntityAnimal {
                 return true;
             }
         } else {
-            if (itemstack != null && Item.byId[itemstack.id] instanceof ItemFood) {
-                ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
-
+            if (itemstack != null && Item.byId[itemstack.id] instanceof ItemFood itemfood) {
                 if (itemfood.l() && this.datawatcher.b(18) < 20) {
                     --itemstack.count;
                     if (itemstack.count <= 0) {

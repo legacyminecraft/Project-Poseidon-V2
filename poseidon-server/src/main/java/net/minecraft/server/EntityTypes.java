@@ -28,7 +28,7 @@ public class EntityTypes {
             Class<? extends Entity> oclass = a.get(s);
 
             if (oclass != null) {
-                entity = oclass.getConstructor(new Class[] { World.class}).newInstance(new Object[] { world});
+                entity = oclass.getConstructor(new Class[] { World.class}).newInstance(world);
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -44,7 +44,7 @@ public class EntityTypes {
             Class<? extends Entity> oclass = a.get(nbttagcompound.getString("id"));
 
             if (oclass != null) {
-                entity = oclass.getConstructor(new Class[] { World.class}).newInstance(new Object[] { world});
+                entity = oclass.getConstructor(new Class[] { World.class}).newInstance(world);
             }
         } catch (Exception exception) {
             exception.printStackTrace();

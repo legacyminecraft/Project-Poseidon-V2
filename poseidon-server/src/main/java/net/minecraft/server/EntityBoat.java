@@ -135,11 +135,9 @@ public class EntityBoat extends Entity {
 
                 this.die();
             }
-
-            return true;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public boolean l_() {
@@ -171,7 +169,7 @@ public class EntityBoat extends Entity {
         double d0 = 0.0D;
 
         for (int i = 0; i < b0; ++i) {
-            double d1 = this.boundingBox.b + (this.boundingBox.e - this.boundingBox.b) * (double) (i + 0) / (double) b0 - 0.125D;
+            double d1 = this.boundingBox.b + (this.boundingBox.e - this.boundingBox.b) * (double) (i) / (double) b0 - 0.125D;
             double d2 = this.boundingBox.b + (this.boundingBox.e - this.boundingBox.b) * (double) (i + 1) / (double) b0 - 0.125D;
             AxisAlignedBB axisalignedbb = AxisAlignedBB.b(this.boundingBox.a, d1, this.boundingBox.c, this.boundingBox.d, d2, this.boundingBox.f);
 
@@ -353,7 +351,7 @@ public class EntityBoat extends Entity {
             List<Entity> list = this.world.b(this, this.boundingBox.b(0.20000000298023224D, 0.0D, 0.20000000298023224D));
             int l;
 
-            if (list != null && list.size() > 0) {
+            if (list != null && !list.isEmpty()) {
                 for (l = 0; l < list.size(); ++l) {
                     Entity entity = list.get(l);
 
@@ -394,9 +392,7 @@ public class EntityBoat extends Entity {
     protected void a(NBTTagCompound nbttagcompound) {}
 
     public boolean a(EntityHuman entityhuman) {
-        if (this.passenger != null && this.passenger instanceof EntityHuman && this.passenger != entityhuman) {
-            return true;
-        } else {
+        if (this.passenger == null || !(this.passenger instanceof EntityHuman) || this.passenger == entityhuman) {
             if (!this.world.isStatic) {
                 // CraftBukkit start
                 VehicleEnterEvent event = new VehicleEnterEvent((Vehicle) this.getBukkitEntity(), entityhuman.getBukkitEntity());
@@ -409,8 +405,8 @@ public class EntityBoat extends Entity {
 
                 entityhuman.mount(this);
             }
-
-            return true;
         }
+
+        return true;
     }
 }

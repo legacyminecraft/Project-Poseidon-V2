@@ -361,7 +361,7 @@ public class Chunk {
             System.out.println("Wrong location! " + entity);
             // Thread.dumpStack(); // CraftBukkit
             // CraftBukkit
-            System.out.println("" + entity.locX + "," + entity.locZ + "(" + i + "," + j + ") vs " + this.x + "," + this.z);
+            System.out.println(entity.locX + "," + entity.locZ + "(" + i + "," + j + ") vs " + this.x + "," + this.z);
         }
 
         int k = MathHelper.floor(entity.locY / 16.0D);
@@ -587,7 +587,6 @@ public class Chunk {
             k1 += this.g.a.length;
             System.arraycopy(this.f.a, 0, abyte, k1, this.f.a.length);
             k1 += this.f.a.length;
-            return k1;
         } else {
             int k2;
             int l2;
@@ -629,9 +628,9 @@ public class Chunk {
                     k1 += j3;
                 }
             }
-
-            return k1;
         }
+
+        return k1;
     }
 
     public Random a(long i) {

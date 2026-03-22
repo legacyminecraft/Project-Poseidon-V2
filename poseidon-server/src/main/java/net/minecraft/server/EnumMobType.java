@@ -6,5 +6,5 @@ public enum EnumMobType {
 
     private static final EnumMobType[] d = new EnumMobType[] { EVERYTHING, MOBS, PLAYERS};
 
-    private EnumMobType(String s, int i) {}
+    EnumMobType(String s, int i) {}
 }

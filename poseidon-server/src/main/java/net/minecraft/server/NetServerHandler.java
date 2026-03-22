@@ -312,7 +312,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             }
 
             float f4 = 0.0625F;
-            boolean flag = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).size() == 0;
+            boolean flag = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).isEmpty();
 
             this.player.move(d4, d6, d7);
             d4 = d1 - this.player.locX;
@@ -333,7 +333,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             }
 
             this.player.setLocation(d1, d2, d3, f2, f3);
-            boolean flag2 = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).size() == 0;
+            boolean flag2 = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).isEmpty();
 
             if (flag && (flag1 || !flag2) && !this.player.isSleeping()) {
                 this.a(this.x, this.y, this.z, f2, f3);
@@ -433,11 +433,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             this.player.F();
         } else {
             boolean flag = worldserver.weirdIsOpCache = worldserver.dimension != 0 || this.minecraftServer.serverConfigurationManager.isOp(this.player.name); // CraftBukkit
-            boolean flag1 = false;
-
-            if (packet14blockdig.e == 0) {
-                flag1 = true;
-            }
+            boolean flag1 = packet14blockdig.e == 0;
 
             if (packet14blockdig.e == 2) {
                 flag1 = true;
@@ -631,22 +627,21 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     }
 
     public void a(Packet packet) {
-        a.warning(this.getClass() + " wasn\'t prepared to deal with a " + packet.getClass());
+        a.warning(this.getClass() + " wasn't prepared to deal with a " + packet.getClass());
         this.disconnect("Protocol error, unexpected packet");
     }
 
     public void sendPacket(Packet packet) {
         // CraftBukkit start
-        if (packet instanceof Packet6SpawnPosition) {
-            Packet6SpawnPosition packet6 = (Packet6SpawnPosition) packet;
+        if (packet instanceof Packet6SpawnPosition packet6) {
             this.player.compassTarget = new Location(this.getPlayer().getWorld(), packet6.x, packet6.y, packet6.z);
-        } else if (packet instanceof Packet3Chat) {
-            String message = ((Packet3Chat) packet).message;
+        } else if (packet instanceof Packet3Chat packet3) {
+            String message = packet3.message;
             for (final String line: TextWrapper.wrapText(message)) {
                 this.networkManager.queue(new Packet3Chat(line));
             }
             packet = null;
-        } else if (packet.k == true) {
+        } else if (packet.k) {
             // Reroute all low-priority packets through to compression thread.
             ChunkCompressionThread.sendPacket(this.player, packet);
             packet = null;
@@ -730,13 +725,10 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         }
 
         try {
-            if (this.server.dispatchCommand(player, s.substring(1))) {
-                return;
-            }
+            this.server.dispatchCommand(player, s.substring(1));
         } catch (CommandException ex) {
             player.sendMessage(ChatColor.RED + "An internal error occurred while attempting to perform this command");
             Logger.getLogger(NetServerHandler.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            return;
         }
         // CraftBukkit end
 
@@ -837,7 +829,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     }
 
     public void a(Packet255KickDisconnect packet255kickdisconnect) {
-        this.networkManager.a("disconnect.quitting", new Object[0]);
+        this.networkManager.a("disconnect.quitting");
     }
 
     public int b() {
@@ -945,9 +937,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         if (worldserver.isLoaded(packet130updatesign.x, packet130updatesign.y, packet130updatesign.z)) {
             TileEntity tileentity = worldserver.getTileEntity(packet130updatesign.x, packet130updatesign.y, packet130updatesign.z);
 
-            if (tileentity instanceof TileEntitySign) {
-                TileEntitySign tileentitysign = (TileEntitySign) tileentity;
-
+            if (tileentity instanceof TileEntitySign tileentitysign) {
                 if (!tileentitysign.a()) {
                     this.minecraftServer.c("Player " + this.player.name + " just tried to change non-editable sign");
                     // CraftBukkit
@@ -977,12 +967,11 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
                 }
             }
 
-            if (tileentity instanceof TileEntitySign) {
+            if (tileentity instanceof TileEntitySign tileentitysign1) {
                 j = packet130updatesign.x;
                 int k = packet130updatesign.y;
 
                 i = packet130updatesign.z;
-                TileEntitySign tileentitysign1 = (TileEntitySign) tileentity;
 
                 // CraftBukkit start
                 Player player = this.server.getPlayer(this.player);

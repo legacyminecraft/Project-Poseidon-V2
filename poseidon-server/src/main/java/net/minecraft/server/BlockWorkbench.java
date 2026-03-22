@@ -12,11 +12,10 @@ public class BlockWorkbench extends Block {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        if (world.isStatic) {
-            return true;
-        } else {
+        if (!world.isStatic) {
             entityhuman.b(i, j, k);
-            return true;
         }
+
+        return true;
     }
 }

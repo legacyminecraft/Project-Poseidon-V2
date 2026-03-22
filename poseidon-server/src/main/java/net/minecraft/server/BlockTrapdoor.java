@@ -63,15 +63,14 @@ public class BlockTrapdoor extends Block {
     }
 
     public boolean interact(World world, int i, int j, int k, EntityHuman entityhuman) {
-        if (this.material == Material.ORE) {
-            return true;
-        } else {
+        if (this.material != Material.ORE) {
             int l = world.getData(i, j, k);
 
             world.setData(i, j, k, l ^ 4);
             world.a(entityhuman, 1003, i, j, k, 0);
-            return true;
         }
+
+        return true;
     }
 
     public void a(World world, int i, int j, int k, boolean flag) {

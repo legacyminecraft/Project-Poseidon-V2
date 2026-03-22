@@ -7,7 +7,7 @@ public enum EnumSkyBlock {
 
     private static final EnumSkyBlock[] d = new EnumSkyBlock[] { SKY, BLOCK};
 
-    private EnumSkyBlock(String s, int i, int j) {
+    EnumSkyBlock(String s, int i, int j) {
         this.c = j;
     }
 }

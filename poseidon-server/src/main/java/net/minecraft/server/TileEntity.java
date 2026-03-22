@@ -54,7 +54,7 @@ public class TileEntity {
             Class<? extends TileEntity> oclass = a.get(nbttagcompound.getString("id"));
 
             if (oclass != null) {
-                tileentity = oclass.newInstance();
+                tileentity = oclass.getDeclaredConstructor().newInstance();
             }
         } catch (Exception exception) {
             exception.printStackTrace();

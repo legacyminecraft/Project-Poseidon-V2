@@ -212,9 +212,7 @@ public class ItemWorldMap extends ItemWorldMapBase {
         if (!world.isStatic) {
             WorldMap worldmap = this.a(itemstack, world);
 
-            if (entity instanceof EntityHuman) {
-                EntityHuman entityhuman = (EntityHuman) entity;
-
+            if (entity instanceof EntityHuman entityhuman) {
                 worldmap.a(entityhuman, itemstack);
             }
 

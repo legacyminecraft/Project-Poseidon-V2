@@ -251,7 +251,7 @@ public class EntityFish extends Entity {
                 double d6 = 0.0D;
 
                 for (int k = 0; k < b0; ++k) {
-                    double d7 = this.boundingBox.b + (this.boundingBox.e - this.boundingBox.b) * (double) (k + 0) / (double) b0 - 0.125D + 0.125D;
+                    double d7 = this.boundingBox.b + (this.boundingBox.e - this.boundingBox.b) * (double) (k) / (double) b0 - 0.125D + 0.125D;
                     double d8 = this.boundingBox.b + (this.boundingBox.e - this.boundingBox.b) * (double) (k + 1) / (double) b0 - 0.125D + 0.125D;
                     AxisAlignedBB axisalignedbb1 = AxisAlignedBB.b(this.boundingBox.a, d7, this.boundingBox.c, this.boundingBox.d, d8, this.boundingBox.f);
 

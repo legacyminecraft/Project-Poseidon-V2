@@ -30,8 +30,6 @@ class GuiLogFormatter extends Formatter {
             stringbuilder.append("[WARNING] ");
         } else if (level == Level.SEVERE) {
             stringbuilder.append("[SEVERE] ");
-        } else if (level == Level.SEVERE) {
-            stringbuilder.append("[" + level.getLocalizedName() + "] ");
         }
 
         stringbuilder.append(logrecord.getMessage());
@@ -42,7 +40,7 @@ class GuiLogFormatter extends Formatter {
             StringWriter stringwriter = new StringWriter();
 
             throwable.printStackTrace(new PrintWriter(stringwriter));
-            stringbuilder.append(stringwriter.toString());
+            stringbuilder.append(stringwriter);
         }
 
         return stringbuilder.toString();

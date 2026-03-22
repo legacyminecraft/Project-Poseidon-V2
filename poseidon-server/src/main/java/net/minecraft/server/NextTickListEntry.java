@@ -19,11 +19,9 @@ public class NextTickListEntry implements Comparable<NextTickListEntry> {
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof NextTickListEntry)) {
+        if (!(object instanceof NextTickListEntry nextticklistentry)) {
             return false;
         } else {
-            NextTickListEntry nextticklistentry = (NextTickListEntry) object;
-
             return this.a == nextticklistentry.a && this.b == nextticklistentry.b && this.c == nextticklistentry.c && this.d == nextticklistentry.d;
         }
     }
