@@ -68,6 +68,8 @@ public class BlockChest extends BlockContainer {
                     entityitem.motZ = (float) this.a.nextGaussian() * f3;
                     world.addEntity(entityitem);
                 }
+
+                tileentitychest.setItem(l, null); // Poseidon
             }
         }
 

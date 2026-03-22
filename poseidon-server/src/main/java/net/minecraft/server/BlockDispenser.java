@@ -236,6 +236,8 @@ public class BlockDispenser extends BlockContainer {
                     entityitem.motZ = (float) this.a.nextGaussian() * f3;
                     world.addEntity(entityitem);
                 }
+
+                tileentitydispenser.setItem(l, null); // Poseidon
             }
         }
 
