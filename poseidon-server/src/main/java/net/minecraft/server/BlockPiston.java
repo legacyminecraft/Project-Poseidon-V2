@@ -57,7 +57,7 @@ public class BlockPiston extends Block {
         int i1 = c(l);
         boolean flag = this.f(world, i, j, k, i1);
 
-        if (l != 7) {
+        if (l >= 0 && l <= 5) { // Poseidon - fix piston exploit
             if (flag && !d(l)) {
                 // CraftBukkit start
                 int length = h(world, i, j, k, i1);
