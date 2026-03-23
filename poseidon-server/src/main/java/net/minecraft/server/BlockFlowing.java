@@ -73,7 +73,7 @@ public class BlockFlowing extends BlockFluids {
             }
 
             if (this.material == Material.LAVA && i1 < 8 && i1 > l && random.nextInt(4) != 0) {
-                i1 = l;
+                //i1 = l; // Poseidon - fix flowing lava not disappearing when the source block is removed
                 flag = false;
             }
 
