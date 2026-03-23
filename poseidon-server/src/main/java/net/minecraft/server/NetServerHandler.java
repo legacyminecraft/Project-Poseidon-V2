@@ -230,6 +230,15 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
                 if (packet10flying.h && packet10flying.y == -999.0D && packet10flying.stance == -999.0D) {
                     d5 = packet10flying.x;
                     d4 = packet10flying.z;
+
+                    // Poseidon start - fix vehicle server crash exploit
+                    double d8 = d5 * d5 + d4 * d4;
+                    if (d8 > 100.0D) {
+                        a.warning(this.player.name + " was caught trying to crash the server on entity " + this.player.vehicle.toString() + ".");
+                        player.kickPlayer("Nope!");
+                        return;
+                    }
+                    // Poseidon end
                 }
 
                 this.player.onGround = packet10flying.g;
