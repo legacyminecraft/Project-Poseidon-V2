@@ -84,9 +84,14 @@ public class EntityCreeper extends EntityMonster {
 
     public void die(@Nullable Entity entity) {
         super.die(entity);
-        if (entity instanceof EntitySkeleton) {
-            this.b(Item.GOLD_RECORD.id + this.random.nextInt(2), 1);
+        // Poseidon start - fix creepers not dropping music discs when killed by skeletons
+        if (entity instanceof EntityArrow entityarrow) {
+            EntityLiving shooter = entityarrow.shooter;
+            if (shooter instanceof EntitySkeleton) {
+                this.b(Item.GOLD_RECORD.id + this.random.nextInt(2), 1);
+            }
         }
+        // Poseidon end
     }
 
     protected void a(Entity entity, float f) {
