@@ -91,6 +91,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     }
 
     public void disconnect(String s) {
+        if (this.disconnected) return; // Poseidon - fix disconnect spam
+
         // CraftBukkit start
         String leaveMessage = "\u00A7e" + this.player.name + " left the game.";
 
@@ -194,7 +196,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             }
         }
 
-        if (Double.isNaN(packet10flying.x) || Double.isNaN(packet10flying.y) || Double.isNaN(packet10flying.z) || Double.isNaN(packet10flying.stance)) {
+        // Poseidon - fix disconnect spawm
+        if ((Double.isNaN(packet10flying.x) || Double.isNaN(packet10flying.y) || Double.isNaN(packet10flying.z) || Double.isNaN(packet10flying.stance)) && player.isOnline() && !this.disconnected) {
             player.teleport(player.getWorld().getSpawnLocation());
             System.err.println(player.getName() + " was caught trying to crash the server with an invalid position.");
             player.kickPlayer("Nope!");
