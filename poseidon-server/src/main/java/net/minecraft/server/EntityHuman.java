@@ -11,6 +11,8 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.util.Vector;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
@@ -556,11 +558,42 @@ public abstract class EntityHuman extends EntityLiving {
             }
             // CraftBukkit end
 
+            // Poseidon start - fix player knockback
+            double d0 = entity.motX;
+            double d1 = entity.motY;
+            double d2 = entity.motZ;
+            // Poseidon end
+
             // CraftBukkit start - Return when the damage fails so that the item will not lose durability
             if (!entity.damageEntity(this, i)) {
                 return;
             }
             // CraftBukkit end
+
+            // Poseidon start - fix player knockback
+            if (entity instanceof EntityPlayer entityplayer && entity.velocityChanged) {
+                boolean cancelled = false;
+                Player player = (Player) entity.getBukkitEntity();
+                Vector velocity = new Vector(d0, d1, d2);
+
+                PlayerVelocityEvent event = new PlayerVelocityEvent(player, velocity.clone());
+                this.world.getServer().getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) {
+                    cancelled = true;
+                } else if (!velocity.equals(event.getVelocity())) {
+                    player.setVelocity(velocity);
+                }
+
+                if (!cancelled) {
+                    entityplayer.netServerHandler.sendPacket(new Packet28EntityVelocity(entity));
+                    entity.velocityChanged = false;
+                    entity.motX = d0;
+                    entity.motY = d1;
+                    entity.motZ = d2;
+                }
+            }
+            // Poseidon end
 
             ItemStack itemstack = this.G();
 
