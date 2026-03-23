@@ -132,6 +132,7 @@ public class Explosion {
                         entity.motX += d0 * d10;
                         entity.motY += d1 * d10;
                         entity.motZ += d2 * d10;
+                        entity.velocityChanged = true; // Poseidon
                     }
                 } else {
                     EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.source.getBukkitEntity(), damagee, EntityDamageEvent.DamageCause.ENTITY_EXPLOSION, damageDone);
@@ -143,6 +144,7 @@ public class Explosion {
                         entity.motX += d0 * d10;
                         entity.motY += d1 * d10;
                         entity.motZ += d2 * d10;
+                        entity.velocityChanged = true; // Poseidon
                     }
                 }
                 // CraftBukkit end
