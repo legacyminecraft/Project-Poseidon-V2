@@ -150,7 +150,9 @@ public abstract class EntityLiving extends Entity {
                 this.world.getServer().getPluginManager().callEvent(event);
 
                 if (!event.isCancelled() && event.getDamage() != 0) {
+                    boolean velocityChanged = this.velocityChanged; // Poseidon
                     this.damageEntity(null, event.getDamage());
+                    this.velocityChanged = velocityChanged; // Poseidon - fix drowning pushing player down
                 }
                 // CraftBukkit end
             }
