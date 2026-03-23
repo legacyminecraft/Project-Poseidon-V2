@@ -72,8 +72,12 @@ public class EntityTrackerEntry {
             int k1 = j - this.e;
             int l1 = k - this.f;
             Packet object = null;
-            boolean flag = Math.abs(i) >= 8 || Math.abs(j) >= 8 || Math.abs(k) >= 8;
-            boolean flag1 = Math.abs(l - this.g) >= 8 || Math.abs(i1 - this.h) >= 8;
+
+            // Poseidon start - lower update threshold and always update vehicles
+            boolean flag = Math.abs(i) >= 1 || Math.abs(j) >= 1 || Math.abs(k) >= 1
+                    || this.tracker instanceof EntityBoat || this.tracker instanceof EntityMinecart;
+            boolean flag1 = Math.abs(l - this.g) >= 1 || Math.abs(i1 - this.h) >= 1;
+            // Poseidon end
 
             if (j1 >= -128 && j1 < 128 && k1 >= -128 && k1 < 128 && l1 >= -128 && l1 < 128 && this.t <= 400) {
                 if (flag && flag1) {
@@ -229,9 +233,11 @@ public class EntityTrackerEntry {
         if (this.tracker instanceof EntityItem entityitem) {
             Packet21PickupSpawn packet21pickupspawn = new Packet21PickupSpawn(entityitem);
 
-            entityitem.locX = (double) packet21pickupspawn.b / 32.0D;
+            // Poseidon start - remove
+            /*entityitem.locX = (double) packet21pickupspawn.b / 32.0D;
             entityitem.locY = (double) packet21pickupspawn.c / 32.0D;
-            entityitem.locZ = (double) packet21pickupspawn.d / 32.0D;
+            entityitem.locZ = (double) packet21pickupspawn.d / 32.0D;*/
+            // Poseidon end
             return packet21pickupspawn;
         } else if (this.tracker instanceof EntityPlayer entityplayer) {
             // CraftBukkit start - limit name length to 16 characters
