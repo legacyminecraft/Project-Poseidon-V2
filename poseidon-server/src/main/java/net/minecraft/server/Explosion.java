@@ -198,6 +198,16 @@ public class Explosion {
         }
         // CraftBukkit end
 
+        // Poseidon start - fix explosion event
+        arraylist.clear();
+        this.blocks.clear();
+        for (org.bukkit.block.Block block : event.blockList()) {
+            ChunkPosition coords = new ChunkPosition(block.getX(), block.getY(), block.getZ());
+            arraylist.add(coords);
+            this.blocks.add(coords);
+        }
+        // Poseidon end
+
         for (int i = arraylist.size() - 1; i >= 0; --i) {
             ChunkPosition chunkposition = arraylist.get(i);
             int j = chunkposition.x;
