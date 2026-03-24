@@ -136,5 +136,5 @@ public interface BlockState {
      */
     boolean update(boolean force);
 
-    public byte getRawData();
+    byte getRawData();
 }

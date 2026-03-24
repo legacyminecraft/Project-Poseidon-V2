@@ -55,21 +55,13 @@ public class Button extends SimpleAttachableMaterialData implements Redstone {
     public BlockFace getAttachedFace() {
         byte data = (byte) (getData() & 0x7);
 
-        switch (data) {
-        case 0x1:
-            return BlockFace.NORTH;
-
-        case 0x2:
-            return BlockFace.SOUTH;
-
-        case 0x3:
-            return BlockFace.EAST;
-
-        case 0x4:
-            return BlockFace.WEST;
-        }
-
-        return null;
+        return switch (data) {
+            case 0x1 -> BlockFace.NORTH;
+            case 0x2 -> BlockFace.SOUTH;
+            case 0x3 -> BlockFace.EAST;
+            case 0x4 -> BlockFace.WEST;
+            default -> null;
+        };
     }
 
     /**

@@ -20,7 +20,7 @@ public interface PluginLoader {
      * unsuccessful
      * @throws InvalidPluginException Thrown when the specified file is not a plugin
      */
-    public Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
+    Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
 
     /**
      * Loads the plugin contained in the specified file
@@ -31,12 +31,12 @@ public interface PluginLoader {
      * unsuccessful
      * @throws InvalidPluginException Thrown when the specified file is not a plugin
      */
-    public Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
+    Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
 
     /**
      * Returns a list of all filename filters expected by this PluginLoader
      */
-    public Pattern[] getPluginFileFilters();
+    Pattern[] getPluginFileFilters();
 
     /**
      * Creates and returns an event executor
@@ -44,7 +44,7 @@ public interface PluginLoader {
      * @param type Type of the event executor to create
      * @param listener the object that will handle the eventual call back
      */
-    public EventExecutor createExecutor(Event.Type type, Listener listener);
+    EventExecutor createExecutor(Event.Type type, Listener listener);
 
     /**
      * Enables the specified plugin
@@ -53,7 +53,7 @@ public interface PluginLoader {
      *
      * @param plugin Plugin to enable
      */
-    public void enablePlugin(Plugin plugin);
+    void enablePlugin(Plugin plugin);
 
     /**
      * Disables the specified plugin
@@ -62,5 +62,5 @@ public interface PluginLoader {
      *
      * @param plugin Plugin to disable
      */
-    public void disablePlugin(Plugin plugin);
+    void disablePlugin(Plugin plugin);
 }

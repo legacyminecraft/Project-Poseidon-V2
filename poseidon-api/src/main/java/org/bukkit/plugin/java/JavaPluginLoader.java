@@ -132,8 +132,8 @@ public class JavaPluginLoader implements PluginLoader {
     protected final Pattern[] fileFilters = new Pattern[] {
         Pattern.compile("\\.jar$"),
     };
-    protected final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
-    protected final Map<String, PluginClassLoader> loaders = new HashMap<String, PluginClassLoader>();
+    protected final Map<String, Class<?>> classes = new HashMap<>();
+    protected final Map<String, PluginClassLoader> loaders = new HashMap<>();
 
     public JavaPluginLoader(Server instance) {
         server = instance;
@@ -209,9 +209,9 @@ public class JavaPluginLoader implements PluginLoader {
         ArrayList<String> depend;
 
         try {
-            depend = (ArrayList) description.getDepend();
+            depend = (ArrayList<String>) description.getDepend();
             if (depend == null) {
-                depend = new ArrayList<String>();
+                depend = new ArrayList<>();
             }
         } catch (ClassCastException ex) {
             throw new InvalidPluginException(ex);
@@ -232,9 +232,9 @@ public class JavaPluginLoader implements PluginLoader {
             ArrayList<String> softDepend;
 
             try {
-                softDepend = (ArrayList) description.getSoftDepend();
+                softDepend = (ArrayList<String>) description.getSoftDepend();
                 if (softDepend == null) {
-                    softDepend = new ArrayList<String>();
+                    softDepend = new ArrayList<>();
                 }
             } catch (ClassCastException ex) {
                 throw new InvalidPluginException(ex);
@@ -271,9 +271,9 @@ public class JavaPluginLoader implements PluginLoader {
             throw new InvalidPluginException(ex);
         }
 
-        loaders.put(description.getName(), (PluginClassLoader) loader);
+        loaders.put(description.getName(), loader);
 
-        return (Plugin) result;
+        return result;
     }
 
     protected File getDataFolder(File file) {
@@ -962,13 +962,11 @@ public class JavaPluginLoader implements PluginLoader {
     }
 
     public void enablePlugin(final Plugin plugin) {
-        if (!(plugin instanceof JavaPlugin)) {
+        if (!(plugin instanceof JavaPlugin jPlugin)) {
             throw new IllegalArgumentException("Plugin is not associated with this PluginLoader");
         }
 
         if (!plugin.isEnabled()) {
-            JavaPlugin jPlugin = (JavaPlugin) plugin;
-
             String pluginName = jPlugin.getDescription().getName();
 
             if (!loaders.containsKey(pluginName)) {
@@ -988,12 +986,11 @@ public class JavaPluginLoader implements PluginLoader {
     }
 
     public void disablePlugin(Plugin plugin) {
-        if (!(plugin instanceof JavaPlugin)) {
+        if (!(plugin instanceof JavaPlugin jPlugin)) {
             throw new IllegalArgumentException("Plugin is not associated with this PluginLoader");
         }
 
         if (plugin.isEnabled()) {
-            JavaPlugin jPlugin = (JavaPlugin) plugin;
             ClassLoader cloader = jPlugin.getClassLoader();
 
             try {
@@ -1006,8 +1003,7 @@ public class JavaPluginLoader implements PluginLoader {
 
             loaders.remove(jPlugin.getDescription().getName());
 
-            if (cloader instanceof PluginClassLoader) {
-                PluginClassLoader loader = (PluginClassLoader) cloader;
+            if (cloader instanceof PluginClassLoader loader) {
                 Set<String> names = loader.getClasses();
 
                 for (String name : names) {

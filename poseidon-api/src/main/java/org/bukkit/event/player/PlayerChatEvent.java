@@ -22,7 +22,7 @@ public class PlayerChatEvent extends PlayerEvent implements Cancellable {
 
     protected PlayerChatEvent(final Type type, final Player player, final String message) {
         super(type, player);
-        recipients = new HashSet<Player>(Arrays.asList(player.getServer().getOnlinePlayers()));
+        recipients = new HashSet<>(Arrays.asList(player.getServer().getOnlinePlayers()));
         this.message = message;
     }
 

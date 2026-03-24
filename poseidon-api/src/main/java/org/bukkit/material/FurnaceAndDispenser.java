@@ -24,25 +24,12 @@ public class FurnaceAndDispenser extends MaterialData implements Directional {
     }
 
     public void setFacingDirection(BlockFace face) {
-        byte data;
-
-        switch (face) {
-        case EAST:
-            data = 0x2;
-            break;
-
-        case WEST:
-            data = 0x3;
-            break;
-
-        case NORTH:
-            data = 0x4;
-            break;
-
-        case SOUTH:
-        default:
-            data = 0x5;
-        }
+        byte data = switch (face) {
+            case EAST -> 0x2;
+            case WEST -> 0x3;
+            case NORTH -> 0x4;
+            default -> 0x5;
+        };
 
         setData(data);
     }
@@ -50,20 +37,12 @@ public class FurnaceAndDispenser extends MaterialData implements Directional {
     public BlockFace getFacing() {
         byte data = getData();
 
-        switch (data) {
-        case 0x2:
-            return BlockFace.EAST;
-
-        case 0x3:
-            return BlockFace.WEST;
-
-        case 0x4:
-            return BlockFace.NORTH;
-
-        case 0x5:
-        default:
-            return BlockFace.SOUTH;
-        }
+        return switch (data) {
+            case 0x2 -> BlockFace.EAST;
+            case 0x3 -> BlockFace.WEST;
+            case 0x4 -> BlockFace.NORTH;
+            default -> BlockFace.SOUTH;
+        };
     }
 
     @Override

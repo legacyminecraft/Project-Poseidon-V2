@@ -62,25 +62,12 @@ public class Bed extends MaterialData implements Directional {
      * only affect one of the two blocks the bed is made of.
      */
     public void setFacingDirection(BlockFace face) {
-        byte data;
-
-        switch (face) {
-        case WEST:
-            data = 0x0;
-            break;
-
-        case NORTH:
-            data = 0x1;
-            break;
-
-        case EAST:
-            data = 0x2;
-            break;
-
-        case SOUTH:
-        default:
-            data = 0x3;
-        }
+        byte data = switch (face) {
+            case WEST -> 0x0;
+            case NORTH -> 0x1;
+            case EAST -> 0x2;
+            default -> 0x3;
+        };
 
         if (isHeadOfBed()) {
             data |= 0x8;
@@ -97,20 +84,12 @@ public class Bed extends MaterialData implements Directional {
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x7);
 
-        switch (data) {
-        case 0x0:
-            return BlockFace.WEST;
-
-        case 0x1:
-            return BlockFace.NORTH;
-
-        case 0x2:
-            return BlockFace.EAST;
-
-        case 0x3:
-        default:
-            return BlockFace.SOUTH;
-        }
+        return switch (data) {
+            case 0x0 -> BlockFace.WEST;
+            case 0x1 -> BlockFace.NORTH;
+            case 0x2 -> BlockFace.EAST;
+            default -> BlockFace.SOUTH;
+        };
     }
 
     @Override

@@ -27,11 +27,11 @@ public enum Achievement {
     /**
      * The offset used to distinguish Achievements and Statistics
      */
-    public final static int STATISTIC_OFFSET = 5242880;
-    private final static Map<Integer, Achievement> achievements = new HashMap<Integer, Achievement>();
+    public static final int STATISTIC_OFFSET = 5242880;
+    private static final Map<Integer, Achievement> achievements = new HashMap<>();
     private final int id;
 
-    private Achievement(int id) {
+    Achievement(int id) {
         this.id = STATISTIC_OFFSET + id;
     }
 

@@ -74,9 +74,9 @@ public enum DyeColor {
     BLACK((byte) 0xF);
 
     private final byte data;
-    private final static Map<Byte, DyeColor> colors = new HashMap<Byte, DyeColor>();
+    private static final Map<Byte, DyeColor> colors = new HashMap<>();
 
-    private DyeColor(final byte data) {
+    DyeColor(final byte data) {
         this.data = data;
     }
 

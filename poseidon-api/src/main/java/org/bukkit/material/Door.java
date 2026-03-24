@@ -108,19 +108,12 @@ public class Door extends MaterialData implements Directional {
      */
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x3);
-        switch (data) {
-        case 0:
-            return BlockFace.NORTH;
-
-        case 1:
-            return BlockFace.EAST;
-
-        case 2:
-            return BlockFace.SOUTH;
-
-        case 3:
-            return BlockFace.WEST;
-        }
-        return null; // shouldn't happen
+        return switch (data) {
+            case 0 -> BlockFace.NORTH;
+            case 1 -> BlockFace.EAST;
+            case 2 -> BlockFace.SOUTH;
+            case 3 -> BlockFace.WEST;
+            default -> null;
+        };
     }
 }

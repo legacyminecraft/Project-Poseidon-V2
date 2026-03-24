@@ -14,21 +14,21 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible {
      *
      * @return Player name
      */
-    public String getName();
+    String getName();
 
     /**
      * Get the player's inventory.
      *
      * @return The inventory of the player, this also contains the armor slots.
      */
-    public PlayerInventory getInventory();
+    PlayerInventory getInventory();
 
     /**
      * Returns the ItemStack currently in your hand, can be empty.
      *
      * @return The ItemStack of the item you are currently holding.
      */
-    public ItemStack getItemInHand();
+    ItemStack getItemInHand();
 
     /**
      * Sets the item to the given ItemStack, this will replace whatever the
@@ -37,7 +37,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible {
      * @param item The ItemStack which will end up in the hand
      * @return
      */
-    public void setItemInHand(ItemStack item);
+    void setItemInHand(ItemStack item);
 
     /**
      * Changes the item in hand to another of your 'action slots'.
@@ -52,12 +52,12 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible {
      *
      * @return slumber state
      */
-    public boolean isSleeping();
+    boolean isSleeping();
 
     /**
      * Get the sleep ticks of the player. This value may be capped.
      *
      * @return slumber ticks
      */
-    public int getSleepTicks();
+    int getSleepTicks();
 }

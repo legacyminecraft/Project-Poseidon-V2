@@ -127,7 +127,7 @@ public abstract class Event implements Serializable {
         /**
          * Represents any miscellaneous events
          */
-        MISCELLANEOUS;
+        MISCELLANEOUS
     }
 
     /**
@@ -770,7 +770,7 @@ public abstract class Event implements Serializable {
 
         private final Category category;
 
-        private Type(Category category) {
+        Type(Category category) {
             this.category = category;
         }
 
@@ -802,6 +802,6 @@ public abstract class Event implements Serializable {
          * The action indicated by the event will take place if possible, even if the server would not normally allow the action.
          * Some actions may not be allowed.
          */
-        ALLOW;
+        ALLOW
     }
 }

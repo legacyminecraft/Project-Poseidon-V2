@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 public class PortalCreateEvent extends WorldEvent implements Cancellable {
     private boolean cancel = false;
-    private ArrayList<Block> blocks = new ArrayList<Block>();
+    private ArrayList<Block> blocks = new ArrayList<>();
 
     public PortalCreateEvent(final Collection<Block> blocks, final World world) {
         super(Type.PORTAL_CREATE, world);

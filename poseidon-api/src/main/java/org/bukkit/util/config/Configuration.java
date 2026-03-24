@@ -60,7 +60,7 @@ public class Configuration extends ConfigurationNode {
     private String header = null;
 
     public Configuration(File file) {
-        super(new HashMap<String, Object>());
+        super(new HashMap<>());
 
         DumperOptions options = new DumperOptions();
 
@@ -82,9 +82,9 @@ public class Configuration extends ConfigurationNode {
             stream = new FileInputStream(file);
             read(yaml.load(new UnicodeReader(stream)));
         } catch (IOException e) {
-            root = new HashMap<String, Object>();
+            root = new HashMap<>();
         } catch (ConfigurationException e) {
-            root = new HashMap<String, Object>();
+            root = new HashMap<>();
         } finally {
             try {
                 if (stream != null) {
@@ -104,7 +104,7 @@ public class Configuration extends ConfigurationNode {
         StringBuilder header = new StringBuilder();
 
         for (String line : headerLines) {
-            if (header.length() > 0) {
+            if (!header.isEmpty()) {
                 header.append("\r\n");
             }
             header.append(line);
@@ -173,7 +173,7 @@ public class Configuration extends ConfigurationNode {
     private void read(Object input) throws ConfigurationException {
         try {
             if (null == input) {
-                root = new HashMap<String, Object>();
+                root = new HashMap<>();
             } else {
                 root = (Map<String, Object>) input;
             }
@@ -188,7 +188,7 @@ public class Configuration extends ConfigurationNode {
      * @return
      */
     public static ConfigurationNode getEmptyNode() {
-        return new ConfigurationNode(new HashMap<String, Object>());
+        return new ConfigurationNode(new HashMap<>());
     }
 }
 

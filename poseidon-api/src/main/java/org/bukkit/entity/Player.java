@@ -26,7 +26,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @return the friendly name
      */
-    public String getDisplayName();
+    String getDisplayName();
 
     /**
      * Sets the "friendly" name to display of this player. This may include color.
@@ -36,48 +36,48 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @param name
      */
-    public void setDisplayName(String name);
+    void setDisplayName(String name);
 
     /**
      * Set the target of the player's compass.
      *
      * @param loc
      */
-    public void setCompassTarget(Location loc);
+    void setCompassTarget(Location loc);
 
     /**
      * Get the previously set compass target.
      *
      * @return location of the target
      */
-    public Location getCompassTarget();
+    Location getCompassTarget();
 
     /**
      * Gets the socket address of this player
      * @return the player's address
      */
-    public InetSocketAddress getAddress();
+    InetSocketAddress getAddress();
 
     /**
      * Sends this sender a message raw
      *
      * @param message Message to be displayed
      */
-    public void sendRawMessage(String message);
+    void sendRawMessage(String message);
 
     /**
      * Kicks player with custom kick message.
      *
      * @param message kick message
      */
-    public void kickPlayer(String message);
+    void kickPlayer(String message);
 
     /**
      * Says a message (or runs a command).
      *
      * @param msg message to print
      */
-    public void chat(String msg);
+    void chat(String msg);
 
     /**
      * Makes the player perform the given command
@@ -85,31 +85,31 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param command Command to perform
      * @return true if the command was successful, otherwise false
      */
-    public boolean performCommand(String command);
+    boolean performCommand(String command);
 
     /**
      * Returns if the player is in sneak mode
      * @return true if player is in sneak mode
      */
-    public boolean isSneaking();
+    boolean isSneaking();
 
     /**
      * Sets the sneak mode the player
      * @param sneak true if player should appear sneaking
      */
-    public void setSneaking(boolean sneak);
+    void setSneaking(boolean sneak);
 
     /**
      * Saves the players current location, health, inventory, motion, and other information into the username.dat file, in the world/player folder
      */
-    public void saveData();
+    void saveData();
 
     /**
      * Loads the players current location, health, inventory, motion, and other information from the username.dat file, in the world/player folder
      *
      * Note: This will overwrite the players current inventory, health, motion, etc, with the state from the saved dat file.
      */
-    public void loadData();
+    void loadData();
 
     /**
      * Sets whether the player is ignored as not sleeping. If everyone is
@@ -119,14 +119,14 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @param isSleeping
      */
-    public void setSleepingIgnored(boolean isSleeping);
+    void setSleepingIgnored(boolean isSleeping);
 
     /**
      * Returns whether the player is sleeping ignored.
      *
      * @return
      */
-    public boolean isSleepingIgnored();
+    boolean isSleepingIgnored();
 
     /**
      * Play a note for a player at a location. This requires a note block
@@ -137,7 +137,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param instrument
      * @param note
      */
-    public void playNote(Location loc, byte instrument, byte note);
+    void playNote(Location loc, byte instrument, byte note);
 
     /**
      * Play a note for a player at a location. This requires a note block
@@ -148,7 +148,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param instrument
      * @param note
      */
-    public void playNote(Location loc, Instrument instrument, Note note);
+    void playNote(Location loc, Instrument instrument, Note note);
 
     /**
      * Plays an effect to just this player.
@@ -157,7 +157,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param effect the {@link Effect}
      * @param data a data bit needed for the RECORD_PLAY, SMOKE, and STEP_SOUND sounds
      */
-    public void playEffect(Location loc, Effect effect, int data);
+    void playEffect(Location loc, Effect effect, int data);
 
     /**
      * Send a block change. This fakes a block change packet for a user at
@@ -167,7 +167,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param material
      * @param data
      */
-    public void sendBlockChange(Location loc, Material material, byte data);
+    void sendBlockChange(Location loc, Material material, byte data);
 
     /**
      * Send a chunk change. This fakes a chunk change packet for a user at
@@ -186,7 +186,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @return true if the chunk change packet was sent
      */
-    public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data);
+    boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data);
 
     /**
      * Send a block change. This fakes a block change packet for a user at
@@ -196,7 +196,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param material
      * @param data
      */
-    public void sendBlockChange(Location loc, int material, byte data);
+    void sendBlockChange(Location loc, int material, byte data);
     
     /**
      * Render a map and send it to the player in its entirety. This may be used
@@ -204,7 +204,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * 
      * @pram map The map to be sent
      */
-    public void sendMap(MapView map);
+    void sendMap(MapView map);
 
     /**
      * Forces an update of the player's entire inventory.
@@ -212,21 +212,21 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @deprecated This method should not be relied upon as it is a temporary work-around for a larger, more complicated issue.
      */
     @Deprecated
-    public void updateInventory();
+    void updateInventory();
 
     /**
      * Awards this player the given achievement
      *
      * @param achievement Achievement to award
      */
-    public void awardAchievement(Achievement achievement);
+    void awardAchievement(Achievement achievement);
 
     /**
      * Increments the given statistic for this player
      *
      * @param statistic Statistic to increment
      */
-    public void incrementStatistic(Statistic statistic);
+    void incrementStatistic(Statistic statistic);
 
     /**
      * Increments the given statistic for this player
@@ -234,7 +234,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param statistic Statistic to increment
      * @param amount Amount to increment this statistic by
      */
-    public void incrementStatistic(Statistic statistic, int amount);
+    void incrementStatistic(Statistic statistic, int amount);
 
     /**
      * Increments the given statistic for this player for the given material
@@ -242,7 +242,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param statistic Statistic to increment
      * @param material Material to offset the statistic with
      */
-    public void incrementStatistic(Statistic statistic, Material material);
+    void incrementStatistic(Statistic statistic, Material material);
 
     /**
      * Increments the given statistic for this player for the given material
@@ -251,7 +251,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param material Material to offset the statistic with
      * @param amount Amount to increment this statistic by
      */
-    public void incrementStatistic(Statistic statistic, Material material, int amount);
+    void incrementStatistic(Statistic statistic, Material material, int amount);
 
     /**
      * Sets the current time on the player's client. When relative is true the player's time
@@ -263,14 +263,14 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param time The current player's perceived time or the player's time offset from the server time.
      * @param relative When true the player time is kept relative to its world time.
      */
-    public void setPlayerTime(long time, boolean relative);
+    void setPlayerTime(long time, boolean relative);
 
     /**
      * Returns the player's current timestamp.
      *
      * @return
      */
-    public long getPlayerTime();
+    long getPlayerTime();
 
     /**
      * Returns the player's current time offset relative to server time, or the current player's fixed time
@@ -278,7 +278,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @return
      */
-    public long getPlayerTimeOffset();
+    long getPlayerTimeOffset();
 
     /**
      * Returns true if the player's time is relative to the server time, otherwise the player's time is absolute and
@@ -286,12 +286,12 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @return true if the player's time is relative to the server time.
      */
-    public boolean isPlayerTimeRelative();
+    boolean isPlayerTimeRelative();
 
     /**
      * Restores the normal condition where the player's time is synchronized with the server time.
      * Equivalent to calling setPlayerTime(0, true).
      */
-    public void resetPlayerTime();
+    void resetPlayerTime();
 
 }

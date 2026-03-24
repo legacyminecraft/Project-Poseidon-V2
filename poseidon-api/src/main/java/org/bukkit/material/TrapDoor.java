@@ -39,22 +39,13 @@ public class TrapDoor extends SimpleAttachableMaterialData {
     public BlockFace getAttachedFace() {
         byte data = (byte) (getData() & 0x3);
 
-        switch (data) {
-            case 0x0:
-                return BlockFace.WEST;
-
-            case 0x1:
-                return BlockFace.EAST;
-
-            case 0x2:
-                return BlockFace.SOUTH;
-
-            case 0x3:
-                return BlockFace.NORTH;
-        }
-
-        return null;
-
+        return switch (data) {
+            case 0x0 -> BlockFace.WEST;
+            case 0x1 -> BlockFace.EAST;
+            case 0x2 -> BlockFace.SOUTH;
+            case 0x3 -> BlockFace.NORTH;
+            default -> null;
+        };
     }
 
     public void setFacingDirection(BlockFace face) {

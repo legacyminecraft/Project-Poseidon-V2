@@ -22,11 +22,11 @@ public class Note {
 
         private final boolean sharpable;
         private final byte id;
-        private static final Map<Byte, Note.Tone> tones = new HashMap<Byte, Note.Tone>();
+        private static final Map<Byte, Note.Tone> tones = new HashMap<>();
         /** The number of tones including sharped tones. */
         public static final byte TONES_COUNT;
 
-        private Tone(byte id, boolean sharpable) {
+        Tone(byte id, boolean sharpable) {
             this.id = id;
             this.sharpable = sharpable;
         }

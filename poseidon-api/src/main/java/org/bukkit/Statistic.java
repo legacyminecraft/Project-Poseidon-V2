@@ -17,20 +17,20 @@ public enum Statistic {
     USE_ITEM(6908288, false),
     BREAK_ITEM(16973824, true);
 
-    private final static Map<Integer, Statistic> statistics = new HashMap<Integer, Statistic>();
+    private static final Map<Integer, Statistic> statistics = new HashMap<>();
     private final int id;
     private final boolean isSubstat;
     private final boolean isBlock;
 
-    private Statistic(int id) {
+    Statistic(int id) {
         this(id, false, false);
     }
 
-    private Statistic(int id, boolean isBlock) {
+    Statistic(int id, boolean isBlock) {
         this(id, true, isBlock);
     }
 
-    private Statistic(int id, boolean isSubstat, boolean isBlock) {
+    Statistic(int id, boolean isSubstat, boolean isBlock) {
         this.id = id;
         this.isSubstat = isSubstat;
         this.isBlock = isBlock;

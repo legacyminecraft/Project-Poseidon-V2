@@ -37,7 +37,7 @@ public class ConfigurationNode {
      */
     @SuppressWarnings("unchecked")
     protected Map<String, Object> recursiveBuilder(Map<String, Object> node) {
-        Map<String, Object> map = new TreeMap<String, Object>();
+        Map<String, Object> map = new TreeMap<>();
 
         Set<String> keys = node.keySet();
         for( String k : keys ) {
@@ -71,12 +71,7 @@ public class ConfigurationNode {
     @SuppressWarnings("unchecked")
     public Object getProperty(String path) {
         if (!path.contains(".")) {
-            Object val = root.get(path);
-
-            if (val == null) {
-                return null;
-            }
-            return val;
+            return root.get(path);
         }
 
         String[] parts = path.split("\\.");
@@ -129,7 +124,7 @@ public class ConfigurationNode {
                 return;
             }
 
-            if (o == null || !(o instanceof Map)) {
+            if (!(o instanceof Map)) {
                 // This will override existing configuration data!
                 o = new HashMap<String, Object>();
                 node.put(parts[i], o);
@@ -248,14 +243,14 @@ public class ConfigurationNode {
     @SuppressWarnings("unchecked")
     public List<String> getKeys(String path) {
         if (path == null) {
-            return new ArrayList<String>(root.keySet());
+            return new ArrayList<>(root.keySet());
         }
         Object o = getProperty(path);
 
         if (o == null) {
             return null;
         } else if (o instanceof Map) {
-            return new ArrayList<String>(((Map<String, Object>) o).keySet());
+            return new ArrayList<>(((Map<String, Object>) o).keySet());
         } else {
             return null;
         }
@@ -267,7 +262,7 @@ public class ConfigurationNode {
      * @return List of keys
      */
     public List<String> getKeys() {
-        return new ArrayList<String>(root.keySet());
+        return new ArrayList<>(root.keySet());
     }
 
     /**
@@ -306,10 +301,10 @@ public class ConfigurationNode {
         List<Object> raw = getList(path);
 
         if (raw == null) {
-            return def != null ? def : new ArrayList<String>();
+            return def != null ? def : new ArrayList<>();
         }
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         for (Object o : raw) {
             if (o == null) {
@@ -337,10 +332,10 @@ public class ConfigurationNode {
         List<Object> raw = getList(path);
 
         if (raw == null) {
-            return def != null ? def : new ArrayList<Integer>();
+            return def != null ? def : new ArrayList<>();
         }
 
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
 
         for (Object o : raw) {
             Integer i = castInt(o);
@@ -368,10 +363,10 @@ public class ConfigurationNode {
         List<Object> raw = getList(path);
 
         if (raw == null) {
-            return def != null ? def : new ArrayList<Double>();
+            return def != null ? def : new ArrayList<>();
         }
 
-        List<Double> list = new ArrayList<Double>();
+        List<Double> list = new ArrayList<>();
 
         for (Object o : raw) {
             Double i = castDouble(o);
@@ -399,10 +394,10 @@ public class ConfigurationNode {
         List<Object> raw = getList(path);
 
         if (raw == null) {
-            return def != null ? def : new ArrayList<Boolean>();
+            return def != null ? def : new ArrayList<>();
         }
 
-        List<Boolean> list = new ArrayList<Boolean>();
+        List<Boolean> list = new ArrayList<>();
 
         for (Object o : raw) {
             Boolean tetsu = castBoolean(o);
@@ -431,10 +426,10 @@ public class ConfigurationNode {
         List<Object> raw = getList(path);
 
         if (raw == null) {
-            return def != null ? def : new ArrayList<ConfigurationNode>();
+            return def != null ? def : new ArrayList<>();
         }
 
-        List<ConfigurationNode> list = new ArrayList<ConfigurationNode>();
+        List<ConfigurationNode> list = new ArrayList<>();
 
         for (Object o : raw) {
             if (o instanceof Map) {
@@ -478,7 +473,7 @@ public class ConfigurationNode {
         if (o == null) {
             return null;
         } else if (o instanceof Map) {
-            Map<String, ConfigurationNode> nodes = new HashMap<String, ConfigurationNode>();
+            Map<String, ConfigurationNode> nodes = new HashMap<>();
 
             for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
                 if (entry.getValue() instanceof Map) {
@@ -499,21 +494,15 @@ public class ConfigurationNode {
      * @return
      */
     private static Integer castInt(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Byte) {
-            return (int) (Byte) o;
-        } else if (o instanceof Integer) {
-            return (Integer) o;
-        } else if (o instanceof Double) {
-            return (int) (double) (Double) o;
-        } else if (o instanceof Float) {
-            return (int) (float) (Float) o;
-        } else if (o instanceof Long) {
-            return (int) (long) (Long) o;
-        } else {
-            return null;
-        }
+        return switch (o) {
+            case null -> null;
+            case Byte b -> (int) b;
+            case Integer i -> i;
+            case Double v -> (int) (double) v;
+            case Float v -> (int) (float) v;
+            case Long l -> (int) (long) l;
+            default -> null;
+        };
     }
 
     /**
@@ -523,21 +512,15 @@ public class ConfigurationNode {
      * @return
      */
     private static Double castDouble(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Float) {
-            return (double) (Float) o;
-        } else if (o instanceof Double) {
-            return (Double) o;
-        } else if (o instanceof Byte) {
-            return (double) (Byte) o;
-        } else if (o instanceof Integer) {
-            return (double) (Integer) o;
-        } else if (o instanceof Long) {
-            return (double) (Long) o;
-        } else {
-            return null;
-        }
+        return switch (o) {
+            case null -> null;
+            case Float v -> (double) v;
+            case Double v -> v;
+            case Byte b -> (double) b;
+            case Integer i -> (double) i;
+            case Long l -> (double) l;
+            default -> null;
+        };
     }
 
     /**
@@ -547,13 +530,11 @@ public class ConfigurationNode {
      * @return
      */
     private static Boolean castBoolean(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Boolean) {
-            return (Boolean) o;
-        } else {
-            return null;
-        }
+        return switch (o) {
+            case null -> null;
+            case Boolean b -> b;
+            default -> null;
+        };
     }
 
     /**

@@ -53,25 +53,12 @@ public class Diode extends MaterialData implements Directional {
 
     public void setFacingDirection(BlockFace face) {
         int delay = getDelay();
-        byte data;
-
-        switch (face) {
-        case SOUTH:
-            data = 0x1;
-            break;
-
-        case WEST:
-            data = 0x2;
-            break;
-
-        case NORTH:
-            data = 0x3;
-            break;
-
-        case EAST:
-        default:
-            data = 0x0;
-        }
+        byte data = switch (face) {
+            case SOUTH -> 0x1;
+            case WEST -> 0x2;
+            case NORTH -> 0x3;
+            default -> 0x0;
+        };
 
         setData(data);
         setDelay(delay);
@@ -80,20 +67,12 @@ public class Diode extends MaterialData implements Directional {
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x3);
 
-        switch (data) {
-        case 0x0:
-        default:
-            return BlockFace.EAST;
-
-        case 0x1:
-            return BlockFace.SOUTH;
-
-        case 0x2:
-            return BlockFace.WEST;
-
-        case 0x3:
-            return BlockFace.NORTH;
-        }
+        return switch (data) {
+            case 0x1 -> BlockFace.SOUTH;
+            case 0x2 -> BlockFace.WEST;
+            case 0x3 -> BlockFace.NORTH;
+            default -> BlockFace.EAST;
+        };
     }
 
     @Override

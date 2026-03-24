@@ -12,12 +12,12 @@ public interface Boat extends Vehicle {
      *
      * @param speed
      */
-    public double getMaxSpeed();
+    double getMaxSpeed();
 
     /**
      * Sets the maximum speed of a boat. Must be nonnegative. Default is 0.4D.
      *
      * @param speed
      */
-    public void setMaxSpeed(double speed);
+    void setMaxSpeed(double speed);
 }

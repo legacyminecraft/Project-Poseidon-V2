@@ -250,32 +250,32 @@ public enum Material {
 
     private final int id;
     private final Class<? extends MaterialData> data;
-    private static final Map<Integer, Material> lookupId = new HashMap<Integer, Material>();
-    private static final Map<String, Material> lookupName = new HashMap<String, Material>();
+    private static final Map<Integer, Material> lookupId = new HashMap<>();
+    private static final Map<String, Material> lookupName = new HashMap<>();
     private final int maxStack;
     private final short durability;
 
-    private Material(final int id) {
+    Material(final int id) {
         this(id, 64);
     }
 
-    private Material(final int id, final int stack) {
+    Material(final int id, final int stack) {
         this(id, stack, null);
     }
 
-    private Material(final int id, final int stack, final int durability) {
+    Material(final int id, final int stack, final int durability) {
         this(id, stack, durability, null);
     }
 
-    private Material(final int id, final Class<? extends MaterialData> data) {
+    Material(final int id, final Class<? extends MaterialData> data) {
         this(id, 64, data);
     }
 
-    private Material(final int id, final int stack, final Class<? extends MaterialData> data) {
+    Material(final int id, final int stack, final Class<? extends MaterialData> data) {
         this(id, stack, -1, data);
     }
 
-    private Material(final int id, final int stack, final int durability, final Class<? extends MaterialData> data) {
+    Material(final int id, final int stack, final int durability, final Class<? extends MaterialData> data) {
         this.id = id;
         this.durability = (short) durability;
         this.maxStack = stack;

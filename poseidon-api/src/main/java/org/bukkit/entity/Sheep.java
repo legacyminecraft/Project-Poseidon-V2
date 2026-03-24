@@ -17,11 +17,11 @@ public interface Sheep extends Animals, Colorable {
      * @author Celtic Minstrel
      * @return Whether the sheep is sheared.
      */
-    public boolean isSheared();
+    boolean isSheared();
 
     /**
      * @author Celtic Minstrel
      * @param flag Whether to shear the sheep
      */
-    public void setSheared(boolean flag);
+    void setSheared(boolean flag);
 }

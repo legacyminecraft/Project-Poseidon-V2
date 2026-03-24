@@ -14,5 +14,5 @@ public interface ContainerBlock {
      *
      * @return
      */
-    public Inventory getInventory();
+    Inventory getInventory();
 }

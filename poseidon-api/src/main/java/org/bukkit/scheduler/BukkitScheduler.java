@@ -17,7 +17,7 @@ public interface BukkitScheduler {
      * @param long Delay in server ticks before executing task
      * @return int Task id number (-1 if scheduling failed)
      */
-    public int scheduleSyncDelayedTask(Plugin plugin, Runnable task, long delay);
+    int scheduleSyncDelayedTask(Plugin plugin, Runnable task, long delay);
 
     /**
      * Schedules a once off task to occur as soon as possible
@@ -27,7 +27,7 @@ public interface BukkitScheduler {
      * @param Runnable Task to be executed
      * @return int Task id number (-1 if scheduling failed)
      */
-    public int scheduleSyncDelayedTask(Plugin plugin, Runnable task);
+    int scheduleSyncDelayedTask(Plugin plugin, Runnable task);
 
     /**
      * Schedules a repeating task
@@ -39,7 +39,7 @@ public interface BukkitScheduler {
      * @param long Period in server ticks of the task
      * @return int Task id number (-1 if scheduling failed)
      */
-    public int scheduleSyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
+    int scheduleSyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
 
     /**
      * Schedules a once off task to occur after a delay
@@ -50,7 +50,7 @@ public interface BukkitScheduler {
      * @param long Delay in server ticks before executing task
      * @return int Task id number (-1 if scheduling failed)
      */
-    public int scheduleAsyncDelayedTask(Plugin plugin, Runnable task, long delay);
+    int scheduleAsyncDelayedTask(Plugin plugin, Runnable task, long delay);
 
     /**
      * Schedules a once off task to occur as soon as possible
@@ -60,7 +60,7 @@ public interface BukkitScheduler {
      * @param Runnable Task to be executed
      * @return int Task id number (-1 if scheduling failed)
      */
-    public int scheduleAsyncDelayedTask(Plugin plugin, Runnable task);
+    int scheduleAsyncDelayedTask(Plugin plugin, Runnable task);
 
     /**
      * Schedules a repeating task
@@ -72,7 +72,7 @@ public interface BukkitScheduler {
      * @param long Period in server ticks of the task
      * @return int Task id number (-1 if scheduling failed)
      */
-    public int scheduleAsyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
+    int scheduleAsyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period);
 
     /**
      * Calls a method on the main thread and returns a Future object
@@ -85,26 +85,26 @@ public interface BukkitScheduler {
      * @param Callable Task to be executed
      * @return Future Future object related to the task
      */
-    public <T> Future<T> callSyncMethod(Plugin plugin, Callable<T> task);
+    <T> Future<T> callSyncMethod(Plugin plugin, Callable<T> task);
 
     /**
      * Removes task from scheduler
      *
      * @param int Id number of task to be removed
      */
-    public void cancelTask(int taskId);
+    void cancelTask(int taskId);
 
     /**
      * Removes all tasks associated with a particular plugin from the scheduler
      *
      * @param Plugin Owner of tasks to be removed
      */
-    public void cancelTasks(Plugin plugin);
+    void cancelTasks(Plugin plugin);
 
     /**
      * Removes all tasks from the scheduler
      */
-    public void cancelAllTasks();
+    void cancelAllTasks();
 
     /**
      * Check if the task currently running.
@@ -118,7 +118,7 @@ public interface BukkitScheduler {
      *
      * @return If the task is currently running.
      */
-    public boolean isCurrentlyRunning(int taskId);
+    boolean isCurrentlyRunning(int taskId);
 
     /**
      * Check if the task queued to be run later.
@@ -130,7 +130,7 @@ public interface BukkitScheduler {
      *
      * @return If the task is queued to be run.
      */
-    public boolean isQueued(int taskId);
+    boolean isQueued(int taskId);
 
     /**
      * Returns a list of all active workers.
@@ -139,13 +139,13 @@ public interface BukkitScheduler {
      *
      * @return Active workers
      */
-    public List<BukkitWorker> getActiveWorkers();
+    List<BukkitWorker> getActiveWorkers();
 
     /**
      * Returns a list of all pending tasks.  The ordering of the tasks is not related to their order of execution.
      *
      * @return Active workers
      */
-    public List<BukkitTask> getPendingTasks();
+    List<BukkitTask> getPendingTasks();
 
 }

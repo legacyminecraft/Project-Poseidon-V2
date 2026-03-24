@@ -30,7 +30,7 @@ public class PluginsCommand extends Command {
         Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
         
         for (Plugin plugin : plugins) {
-            if (pluginList.length() > 0) {
+            if (!pluginList.isEmpty()) {
                 pluginList.append(ChatColor.WHITE);
                 pluginList.append(", ");
             }

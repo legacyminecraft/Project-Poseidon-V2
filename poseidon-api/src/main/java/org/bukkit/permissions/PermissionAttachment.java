@@ -10,7 +10,7 @@ import java.util.TreeMap;
  */
 public class PermissionAttachment {
     private PermissionRemovedExecutor removed;
-    private final TreeMap<String, Boolean> permissions = new TreeMap<String, Boolean>();
+    private final TreeMap<String, Boolean> permissions = new TreeMap<>();
     private final Permissible permissible;
     private final Plugin plugin;
 

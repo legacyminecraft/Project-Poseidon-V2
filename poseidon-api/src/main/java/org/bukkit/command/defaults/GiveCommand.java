@@ -34,7 +34,7 @@ public class GiveCommand extends VanillaCommand {
 
                 int amount = 1;
 
-                if (args.length >= 3) {
+                if (args.length == 3) {
                     try {
                         amount = Integer.parseInt(args[2]);
                     } catch (NumberFormatException ex) {}

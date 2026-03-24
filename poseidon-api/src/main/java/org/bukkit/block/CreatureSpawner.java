@@ -15,40 +15,40 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return
      */
-    public CreatureType getCreatureType();
+    CreatureType getCreatureType();
 
     /**
      * Set the spawner creature type.
      *
      * @param mobType
      */
-    public void setCreatureType(CreatureType creatureType);
+    void setCreatureType(CreatureType creatureType);
 
     /**
      * Get the spawner's creature type.
      *
      * @return
      */
-    public String getCreatureTypeId();
+    String getCreatureTypeId();
 
     /**
      * Set the spawner mob type.
      *
      * @param creatureType
      */
-    public void setCreatureTypeId(String creatureType);
+    void setCreatureTypeId(String creatureType);
 
     /**
      * Get the spawner's delay.
      *
      * @return
      */
-    public int getDelay();
+    int getDelay();
 
     /**
      * Set the spawner's delay.
      *
      * @param delay
      */
-    public void setDelay(int delay);
+    void setDelay(int delay);
 }

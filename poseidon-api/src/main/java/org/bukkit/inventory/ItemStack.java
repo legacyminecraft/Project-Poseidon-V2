@@ -186,11 +186,9 @@ public class ItemStack {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ItemStack)) {
+        if (!(obj instanceof ItemStack item)) {
             return false;
         }
-
-        ItemStack item = (ItemStack) obj;
 
         return item.getAmount() == getAmount() && item.getTypeId() == getTypeId();
     }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class ShapedRecipe implements Recipe {
     private ItemStack output;
     private String[] rows;
-    private HashMap<Character, MaterialData> ingredients = new HashMap<Character, MaterialData>();
+    private HashMap<Character, MaterialData> ingredients = new HashMap<>();
 
     /**
      * Create a shaped recipe to craft the specified ItemStack. The constructor merely determines the
@@ -37,7 +37,7 @@ public class ShapedRecipe implements Recipe {
             throw new IllegalArgumentException("Crafting recipes should be 1, 2, or 3 rows.");
         }
         for (String row : shape) {
-            if (row == null || row.length() > 3 || row.length() < 1) {
+            if (row == null || row.length() > 3 || row.isEmpty()) {
                 throw new IllegalArgumentException("Crafting rows should be 1, 2, or 3 characters.");
             }
         }
@@ -46,7 +46,7 @@ public class ShapedRecipe implements Recipe {
         // Remove character mappings for characters that no longer exist in the shape
         HashMap<Character, MaterialData> ingredientsTemp = this.ingredients;
 
-        this.ingredients = new HashMap<Character, MaterialData>();
+        this.ingredients = new HashMap<>();
         for (char key : ingredientsTemp.keySet()) {
             try {
                 setIngredient(key, ingredientsTemp.get(key));

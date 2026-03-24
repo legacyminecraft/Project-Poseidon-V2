@@ -35,50 +35,24 @@ public class Torch extends SimpleAttachableMaterialData {
     public BlockFace getAttachedFace() {
         byte data = getData();
 
-        switch (data) {
-        case 0x1:
-            return BlockFace.NORTH;
-
-        case 0x2:
-            return BlockFace.SOUTH;
-
-        case 0x3:
-            return BlockFace.EAST;
-
-        case 0x4:
-            return BlockFace.WEST;
-
-        case 0x5:
-            return BlockFace.DOWN;
-        }
-
-        return null;
+        return switch (data) {
+            case 0x1 -> BlockFace.NORTH;
+            case 0x2 -> BlockFace.SOUTH;
+            case 0x3 -> BlockFace.EAST;
+            case 0x4 -> BlockFace.WEST;
+            case 0x5 -> BlockFace.DOWN;
+            default -> null;
+        };
     }
 
     public void setFacingDirection(BlockFace face) {
-        byte data;
-
-        switch (face) {
-        case SOUTH:
-            data = 0x1;
-            break;
-
-        case NORTH:
-            data = 0x2;
-            break;
-
-        case WEST:
-            data = 0x3;
-            break;
-
-        case EAST:
-            data = 0x4;
-            break;
-
-        case UP:
-        default:
-            data = 0x5;
-        }
+        byte data = switch (face) {
+            case SOUTH -> 0x1;
+            case NORTH -> 0x2;
+            case WEST -> 0x3;
+            case EAST -> 0x4;
+            default -> 0x5;
+        };
 
         setData(data);
     }

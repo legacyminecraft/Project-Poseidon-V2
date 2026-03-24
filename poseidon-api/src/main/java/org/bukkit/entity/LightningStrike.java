@@ -12,6 +12,6 @@ public interface LightningStrike extends Weather {
      *
      * @return whether the strike is an effect
      */
-    public boolean isEffect();
+    boolean isEffect();
 
 }

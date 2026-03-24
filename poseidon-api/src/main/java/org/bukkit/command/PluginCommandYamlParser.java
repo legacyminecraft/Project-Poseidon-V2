@@ -11,7 +11,7 @@ public class PluginCommandYamlParser {
 
     @SuppressWarnings("unchecked")
     public static List<Command> parse(Plugin plugin) {
-        List<Command> pluginCmds = new ArrayList<Command>();
+        List<Command> pluginCmds = new ArrayList<>();
         Object object = plugin.getDescription().getCommands();
 
         if (object == null) {
@@ -37,7 +37,7 @@ public class PluginCommandYamlParser {
                 }
 
                 if (aliases != null) {
-                    List<String> aliasList = new ArrayList<String>();
+                    List<String> aliasList = new ArrayList<>();
 
                     if (aliases instanceof List) {
                         for (Object o : (List<Object>) aliases) {

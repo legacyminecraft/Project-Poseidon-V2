@@ -38,10 +38,10 @@ import java.util.Set;
 import static org.bukkit.util.Java15Compat.Arrays_copyOfRange;
 
 public class SimpleCommandMap implements CommandMap {
-    protected final Map<String, Command> knownCommands = new HashMap<String, Command>();
-    protected final Set<String> aliases = new HashSet<String>();
+    protected final Map<String, Command> knownCommands = new HashMap<>();
+    protected final Set<String> aliases = new HashSet<>();
     private final Server server;
-    protected static final Set<VanillaCommand> fallbackCommands = new HashSet<VanillaCommand>();
+    protected static final Set<VanillaCommand> fallbackCommands = new HashSet<>();
 
     static {
         fallbackCommands.add(new ListCommand());
@@ -102,9 +102,9 @@ public class SimpleCommandMap implements CommandMap {
     public boolean register(String label, String fallbackPrefix, Command command) {
         boolean registeredPassedLabel = register(label, fallbackPrefix, command, false);
 
-        Iterator iterator = command.getAliases().iterator();
+        Iterator<String> iterator = command.getAliases().iterator();
         while (iterator.hasNext()) {
-            if (!register((String) iterator.next(), fallbackPrefix, command, true)) {
+            if (!register(iterator.next(), fallbackPrefix, command, true)) {
                 iterator.remove();
             }
         }
@@ -214,7 +214,7 @@ public class SimpleCommandMap implements CommandMap {
 
         for (String alias : values.keySet()) {
             String[] targetNames = values.get(alias);
-            List<Command> targets = new ArrayList<Command>();
+            List<Command> targets = new ArrayList<>();
             String bad = "";
 
             for (String name : targetNames) {
@@ -229,13 +229,13 @@ public class SimpleCommandMap implements CommandMap {
 
             // We register these as commands so they have absolute priority.
 
-            if (targets.size() > 0) {
+            if (!targets.isEmpty()) {
                 knownCommands.put(alias.toLowerCase(), new MultipleCommandAlias(alias.toLowerCase(), targets.toArray(new Command[0])));
             } else {
                 knownCommands.remove(alias.toLowerCase());
             }
 
-            if (bad.length() > 0) {
+            if (!bad.isEmpty()) {
                 bad = bad.substring(0, bad.length() - 2);
                 server.getLogger().warning("The following command(s) could not be aliased under '" + alias + "' because they do not exist: " + bad);
             }

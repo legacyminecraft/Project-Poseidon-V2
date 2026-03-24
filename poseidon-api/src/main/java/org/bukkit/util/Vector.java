@@ -510,11 +510,9 @@ public class Vector implements Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Vector)) {
+        if (!(obj instanceof Vector other)) {
             return false;
         }
-
-        Vector other = (Vector) obj;
 
         return Math.abs(x - other.x) < epsilon && Math.abs(y - other.y) < epsilon && Math.abs(z - other.z) < epsilon && (this.getClass().equals(obj.getClass()));
     }

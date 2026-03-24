@@ -14,5 +14,5 @@ public interface StorageMinecart extends Minecart {
      *
      * @return The inventory for this Minecart
      */
-    public Inventory getInventory();
+    Inventory getInventory();
 }

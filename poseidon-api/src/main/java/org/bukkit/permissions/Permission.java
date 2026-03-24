@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class Permission {
     private final String name;
-    private final Map<String, Boolean> children = new LinkedHashMap<String, Boolean>();
+    private final Map<String, Boolean> children = new LinkedHashMap<>();
     private PermissionDefault defaultValue = PermissionDefault.FALSE;
     private String description;
 
@@ -47,7 +47,7 @@ public class Permission {
     public Permission(String name, String description, PermissionDefault defaultValue, Map<String, Boolean> children) {
         this.name = name;
         this.description = (description == null) ? "" : description;
-        this.defaultValue = (defaultValue == null) ? defaultValue.FALSE : defaultValue;
+        this.defaultValue = (defaultValue == null) ? PermissionDefault.FALSE : defaultValue;
         
         if (children != null) {
             this.children.putAll(children);

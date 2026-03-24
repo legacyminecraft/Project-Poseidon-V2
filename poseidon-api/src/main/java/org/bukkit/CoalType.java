@@ -12,9 +12,9 @@ public enum CoalType {
     CHARCOAL((byte) 0x1);
 
     private final byte data;
-    private final static Map<Byte, CoalType> types = new HashMap<Byte, CoalType>();
+    private static final Map<Byte, CoalType> types = new HashMap<>();
 
-    private CoalType(byte data) {
+    CoalType(byte data) {
         this.data = data;
     }
 

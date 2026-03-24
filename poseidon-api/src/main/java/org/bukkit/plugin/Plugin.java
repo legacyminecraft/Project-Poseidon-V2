@@ -19,77 +19,77 @@ public interface Plugin extends CommandExecutor {
      *
      * @return
      */
-    public File getDataFolder();
+    File getDataFolder();
 
     /**
      * Returns the plugin.yaml file containing the details for this plugin
      *
      * @return Contents of the plugin.yaml file
      */
-    public PluginDescriptionFile getDescription();
+    PluginDescriptionFile getDescription();
 
     /**
      * Returns the main configuration file. It should be loaded.
      *
      * @return
      */
-    public Configuration getConfiguration();
+    Configuration getConfiguration();
 
     /**
      * Gets the associated PluginLoader responsible for this plugin
      *
      * @return PluginLoader that controls this plugin
      */
-    public PluginLoader getPluginLoader();
+    PluginLoader getPluginLoader();
 
     /**
      * Returns the Server instance currently running this plugin
      *
      * @return Server running this plugin
      */
-    public Server getServer();
+    Server getServer();
 
     /**
      * Returns a value indicating whether or not this plugin is currently enabled
      *
      * @return true if this plugin is enabled, otherwise false
      */
-    public boolean isEnabled();
+    boolean isEnabled();
 
     /**
      * Called when this plugin is disabled
      */
-    public void onDisable();
+    void onDisable();
 
     /**
      * Called after a plugin is loaded but before it has been enabled.
      * When mulitple plugins are loaded, the onLoad() for all plugins is called before any onEnable() is called.
      */
-    public void onLoad();
+    void onLoad();
 
     /**
      * Called when this plugin is enabled
      */
-    public void onEnable();
+    void onEnable();
 
     /**
      * Simple boolean if we can still nag to the logs about things
      * @return boolean whether we can nag
      */
-    public boolean isNaggable();
+    boolean isNaggable();
 
     /**
      * Set naggable state
      * @param canNag is this plugin still naggable?
      */
-    public void setNaggable(boolean canNag);
+    void setNaggable(boolean canNag);
 
     /**
      * Gets the {@link EbeanServer} tied to this plugin
      *
      * @return Ebean server instance
      */
-    public EbeanServer getDatabase();
+    EbeanServer getDatabase();
 
     /**
      * Gets a {@link ChunkGenerator} for use in a default world, as specified in the server configuration
@@ -98,5 +98,5 @@ public interface Plugin extends CommandExecutor {
      * @param id Unique ID, if any, that was specified to indicate which generator was requested
      * @return ChunkGenerator for use in the default world generation
      */
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id);
+    ChunkGenerator getDefaultWorldGenerator(String worldName, String id);
 }

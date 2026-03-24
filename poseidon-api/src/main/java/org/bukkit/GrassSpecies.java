@@ -22,9 +22,9 @@ public enum GrassSpecies {
     FERN_LIKE((byte) 0x2);
 
     private final byte data;
-    private final static Map<Byte, GrassSpecies> species = new HashMap<Byte, GrassSpecies>();
+    private static final Map<Byte, GrassSpecies> species = new HashMap<>();
 
-    private GrassSpecies(final byte data) {
+    GrassSpecies(final byte data) {
         this.data = data;
     }
 

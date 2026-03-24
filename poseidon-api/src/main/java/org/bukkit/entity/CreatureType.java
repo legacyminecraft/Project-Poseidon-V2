@@ -23,7 +23,7 @@ public enum CreatureType {
 
     private String name;
 
-    private static final Map<String, CreatureType> mapping = new HashMap<String, CreatureType>();
+    private static final Map<String, CreatureType> mapping = new HashMap<>();
 
     static {
         for (CreatureType type : EnumSet.allOf(CreatureType.class)) {
@@ -31,7 +31,7 @@ public enum CreatureType {
         }
     }
 
-    private CreatureType(String name) {
+    CreatureType(String name) {
         this.name = name;
     }
 

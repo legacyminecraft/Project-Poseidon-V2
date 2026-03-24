@@ -31,7 +31,7 @@ public class VersionCommand extends Command {
             StringBuilder name = new StringBuilder();
 
             for (String arg : args) {
-                if (name.length() > 0) {
+                if (!name.isEmpty()) {
                     name.append(' ');
                 }
                 
@@ -72,7 +72,7 @@ public class VersionCommand extends Command {
         ArrayList<String> authors = desc.getAuthors();
 
         for (int i = 0; i < authors.size(); i++) {
-            if (result.length() > 0) {
+            if (!result.isEmpty()) {
                 result.append(ChatColor.WHITE);
 
                 if (i < authors.size() - 1) {

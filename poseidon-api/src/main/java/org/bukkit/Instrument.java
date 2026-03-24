@@ -12,9 +12,9 @@ public enum Instrument {
     BASS_GUITAR((byte) 0x4); // Wood
 
     private final byte type;
-    private final static Map<Byte, Instrument> types = new HashMap<Byte, Instrument>();
+    private static final Map<Byte, Instrument> types = new HashMap<>();
 
-    private Instrument(byte type) {
+    Instrument(byte type) {
         this.type = type;
     }
 

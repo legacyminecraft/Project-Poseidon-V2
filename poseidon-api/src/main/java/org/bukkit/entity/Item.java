@@ -15,12 +15,12 @@ public interface Item extends Entity {
      *
      * @return
      */
-    public ItemStack getItemStack();
+    ItemStack getItemStack();
 
     /**
      * Sets the item stack associated with this item drop.
      *
      * @param stack
      */
-    public void setItemStack(ItemStack stack);
+    void setItemStack(ItemStack stack);
 }

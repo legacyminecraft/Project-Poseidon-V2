@@ -29,7 +29,7 @@ public abstract class MapRenderer {
      * different players.
      * @return True if contextual, false otherwise.
      */
-    final public boolean isContextual() {
+    public final boolean isContextual() {
         return contextual;
     }
     
@@ -45,6 +45,6 @@ public abstract class MapRenderer {
      * @param canvas The canvas to use for rendering.
      * @param player The player who triggered the rendering.
      */
-    abstract public void render(MapView map, MapCanvas canvas, Player player);
+    public abstract void render(MapView map, MapCanvas canvas, Player player);
     
 }

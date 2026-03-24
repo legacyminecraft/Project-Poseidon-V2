@@ -26,11 +26,11 @@ public final class PluginDescriptionFile {
     private String version = null;
     private Object commands = null;
     private String description = null;
-    private ArrayList<String> authors = new ArrayList<String>();
+    private ArrayList<String> authors = new ArrayList<>();
     private String website = null;
     private boolean database = false;
     private PluginLoadOrder order = PluginLoadOrder.POSTWORLD;
-    private ArrayList<Permission> permissions = new ArrayList<Permission>();
+    private ArrayList<Permission> permissions = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public PluginDescriptionFile(final InputStream stream) throws InvalidDescriptionException {
@@ -270,7 +270,7 @@ public final class PluginDescriptionFile {
     }
 
     private Map<String, Object> saveMap() {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         map.put("name", name);
         map.put("main", main);

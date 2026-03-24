@@ -19,7 +19,7 @@ public class ListCommand extends VanillaCommand {
         String players = "";
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (players.length() > 0) {
+            if (!players.isEmpty()) {
                 players += ", ";
             }
 

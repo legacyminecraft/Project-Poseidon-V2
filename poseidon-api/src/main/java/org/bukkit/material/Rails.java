@@ -56,38 +56,18 @@ public class Rails extends MaterialData {
     public BlockFace getDirection() {
         byte d = getConvertedData();
 
-        switch (d) {
-        case 0x0:
-        default:
-            return BlockFace.WEST;
-
-        case 0x1:
-            return BlockFace.SOUTH;
-
-        case 0x2:
-            return BlockFace.SOUTH;
-
-        case 0x3:
-            return BlockFace.NORTH;
-
-        case 0x4:
-            return BlockFace.EAST;
-
-        case 0x5:
-            return BlockFace.WEST;
-
-        case 0x6:
-            return BlockFace.NORTH_EAST;
-
-        case 0x7:
-            return BlockFace.SOUTH_EAST;
-
-        case 0x8:
-            return BlockFace.SOUTH_WEST;
-
-        case 0x9:
-            return BlockFace.NORTH_WEST;
-        }
+        return switch (d) {
+            case 0x1 -> BlockFace.SOUTH;
+            case 0x2 -> BlockFace.SOUTH;
+            case 0x3 -> BlockFace.NORTH;
+            case 0x4 -> BlockFace.EAST;
+            case 0x5 -> BlockFace.WEST;
+            case 0x6 -> BlockFace.NORTH_EAST;
+            case 0x7 -> BlockFace.SOUTH_EAST;
+            case 0x8 -> BlockFace.SOUTH_WEST;
+            case 0x9 -> BlockFace.NORTH_WEST;
+            default -> BlockFace.WEST;
+        };
     }
 
     @Override

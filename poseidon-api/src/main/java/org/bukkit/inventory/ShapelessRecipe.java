@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class ShapelessRecipe implements Recipe {
     private ItemStack output;
-    private ArrayList<MaterialData> ingredients = new ArrayList<MaterialData>();
+    private ArrayList<MaterialData> ingredients = new ArrayList<>();
 
     /**
      * Create a shapeless recipe to craft the specified ItemStack. The constructor merely determines the

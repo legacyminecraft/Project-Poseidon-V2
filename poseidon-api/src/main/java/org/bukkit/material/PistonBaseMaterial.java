@@ -48,24 +48,17 @@ public class PistonBaseMaterial extends MaterialData implements Directional, Red
     }
 
     public BlockFace getFacing() {
-        byte dir = (byte)(getData() & 7);
+        byte dir = (byte) (getData() & 7);
 
-        switch (dir) {
-            case 0:
-                return BlockFace.DOWN;
-            case 1:
-                return BlockFace.UP;
-            case 2:
-                return BlockFace.EAST;
-            case 3:
-                return BlockFace.WEST;
-            case 4:
-                return BlockFace.NORTH;
-            case 5:
-                return BlockFace.SOUTH;
-            default:
-                return BlockFace.SELF;
-        }
+        return switch (dir) {
+            case 0 -> BlockFace.DOWN;
+            case 1 -> BlockFace.UP;
+            case 2 -> BlockFace.EAST;
+            case 3 -> BlockFace.WEST;
+            case 4 -> BlockFace.NORTH;
+            case 5 -> BlockFace.SOUTH;
+            default -> BlockFace.SELF;
+        };
     }
 
     public boolean isPowered() {

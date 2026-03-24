@@ -14,5 +14,5 @@ public interface Dispenser extends BlockState, ContainerBlock {
      *
      * @return true if successful, otherwise false
      */
-    public boolean dispense();
+    boolean dispense();
 }

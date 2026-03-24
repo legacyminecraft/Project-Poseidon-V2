@@ -19,7 +19,7 @@ public class SimpleServicesManager implements ServicesManager {
     /**
      * Map of providers.
      */
-    private final Map<Class<?>, List<RegisteredServiceProvider<?>>> providers = new HashMap<Class<?>, List<RegisteredServiceProvider<?>>>();
+    private final Map<Class<?>, List<RegisteredServiceProvider<?>>> providers = new HashMap<>();
 
     /**
      * Register a provider of a service.
@@ -37,11 +37,11 @@ public class SimpleServicesManager implements ServicesManager {
             List<RegisteredServiceProvider<?>> registered = providers.get(service);
 
             if (registered == null) {
-                registered = new ArrayList<RegisteredServiceProvider<?>>();
+                registered = new ArrayList<>();
                 providers.put(service, registered);
             }
 
-            registered.add(new RegisteredServiceProvider<T>(service, provider, priority, plugin));
+            registered.add(new RegisteredServiceProvider<>(service, provider, priority, plugin));
 
             // Make sure that providers are in the right order in order
             // for priorities to work correctly
@@ -75,7 +75,7 @@ public class SimpleServicesManager implements ServicesManager {
                     }
 
                     // Get rid of the empty list
-                    if (entry.getValue().size() == 0) {
+                    if (entry.getValue().isEmpty()) {
                         it.remove();
                     }
                 }
@@ -116,7 +116,7 @@ public class SimpleServicesManager implements ServicesManager {
                     }
 
                     // Get rid of the empty list
-                    if (entry.getValue().size() == 0) {
+                    if (entry.getValue().isEmpty()) {
                         it.remove();
                     }
                 }
@@ -150,7 +150,7 @@ public class SimpleServicesManager implements ServicesManager {
                     }
 
                     // Get rid of the empty list
-                    if (entry.getValue().size() == 0) {
+                    if (entry.getValue().isEmpty()) {
                         it.remove();
                     }
                 }
@@ -210,7 +210,7 @@ public class SimpleServicesManager implements ServicesManager {
      */
     public List<RegisteredServiceProvider<?>> getRegistrations(Plugin plugin) {
         synchronized (providers) {
-            List<RegisteredServiceProvider<?>> ret = new ArrayList<RegisteredServiceProvider<?>>();
+            List<RegisteredServiceProvider<?>> ret = new ArrayList<>();
 
             for (List<RegisteredServiceProvider<?>> registered : providers.values()) {
                 for (RegisteredServiceProvider<?> provider : registered) {
@@ -238,10 +238,10 @@ public class SimpleServicesManager implements ServicesManager {
             List<RegisteredServiceProvider<?>> registered = providers.get(service);
 
             if (registered == null) {
-                return Collections.unmodifiableList(new ArrayList<RegisteredServiceProvider<T>>());
+                return Collections.unmodifiableList(new ArrayList<>());
             }
 
-            List<RegisteredServiceProvider<T>> ret = new ArrayList<RegisteredServiceProvider<T>>();
+            List<RegisteredServiceProvider<T>> ret = new ArrayList<>();
 
             for (RegisteredServiceProvider<?> provider : registered) {
                 ret.add((RegisteredServiceProvider<T>) provider);

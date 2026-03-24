@@ -8,7 +8,7 @@ import java.util.HashSet;
  * Represents the different types of steps.
  */
 public class Step extends MaterialData {
-    private static HashSet<Material> stepTypes = new HashSet<Material>();
+    private static HashSet<Material> stepTypes = new HashSet<>();
     static {
         stepTypes.add(Material.SANDSTONE);
         stepTypes.add(Material.WOOD);
@@ -45,20 +45,12 @@ public class Step extends MaterialData {
      * @return Material of this step
      */
     public Material getMaterial() {
-        switch ((int) getData()) {
-        case 1:
-            return Material.SANDSTONE;
-
-        case 2:
-            return Material.WOOD;
-
-        case 3:
-            return Material.COBBLESTONE;
-
-        case 0:
-        default:
-            return Material.STONE;
-        }
+        return switch ((int) getData()) {
+            case 1 -> Material.SANDSTONE;
+            case 2 -> Material.WOOD;
+            case 3 -> Material.COBBLESTONE;
+            default -> Material.STONE;
+        };
     }
 
     /**

@@ -18,7 +18,7 @@ public interface BlockChangeDelegate {
      * @param typeId
      * @return true if the block was set successfully
      */
-    public boolean setRawTypeId(int x, int y, int z, int typeId);
+    boolean setRawTypeId(int x, int y, int z, int typeId);
 
     /**
      * Set a block type and data at the specified coordinates.
@@ -30,7 +30,7 @@ public interface BlockChangeDelegate {
      * @param data
      * @return true if the block was set successfully
      */
-    public boolean setRawTypeIdAndData(int x, int y, int z, int typeId, int data);
+    boolean setRawTypeIdAndData(int x, int y, int z, int typeId, int data);
 
     /**
      * Get the block type at the location.
@@ -39,5 +39,5 @@ public interface BlockChangeDelegate {
      * @param z
      * @return
      */
-    public int getTypeId(int x, int y, int z);
+    int getTypeId(int x, int y, int z);
 }

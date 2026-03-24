@@ -23,9 +23,9 @@ public enum TreeSpecies {
     BIRCH((byte) 0x2);
 
     private final byte data;
-    private final static Map<Byte, TreeSpecies> species = new HashMap<Byte, TreeSpecies>();
+    private static final Map<Byte, TreeSpecies> species = new HashMap<>();
 
-    private TreeSpecies(final byte data) {
+    TreeSpecies(final byte data) {
         this.data = data;
     }
 

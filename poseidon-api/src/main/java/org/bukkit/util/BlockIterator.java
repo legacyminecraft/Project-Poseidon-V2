@@ -179,28 +179,15 @@ public class BlockIterator implements Iterator<Block> {
     }
 
     private BlockFace reverseFace(BlockFace face) {
-        switch (face) {
-        case UP:
-            return BlockFace.DOWN;
-
-        case DOWN:
-            return BlockFace.UP;
-
-        case NORTH:
-            return BlockFace.SOUTH;
-
-        case SOUTH:
-            return BlockFace.NORTH;
-
-        case EAST:
-            return BlockFace.WEST;
-
-        case WEST:
-            return BlockFace.EAST;
-
-        default:
-            return null;
-        }
+        return switch (face) {
+            case UP -> BlockFace.DOWN;
+            case DOWN -> BlockFace.UP;
+            case NORTH -> BlockFace.SOUTH;
+            case SOUTH -> BlockFace.NORTH;
+            case EAST -> BlockFace.WEST;
+            case WEST -> BlockFace.EAST;
+            default -> null;
+        };
     }
 
     private BlockFace getXFace(Vector direction) {
@@ -360,23 +347,19 @@ public class BlockIterator implements Iterator<Block> {
             thirdError -= gridSize;
             secondError -= gridSize;
             currentBlock = 2;
-            return;
         } else if (secondError > 0) {
             blockQueue[1] = blockQueue[0].getRelative(mainFace);
             blockQueue[0] = blockQueue[1].getRelative(secondFace);
             secondError -= gridSize;
             currentBlock = 1;
-            return;
         } else if (thirdError > 0) {
             blockQueue[1] = blockQueue[0].getRelative(mainFace);
             blockQueue[0] = blockQueue[1].getRelative(thirdFace);
             thirdError -= gridSize;
             currentBlock = 1;
-            return;
         } else {
             blockQueue[0] = blockQueue[0].getRelative(mainFace);
             currentBlock = 0;
-            return;
         }
     }
 }

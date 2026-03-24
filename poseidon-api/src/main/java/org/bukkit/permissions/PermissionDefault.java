@@ -13,9 +13,9 @@ public enum PermissionDefault {
     NOT_OP("!op", "notop", "!operator", "notoperator", "!admin", "notadmin");
 
     private final String[] names;
-    private final static Map<String, PermissionDefault> lookup = new HashMap<String, PermissionDefault>();
+    private static final Map<String, PermissionDefault> lookup = new HashMap<>();
 
-    private PermissionDefault(String... names) {
+    PermissionDefault(String... names) {
         this.names = names;
     }
 
@@ -26,18 +26,12 @@ public enum PermissionDefault {
      * @return True if the default should be true, or false
      */
     public boolean getValue(boolean op) {
-        switch (this) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            case OP:
-                return op;
-            case NOT_OP:
-                return !op;
-            default:
-                return false;
-        }
+        return switch (this) {
+            case TRUE -> true;
+            case FALSE -> false;
+            case OP -> op;
+            case NOT_OP -> !op;
+        };
     }
 
     /**

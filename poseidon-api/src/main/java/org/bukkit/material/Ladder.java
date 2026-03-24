@@ -35,48 +35,27 @@ public class Ladder extends SimpleAttachableMaterialData {
     public BlockFace getAttachedFace() {
         byte data = getData();
 
-        switch (data) {
-        case 0x2:
-            return BlockFace.WEST;
-
-        case 0x3:
-            return BlockFace.EAST;
-
-        case 0x4:
-            return BlockFace.SOUTH;
-
-        case 0x5:
-            return BlockFace.NORTH;
-        }
-
-        return null;
+        return switch (data) {
+            case 0x2 -> BlockFace.WEST;
+            case 0x3 -> BlockFace.EAST;
+            case 0x4 -> BlockFace.SOUTH;
+            case 0x5 -> BlockFace.NORTH;
+            default -> null;
+        };
     }
 
     /**
      * Sets the direction this ladder is facing
      */
     public void setFacingDirection(BlockFace face) {
-        byte data = (byte) 0x0;
-
-        switch (face) {
-        case WEST:
-            data = 0x2;
-            break;
-
-        case EAST:
-            data = 0x3;
-            break;
-
-        case SOUTH:
-            data = 0x4;
-            break;
-
-        case NORTH:
-            data = 0x5;
-            break;
-        }
+        byte data = switch (face) {
+            case WEST -> 0x2;
+            case EAST -> 0x3;
+            case SOUTH -> 0x4;
+            case NORTH -> 0x5;
+            default -> 0x0;
+        };
 
         setData(data);
-
     }
 }

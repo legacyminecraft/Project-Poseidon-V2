@@ -24,7 +24,7 @@ public abstract class Command {
     private String permission;
 
     protected Command(String name) {
-        this(name, "", "/" + name, new ArrayList<String>());
+        this(name, "", "/" + name, new ArrayList<>());
     }
 
     protected Command(String name, String description, String usageMessage, List<String> aliases) {
@@ -34,7 +34,7 @@ public abstract class Command {
         this.description = description;
         this.usageMessage = usageMessage;
         this.aliases = aliases;
-        this.activeAliases = new ArrayList<String>(aliases);
+        this.activeAliases = new ArrayList<>(aliases);
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class Command {
      * @return true if they can use it, otherwise false
      */
     public boolean testPermission(CommandSender target) {
-        if ((permission == null) || (permission.length() == 0) || (target.hasPermission(permission))) {
+        if ((permission == null) || (permission.isEmpty()) || (target.hasPermission(permission))) {
             return true;
         }
 
@@ -141,7 +141,7 @@ public abstract class Command {
     public boolean unregister(CommandMap commandMap) {
         if (allowChangesFrom(commandMap)) {
             this.commandMap = null;
-            this.activeAliases = new ArrayList<String>(this.aliases);
+            this.activeAliases = new ArrayList<>(this.aliases);
             this.label = this.nextLabel;
             return true;
         }
@@ -199,7 +199,7 @@ public abstract class Command {
     public Command setAliases(List<String> aliases) {
         this.aliases = aliases;
         if (!isRegistered()) {
-            this.activeAliases = new ArrayList<String>(aliases);
+            this.activeAliases = new ArrayList<>(aliases);
         }
         return this;
     }
@@ -236,9 +236,7 @@ public abstract class Command {
         }
 
         for (Permissible user : users) {
-            if (user instanceof CommandSender) {
-                CommandSender target = (CommandSender)user;
-
+            if (user instanceof CommandSender target) {
                 if (target instanceof ConsoleCommandSender) {
                     target.sendMessage(result);
                 } else if (target != source) {

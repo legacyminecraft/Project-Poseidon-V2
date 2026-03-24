@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class PluginClassLoader extends URLClassLoader {
     private final JavaPluginLoader loader;
-    private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
+    private final Map<String, Class<?>> classes = new HashMap<>();
 
     public PluginClassLoader(final JavaPluginLoader loader, final URL[] urls, final ClassLoader parent) {
         super(urls, parent);

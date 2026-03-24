@@ -10,19 +10,19 @@ public interface Slot {
      *
      * @return The inventory
      */
-    public Inventory getInventory();
+    Inventory getInventory();
 
     /**
      * Get the index this slot belongs to
      *
      * @return Index of the slot
      */
-    public int getIndex();
+    int getIndex();
 
     /**
      * Get the item from the slot.
      *
      * @return ItemStack in the slot.
      */
-    public ItemStack getItem();
+    ItemStack getItem();
 }

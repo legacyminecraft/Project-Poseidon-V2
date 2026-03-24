@@ -16,21 +16,21 @@ public interface LivingEntity extends Entity {
      *
      * @return Health represented from 0-20
      */
-    public int getHealth();
+    int getHealth();
 
     /**
      * Sets the entity's health from 0-20, where 0 is dead and 20 is full
      *
      * @param health New health represented from 0-20
      */
-    public void setHealth(int health);
+    void setHealth(int health);
 
     /**
      * Gets the height of the entity's head above its Location
      *
      * @return Height of the entity's eyes above its Location
      */
-    public double getEyeHeight();
+    double getEyeHeight();
 
     /**
      * Gets the height of the entity's head above its Location
@@ -38,14 +38,14 @@ public interface LivingEntity extends Entity {
      * @param boolean If set to true, the effects of sneaking will be ignored
      * @return Height of the entity's eyes above its Location
      */
-    public double getEyeHeight(boolean ignoreSneaking);
+    double getEyeHeight(boolean ignoreSneaking);
 
     /**
      * Get a Location detailing the current eye position of the LivingEntity.
      *
      * @return a Location at the eyes of the LivingEntity.
      */
-    public Location getEyeLocation();
+    Location getEyeLocation();
 
     /**
      * Gets all blocks along the player's line of sight
@@ -55,7 +55,7 @@ public interface LivingEntity extends Entity {
      * @param int This is the maximum distance to scan. This may be further limited by the server, but never to less than 100 blocks.
      * @return List containing all blocks along the player's line of sight
      */
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance);
+    List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance);
 
     /**
      * Gets the block that the player has targeted
@@ -64,7 +64,7 @@ public interface LivingEntity extends Entity {
      * @param int This is the maximum distance to scan. This may be further limited by the server, but never to less than 100 blocks.
      * @return Block that the player has targeted
      */
-    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance);
+    Block getTargetBlock(HashSet<Byte> transparent, int maxDistance);
 
     /**
      * Gets the last two blocks along the player's line of sight.
@@ -74,31 +74,31 @@ public interface LivingEntity extends Entity {
      * @param int This is the maximum distance to scan. This may be further limited by the server, but never to less than 100 blocks
      * @return List containing the last 2 blocks along the player's line of sight
      */
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance);
+    List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance);
 
     /**
      * Throws an egg from the entity.
      */
-    public Egg throwEgg();
+    Egg throwEgg();
 
     /**
      * Throws a snowball from the entity.
      */
-    public Snowball throwSnowball();
+    Snowball throwSnowball();
 
     /**
      * Shoots an arrow from the entity.
      *
      * @return
      */
-    public Arrow shootArrow();
+    Arrow shootArrow();
 
     /**
      * Returns whether this entity is inside a vehicle.
      *
      * @return
      */
-    public boolean isInsideVehicle();
+    boolean isInsideVehicle();
 
     /**
      * Leave the current vehicle. If the entity is currently in a vehicle
@@ -107,7 +107,7 @@ public interface LivingEntity extends Entity {
      *
      * @return
      */
-    public boolean leaveVehicle();
+    boolean leaveVehicle();
 
     /**
      * Get the vehicle that this player is inside. If there is no vehicle,
@@ -115,42 +115,42 @@ public interface LivingEntity extends Entity {
      *
      * @return
      */
-    public Vehicle getVehicle();
+    Vehicle getVehicle();
 
     /**
      * Returns the amount of air that this entity has remaining, in ticks
      *
      * @return Amount of air remaining
      */
-    public int getRemainingAir();
+    int getRemainingAir();
 
     /**
      * Sets the amount of air that this entity has remaining, in ticks
      *
      * @param ticks Amount of air remaining
      */
-    public void setRemainingAir(int ticks);
+    void setRemainingAir(int ticks);
 
     /**
      * Returns the maximum amount of air this entity can have, in ticks
      *
      * @return Maximum amount of air
      */
-    public int getMaximumAir();
+    int getMaximumAir();
 
     /**
      * Sets the maximum amount of air this entity can have, in ticks
      *
      * @param ticks Maximum amount of air
      */
-    public void setMaximumAir(int ticks);
+    void setMaximumAir(int ticks);
 
     /**
      * Deals the given amount of damage to this entity
      *
      * @param amount Amount of damage to deal
      */
-    public void damage(int amount);
+    void damage(int amount);
 
     /**
      * Deals the given amount of damage to this entity, from a specified entity
@@ -158,7 +158,7 @@ public interface LivingEntity extends Entity {
      * @param amount Amount of damage to deal
      * @param source Entity which to attribute this damage from
      */
-    public void damage(int amount, Entity source);
+    void damage(int amount, Entity source);
 
     /**
      * Returns the entities current maximum noDamageTicks
@@ -167,14 +167,14 @@ public interface LivingEntity extends Entity {
      *
      * @return noDamageTicks
      */
-    public int getMaximumNoDamageTicks();
+    int getMaximumNoDamageTicks();
 
     /**
      * Sets the entities current maximum noDamageTicks
      *
      * @param ticks maximumNoDamageTicks
      */
-    public void setMaximumNoDamageTicks(int ticks);
+    void setMaximumNoDamageTicks(int ticks);
 
     /**
      * Returns the entities lastDamage taken in the current noDamageTicks time.
@@ -182,27 +182,27 @@ public interface LivingEntity extends Entity {
      *
      * @return lastDamage
      */
-    public int getLastDamage();
+    int getLastDamage();
 
     /**
      * Sets the entities current maximum noDamageTicks
      *
      * @param damage last damage
      */
-    public void setLastDamage(int damage);
+    void setLastDamage(int damage);
 
     /**
      * Returns the entities current noDamageTicks
      *
      * @return noDamageTicks
      */
-    public int getNoDamageTicks();
+    int getNoDamageTicks();
 
     /**
      * Sets the entities current noDamageTicks
      *
      * @param ticks NoDamageTicks
      */
-    public void setNoDamageTicks(int ticks);
+    void setNoDamageTicks(int ticks);
 
 }
