@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.legacyminecraft</groupId>
         <artifactId>poseidon-parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>${poseidon.version}</version>
     </parent>
 
     <artifactId>poseidon-server</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.legacyminecraft</groupId>
             <artifactId>poseidon-api</artifactId>
-            <version>${project.version}</version>
+            <version>${poseidon.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
