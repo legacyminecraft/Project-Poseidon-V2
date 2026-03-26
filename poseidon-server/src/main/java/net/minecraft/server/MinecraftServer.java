@@ -72,6 +72,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
     }
 
     private boolean init() throws UnknownHostException { // CraftBukkit - added throws UnknownHostException
+        long j = System.nanoTime(); // Poseidon - moved from below
+
         PoseidonConfig.load(); // Poseidon
 
         this.consoleCommandHandler = new ConsoleCommandHandler(this);
@@ -126,7 +128,6 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
         this.serverConfigurationManager = new ServerConfigurationManager(this);
         // CraftBukkit - removed trackers
-        long j = System.nanoTime();
         String s1 = this.propertyManager.getString("level-name", "world");
         String s2 = this.propertyManager.getString("level-seed", "");
         long k = (new Random()).nextLong();
@@ -143,16 +144,20 @@ public class MinecraftServer implements Runnable, ICommandListener {
         this.a(new WorldLoaderServer(new File(".")), s1, k);
 
         // CraftBukkit start
-        long elapsed = System.nanoTime() - j;
-        String time = String.format("%.3fs", elapsed / 10000000000.0D);
-        log.info("Done (" + time + ")! For help, type \"help\" or \"?\"");
-
         if (this.propertyManager.properties.containsKey("spawn-protection")) {
             log.info("'spawn-protection' in server.properties has been moved to 'settings.spawn-radius' in bukkit.yml. I will move your config for you.");
             this.server.setSpawnRadius(this.propertyManager.getInt("spawn-protection", 16));
             this.propertyManager.properties.remove("spawn-protection");
             this.propertyManager.savePropertiesFile();
         }
+        // CraftBukkit end
+
+        // Poseidon start - moved from above
+        long elapsed = System.nanoTime() - j;
+        String time = String.format("%.3fs", elapsed / 1_000_000_000.0D); // Poseidon - fix startup time message
+        log.info("Done (" + time + ")! For help, type \"help\" or \"?\"");
+        // Poseidon end
+
         return true;
     }
 
