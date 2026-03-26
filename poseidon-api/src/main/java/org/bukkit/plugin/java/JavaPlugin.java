@@ -14,11 +14,13 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.PluginLogger;
 import org.bukkit.util.config.Configuration;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Represents a Java plugin
@@ -28,6 +30,7 @@ public abstract class JavaPlugin implements Plugin {
     private boolean initialized = false;
     private PluginLoader loader = null;
     private Server server = null;
+    private Logger logger = null;
     private File file = null;
     private PluginDescriptionFile description = null;
     private File dataFolder = null;
@@ -64,6 +67,17 @@ public abstract class JavaPlugin implements Plugin {
      */
     public final Server getServer() {
         return server;
+    }
+
+    /**
+     * Returns the plugin logger associated with this server's logger. The
+     * returned logger automatically tags all log messages with the plugin's
+     * name.
+     *
+     * @return Logger associated with this plugin
+     */
+    public final Logger getLogger() {
+        return logger;
     }
 
     /**
@@ -154,6 +168,7 @@ public abstract class JavaPlugin implements Plugin {
             this.description = description;
             this.dataFolder = dataFolder;
             this.classLoader = classLoader;
+            this.logger = new PluginLogger(this);
             this.config = new Configuration(new File(dataFolder, "config.yml"));
             this.config.load();
 

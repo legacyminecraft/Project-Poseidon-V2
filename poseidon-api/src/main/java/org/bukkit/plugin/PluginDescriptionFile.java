@@ -26,6 +26,7 @@ public final class PluginDescriptionFile {
     private String version = null;
     private Object commands = null;
     private String description = null;
+    private String prefix = null;
     private ArrayList<String> authors = new ArrayList<>();
     private String website = null;
     private boolean database = false;
@@ -128,6 +129,15 @@ public final class PluginDescriptionFile {
         return description;
     }
 
+    /**
+     * Gets the token to prefix plugin-specific logging messages with
+     *
+     * @return the prefixed logging token
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
     public ArrayList<String> getAuthors() {
         return authors;
     }
@@ -228,6 +238,14 @@ public final class PluginDescriptionFile {
             }
         }
 
+        if (map.containsKey("prefix")) {
+            try {
+                prefix = (String) map.get("prefix");
+            } catch (ClassCastException ex) {
+                throw new InvalidDescriptionException(ex, "prefix is of wrong type");
+            }
+        }
+
         if (map.containsKey("load")) {
             try {
                 order = PluginLoadOrder.valueOf(((String)map.get("load")).toUpperCase().replaceAll("\\W", ""));
@@ -292,6 +310,9 @@ public final class PluginDescriptionFile {
         }
         if (description != null) {
             map.put("description", description);
+        }
+        if (prefix != null) {
+            map.put("prefix", prefix);
         }
 
         if (authors.size() == 1) {

@@ -7,6 +7,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.config.Configuration;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * Represents a Plugin
@@ -48,6 +49,15 @@ public interface Plugin extends CommandExecutor {
      * @return Server running this plugin
      */
     Server getServer();
+
+    /**
+     * Returns the plugin logger associated with this server's logger. The
+     * returned logger automatically tags all log messages with the plugin's
+     * name.
+     *
+     * @return Logger associated with this plugin
+     */
+    Logger getLogger();
 
     /**
      * Returns a value indicating whether or not this plugin is currently enabled
