@@ -1,53 +1,28 @@
 package net.minecraft.server;
 
-import org.bukkit.craftbukkit.util.ShortConsoleLogFormatter;
-import org.bukkit.craftbukkit.util.TerminalConsoleHandler;
+import com.legacyminecraft.poseidon.logging.ServerLoggingConfigurator;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
+import java.util.ServiceLoader;
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConsoleLogManager {
 
     public static Logger a = Logger.getLogger("Minecraft");
-    public static Logger global = Logger.getLogger(""); // CraftBukkit
 
     public ConsoleLogManager() {}
 
-    // CraftBukkit - change of method signature!
-    public static void init(MinecraftServer server) {
-        ConsoleLogFormatter consolelogformatter = new ConsoleLogFormatter();
-
-        a.setUseParentHandlers(false);
-        // CraftBukkit start
-        ConsoleHandler consolehandler = new TerminalConsoleHandler(server.reader);
-
-        for (Handler handler: global.getHandlers()) {
-            global.removeHandler(handler);
+    public static void init() {
+        // Poseidon start - logging configuration
+        a.setUseParentHandlers(true);
+        Logger rootLogger = Logger.getLogger("");
+        for (Handler handler : rootLogger.getHandlers()) {
+            rootLogger.removeHandler(handler);
         }
 
-        consolehandler.setFormatter(new ShortConsoleLogFormatter(server));
-        global.addHandler(consolehandler);
-        // CraftBukkit end
-
-        a.addHandler(consolehandler);
-
-        try {
-            // CraftBukkit start
-            String pattern = (String)server.options.valueOf("log-pattern");
-            int limit = (Integer) server.options.valueOf("log-limit");
-            int count = (Integer) server.options.valueOf("log-count");
-            boolean append = (Boolean) server.options.valueOf("log-append");
-            FileHandler filehandler = new FileHandler(pattern, limit, count, append);
-            // CraftBukkit start
-
-            filehandler.setFormatter(consolelogformatter);
-            a.addHandler(filehandler);
-            global.addHandler(filehandler); // CraftBukkit
-        } catch (Exception exception) {
-            a.log(Level.WARNING, "Failed to log to server.log", exception);
-        }
+        SLF4JBridgeHandler.install();
+        ServiceLoader.load(ServerLoggingConfigurator.class);
+        // Poseidon end
     }
 }

@@ -1,6 +1,7 @@
 package com.legacyminecraft.poseidon.config;
 
 import org.jspecify.annotations.Nullable;
+import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.HeaderMode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -48,6 +49,24 @@ public final class PoseidonConfig {
             instance = config;
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public Logging logging;
+
+    @ConfigSerializable
+    public static final class Logging {
+        public Level level = Level.INFO;
+        public String consolePattern = "[%d{HH:mm:ss} %level]: %msg%n";
+        public String filePattern = "[%d{yyyy-MM-dd HH:mm:ss}] [%thread/%level]: %msg%n";
+        public String file = "server.log";
+        public RollingLogFile rollingLogFile;
+
+        @ConfigSerializable
+        public static final class RollingLogFile {
+            public boolean enabled = false;
+            public String latestFile = "logs/latest.log";
+            public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
         }
     }
 }

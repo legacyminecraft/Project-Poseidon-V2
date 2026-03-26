@@ -1,59 +1,115 @@
 package org.bukkit.craftbukkit.command;
 
-import jline.ANSIBuffer.ANSICodes;
-import jline.ConsoleReader;
-import jline.Terminal;
+import net.kyori.ansi.ANSIComponentRenderer;
+import net.kyori.ansi.StyleOps;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.CraftServer;
+import org.jspecify.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.logging.Logger;
 
 public class ColouredConsoleSender extends ConsoleCommandSender {
-    private final ConsoleReader reader;
-    private final Terminal terminal;
-    private final Map<ChatColor, String> replacements = new EnumMap<ChatColor, String>(ChatColor.class);
-    private final ChatColor[] colors = ChatColor.values();
+
+    private static final Logger log = Logger.getLogger("Minecraft"); // Poseidon
+
+    // Poseidon - remove fields
 
     public ColouredConsoleSender(CraftServer server) {
         super(server);
-        this.reader = server.getReader();
-        this.terminal = reader.getTerminal();
-
-        replacements.put(ChatColor.BLACK, ANSICodes.attrib(0));
-        replacements.put(ChatColor.DARK_BLUE, ANSICodes.attrib(34));
-        replacements.put(ChatColor.DARK_GREEN, ANSICodes.attrib(32));
-        replacements.put(ChatColor.DARK_AQUA, ANSICodes.attrib(36));
-        replacements.put(ChatColor.DARK_RED, ANSICodes.attrib(31));
-        replacements.put(ChatColor.DARK_PURPLE, ANSICodes.attrib(35));
-        replacements.put(ChatColor.GOLD, ANSICodes.attrib(33));
-        replacements.put(ChatColor.GRAY, ANSICodes.attrib(37));
-        replacements.put(ChatColor.DARK_GRAY, ANSICodes.attrib(0));
-        replacements.put(ChatColor.BLUE, ANSICodes.attrib(34));
-        replacements.put(ChatColor.GREEN, ANSICodes.attrib(32));
-        replacements.put(ChatColor.AQUA, ANSICodes.attrib(36));
-        replacements.put(ChatColor.RED, ANSICodes.attrib(31));
-        replacements.put(ChatColor.LIGHT_PURPLE, ANSICodes.attrib(35));
-        replacements.put(ChatColor.YELLOW, ANSICodes.attrib(33));
-        replacements.put(ChatColor.WHITE, ANSICodes.attrib(37));
     }
 
     @Override
     public void sendMessage(String message) {
-        if (terminal.isANSISupported()) {
-            String result = message;
+        log.info(chatColorsToAnsi(message)); // Poseidon
+    }
 
-            for (ChatColor color : colors) {
-                if (replacements.containsKey(color)) {
-                    result = result.replaceAll(color.toString(), replacements.get(color));
-                } else {
-                    result = result.replaceAll(color.toString(), "");
+    // Poseidon start - convert chat colors to ansi
+    private static String chatColorsToAnsi(String text) {
+        ANSIComponentRenderer.ToString<ChatColor> renderer = ANSIComponentRenderer.toString(ChatColorStyle.instance);
+        ChatColor lastColor = ChatColor.WHITE;
+        renderer.pushStyle(lastColor);
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '\u00A7' && i < text.length() - 1) {
+                ChatColor color = null;
+                try {
+                    color = ChatColor.getByCode(Integer.parseInt(String.valueOf(text.charAt(i + 1)), 16));
+                } catch (NumberFormatException e) {
+                }
+
+                if (color != null) {
+                    renderer.popStyle(lastColor);
+                    lastColor = color;
+                    renderer.pushStyle(lastColor);
+                    i++;
+                    continue;
                 }
             }
-            System.out.println(result + ANSICodes.attrib(0));
-        } else {
-            super.sendMessage(message);
+
+            renderer.text(String.valueOf(ch));
+        }
+
+        renderer.popStyle(lastColor);
+        renderer.complete();
+        return renderer.asString();
+    }
+
+    private static final class ChatColorStyle implements StyleOps<ChatColor> {
+        private static final ChatColorStyle instance = new ChatColorStyle();
+
+        @Override
+        public int color(ChatColor color) {
+            return switch (color) {
+                case BLACK -> 0x000000;
+                case DARK_BLUE -> 0x0000AA;
+                case DARK_GREEN -> 0x00AA00;
+                case DARK_AQUA -> 0x00AAAA;
+                case DARK_RED -> 0xAA0000;
+                case DARK_PURPLE -> 0xAA00AA;
+                case GOLD -> 0xFFAA00;
+                case GRAY -> 0xAAAAAA;
+                case DARK_GRAY -> 0x555555;
+                case BLUE -> 0x5555FF;
+                case GREEN -> 0x55FF55;
+                case AQUA -> 0x55FFFF;
+                case RED -> 0xFF5555;
+                case LIGHT_PURPLE -> 0xFF55FF;
+                case YELLOW -> 0xFFFF55;
+                default -> 0xFFFFFF;
+            };
+        }
+
+        @Override
+        public State bold(ChatColor color) {
+            return State.UNSET;
+        }
+
+        @Override
+        public State italics(ChatColor color) {
+            return State.UNSET;
+        }
+
+        @Override
+        public State underlined(ChatColor color) {
+            return State.UNSET;
+        }
+
+        @Override
+        public State strikethrough(ChatColor color) {
+            return State.UNSET;
+        }
+
+        @Override
+        public State obfuscated(ChatColor color) {
+            return State.UNSET;
+        }
+
+        @Override
+        public @Nullable String font(ChatColor color) {
+            return null;
         }
     }
+    // Poseidon end
 }

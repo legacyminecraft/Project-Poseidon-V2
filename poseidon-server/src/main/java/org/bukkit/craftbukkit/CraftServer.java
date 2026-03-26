@@ -4,7 +4,6 @@ import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
-import jline.ConsoleReader;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.ConvertProgressUpdater;
 import net.minecraft.server.Convertable;
@@ -63,6 +62,7 @@ import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 import org.bukkit.util.permissions.DefaultPermissions;
+import org.jline.reader.LineReader;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
@@ -620,8 +620,8 @@ public final class CraftServer implements Server {
         return MinecraftServer.log;
     }
 
-    public ConsoleReader getReader() {
-        return console.reader;
+    public LineReader getReader() { // Poseidon - ConsoleReader -> LineReader
+        return MinecraftServer.reader; // Poseidon
     }
 
     public PluginCommand getPluginCommand(String name) {

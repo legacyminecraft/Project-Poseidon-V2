@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import jline.ConsoleReader;
+import com.legacyminecraft.poseidon.config.PoseidonConfig;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.CraftServer;
@@ -14,10 +14,11 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginLoadOrder;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -57,7 +58,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
     public CraftServer server;
     public OptionSet options;
     public ColouredConsoleSender console;
-    public ConsoleReader reader;
+    public static final LineReader reader; // Poseidon - static final, ConsoleReader -> LineReader
     public static int currentTick;
     // CraftBukkit end
 
@@ -66,22 +67,17 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
         // CraftBukkit start
         this.options = options;
-        try {
-            this.reader = new ConsoleReader();
-        } catch (IOException ex) {
-            Logger.getLogger(MinecraftServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
         Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(this));
         // CraftBukkit end
     }
 
     private boolean init() throws UnknownHostException { // CraftBukkit - added throws UnknownHostException
+        PoseidonConfig.load(); // Poseidon
+
         this.consoleCommandHandler = new ConsoleCommandHandler(this);
         ThreadCommandReader threadcommandreader = new ThreadCommandReader(this);
-
-        threadcommandreader.setDaemon(true);
         threadcommandreader.start();
-        ConsoleLogManager.init(this); // CraftBukkit
+        ConsoleLogManager.init();
 
         // CraftBukkit start
         System.setOut(new PrintStream(new LoggerOutputStream(log, Level.INFO), true));
@@ -542,4 +538,12 @@ public class MinecraftServer implements Runnable, ICommandListener {
     public static boolean isRunning(MinecraftServer minecraftserver) {
         return minecraftserver.isRunning;
     }
+
+    // Poseidon start
+    static {
+        reader = LineReaderBuilder.builder()
+                .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                .build();
+    }
+    // Poseidon end
 }

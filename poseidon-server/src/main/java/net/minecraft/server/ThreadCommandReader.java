@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
-import java.io.IOException;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.UserInterruptException;
 
 public class ThreadCommandReader extends Thread {
 
@@ -8,28 +10,35 @@ public class ThreadCommandReader extends Thread {
 
     public ThreadCommandReader(MinecraftServer minecraftserver) {
         this.server = minecraftserver;
+        // Poseidon start
+        setName("Server console handler");
+        setPriority(Thread.MIN_PRIORITY);
+        setDaemon(true);
+        // Poseidon end
     }
 
     public void run() {
-        jline.ConsoleReader bufferedreader = this.server.reader; // CraftBukkit
-        String s = null;
+        LineReader bufferedreader = MinecraftServer.reader; // Poseidon
+        String s;
 
         try {
             // CraftBukkit start - JLine disabling compatibility
             while (!this.server.isStopped && MinecraftServer.isRunning(this.server)) {
-                if (org.bukkit.craftbukkit.Main.useJline) {
-                    s = bufferedreader.readLine(">", null);
-                } else {
-                    s = bufferedreader.readLine();
+                try {
+                    if (org.bukkit.craftbukkit.Main.useJline) {
+                        s = bufferedreader.readLine("> "); // Poseidon
+                    } else {
+                        s = bufferedreader.readLine();
+                    }
+                    if (s != null && !s.isBlank()) { // Poseidon - only handle non-empty input
+                        this.server.issueCommand(s, this.server);
+                    }
+                    // CraftBukkit end
+                } catch (EndOfFileException e) { // Poseidon
                 }
-                if (s != null) {
-                    this.server.issueCommand(s, this.server);
-                }
-                // CraftBukkit end
             }
-        } catch (IOException ioexception) {
-            // CraftBukkit
-            java.util.logging.Logger.getLogger(ThreadCommandReader.class.getName()).log(java.util.logging.Level.SEVERE, null, ioexception);
+        } catch (UserInterruptException e) {
+            this.server.a(); // Poseidon - shut down gracefully
         }
     }
 }
