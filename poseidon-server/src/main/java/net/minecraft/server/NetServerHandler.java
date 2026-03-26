@@ -738,6 +738,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         }
 
         try {
+            a.info(player.getName() + " issued server command: " + s); // Poseidon - log commands
             this.server.dispatchCommand(player, s.substring(1));
         } catch (CommandException ex) {
             player.sendMessage(ChatColor.RED + "An internal error occurred while attempting to perform this command");
