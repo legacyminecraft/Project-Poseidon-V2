@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapView;
+import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 
@@ -56,7 +57,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * Gets the socket address of this player
      * @return the player's address
      */
-    InetSocketAddress getAddress();
+    @Nullable InetSocketAddress getAddress();
 
     /**
      * Sends this sender a message raw
@@ -70,7 +71,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *
      * @param message kick message
      */
-    void kickPlayer(String message);
+    void kickPlayer(@Nullable String message);
 
     /**
      * Says a message (or runs a command).

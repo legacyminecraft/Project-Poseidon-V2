@@ -1,5 +1,7 @@
 package org.bukkit.permissions;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public enum PermissionDefault {
      * @param name Name of the default
      * @return Specified value, or null if not found
      */
-    public static PermissionDefault getByName(String name) {
+    public static @Nullable PermissionDefault getByName(String name) {
         return lookup.get(name.toLowerCase().replaceAll("[^a-z!]", ""));
     }
 

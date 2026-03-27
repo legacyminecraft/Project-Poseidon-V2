@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.permissions.Permissible;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,10 @@ public abstract class Command {
     private String label;
     private List<String> aliases;
     private List<String> activeAliases;
-    private CommandMap commandMap = null;
+    private @Nullable CommandMap commandMap = null;
     protected String description = "";
     protected String usageMessage;
-    private String permission;
+    private @Nullable String permission;
 
     protected Command(String name) {
         this(name, "", "/" + name, new ArrayList<>());
@@ -61,7 +62,7 @@ public abstract class Command {
      *
      * @return Permission name, or null if none
      */
-    public String getPermission() {
+    public @Nullable String getPermission() {
         return permission;
     }
 
@@ -70,7 +71,7 @@ public abstract class Command {
      *
      * @param permission Permission name or null
      */
-    public void setPermission(String permission) {
+    public void setPermission(@Nullable String permission) {
         this.permission = permission;
     }
 

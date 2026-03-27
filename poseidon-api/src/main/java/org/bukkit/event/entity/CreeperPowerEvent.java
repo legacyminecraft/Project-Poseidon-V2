@@ -2,6 +2,7 @@ package org.bukkit.event.entity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a Creeper is struck by lightning.
@@ -13,7 +14,7 @@ public class CreeperPowerEvent extends EntityEvent implements Cancellable {
     private boolean canceled;
     private Entity creeper;
     private PowerCause cause;
-    private Entity bolt;
+    private @Nullable Entity bolt;
 
     public CreeperPowerEvent(Entity creeper, Entity bolt, PowerCause cause) {
         super(Type.CREEPER_POWER, creeper);
@@ -42,7 +43,7 @@ public class CreeperPowerEvent extends EntityEvent implements Cancellable {
      *
      * @return The Entity for the lightning bolt which is striking the Creeper
      */
-    public Entity getLightning() {
+    public @Nullable Entity getLightning() {
         return bolt;
     }
 

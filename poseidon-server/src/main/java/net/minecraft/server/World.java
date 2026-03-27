@@ -82,7 +82,7 @@ public class World implements IBlockAccess {
     private final CraftWorld world;
     public boolean pvpMode;
     public boolean keepSpawnInMemory = true;
-    public ChunkGenerator generator;
+    public @Nullable ChunkGenerator generator;
     Chunk lastChunkAccessed;
     int lastXAccessed = Integer.MIN_VALUE;
     int lastZAccessed = Integer.MIN_VALUE;
@@ -110,7 +110,7 @@ public class World implements IBlockAccess {
     }
 
     // CraftBukkit - changed signature
-    public World(IDataManager idatamanager, String s, long i, WorldProvider worldprovider, ChunkGenerator gen, org.bukkit.World.Environment env) {
+    public World(IDataManager idatamanager, String s, long i, WorldProvider worldprovider, @Nullable ChunkGenerator gen, org.bukkit.World.Environment env) {
         this.generator = gen;
         this.world = new CraftWorld((WorldServer) this, gen, env);
         tileEntitiesToUnload = new ArrayList<>();

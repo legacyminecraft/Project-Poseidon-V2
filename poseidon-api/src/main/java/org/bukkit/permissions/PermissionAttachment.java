@@ -1,6 +1,7 @@
 package org.bukkit.permissions;
 
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -9,7 +10,7 @@ import java.util.TreeMap;
  * Holds information about a permission attachment on a {@link Permissible} object
  */
 public class PermissionAttachment {
-    private PermissionRemovedExecutor removed;
+    private @Nullable PermissionRemovedExecutor removed;
     private final TreeMap<String, Boolean> permissions = new TreeMap<>();
     private final Permissible permissible;
     private final Plugin plugin;
@@ -39,7 +40,7 @@ public class PermissionAttachment {
      *
      * @param ex Object to be called when this is removed
      */
-    public void setRemovalCallback(PermissionRemovedExecutor ex) {
+    public void setRemovalCallback(@Nullable PermissionRemovedExecutor ex) {
         removed = ex;
     }
 
@@ -48,7 +49,7 @@ public class PermissionAttachment {
      *
      * @return Object to be called when this is removed
      */
-    public PermissionRemovedExecutor getRemovalCallback() {
+    public @Nullable PermissionRemovedExecutor getRemovalCallback() {
         return removed;
     }
 

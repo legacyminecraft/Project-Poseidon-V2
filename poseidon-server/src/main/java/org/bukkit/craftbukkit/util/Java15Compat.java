@@ -1,9 +1,11 @@
 package org.bukkit.craftbukkit.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.Array;
 
 public class Java15Compat {
-    public static <T> T[] Arrays_copyOf(T[] original, int newLength) {
+    public static <T> T[] Arrays_copyOf(@Nullable T[] original, int newLength) {
         if (0 <= newLength) {
             return org.bukkit.util.Java15Compat.Arrays_copyOfRange(original, 0, newLength);
         }

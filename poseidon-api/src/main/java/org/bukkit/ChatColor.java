@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +102,7 @@ public enum ChatColor {
      * @param code Code to check
      * @return Associative {@link Color} with the given code, or null if it doesn't exist
      */
-    public static ChatColor getByCode(final int code) {
+    public static @Nullable ChatColor getByCode(final int code) {
         return colors.get(code);
     }
 
@@ -110,7 +112,7 @@ public enum ChatColor {
      * @param input String to strip of color
      * @return A copy of the input string, without any coloring
      */
-    public static String stripColor(final String input) {
+    public static @Nullable String stripColor(final @Nullable String input) {
         if (input == null) {
             return null;
         }

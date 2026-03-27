@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the different types of leaves.
@@ -37,7 +38,7 @@ public class Leaves extends MaterialData {
      *
      * @return TreeSpecies of this leave
      */
-    public TreeSpecies getSpecies() {
+    public @Nullable TreeSpecies getSpecies() {
         return TreeSpecies.getByData(getData());
     }
 

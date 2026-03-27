@@ -5,6 +5,7 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.config.Configuration;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -108,5 +109,5 @@ public interface Plugin extends CommandExecutor {
      * @param id Unique ID, if any, that was specified to indicate which generator was requested
      * @return ChunkGenerator for use in the default world generation
      */
-    ChunkGenerator getDefaultWorldGenerator(String worldName, String id);
+    @Nullable ChunkGenerator getDefaultWorldGenerator(String worldName, @Nullable String id);
 }

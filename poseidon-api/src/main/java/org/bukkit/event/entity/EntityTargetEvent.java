@@ -2,16 +2,17 @@ package org.bukkit.event.entity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a creature targets another entity
  */
 public class EntityTargetEvent extends EntityEvent implements Cancellable {
     private boolean cancel;
-    private Entity target;
+    private @Nullable Entity target;
     private TargetReason reason;
 
-    public EntityTargetEvent(Entity entity, Entity target, TargetReason reason) {
+    public EntityTargetEvent(Entity entity, @Nullable Entity target, TargetReason reason) {
         super(Type.ENTITY_TARGET, entity);
         this.target = target;
         this.cancel = false;
@@ -38,7 +39,7 @@ public class EntityTargetEvent extends EntityEvent implements Cancellable {
      * This is possible to be null in the case that the event is called when
      * the mob forgets its target.
      */
-    public Entity getTarget() {
+    public @Nullable Entity getTarget() {
         return target;
     }
 

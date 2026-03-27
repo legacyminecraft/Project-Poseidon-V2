@@ -2,14 +2,15 @@ package org.bukkit.craftbukkit.util;
 
 import net.minecraft.server.Chunk;
 import net.minecraft.server.MinecraftServer;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 
 import static org.bukkit.craftbukkit.util.Java15Compat.Arrays_copyOf;
 
 public class LongHashtable<V> extends LongHash {
-    Object[][][] values = new Object[256][][];
-    Entry cache = null;
+    @Nullable Object[][][] values = new Object[256][][];
+    @Nullable Entry cache = null;
 
     public void put(int msw, int lsw, V value) {
         put(toLong(msw, lsw), value);
@@ -24,7 +25,7 @@ public class LongHashtable<V> extends LongHash {
         }
     }
 
-    public V get(int msw, int lsw) {
+    public @Nullable V get(int msw, int lsw) {
         V value = get(toLong(msw, lsw));
         if (value instanceof Chunk) {
             Chunk c = (Chunk) value;
@@ -40,11 +41,11 @@ public class LongHashtable<V> extends LongHash {
 
     public synchronized void put(long key, V value) {
         int mainIdx = (int) (key & 255);
-        Object[][] outer = this.values[mainIdx];
+        @Nullable Object[][] outer = this.values[mainIdx];
         if (outer == null) this.values[mainIdx] = outer = new Object[256][];
 
         int outerIdx = (int) ((key >> 32) & 255);
-        Object[] inner = outer[outerIdx];
+        @Nullable Object[] inner = outer[outerIdx];
 
         if (inner == null) {
             outer[outerIdx] = inner = new Object[5];
@@ -63,7 +64,7 @@ public class LongHashtable<V> extends LongHash {
         }
     }
 
-    public synchronized V get(long key) {
+    public synchronized @Nullable V get(long key) {
         return containsKey(key) ? (V) cache.value : null;
     }
 
@@ -74,7 +75,7 @@ public class LongHashtable<V> extends LongHash {
         Object[][] outer = this.values[(int) (key & 255)];
         if (outer == null) return false;
 
-        Object[] inner = outer[outerIdx];
+        @Nullable Object[] inner = outer[outerIdx];
         if (inner == null) return false;
 
         for (int i = 0; i < inner.length; i++) {
@@ -93,7 +94,7 @@ public class LongHashtable<V> extends LongHash {
         Object[][] outer = this.values[(int) (key & 255)];
         if (outer == null) return;
 
-        Object[] inner = outer[(int) ((key >> 32) & 255)];
+        @Nullable Object[] inner = outer[(int) ((key >> 32) & 255)];
         if (inner == null) return;
 
         for (int i = 0; i < inner.length; i++) {
@@ -115,10 +116,10 @@ public class LongHashtable<V> extends LongHash {
     public synchronized ArrayList<V> values() {
         ArrayList<V> ret = new ArrayList<V>();
 
-        for (Object[][] outer: this.values) {
+        for (@Nullable Object[][] outer: this.values) {
             if (outer == null) continue;
 
-            for (Object[] inner: outer) {
+            for (@Nullable Object[] inner: outer) {
                 if (inner == null) continue;
 
                 for (Object entry: inner) {

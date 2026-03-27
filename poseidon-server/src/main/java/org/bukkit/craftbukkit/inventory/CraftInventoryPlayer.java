@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.inventory;
 import net.minecraft.server.InventoryPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.jspecify.annotations.Nullable;
 
 public class CraftInventoryPlayer extends CraftInventory implements PlayerInventory {
     public CraftInventoryPlayer(net.minecraft.server.InventoryPlayer inventory) {
@@ -21,7 +22,7 @@ public class CraftInventoryPlayer extends CraftInventory implements PlayerInvent
         return new CraftItemStack(getInventory().getItemInHand());
     }
 
-    public void setItemInHand(ItemStack stack) {
+    public void setItemInHand(@Nullable ItemStack stack) {
         setItem(getHeldItemSlot(), stack);
     }
 
@@ -45,25 +46,25 @@ public class CraftInventoryPlayer extends CraftInventory implements PlayerInvent
         return getItem(getSize() + 0);
     }
 
-    public void setHelmet(ItemStack helmet) {
+    public void setHelmet(@Nullable ItemStack helmet) {
         setItem(getSize() + 3, helmet);
     }
 
-    public void setChestplate(ItemStack chestplate) {
+    public void setChestplate(@Nullable ItemStack chestplate) {
         setItem(getSize() + 2, chestplate);
     }
 
-    public void setLeggings(ItemStack leggings) {
+    public void setLeggings(@Nullable ItemStack leggings) {
         setItem(getSize() + 1, leggings);
     }
 
-    public void setBoots(ItemStack boots) {
+    public void setBoots(@Nullable ItemStack boots) {
         setItem(getSize() + 0, boots);
     }
 
-    public CraftItemStack[] getArmorContents() {
-        net.minecraft.server.ItemStack[] mcItems = getInventory().getArmorContents();
-        CraftItemStack[] ret = new CraftItemStack[mcItems.length];
+    public @Nullable CraftItemStack[] getArmorContents() {
+        net.minecraft.server.@Nullable ItemStack[] mcItems = getInventory().getArmorContents();
+        @Nullable CraftItemStack[] ret = new CraftItemStack[mcItems.length];
 
         for (int i = 0; i < mcItems.length; i++) {
             ret[i] = new CraftItemStack(mcItems[i]);
@@ -71,7 +72,7 @@ public class CraftInventoryPlayer extends CraftInventory implements PlayerInvent
         return ret;
     }
 
-    public void setArmorContents(ItemStack[] items) {
+    public void setArmorContents(@Nullable ItemStack[] items) {
         int cnt = getSize();
 
         if (items == null) {

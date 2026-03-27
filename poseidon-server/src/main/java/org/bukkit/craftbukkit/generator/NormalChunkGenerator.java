@@ -6,6 +6,7 @@ import net.minecraft.server.IProgressUpdate;
 import net.minecraft.server.World;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.generator.BlockPopulator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class NormalChunkGenerator extends InternalChunkGenerator {
         provider.getChunkAt(icp, i, i1);
     }
 
-    public boolean saveChunks(boolean bln, IProgressUpdate ipu) {
+    public boolean saveChunks(boolean bln, @Nullable IProgressUpdate ipu) {
         return provider.saveChunks(bln, ipu);
     }
 

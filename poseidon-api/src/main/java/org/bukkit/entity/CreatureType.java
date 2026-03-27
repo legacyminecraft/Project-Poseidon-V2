@@ -1,5 +1,7 @@
 package org.bukkit.entity;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +41,7 @@ public enum CreatureType {
         return name;
     }
 
-    public static CreatureType fromName(String name) {
+    public static @Nullable CreatureType fromName(String name) {
         return mapping.get(name);
     }
 }

@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public enum TreeSpecies {
      * @return The {@link TreeSpecies} representing the given value, or null if
      *         it doesn't exist
      */
-    public static TreeSpecies getByData(final byte data) {
+    public static @Nullable TreeSpecies getByData(final byte data) {
         return species.get(data);
     }
 

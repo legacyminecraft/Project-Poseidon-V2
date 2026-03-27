@@ -1,5 +1,7 @@
 package org.bukkit.map;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 
 /**
@@ -33,6 +35,7 @@ public class MapFont {
      * @param ch The character to get the sprite for.
      * @return The CharacterSprite associated with the character, or null if there is none.
      */
+    @Nullable
     public CharacterSprite getChar(char ch) {
         return chars.get(ch);
     }

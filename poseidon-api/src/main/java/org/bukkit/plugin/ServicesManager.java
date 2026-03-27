@@ -1,5 +1,7 @@
 package org.bukkit.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public interface ServicesManager {
      * @param service
      * @return provider or null
      */
-    <T> T load(Class<T> service);
+    <T> @Nullable T load(Class<T> service);
 
     /**
      * Queries for a provider registration. This may return if no provider
@@ -67,7 +69,7 @@ public interface ServicesManager {
      * @param service
      * @return provider registration or null
      */
-    <T> RegisteredServiceProvider<T> getRegistration(Class<T> service);
+    <T> @Nullable RegisteredServiceProvider<T> getRegistration(Class<T> service);
 
     /**
      * Get registrations of providers for a plugin.

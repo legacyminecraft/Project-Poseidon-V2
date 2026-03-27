@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.TravelAgent;
 import org.bukkit.event.world.PortalCreateEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class PortalTravelAgent implements TravelAgent {
         return resultLocation;
     }
 
-    public Location findPortal(Location location) {
+    public @Nullable Location findPortal(Location location) {
         net.minecraft.server.World world = ((CraftWorld) location.getWorld()).getHandle();
         // short short1 = 128;
         double d0 = -1.0D;

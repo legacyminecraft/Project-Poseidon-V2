@@ -7,6 +7,7 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +17,9 @@ import java.util.Map;
 
 public final class CraftMapView implements MapView {
     
-    private final Map<CraftPlayer, RenderData> renderCache = new HashMap<CraftPlayer, RenderData>();
+    private final Map<@Nullable CraftPlayer, RenderData> renderCache = new HashMap<CraftPlayer, RenderData>();
     private final List<MapRenderer> renderers = new ArrayList<MapRenderer>();
-    private final Map<MapRenderer, Map<CraftPlayer, CraftMapCanvas>> canvases = new HashMap<MapRenderer, Map<CraftPlayer, CraftMapCanvas>>();
+    private final Map<MapRenderer, Map<@Nullable CraftPlayer, CraftMapCanvas>> canvases = new HashMap<MapRenderer, Map<CraftPlayer, CraftMapCanvas>>();
     protected final WorldMap worldMap;
     
     public CraftMapView(WorldMap worldMap) {
@@ -44,7 +45,7 @@ public final class CraftMapView implements MapView {
         return renderers.size() > 0 && !(renderers.get(0) instanceof CraftMapRenderer);
     }
 
-    public Scale getScale() {
+    public @Nullable Scale getScale() {
         return Scale.valueOf(worldMap.e);
     }
 
@@ -52,7 +53,7 @@ public final class CraftMapView implements MapView {
         worldMap.e = scale.getValue();
     }
     
-    public World getWorld() {
+    public @Nullable World getWorld() {
         byte dimension = worldMap.map;
         for (World world : Bukkit.getServer().getWorlds()) {
             if (((CraftWorld) world).getHandle().dimension == dimension) {

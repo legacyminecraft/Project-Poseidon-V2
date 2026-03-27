@@ -10,6 +10,7 @@ import org.bukkit.map.MapView;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -158,7 +159,7 @@ public interface Server {
      * @param name Name to look up
      * @return Player if it was found, otherwise null
      */
-    Player getPlayer(String name);
+    @Nullable Player getPlayer(String name);
 
     /**
      * Gets the player with the exact given name, case insensitive
@@ -166,7 +167,7 @@ public interface Server {
      * @param name Exact name of the player to retrieve
      * @return Player object or null if not found
      */
-    Player getPlayerExact(String name);
+    @Nullable Player getPlayerExact(String name);
 
     /**
      * Attempts to match any players with the given name, and returns a list
@@ -217,7 +218,7 @@ public interface Server {
      * @param environment Environment type of the world
      * @return Newly created or loaded World
      */
-    World createWorld(String name, World.Environment environment);
+    @Nullable World createWorld(String name, World.Environment environment);
 
     /**
      * Creates or loads a world with the given name.
@@ -229,7 +230,7 @@ public interface Server {
      * @param seed Seed value to create the world with
      * @return Newly created or loaded World
      */
-    World createWorld(String name, World.Environment environment, long seed);
+    @Nullable World createWorld(String name, World.Environment environment, long seed);
 
     /**
      * Creates or loads a world with the given name.
@@ -241,7 +242,7 @@ public interface Server {
      * @param generator ChunkGenerator to use in the construction of the new world
      * @return Newly created or loaded World
      */
-    World createWorld(String name, World.Environment environment, ChunkGenerator generator);
+    @Nullable World createWorld(String name, World.Environment environment, ChunkGenerator generator);
 
     /**
      * Creates or loads a world with the given name.
@@ -254,7 +255,7 @@ public interface Server {
      * @param generator ChunkGenerator to use in the construction of the new world
      * @return Newly created or loaded World
      */
-    World createWorld(String name, World.Environment environment, long seed, ChunkGenerator generator);
+    @Nullable World createWorld(String name, World.Environment environment, long seed, ChunkGenerator generator);
 
      /**
      * Unloads a world with the given name.
@@ -272,7 +273,7 @@ public interface Server {
      * @param save Whether to save the chunks before unloading.
      * @return Whether the action was Successful
      */
-    boolean unloadWorld(World world, boolean save);
+    boolean unloadWorld(@Nullable World world, boolean save);
 
     /**
      * Gets the world with the given name
@@ -280,7 +281,7 @@ public interface Server {
      * @param name Name of the world to retrieve
      * @return World with the given name, or null if none exists
      */
-    World getWorld(String name);
+    @Nullable World getWorld(String name);
 
     /**
      * Gets the world from the given Unique ID
@@ -288,7 +289,7 @@ public interface Server {
      * @param uid Unique ID of the world to retrieve.
      * @return World with the given Unique ID, or null if none exists.
      */
-    World getWorld(UUID uid);
+    @Nullable World getWorld(UUID uid);
     
     /**
      * Gets the map from the given item ID.
@@ -296,7 +297,7 @@ public interface Server {
      * @param id ID of the map to get.
      * @return The MapView if it exists, or null otherwise.
      */
-    MapView getMap(short id);
+    @Nullable MapView getMap(short id);
     
     /**
      * Create a new map with an automatically assigned ID.
@@ -324,7 +325,7 @@ public interface Server {
      * @param name Name of the command to retrieve
      * @return PluginCommand if found, otherwise null
      */
-    PluginCommand getPluginCommand(String name);
+    @Nullable PluginCommand getPluginCommand(String name);
 
     /**
      * Writes loaded players to disk

@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.Nullable;
 
 public class CraftFireball extends AbstractProjectile implements Fireball {
     public CraftFireball(CraftServer server, EntityFireball entity) {
@@ -33,7 +34,7 @@ public class CraftFireball extends AbstractProjectile implements Fireball {
         ((EntityFireball) getHandle()).yield = yield;
     }
 
-    public LivingEntity getShooter() {
+    public @Nullable LivingEntity getShooter() {
         if (((EntityFireball) getHandle()).shooter != null) {
             return (LivingEntity) ((EntityFireball) getHandle()).shooter.getBukkitEntity();
         }
@@ -42,7 +43,7 @@ public class CraftFireball extends AbstractProjectile implements Fireball {
 
     }
 
-    public void setShooter(LivingEntity shooter) {
+    public void setShooter(@Nullable LivingEntity shooter) {
         if (shooter instanceof CraftLivingEntity) {
             ((EntityFireball) getHandle()).shooter = (EntityLiving) ((CraftLivingEntity) shooter).entity;
         }

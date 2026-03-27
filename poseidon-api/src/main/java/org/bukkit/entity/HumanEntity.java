@@ -3,6 +3,7 @@ package org.bukkit.entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permissible;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a human entity, such as an NPC or a player
@@ -37,7 +38,7 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible {
      * @param item The ItemStack which will end up in the hand
      * @return
      */
-    void setItemInHand(ItemStack item);
+    void setItemInHand(@Nullable ItemStack item);
 
     /**
      * Changes the item in hand to another of your 'action slots'.

@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +37,7 @@ public enum CoalType {
      * @return The {@link CoalType} representing the given value, or null if
      *         it doesn't exist
      */
-    public static CoalType getByData(final byte data) {
+    public static @Nullable CoalType getByData(final byte data) {
         return types.get(data);
     }
 

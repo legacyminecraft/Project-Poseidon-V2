@@ -63,6 +63,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.jline.reader.LineReader;
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
@@ -209,7 +210,7 @@ public final class CraftServer implements Server {
         return players;
     }
 
-    public Player getPlayer(final String name) {
+    public @Nullable Player getPlayer(final String name) {
         Player[] players = getOnlinePlayers();
 
         Player found = null;
@@ -228,7 +229,7 @@ public final class CraftServer implements Server {
         return found;
     }
 
-    public Player getPlayerExact(String name) {
+    public @Nullable Player getPlayerExact(String name) {
         String lname = name.toLowerCase();
 
         for (Player player : getOnlinePlayers()) {
@@ -460,19 +461,19 @@ public final class CraftServer implements Server {
         return "CraftServer{" + "serverName=" + serverName + ",serverVersion=" + serverVersion + ",protocolVersion=" + protocolVersion + '}';
     }
 
-    public World createWorld(String name, World.Environment environment) {
+    public @Nullable World createWorld(String name, World.Environment environment) {
         return createWorld(name, environment, (new Random()).nextLong());
     }
 
-    public World createWorld(String name, World.Environment environment, long seed) {
+    public @Nullable World createWorld(String name, World.Environment environment, long seed) {
         return createWorld(name, environment, seed, null);
     }
 
-    public World createWorld(String name, Environment environment, ChunkGenerator generator) {
+    public @Nullable World createWorld(String name, Environment environment, @Nullable ChunkGenerator generator) {
         return createWorld(name, environment, (new Random()).nextLong(), generator);
     }
 
-    public World createWorld(String name, Environment environment, long seed, ChunkGenerator generator) {
+    public @Nullable World createWorld(String name, Environment environment, long seed, @Nullable ChunkGenerator generator) {
         File folder = new File(name);
         World world = getWorld(name);
 
@@ -552,7 +553,7 @@ public final class CraftServer implements Server {
         return unloadWorld(getWorld(name), save);
     }
 
-    public boolean unloadWorld(World world, boolean save) {
+    public boolean unloadWorld(@Nullable World world, boolean save) {
         if (world == null) {
             return false;
         }
@@ -594,11 +595,11 @@ public final class CraftServer implements Server {
         return console;
     }
 
-    public World getWorld(String name) {
+    public @Nullable World getWorld(String name) {
         return worlds.get(name.toLowerCase());
     }
 
-    public World getWorld(UUID uid) {
+    public @Nullable World getWorld(UUID uid) {
         for (World world : worlds.values()) {
             if (world.getUID().equals(uid)) {
                 return world;
@@ -624,7 +625,7 @@ public final class CraftServer implements Server {
         return MinecraftServer.reader; // Poseidon
     }
 
-    public PluginCommand getPluginCommand(String name) {
+    public @Nullable PluginCommand getPluginCommand(String name) {
         Command command = commandMap.getCommand(name);
 
         if (command instanceof PluginCommand) {
@@ -711,7 +712,7 @@ public final class CraftServer implements Server {
         return this.console.allowFlight;
     }
 
-    public ChunkGenerator getGenerator(String world) {
+    public @Nullable ChunkGenerator getGenerator(String world) {
         ConfigurationNode node = configuration.getNode("worlds");
         ChunkGenerator result = null;
 
@@ -740,7 +741,7 @@ public final class CraftServer implements Server {
         return result;
     }
 
-    public CraftMapView getMap(short id) {
+    public @Nullable CraftMapView getMap(short id) {
         WorldMapCollection collection = console.worlds.get(0).worldMaps;
         WorldMap worldmap = (WorldMap) collection.a(WorldMap.class, "map_" + id);
         if (worldmap == null) {

@@ -1,5 +1,7 @@
 package org.bukkit.craftbukkit.scheduler;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -15,7 +17,7 @@ public class CraftFuture<T> implements Runnable, Future<T> {
     private boolean done = false;
     private boolean running = false;
     private boolean cancelled = false;
-    private Exception e = null;
+    private @Nullable Exception e = null;
     private int taskId = -1;
 
     CraftFuture(CraftScheduler craftScheduler, Callable callable) {

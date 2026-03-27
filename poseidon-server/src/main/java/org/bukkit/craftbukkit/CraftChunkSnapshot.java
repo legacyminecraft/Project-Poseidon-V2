@@ -4,6 +4,8 @@ import net.minecraft.server.BiomeBase;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a static, thread-safe snapshot of chunk of blocks
  * Purpose is to allow clean, efficient copy of a chunk data to be made, and then handed off for processing in another thread (e.g. map rendering)
@@ -12,11 +14,11 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
     private final int x, z;
     private final String worldname;
     private final byte[] buf; // Flat buffer in uncompressed chunk file format
-    private final byte[] hmap; // Height map
+    private final byte @Nullable [] hmap; // Height map
     private final long captureFulltime;
-    private final BiomeBase[] biome;
-    private final double[] biomeTemp;
-    private final double[] biomeRain;
+    private final BiomeBase @Nullable [] biome;
+    private final double @Nullable [] biomeTemp;
+    private final double @Nullable [] biomeRain;
 
     private static final int BLOCKDATA_OFF = 32768;
     private static final int BLOCKLIGHT_OFF = BLOCKDATA_OFF + 16384;
@@ -25,7 +27,7 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
     /**
      * Constructor
      */
-    CraftChunkSnapshot(int x, int z, String wname, long wtime, byte[] buf, byte[] hmap, BiomeBase[] biome, double[] biomeTemp, double[] biomeRain) {
+    CraftChunkSnapshot(int x, int z, String wname, long wtime, byte[] buf, byte @Nullable [] hmap, BiomeBase @Nullable [] biome, double @Nullable [] biomeTemp, double @Nullable [] biomeRain) {
         this.x = x;
         this.z = z;
         this.worldname = wname;

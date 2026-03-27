@@ -2,6 +2,7 @@ package org.bukkit.event.block;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when we try to place a block, to see if we can build it here or not.
@@ -46,7 +47,7 @@ public class BlockCanBuildEvent extends BlockEvent {
      *
      * @return The Material that we are trying to place
      */
-    public Material getMaterial() {
+    public @Nullable Material getMaterial() {
         return Material.getMaterial(material);
     }
 

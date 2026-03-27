@@ -1,5 +1,7 @@
 package org.bukkit.util.config;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +71,7 @@ public class ConfigurationNode {
      * @return object or null
      */
     @SuppressWarnings("unchecked")
-    public Object getProperty(String path) {
+    public @Nullable Object getProperty(String path) {
         if (!path.contains(".")) {
             return root.get(path);
         }
@@ -143,7 +145,7 @@ public class ConfigurationNode {
      * @param path path to node (dot notation)
      * @return string or null
      */
-    public String getString(String path) {
+    public @Nullable String getString(String path) {
         Object o = getProperty(path);
 
         if (o == null) {
@@ -241,7 +243,7 @@ public class ConfigurationNode {
      * @return list of keys
      */
     @SuppressWarnings("unchecked")
-    public List<String> getKeys(String path) {
+    public @Nullable List<String> getKeys(@Nullable String path) {
         if (path == null) {
             return new ArrayList<>(root.keySet());
         }
@@ -273,7 +275,7 @@ public class ConfigurationNode {
      * @return boolean or default
      */
     @SuppressWarnings("unchecked")
-    public List<Object> getList(String path) {
+    public @Nullable List<Object> getList(String path) {
         Object o = getProperty(path);
 
         if (o == null) {
@@ -297,7 +299,7 @@ public class ConfigurationNode {
      * @param def default value or null for an empty list as default
      * @return list of strings
      */
-    public List<String> getStringList(String path, List<String> def) {
+    public List<String> getStringList(String path, @Nullable List<String> def) {
         List<Object> raw = getList(path);
 
         if (raw == null) {
@@ -449,7 +451,7 @@ public class ConfigurationNode {
      * @return node or null
      */
     @SuppressWarnings("unchecked")
-    public ConfigurationNode getNode(String path) {
+    public @Nullable ConfigurationNode getNode(String path) {
         Object raw = getProperty(path);
 
         if (raw instanceof Map) {
@@ -467,7 +469,7 @@ public class ConfigurationNode {
      * @return map of nodes
      */
     @SuppressWarnings("unchecked")
-    public Map<String, ConfigurationNode> getNodes(String path) {
+    public @Nullable Map<String, ConfigurationNode> getNodes(String path) {
         Object o = getProperty(path);
 
         if (o == null) {
@@ -493,7 +495,7 @@ public class ConfigurationNode {
      * @param o
      * @return
      */
-    private static Integer castInt(Object o) {
+    private static @Nullable Integer castInt(Object o) {
         return switch (o) {
             case null -> null;
             case Byte b -> (int) b;
@@ -511,7 +513,7 @@ public class ConfigurationNode {
      * @param o
      * @return
      */
-    private static Double castDouble(Object o) {
+    private static @Nullable Double castDouble(Object o) {
         return switch (o) {
             case null -> null;
             case Float v -> (double) v;
@@ -529,7 +531,7 @@ public class ConfigurationNode {
      * @param o
      * @return
      */
-    private static Boolean castBoolean(Object o) {
+    private static @Nullable Boolean castBoolean(Object o) {
         return switch (o) {
             case null -> null;
             case Boolean b -> b;

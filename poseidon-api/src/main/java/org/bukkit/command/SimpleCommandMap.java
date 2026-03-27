@@ -26,6 +26,7 @@ import org.bukkit.command.defaults.TimeCommand;
 import org.bukkit.command.defaults.VanillaCommand;
 import org.bukkit.command.defaults.VersionCommand;
 import org.bukkit.command.defaults.WhitelistCommand;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,7 +155,7 @@ public class SimpleCommandMap implements CommandMap {
         return registerdPassedLabel;
     }
 
-    protected Command getFallback(String label) {
+    protected @Nullable Command getFallback(String label) {
         for (VanillaCommand cmd : fallbackCommands) {
             if (cmd.matches(label)) {
                 return cmd;
@@ -205,7 +206,7 @@ public class SimpleCommandMap implements CommandMap {
         setDefaultCommands(server);
     }
 
-    public Command getCommand(String name) {
+    public @Nullable Command getCommand(String name) {
         return knownCommands.get(name.toLowerCase());
     }
 

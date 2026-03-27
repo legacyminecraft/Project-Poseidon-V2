@@ -31,6 +31,7 @@ import org.bukkit.material.Torch;
 import org.bukkit.material.TrapDoor;
 import org.bukkit.material.Tree;
 import org.bukkit.material.Wool;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -249,7 +250,7 @@ public enum Material {
     GREEN_RECORD(2257, 1);
 
     private final int id;
-    private final Class<? extends MaterialData> data;
+    private final @Nullable Class<? extends MaterialData> data;
     private static final Map<Integer, Material> lookupId = new HashMap<>();
     private static final Map<String, Material> lookupName = new HashMap<>();
     private final int maxStack;
@@ -267,15 +268,15 @@ public enum Material {
         this(id, stack, durability, null);
     }
 
-    Material(final int id, final Class<? extends MaterialData> data) {
+    Material(final int id, final @Nullable Class<? extends MaterialData> data) {
         this(id, 64, data);
     }
 
-    Material(final int id, final int stack, final Class<? extends MaterialData> data) {
+    Material(final int id, final int stack, final @Nullable Class<? extends MaterialData> data) {
         this(id, stack, -1, data);
     }
 
-    Material(final int id, final int stack, final int durability, final Class<? extends MaterialData> data) {
+    Material(final int id, final int stack, final int durability, final @Nullable Class<? extends MaterialData> data) {
         this.id = id;
         this.durability = (short) durability;
         this.maxStack = stack;
@@ -314,7 +315,7 @@ public enum Material {
      *
      * @return MaterialData associated with this Material
      */
-    public Class<? extends MaterialData> getData() {
+    public @Nullable Class<? extends MaterialData> getData() {
         return data;
     }
 
@@ -325,7 +326,7 @@ public enum Material {
      * @param raw Initial data to construct the MaterialData with
      * @return New MaterialData with the given data
      */
-    public MaterialData getNewData(final byte raw) {
+    public @Nullable MaterialData getNewData(final byte raw) {
         if (data == null) {
             return null;
         }
@@ -366,7 +367,7 @@ public enum Material {
      * @param id ID of the material to get
      * @return Material if found, or null
      */
-    public static Material getMaterial(final int id) {
+    public static @Nullable Material getMaterial(final int id) {
         return lookupId.get(id);
     }
 
@@ -378,7 +379,7 @@ public enum Material {
      * @param name Name of the material to get
      * @return Material if found, or null
      */
-    public static Material getMaterial(final String name) {
+    public static @Nullable Material getMaterial(final String name) {
         return lookupName.get(name);
     }
 
@@ -390,7 +391,7 @@ public enum Material {
      * @param name Name of the material to get
      * @return Material if found, or null
      */
-    public static Material matchMaterial(final String name) {
+    public static @Nullable Material matchMaterial(final String name) {
         Material result = null;
 
         try {

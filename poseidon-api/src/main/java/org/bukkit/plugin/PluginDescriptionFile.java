@@ -2,6 +2,7 @@ package org.bukkit.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
@@ -21,14 +22,14 @@ public final class PluginDescriptionFile {
     private static final Yaml yaml = new Yaml(new SafeConstructor());
     private String name = null;
     private String main = null;
-    private ArrayList<String> depend = null;
-    private ArrayList<String> softDepend = null;
+    private @Nullable ArrayList<String> depend = null;
+    private @Nullable ArrayList<String> softDepend = null;
     private String version = null;
-    private Object commands = null;
-    private String description = null;
-    private String prefix = null;
+    private @Nullable Object commands = null;
+    private @Nullable String description = null;
+    private @Nullable String prefix = null;
     private ArrayList<String> authors = new ArrayList<>();
-    private String website = null;
+    private @Nullable String website = null;
     private boolean database = false;
     private PluginLoadOrder order = PluginLoadOrder.POSTWORLD;
     private ArrayList<Permission> permissions = new ArrayList<>();
@@ -104,15 +105,15 @@ public final class PluginDescriptionFile {
         return main;
     }
 
-    public Object getCommands() {
+    public @Nullable Object getCommands() {
         return commands;
     }
 
-    public Object getDepend() {
+    public @Nullable Object getDepend() {
         return depend;
     }
 
-    public Object getSoftDepend() {
+    public @Nullable Object getSoftDepend() {
         return softDepend;
     }
 
@@ -125,7 +126,7 @@ public final class PluginDescriptionFile {
      *
      * return Description of this plugin
      */
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return description;
     }
 
@@ -134,7 +135,7 @@ public final class PluginDescriptionFile {
      *
      * @return the prefixed logging token
      */
-    public String getPrefix() {
+    public @Nullable String getPrefix() {
         return prefix;
     }
 
@@ -142,7 +143,7 @@ public final class PluginDescriptionFile {
         return authors;
     }
 
-    public String getWebsite() {
+    public @Nullable String getWebsite() {
         return website;
     }
 

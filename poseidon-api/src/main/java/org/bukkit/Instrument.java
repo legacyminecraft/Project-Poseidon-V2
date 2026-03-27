@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +24,7 @@ public enum Instrument {
         return this.type;
     }
 
-    public static Instrument getByType(final byte type) {
+    public static @Nullable Instrument getByType(final byte type) {
         return types.get(type);
     }
 

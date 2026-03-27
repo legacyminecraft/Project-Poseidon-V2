@@ -16,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.util.BlockIterator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,7 +83,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return getEyeHeight();
     }
 
-    private List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance, int maxLength) {
+    private List<Block> getLineOfSight(@Nullable HashSet<Byte> transparent, int maxDistance, int maxLength) {
         if (maxDistance > 120) {
             maxDistance = 120;
         }
@@ -108,16 +109,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return blocks;
     }
 
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
+    public List<Block> getLineOfSight(@Nullable HashSet<Byte> transparent, int maxDistance) {
         return getLineOfSight(transparent, maxDistance, 0);
     }
 
-    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
+    public @Nullable Block getTargetBlock(@Nullable HashSet<Byte> transparent, int maxDistance) {
         List<Block> blocks = getLineOfSight(transparent, maxDistance, 1);
         return blocks.get(0);
     }
 
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
+    public List<Block> getLastTwoTargetBlocks(@Nullable HashSet<Byte> transparent, int maxDistance) {
         return getLineOfSight(transparent, maxDistance, 2);
     }
 
@@ -142,7 +143,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return true;
     }
 
-    public Vehicle getVehicle() {
+    public @Nullable Vehicle getVehicle() {
         if (getHandle().vehicle == null) {
             return null;
         }

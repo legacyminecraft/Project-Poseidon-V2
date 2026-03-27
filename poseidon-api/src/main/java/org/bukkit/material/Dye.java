@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents dye
@@ -32,7 +33,7 @@ public class Dye extends MaterialData implements Colorable {
      *
      * @return DyeColor of this dye
      */
-    public DyeColor getColor() {
+    public @Nullable DyeColor getColor() {
         return DyeColor.getByData((byte) (15 - getData()));
     }
 

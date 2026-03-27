@@ -5,6 +5,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -119,7 +120,7 @@ public interface Entity {
      *
      * @return an entity
      */
-    Entity getPassenger();
+    @Nullable Entity getPassenger();
 
     /**
      * Set the passenger of a vehicle.
@@ -165,7 +166,7 @@ public interface Entity {
      * Retrieve the last {@link EntityDamageEvent} inflicted on this entity. This event may have been cancelled.
      * @return the last known {@link EntityDamageEvent} or null if hitherto unharmed
      */
-    EntityDamageEvent getLastDamageCause();
+    @Nullable EntityDamageEvent getLastDamageCause();
 
     /**
      * Returns a unique and persistent id for this entity

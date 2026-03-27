@@ -1,5 +1,7 @@
 package org.bukkit.entity;
 
+import org.jspecify.annotations.Nullable;
+
 public interface Tameable {
 
     /**
@@ -25,7 +27,7 @@ public interface Tameable {
      *
      * @return the owning AnimalTamer, or null if not owned
      */
-    AnimalTamer getOwner();
+    @Nullable AnimalTamer getOwner();
 
     /**
      * Set this to be owned by given AnimalTamer.
@@ -34,6 +36,6 @@ public interface Tameable {
      *
      * @param tamer the AnimalTamer who should own this
      */
-    void setOwner(AnimalTamer tamer);
+    void setOwner(@Nullable AnimalTamer tamer);
 
 }

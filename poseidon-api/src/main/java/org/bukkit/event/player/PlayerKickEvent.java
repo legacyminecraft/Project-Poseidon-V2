@@ -2,12 +2,13 @@ package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player gets kicked from the server
  */
 public class PlayerKickEvent extends PlayerEvent implements Cancellable {
-    private String leaveMessage;
+    private @Nullable String leaveMessage;
     private String kickReason;
     private Boolean cancel;
 
@@ -32,7 +33,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      *
      * @return string kick reason
      */
-    public String getLeaveMessage() {
+    public @Nullable String getLeaveMessage() {
         return leaveMessage;
     }
 
@@ -58,7 +59,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      *
      * @param leaveMessage leave message
      */
-    public void setLeaveMessage(String leaveMessage) {
+    public void setLeaveMessage(@Nullable String leaveMessage) {
         this.leaveMessage = leaveMessage;
     }
 }

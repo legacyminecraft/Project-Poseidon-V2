@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a Wool/Cloth block
@@ -37,7 +38,7 @@ public class Wool extends MaterialData implements Colorable {
      *
      * @return DyeColor of this dye
      */
-    public DyeColor getColor() {
+    public @Nullable DyeColor getColor() {
         return DyeColor.getByData(getData());
     }
 

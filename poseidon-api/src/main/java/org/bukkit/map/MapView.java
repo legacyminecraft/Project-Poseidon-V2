@@ -1,6 +1,7 @@
 package org.bukkit.map;
 
 import org.bukkit.World;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface MapView {
         /**
          * Get the scale given the raw value.
          */
-        public static Scale valueOf(byte value) {
+        public static @Nullable Scale valueOf(byte value) {
             return switch (value) {
                 case 0 -> CLOSEST;
                 case 1 -> CLOSE;
@@ -65,7 +66,7 @@ public interface MapView {
      * Get the scale of this map.
      * @return The scale of the map.
      */
-    Scale getScale();
+    @Nullable Scale getScale();
     
     /**
      * Set the scale of this map.
@@ -103,7 +104,7 @@ public interface MapView {
      * null if the world the map is associated with is not loaded.
      * @return The World this map is associated with.
      */
-    World getWorld();
+    @Nullable World getWorld();
     
     /**
      * Set the world that this map is associated with. The world is used by

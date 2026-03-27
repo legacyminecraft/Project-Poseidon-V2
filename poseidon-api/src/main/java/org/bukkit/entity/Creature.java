@@ -1,5 +1,7 @@
 package org.bukkit.entity;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a Creature. Creatures are non-intelligent monsters or animals which
  * have very simple abilities.
@@ -13,12 +15,12 @@ public interface Creature extends LivingEntity {
      *
      * @param target New LivingEntity to target, or null to clear the target
      */
-    void setTarget(LivingEntity target);
+    void setTarget(@Nullable LivingEntity target);
 
     /**
      * Gets the current target of this Creature
      *
      * @return Current target of this creature, or null if none exists
      */
-    LivingEntity getTarget();
+    @Nullable LivingEntity getTarget();
 }

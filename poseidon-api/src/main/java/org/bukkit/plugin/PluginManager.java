@@ -5,6 +5,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -30,7 +31,7 @@ public interface PluginManager {
      * @param name Name of the plugin to check
      * @return Plugin if it exists, otherwise null
      */
-    Plugin getPlugin(String name);
+    @Nullable Plugin getPlugin(String name);
 
     /**
      * Gets a list of all currently loaded plugins
@@ -55,7 +56,7 @@ public interface PluginManager {
      * @param plugin Plugin to check
      * @return true if the plugin is enabled, otherwise false
      */
-    boolean isPluginEnabled(Plugin plugin);
+    boolean isPluginEnabled(@Nullable Plugin plugin);
 
     /**
      * Loads the plugin in the specified file
@@ -67,7 +68,7 @@ public interface PluginManager {
      * @throws InvalidPluginException Thrown when the specified file is not a valid plugin
      * @throws InvalidDescriptionException Thrown when the specified file contains an invalid description
      */
-    Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
+    @Nullable Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
 
     /**
      * Loads the plugins contained within the specified directory
@@ -140,7 +141,7 @@ public interface PluginManager {
      * @param name Name of the permission
      * @return Permission, or null if none
      */
-    Permission getPermission(String name);
+    @Nullable Permission getPermission(String name);
 
     /**
      * Adds a {@link Permission} to this plugin manager.

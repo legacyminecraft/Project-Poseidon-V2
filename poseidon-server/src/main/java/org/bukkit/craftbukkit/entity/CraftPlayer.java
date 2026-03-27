@@ -25,6 +25,7 @@ import org.bukkit.craftbukkit.map.RenderData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.map.MapView;
+import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -66,7 +67,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return false;
     }
 
-    public InetSocketAddress getAddress() {
+    public @Nullable InetSocketAddress getAddress() {
         SocketAddress addr = getHandle().netServerHandler.networkManager.getSocketAddress();
         if (addr instanceof InetSocketAddress) {
             return (InetSocketAddress) addr;
@@ -144,7 +145,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return hash;
     }
 
-    public void kickPlayer(String message) {
+    public void kickPlayer(@Nullable String message) {
         if (isOnline() && !getHandle().netServerHandler.disconnected) { // Poseidon - fix disconnect spam
             getHandle().netServerHandler.disconnect(message == null ? "" : message);
         }

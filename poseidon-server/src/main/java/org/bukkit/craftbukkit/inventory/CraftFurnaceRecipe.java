@@ -5,13 +5,14 @@ import org.bukkit.Material;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.jspecify.annotations.Nullable;
 
 public class CraftFurnaceRecipe extends FurnaceRecipe implements CraftRecipe {
     public CraftFurnaceRecipe(ItemStack result, Material source) {
         super(result, source);
     }
 
-    public CraftFurnaceRecipe(ItemStack result, MaterialData source) {
+    public CraftFurnaceRecipe(ItemStack result, @Nullable MaterialData source) {
         super(result, source);
     }
 

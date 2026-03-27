@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.entity.Entity;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ConcurrentMap;
@@ -177,7 +178,7 @@ public class CraftChunk implements Chunk {
      * Empty chunk snapshot - nothing but air blocks, but can include valid biome data
      */
     private static class EmptyChunkSnapshot extends CraftChunkSnapshot {
-        EmptyChunkSnapshot(int x, int z, String worldName, long time, BiomeBase[] biome, double[] biomeTemp, double[] biomeRain) {
+        EmptyChunkSnapshot(int x, int z, String worldName, long time, BiomeBase @Nullable [] biome, double @Nullable [] biomeTemp, double @Nullable [] biomeRain) {
             super(x, z, worldName, time, null, null, biome, biomeTemp, biomeRain);
         }
 

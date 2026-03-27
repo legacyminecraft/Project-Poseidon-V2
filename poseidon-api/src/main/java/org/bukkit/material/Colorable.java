@@ -1,6 +1,7 @@
 package org.bukkit.material;
 
 import org.bukkit.DyeColor;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An object that can be colored.
@@ -15,7 +16,7 @@ public interface Colorable {
      *
      * @return The DyeColor of this object.
      */
-    DyeColor getColor();
+    @Nullable DyeColor getColor();
 
     /**
      * Sets the color of this object to the specified DyeColor.

@@ -1,8 +1,10 @@
 package org.bukkit.event;
 
+import org.jspecify.annotations.Nullable;
+
 public class EventException extends Exception {
     private static final long serialVersionUID = 3532808232324183999L;
-    private final Throwable cause;
+    private final @Nullable Throwable cause;
 
     /**
      * Constructs a new EventException based on the given Exception
@@ -42,7 +44,7 @@ public class EventException extends Exception {
      * @return Inner exception, or null if one does not exist
      */
     @Override
-    public Throwable getCause() {
+    public @Nullable Throwable getCause() {
         return cause;
     }
 }

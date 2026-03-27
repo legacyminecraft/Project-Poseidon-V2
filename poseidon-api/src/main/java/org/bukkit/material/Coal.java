@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.CoalType;
 import org.bukkit.Material;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the different types of coals.
@@ -37,7 +38,7 @@ public class Coal extends MaterialData {
      *
      * @return CoalType of this coal
      */
-    public CoalType getType() {
+    public @Nullable CoalType getType() {
         return CoalType.getByData(getData());
     }
 

@@ -44,6 +44,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -51,7 +52,7 @@ import java.util.UUID;
 public abstract class CraftEntity implements org.bukkit.entity.Entity {
     protected final CraftServer server;
     protected Entity entity;
-    private EntityDamageEvent lastDamageEvent;
+    private @Nullable EntityDamageEvent lastDamageEvent;
 
     public CraftEntity(final CraftServer server, final Entity entity) {
         this.server = server;
@@ -253,7 +254,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         setVelocity(value);
     }
 
-    public org.bukkit.entity.Entity getPassenger() {
+    public org.bukkit.entity.@Nullable Entity getPassenger() {
         return isEmpty() ? null : (CraftEntity) getHandle().passenger.getBukkitEntity();
     }
 
@@ -291,7 +292,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         lastDamageEvent = event;
     }
 
-    public EntityDamageEvent getLastDamageCause() {
+    public @Nullable EntityDamageEvent getLastDamageCause() {
         return lastDamageEvent;
     }
 

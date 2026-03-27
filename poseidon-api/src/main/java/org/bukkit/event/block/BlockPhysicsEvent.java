@@ -3,6 +3,7 @@ package org.bukkit.event.block;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown when a block physics check is called
@@ -30,7 +31,7 @@ public class BlockPhysicsEvent extends BlockEvent implements Cancellable {
      *
      * @return Changed block's type
      */
-    public Material getChangedType() {
+    public @Nullable Material getChangedType() {
         return Material.getMaterial(changed);
     }
 

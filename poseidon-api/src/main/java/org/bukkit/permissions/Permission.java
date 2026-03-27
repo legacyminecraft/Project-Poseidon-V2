@@ -1,6 +1,7 @@
 package org.bukkit.permissions;
 
 import org.bukkit.Bukkit;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,31 +21,31 @@ public class Permission {
         this(name, null, null, null);
     }
 
-    public Permission(String name, String description) {
+    public Permission(String name, @Nullable String description) {
         this(name, description, null, null);
     }
 
-    public Permission(String name, PermissionDefault defaultValue) {
+    public Permission(String name, @Nullable PermissionDefault defaultValue) {
         this(name, null, defaultValue, null);
     }
 
-    public Permission(String name, String description, PermissionDefault defaultValue) {
+    public Permission(String name, @Nullable String description, @Nullable PermissionDefault defaultValue) {
         this(name, description, defaultValue, null);
     }
 
-    public Permission(String name, Map<String, Boolean> children) {
+    public Permission(String name, @Nullable Map<String, Boolean> children) {
         this(name, null, null, children);
     }
 
-    public Permission(String name, String description, Map<String, Boolean> children) {
+    public Permission(String name, @Nullable String description, @Nullable Map<String, Boolean> children) {
         this(name, description, null, children);
     }
 
-    public Permission(String name, PermissionDefault defaultValue, Map<String, Boolean> children) {
+    public Permission(String name, @Nullable PermissionDefault defaultValue, @Nullable Map<String, Boolean> children) {
         this(name, null, defaultValue, children);
     }
 
-    public Permission(String name, String description, PermissionDefault defaultValue, Map<String, Boolean> children) {
+    public Permission(String name, @Nullable String description, @Nullable PermissionDefault defaultValue, @Nullable Map<String, Boolean> children) {
         this.name = name;
         this.description = (description == null) ? "" : description;
         this.defaultValue = (defaultValue == null) ? PermissionDefault.FALSE : defaultValue;
@@ -118,7 +119,7 @@ public class Permission {
      *
      * @param value The new description to set
      */
-    public void setDescription(String value) {
+    public void setDescription(@Nullable String value) {
         if (value == null) {
             description = "";
         } else {

@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.CropState;
 import org.bukkit.Material;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the different types of crops.
@@ -37,7 +38,7 @@ public class Crops extends MaterialData {
      *
      * @return CropState of this leave
      */
-    public CropState getState() {
+    public @Nullable CropState getState() {
         return CropState.getByData(getData());
     }
 

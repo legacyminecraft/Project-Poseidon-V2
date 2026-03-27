@@ -16,6 +16,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.util.config.Configuration;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -232,7 +233,7 @@ public abstract class JavaPlugin implements Plugin {
      * @param name Name or alias of the command
      * @return PluginCommand if found, otherwise null
      */
-    public PluginCommand getCommand(String name) {
+    public @Nullable PluginCommand getCommand(String name) {
         String alias = name.toLowerCase();
         PluginCommand command = getServer().getPluginCommand(alias);
 
@@ -249,7 +250,7 @@ public abstract class JavaPlugin implements Plugin {
 
     public void onLoad() {} // Empty!
 
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+    public @Nullable ChunkGenerator getDefaultWorldGenerator(String worldName, @Nullable String id) {
         getServer().getLogger().severe("Plugin " + getDescription().getFullName() + " does not contain any generators that may be used in the default world!");
         return null;
     }

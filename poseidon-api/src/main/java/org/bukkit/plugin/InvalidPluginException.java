@@ -1,18 +1,20 @@
 package org.bukkit.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Thrown when attempting to load an invalid Plugin file
  */
 public class InvalidPluginException extends Exception {
     private static final long serialVersionUID = -8242141640709409542L;
-    private final Throwable cause;
+    private final @Nullable Throwable cause;
 
     /**
      * Constructs a new InvalidPluginException based on the given Exception
      *
      * @param throwable Exception that triggered this Exception
      */
-    public InvalidPluginException(Throwable throwable) {
+    public InvalidPluginException(@Nullable Throwable throwable) {
         cause = throwable;
     }
 
@@ -29,7 +31,7 @@ public class InvalidPluginException extends Exception {
      * @return Inner exception, or null if one does not exist
      */
     @Override
-    public Throwable getCause() {
+    public @Nullable Throwable getCause() {
         return cause;
     }
 }

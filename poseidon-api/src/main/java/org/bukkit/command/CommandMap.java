@@ -1,5 +1,7 @@
 package org.bukkit.command;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 
 public interface CommandMap {
@@ -60,5 +62,5 @@ public interface CommandMap {
      * @param name Name of the command to retrieve
      * @return Command with the specified name or null if a command with that label doesn't exist
      */
-    Command getCommand(String name);
+    @Nullable Command getCommand(String name);
 }

@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.GrassSpecies;
 import org.bukkit.Material;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the different types of long grasses.
@@ -37,7 +38,7 @@ public class LongGrass extends MaterialData {
      *
      * @return GrassSpecies of this grass
      */
-    public GrassSpecies getSpecies() {
+    public @Nullable GrassSpecies getSpecies() {
         return GrassSpecies.getByData(getData());
     }
 

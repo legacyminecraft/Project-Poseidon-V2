@@ -4,6 +4,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.material.MaterialData;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a captured state of a block, which will not change automatically.
@@ -34,7 +35,7 @@ public interface BlockState {
      *
      * @return block type
      */
-    Material getType();
+    @Nullable Material getType();
 
     /**
      * Gets the type-id of this block

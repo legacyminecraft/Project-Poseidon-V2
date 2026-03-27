@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +73,7 @@ public enum Statistic {
      * @param id ID of the statistic to return
      * @return statistic with the given ID
      */
-    public static Statistic getStatistic(int id) {
+    public static @Nullable Statistic getStatistic(int id) {
         return statistics.get(id);
     }
 

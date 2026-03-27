@@ -3,15 +3,16 @@ package org.bukkit.event.vehicle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Raised when a vehicle is destroyed
  */
 public class VehicleDestroyEvent extends VehicleEvent implements Cancellable {
-    private Entity attacker;
+    private @Nullable Entity attacker;
     private boolean cancelled;
 
-    public VehicleDestroyEvent(Vehicle vehicle, Entity attacker) {
+    public VehicleDestroyEvent(Vehicle vehicle, @Nullable Entity attacker) {
         super(Type.VEHICLE_DESTROY, vehicle);
         this.attacker = attacker;
     }
@@ -21,7 +22,7 @@ public class VehicleDestroyEvent extends VehicleEvent implements Cancellable {
      *
      * @return the Entity that has destroyed the vehicle
      */
-    public Entity getAttacker() {
+    public @Nullable Entity getAttacker() {
         return attacker;
     }
 

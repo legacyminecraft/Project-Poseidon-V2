@@ -13,6 +13,7 @@ import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.FileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -43,7 +44,7 @@ public final class SimplePluginManager implements PluginManager {
     private final List<Plugin> plugins = new ArrayList<>();
     private final Map<String, Plugin> lookupNames = new HashMap<>();
     private final Map<Event.Type, SortedSet<RegisteredListener>> listeners = new EnumMap<>(Event.Type.class);
-    private static File updateDirectory = null;
+    private static @Nullable File updateDirectory = null;
     private final SimpleCommandMap commandMap;
     private final Map<String, Permission> permissions = new HashMap<>();
     private final Map<Boolean, Set<Permission>> defaultPerms = new LinkedHashMap<>();
@@ -175,7 +176,7 @@ public final class SimplePluginManager implements PluginManager {
      * @throws InvalidPluginException Thrown when the specified file is not a valid plugin
      * @throws InvalidDescriptionException Thrown when the specified file contains an invalid description
      */
-    public synchronized Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
+    public synchronized @Nullable Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
         return loadPlugin(file, true);
     }
 
@@ -190,7 +191,7 @@ public final class SimplePluginManager implements PluginManager {
      * @throws InvalidPluginException Thrown when the specified file is not a valid plugin
      * @throws InvalidDescriptionException Thrown when the specified file contains an invalid description
      */
-    public synchronized Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
+    public synchronized @Nullable Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
         File updateFile = null;
 
         if (updateDirectory != null && updateDirectory.isDirectory() && (updateFile = new File(updateDirectory, file.getName())).isFile()) {
@@ -229,7 +230,7 @@ public final class SimplePluginManager implements PluginManager {
      * @param name Name of the plugin to check
      * @return Plugin if it exists, otherwise null
      */
-    public synchronized Plugin getPlugin(String name) {
+    public synchronized @Nullable Plugin getPlugin(String name) {
         return lookupNames.get(name);
     }
 
@@ -257,7 +258,7 @@ public final class SimplePluginManager implements PluginManager {
      * @param plugin Plugin to check
      * @return true if the plugin is enabled, otherwise false
      */
-    public boolean isPluginEnabled(Plugin plugin) {
+    public boolean isPluginEnabled(@Nullable Plugin plugin) {
         if ((plugin != null) && (plugins.contains(plugin))) {
             return plugin.isEnabled();
         } else {
@@ -411,7 +412,7 @@ public final class SimplePluginManager implements PluginManager {
         return eventListeners;
     }
 
-    public Permission getPermission(String name) {
+    public @Nullable Permission getPermission(String name) {
         return permissions.get(name.toLowerCase());
     }
 

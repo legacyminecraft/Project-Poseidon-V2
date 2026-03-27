@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +96,7 @@ public class Note {
          *            the id of the tone.
          * @return the tone to id.
          */
-        public static Tone getToneById(byte id) {
+        public static @Nullable Tone getToneById(byte id) {
             return tones.get(id);
         }
 
@@ -185,7 +187,7 @@ public class Note {
      *
      * @return the tone of this note.
      */
-    public Tone getTone() {
+    public @Nullable Tone getTone() {
         return Tone.getToneById(getToneByte());
     }
 

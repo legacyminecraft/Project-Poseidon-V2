@@ -4,6 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a block is ignited. If you want to catch when a Player places fire, you need to use {@link BlockPlaceEvent}.
@@ -13,9 +14,9 @@ import org.bukkit.event.Event;
 public class BlockIgniteEvent extends BlockEvent implements Cancellable {
     private IgniteCause cause;
     private boolean cancel;
-    private Player thePlayer;
+    private @Nullable Player thePlayer;
 
-    public BlockIgniteEvent(Block theBlock, IgniteCause cause, Player thePlayer) {
+    public BlockIgniteEvent(Block theBlock, IgniteCause cause, @Nullable Player thePlayer) {
         super(Event.Type.BLOCK_IGNITE, theBlock);
         this.cause = cause;
         this.thePlayer = thePlayer;
@@ -44,7 +45,7 @@ public class BlockIgniteEvent extends BlockEvent implements Cancellable {
      *
      * @return The Player who placed the fire block, if not ignited by a player returns null
      */
-    public Player getPlayer() {
+    public @Nullable Player getPlayer() {
         return thePlayer;
     }
 

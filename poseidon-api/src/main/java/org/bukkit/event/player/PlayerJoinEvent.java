@@ -1,12 +1,13 @@
 package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player joins a server
  */
 public class PlayerJoinEvent extends PlayerEvent {
-    private String joinMessage;
+    private @Nullable String joinMessage;
 
     public PlayerJoinEvent(Player playerJoined, String joinMessage) {
         super(Type.PLAYER_JOIN, playerJoined);
@@ -18,7 +19,7 @@ public class PlayerJoinEvent extends PlayerEvent {
      *
      * @return string join message
      */
-    public String getJoinMessage() {
+    public @Nullable String getJoinMessage() {
         return joinMessage;
     }
 
@@ -27,7 +28,7 @@ public class PlayerJoinEvent extends PlayerEvent {
      *
      * @param joinMessage join message
      */
-    public void setJoinMessage(String joinMessage) {
+    public void setJoinMessage(@Nullable String joinMessage) {
         this.joinMessage = joinMessage;
     }
 }

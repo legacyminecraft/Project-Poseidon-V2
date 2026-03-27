@@ -1,5 +1,7 @@
 package org.bukkit.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -167,7 +169,7 @@ public class SimpleServicesManager implements ServicesManager {
      * @return provider or null
      */
     @SuppressWarnings("unchecked")
-    public <T> T load(Class<T> service) {
+    public <T> @Nullable T load(Class<T> service) {
         synchronized (providers) {
             List<RegisteredServiceProvider<?>> registered = providers.get(service);
 
@@ -189,7 +191,7 @@ public class SimpleServicesManager implements ServicesManager {
      * @return provider registration or null
      */
     @SuppressWarnings("unchecked")
-    public <T> RegisteredServiceProvider<T> getRegistration(Class<T> service) {
+    public <T> @Nullable RegisteredServiceProvider<T> getRegistration(Class<T> service) {
         synchronized (providers) {
             List<RegisteredServiceProvider<?>> registered = providers.get(service);
 

@@ -1,5 +1,7 @@
 package org.bukkit.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Thrown when attempting to load an invalid Plugin file
  */
@@ -31,7 +33,7 @@ public class UnknownSoftDependencyException extends UnknownDependencyException {
      * @param message Brief message explaining the cause of the exception
      * @param throwable Exception that triggered this Exception
      */
-    public UnknownSoftDependencyException(final Throwable throwable, final String message) {
+    public UnknownSoftDependencyException(final @Nullable Throwable throwable, final String message) {
         super(throwable, message);
     }
 

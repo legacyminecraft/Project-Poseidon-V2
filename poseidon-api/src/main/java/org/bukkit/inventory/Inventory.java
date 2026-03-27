@@ -1,6 +1,7 @@
 package org.bukkit.inventory;
 
 import org.bukkit.Material;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -37,7 +38,7 @@ public interface Inventory {
      * @param index The index where to put the ItemStack
      * @param item The ItemStack to set
      */
-    void setItem(int index, ItemStack item);
+    void setItem(int index, @Nullable ItemStack item);
 
     /**
      * Stores the given ItemStacks in the inventory.
@@ -66,14 +67,14 @@ public interface Inventory {
      *
      * @return All the ItemStacks from all slots
      */
-    ItemStack[] getContents();
+    @Nullable ItemStack[] getContents();
 
     /**
      * Set the inventory's contents
      *
      * @return All the ItemStacks from all slots
      */
-    void setContents(ItemStack[] items);
+    void setContents(@Nullable ItemStack[] items);
 
     /**
      * Check if the inventory contains any ItemStacks with the given materialId
@@ -98,7 +99,7 @@ public interface Inventory {
      * @param item The ItemStack to match against
      * @return If any matching ItemStacks were found
      */
-    boolean contains(ItemStack item);
+    boolean contains(@Nullable ItemStack item);
 
     /**
      * Check if the inventory contains any ItemStacks with the given materialId and at least the minimum amount specified
@@ -124,7 +125,7 @@ public interface Inventory {
      * @param item The ItemStack to match against
      * @return If any matching ItemStacks were found
      */
-    boolean contains(ItemStack item, int amount);
+    boolean contains(@Nullable ItemStack item, int amount);
 
     /**
      * Find all slots in the inventory containing any ItemStacks with the given materialId
@@ -149,7 +150,7 @@ public interface Inventory {
      * @param item The ItemStack to match against
      * @return The Slots found.
      */
-    HashMap<Integer, ? extends ItemStack> all(ItemStack item);
+    HashMap<Integer, ? extends @Nullable ItemStack> all(@Nullable ItemStack item);
 
     /**
      * Find the first slot in the inventory containing an ItemStack with the given materialId
@@ -174,7 +175,7 @@ public interface Inventory {
      * @param item The ItemStack to match against
      * @return The Slot found.
      */
-    int first(ItemStack item);
+    int first(@Nullable ItemStack item);
 
     /**
      * Find the first empty Slot.

@@ -5,13 +5,14 @@ import net.minecraft.server.EntityLiving;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.Nullable;
 
 public class CraftCreature extends CraftLivingEntity implements Creature {
     public CraftCreature(CraftServer server, EntityCreature entity) {
         super(server, entity);
     }
 
-    public void setTarget(LivingEntity target) {
+    public void setTarget(@Nullable LivingEntity target) {
         EntityCreature entity = getHandle();
         if (target == null) {
             entity.target = null;
@@ -22,7 +23,7 @@ public class CraftCreature extends CraftLivingEntity implements Creature {
         }
     }
 
-    public CraftLivingEntity getTarget() {
+    public @Nullable CraftLivingEntity getTarget() {
         if (getHandle().target == null) return null;
 
         return (CraftLivingEntity) getHandle().target.getBukkitEntity();

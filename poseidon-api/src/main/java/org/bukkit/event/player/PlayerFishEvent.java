@@ -3,16 +3,17 @@ package org.bukkit.event.player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown when a player is fishing
  */
 public class PlayerFishEvent extends PlayerEvent implements Cancellable {
-    private final Entity entity;
+    private final @Nullable Entity entity;
     private boolean cancel = false;
     private State state;
 
-    public PlayerFishEvent(final Player player, final Entity entity, State state) {
+    public PlayerFishEvent(final Player player, final @Nullable Entity entity, State state) {
         super(Type.PLAYER_FISH, player);
         this.entity = entity;
         this.state = state;
@@ -23,7 +24,7 @@ public class PlayerFishEvent extends PlayerEvent implements Cancellable {
      *
      * @return Entity caught by the player, null if fishing, bobber has gotten stuck in the ground or nothing has been caught
      */
-    public Entity getCaught() {
+    public @Nullable Entity getCaught() {
         return entity;
     }
 

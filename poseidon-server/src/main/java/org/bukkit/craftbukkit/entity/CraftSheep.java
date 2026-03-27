@@ -4,6 +4,7 @@ import net.minecraft.server.EntitySheep;
 import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Sheep;
+import org.jspecify.annotations.Nullable;
 
 public class CraftSheep extends CraftAnimals implements Sheep {
     public CraftSheep(CraftServer server, EntitySheep entity) {
@@ -20,7 +21,7 @@ public class CraftSheep extends CraftAnimals implements Sheep {
         return "CraftSheep";
     }
 
-    public DyeColor getColor() {
+    public @Nullable DyeColor getColor() {
         return DyeColor.getByData((byte) getHandle().getColor());
     }
 

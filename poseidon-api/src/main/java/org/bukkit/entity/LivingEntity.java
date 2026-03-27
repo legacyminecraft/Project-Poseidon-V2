@@ -2,6 +2,7 @@ package org.bukkit.entity;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +56,7 @@ public interface LivingEntity extends Entity {
      * @param int This is the maximum distance to scan. This may be further limited by the server, but never to less than 100 blocks.
      * @return List containing all blocks along the player's line of sight
      */
-    List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance);
+    List<Block> getLineOfSight(@Nullable HashSet<Byte> transparent, int maxDistance);
 
     /**
      * Gets the block that the player has targeted
@@ -64,7 +65,7 @@ public interface LivingEntity extends Entity {
      * @param int This is the maximum distance to scan. This may be further limited by the server, but never to less than 100 blocks.
      * @return Block that the player has targeted
      */
-    Block getTargetBlock(HashSet<Byte> transparent, int maxDistance);
+    @Nullable Block getTargetBlock(@Nullable HashSet<Byte> transparent, int maxDistance);
 
     /**
      * Gets the last two blocks along the player's line of sight.
@@ -74,7 +75,7 @@ public interface LivingEntity extends Entity {
      * @param int This is the maximum distance to scan. This may be further limited by the server, but never to less than 100 blocks
      * @return List containing the last 2 blocks along the player's line of sight
      */
-    List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance);
+    List<Block> getLastTwoTargetBlocks(@Nullable HashSet<Byte> transparent, int maxDistance);
 
     /**
      * Throws an egg from the entity.
@@ -115,7 +116,7 @@ public interface LivingEntity extends Entity {
      *
      * @return
      */
-    Vehicle getVehicle();
+    @Nullable Vehicle getVehicle();
 
     /**
      * Returns the amount of air that this entity has remaining, in ticks

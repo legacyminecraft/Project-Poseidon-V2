@@ -2,6 +2,7 @@ package org.bukkit.permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,12 +16,12 @@ import java.util.logging.Level;
  * Base Permissible for use in any Permissible object via proxy or extension
  */
 public class PermissibleBase implements Permissible {
-    private ServerOperator opable = null;
+    private @Nullable ServerOperator opable = null;
     private Permissible parent = this;
     private final List<PermissionAttachment> attachments = new LinkedList<>();
     private final Map<String, PermissionAttachmentInfo> permissions = new HashMap<>();
 
-    public PermissibleBase(ServerOperator opable) {
+    public PermissibleBase(@Nullable ServerOperator opable) {
         this.opable = opable;
 
         if (opable instanceof Permissible) {
@@ -179,7 +180,7 @@ public class PermissibleBase implements Permissible {
         permissions.clear();
     }
 
-    private void calculateChildPermissions(Map<String, Boolean> children, boolean invert, PermissionAttachment attachment) {
+    private void calculateChildPermissions(Map<String, Boolean> children, boolean invert, @Nullable PermissionAttachment attachment) {
         Set<String> keys = children.keySet();
 
         for (String name : keys) {
@@ -196,7 +197,7 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+    public @Nullable PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
         if (name == null) {
             throw new IllegalArgumentException("Permission name cannot be null");
         } else if (plugin == null) {
@@ -214,7 +215,7 @@ public class PermissibleBase implements Permissible {
         return result;
     }
 
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+    public @Nullable PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         } else if (!plugin.isEnabled()) {

@@ -3,6 +3,7 @@ package org.bukkit.util.permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -40,31 +41,31 @@ public final class DefaultPermissions {
         return registerPermission(perm);
     }
 
-    public static Permission registerPermission(String name, String desc) {
+    public static Permission registerPermission(String name, @Nullable String desc) {
         return registerPermission(new Permission(name, desc));
     }
 
-    public static Permission registerPermission(String name, String desc, Permission parent) {
+    public static Permission registerPermission(String name, @Nullable String desc, Permission parent) {
         Permission perm = registerPermission(name, desc);
         parent.getChildren().put(perm.getName(), true);
         return perm;
     }
 
-    public static Permission registerPermission(String name, String desc, PermissionDefault def) {
+    public static Permission registerPermission(String name, @Nullable String desc, @Nullable PermissionDefault def) {
         return registerPermission(new Permission(name, desc, def));
     }
 
-    public static Permission registerPermission(String name, String desc, PermissionDefault def, Permission parent) {
+    public static Permission registerPermission(String name, @Nullable String desc, @Nullable PermissionDefault def, Permission parent) {
         Permission perm = registerPermission(name, desc, def);
         parent.getChildren().put(perm.getName(), true);
         return perm;
     }
 
-    public static Permission registerPermission(String name, String desc, PermissionDefault def, Map<String, Boolean> children) {
+    public static Permission registerPermission(String name, @Nullable String desc, @Nullable PermissionDefault def, @Nullable Map<String, Boolean> children) {
         return registerPermission(new Permission(name, desc, def, children));
     }
 
-    public static Permission registerPermission(String name, String desc, PermissionDefault def, Map<String, Boolean> children, Permission parent) {
+    public static Permission registerPermission(String name, @Nullable String desc, @Nullable PermissionDefault def, @Nullable Map<String, Boolean> children, Permission parent) {
         Permission perm = registerPermission(name, desc, def, children);
         parent.getChildren().put(perm.getName(), true);
         return perm;

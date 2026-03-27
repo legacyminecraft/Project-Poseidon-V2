@@ -1,5 +1,7 @@
 package org.bukkit.inventory;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Includes interface to the 4 armor slots
  */
@@ -10,7 +12,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @return All the ItemStacks from the armor slots
      */
-    ItemStack[] getArmorContents();
+    @Nullable ItemStack[] getArmorContents();
 
     /**
      * Return the ItemStack from the helmet slot
@@ -45,7 +47,7 @@ public interface PlayerInventory extends Inventory {
      *
      *  @param items The ItemStacks to use as armour
      */
-    void setArmorContents(ItemStack[] items);
+    void setArmorContents(@Nullable ItemStack[] items);
 
     /**
      * Put the given ItemStack into the helmet slot
@@ -53,7 +55,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param helmet The ItemStack to use as helmet
      */
-    void setHelmet(ItemStack helmet);
+    void setHelmet(@Nullable ItemStack helmet);
 
     /**
      * Put the given ItemStack into the chestplate slot
@@ -61,7 +63,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param chestplate The ItemStack to use as chestplate
      */
-    void setChestplate(ItemStack chestplate);
+    void setChestplate(@Nullable ItemStack chestplate);
 
     /**
      * Put the given ItemStack into the leg slot
@@ -69,7 +71,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param leggings The ItemStack to use as leggings
      */
-    void setLeggings(ItemStack leggings);
+    void setLeggings(@Nullable ItemStack leggings);
 
     /**
      * Put the given ItemStack into the boots slot
@@ -77,7 +79,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param boots The ItemStack to use as boots
      */
-    void setBoots(ItemStack boots);
+    void setBoots(@Nullable ItemStack boots);
 
     /**
      * Returns the ItemStack currently hold
@@ -91,7 +93,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @param stack Stack to set
      */
-    void setItemInHand(ItemStack stack);
+    void setItemInHand(@Nullable ItemStack stack);
 
     /**
      * Get the slot number of the currently held item

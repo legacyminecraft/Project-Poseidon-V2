@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +97,7 @@ public enum DyeColor {
      * @param data Data value to fetch
      * @return The {@link DyeColor} representing the given value, or null if it doesn't exist
      */
-    public static DyeColor getByData(final byte data) {
+    public static @Nullable DyeColor getByData(final byte data) {
         return colors.get(data);
     }
 

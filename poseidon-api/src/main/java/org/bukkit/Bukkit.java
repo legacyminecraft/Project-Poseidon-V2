@@ -11,6 +11,7 @@ import org.bukkit.map.MapView;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public final class Bukkit {
         return server.getUpdateFolder();
     }
 
-    public static Player getPlayer(String name) {
+    public static @Nullable Player getPlayer(String name) {
         return server.getPlayer(name);
     }
 
@@ -130,19 +131,19 @@ public final class Bukkit {
         return server.getWorlds();
     }
 
-    public static World createWorld(String name, Environment environment) {
+    public static @Nullable World createWorld(String name, Environment environment) {
         return server.createWorld(name, environment);
     }
 
-    public static World createWorld(String name, Environment environment, long seed) {
+    public static @Nullable World createWorld(String name, Environment environment, long seed) {
         return server.createWorld(name, environment, seed);
     }
 
-    public static World createWorld(String name, Environment environment, ChunkGenerator generator) {
+    public static @Nullable World createWorld(String name, Environment environment, ChunkGenerator generator) {
         return server.createWorld(name, environment, generator);
     }
 
-    public static World createWorld(String name, Environment environment, long seed, ChunkGenerator generator) {
+    public static @Nullable World createWorld(String name, Environment environment, long seed, ChunkGenerator generator) {
         return server.createWorld(name, environment, seed, generator);
     }
 
@@ -154,15 +155,15 @@ public final class Bukkit {
         return server.unloadWorld(world, save);
     }
 
-    public static World getWorld(String name) {
+    public static @Nullable World getWorld(String name) {
         return server.getWorld(name);
     }
 
-    public static World getWorld(UUID uid) {
+    public static @Nullable World getWorld(UUID uid) {
         return server.getWorld(uid);
     }
 
-    public static MapView getMap(short id) {
+    public static @Nullable MapView getMap(short id) {
         return server.getMap(id);
     }
 
@@ -178,7 +179,7 @@ public final class Bukkit {
         return server.getLogger();
     }
 
-    public static PluginCommand getPluginCommand(String name) {
+    public static @Nullable PluginCommand getPluginCommand(String name) {
         return server.getPluginCommand(name);
     }
 
@@ -230,7 +231,7 @@ public final class Bukkit {
         return server.getOfflinePlayer(name);
     }
 
-    public static Player getPlayerExact(String name) {
+    public static @Nullable Player getPlayerExact(String name) {
         return server.getPlayerExact(name);
     }
 

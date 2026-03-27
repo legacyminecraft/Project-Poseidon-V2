@@ -22,7 +22,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
     private EntityList G = new EntityList();
 
     // CraftBukkit start - change signature
-    public WorldServer(MinecraftServer minecraftserver, IDataManager idatamanager, String s, int i, long j, org.bukkit.World.Environment env, ChunkGenerator gen) {
+    public WorldServer(MinecraftServer minecraftserver, IDataManager idatamanager, String s, int i, long j, org.bukkit.World.Environment env, @Nullable ChunkGenerator gen) {
         super(idatamanager, s, j, WorldProvider.byDimension(env.getId()), gen, env);
         this.server = minecraftserver;
 

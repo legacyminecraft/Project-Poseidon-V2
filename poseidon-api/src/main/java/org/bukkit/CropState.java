@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +68,7 @@ public enum CropState {
      * @return The {@link CropState} representing the given value, or null if
      *         it doesn't exist
      */
-    public static CropState getByData(final byte data) {
+    public static @Nullable CropState getByData(final byte data) {
         return states.get(data);
     }
 

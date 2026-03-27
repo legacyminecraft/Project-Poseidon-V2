@@ -2,6 +2,7 @@ package org.bukkit.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a stack of items
@@ -9,7 +10,7 @@ import org.bukkit.material.MaterialData;
 public class ItemStack {
     private int type;
     private int amount = 0;
-    private MaterialData data = null;
+    private @Nullable MaterialData data = null;
     private short durability = 0;
 
     public ItemStack(final int type) {
@@ -36,7 +37,7 @@ public class ItemStack {
         this(type.getId(), amount, damage);
     }
 
-    public ItemStack(final int type, final int amount, final short damage, final Byte data) {
+    public ItemStack(final int type, final int amount, final short damage, final @Nullable Byte data) {
         this.type = type;
         this.amount = amount;
         this.durability = damage;
@@ -55,7 +56,7 @@ public class ItemStack {
      *
      * @return Type of the items in this stack
      */
-    public Material getType() {
+    public @Nullable Material getType() {
         return Material.getMaterial(type);
     }
 
@@ -114,7 +115,7 @@ public class ItemStack {
      *
      * @return MaterialData for this item
      */
-    public MaterialData getData() {
+    public @Nullable MaterialData getData() {
         if (Material.getMaterial(getTypeId()).getData() != null) {
             data = Material.getMaterial(getTypeId()).getNewData((byte) this.durability);
         }

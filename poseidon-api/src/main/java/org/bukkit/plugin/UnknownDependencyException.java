@@ -1,12 +1,14 @@
 package org.bukkit.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Thrown when attempting to load an invalid Plugin file
  */
 public class UnknownDependencyException extends Exception {
 
     private static final long serialVersionUID = 5721389371901775894L;
-    private final Throwable cause;
+    private final @Nullable Throwable cause;
     private final String message;
 
     /**
@@ -33,7 +35,7 @@ public class UnknownDependencyException extends Exception {
      * @param message Brief message explaining the cause of the exception
      * @param throwable Exception that triggered this Exception
      */
-    public UnknownDependencyException(final Throwable throwable, final String message) {
+    public UnknownDependencyException(final @Nullable Throwable throwable, final String message) {
         this.cause = null;
         this.message = message;
     }
@@ -51,7 +53,7 @@ public class UnknownDependencyException extends Exception {
      * @return Inner exception, or null if one does not exist
      */
     @Override
-    public Throwable getCause() {
+    public @Nullable Throwable getCause() {
         return cause;
     }
 

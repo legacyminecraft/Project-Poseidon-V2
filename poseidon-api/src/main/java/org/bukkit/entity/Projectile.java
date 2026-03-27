@@ -1,5 +1,7 @@
 package org.bukkit.entity;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a shootable entity
  */
@@ -11,14 +13,14 @@ public interface Projectile extends Entity {
      *
      * @return the {@link LivingEntity} that shot this projectile
      */
-    LivingEntity getShooter();
+    @Nullable LivingEntity getShooter();
 
     /**
      * Set the shooter of this projectile
      *
      * @param shooter the {@link LivingEntity} that shot this projectile
      */
-    void setShooter(LivingEntity shooter);
+    void setShooter(@Nullable LivingEntity shooter);
 
     /**
      * Determine if this projectile should bounce or not when it hits.

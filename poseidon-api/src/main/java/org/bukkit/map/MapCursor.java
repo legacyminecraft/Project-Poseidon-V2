@@ -1,5 +1,7 @@
 package org.bukkit.map;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a cursor on a map.
  */
@@ -53,7 +55,7 @@ public final class MapCursor {
      * Get the type of this cursor.
      * @return The type (color/style) of the map cursor.
      */
-    public Type getType() {
+    public @Nullable Type getType() {
         return Type.byValue(type);
     }
     
@@ -149,7 +151,7 @@ public final class MapCursor {
             return value;
         }
         
-        public static Type byValue(byte value) {
+        public static @Nullable Type byValue(byte value) {
             for (Type t : values()) {
                 if (t.value == value) return t;
             }

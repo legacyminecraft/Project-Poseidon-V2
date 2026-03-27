@@ -137,7 +137,7 @@ public class ServerConfigurationManager {
         this.getPlayerManager(entityplayer.dimension).movePlayer(entityplayer);
     }
 
-    public String disconnect(EntityPlayer entityplayer) { // CraftBukkit - changed return type
+    public @Nullable String disconnect(EntityPlayer entityplayer) { // CraftBukkit - changed return type
         // CraftBukkit start
         // Quitting must be before we do final save of data, in case plugins need to modify it
         this.getPlayerManager(entityplayer.dimension).removePlayer(entityplayer);

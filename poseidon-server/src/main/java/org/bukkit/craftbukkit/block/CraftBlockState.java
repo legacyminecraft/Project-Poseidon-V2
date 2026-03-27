@@ -10,6 +10,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.material.MaterialData;
+import org.jspecify.annotations.Nullable;
 
 public class CraftBlockState implements BlockState {
     private final CraftWorld world;
@@ -137,7 +138,7 @@ public class CraftBlockState implements BlockState {
      *
      * @return block type
      */
-    public Material getType() {
+    public @Nullable Material getType() {
         return Material.getMaterial(getTypeId());
     }
 

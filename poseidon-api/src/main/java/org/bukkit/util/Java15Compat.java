@@ -1,10 +1,12 @@
 package org.bukkit.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.Array;
 
 public class Java15Compat {
     @SuppressWarnings("unchecked")
-    public static <T> T[] Arrays_copyOfRange(T[] original, int start, int end) {
+    public static <T> T[] Arrays_copyOfRange(@Nullable T[] original, int start, int end) {
         if (original.length >= start && 0 <= start) {
             if (start <= end) {
                 int length = end - start;

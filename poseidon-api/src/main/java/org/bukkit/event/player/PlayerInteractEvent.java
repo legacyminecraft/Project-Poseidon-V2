@@ -7,20 +7,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player interacts with an object or air.
  */
 public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
-    protected ItemStack item;
+    protected @Nullable ItemStack item;
     protected Action action;
-    protected Block blockClicked;
+    protected @Nullable Block blockClicked;
     protected BlockFace blockFace;
 
     private Result useClickedBlock;
     private Result useItemInHand;
 
-    public PlayerInteractEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
+    public PlayerInteractEvent(Player who, Action action, @Nullable ItemStack item, @Nullable Block clickedBlock, BlockFace clickedFace) {
         super(Type.PLAYER_INTERACT, who);
         this.action = action;
         this.item = item;
@@ -70,7 +71,7 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      *
      * @return ItemStack the item used
      */
-    public ItemStack getItem() {
+    public @Nullable ItemStack getItem() {
         return this.item;
     }
 
@@ -80,7 +81,7 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      *
      * @return Material the material of the item used
      */
-    public Material getMaterial() {
+    public @Nullable Material getMaterial() {
         if (!hasItem()) {
             return Material.AIR;
         }
@@ -125,7 +126,7 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      *
      * @return Block returns the block clicked with this item.
      */
-    public Block getClickedBlock() {
+    public @Nullable Block getClickedBlock() {
         return blockClicked;
     }
 

@@ -1,5 +1,6 @@
 package org.bukkit.util.config;
 
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -57,7 +58,7 @@ import java.util.Map;
 public class Configuration extends ConfigurationNode {
     private Yaml yaml;
     private File file;
-    private String header = null;
+    private @Nullable String header = null;
 
     public Configuration(File file) {
         super(new HashMap<>());
@@ -121,7 +122,7 @@ public class Configuration extends ConfigurationNode {
      *
      * @param header header to prepend
      */
-    public void setHeader(String header) {
+    public void setHeader(@Nullable String header) {
         this.header = header;
     }
 
@@ -130,7 +131,7 @@ public class Configuration extends ConfigurationNode {
      *
      * @return
      */
-    public String getHeader() {
+    public @Nullable String getHeader() {
         return header;
     }
 

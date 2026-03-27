@@ -3,15 +3,16 @@ package org.bukkit.event.entity;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when an entity is damaged by a block
  */
 public class EntityDamageByBlockEvent extends EntityDamageEvent implements Cancellable {
 
-    private Block damager;
+    private @Nullable Block damager;
 
-    public EntityDamageByBlockEvent(Block damager, Entity damagee, DamageCause cause, int damage) {
+    public EntityDamageByBlockEvent(@Nullable Block damager, Entity damagee, DamageCause cause, int damage) {
         super(Type.ENTITY_DAMAGE, damagee, cause, damage);
         this.damager = damager;
     }
@@ -21,7 +22,7 @@ public class EntityDamageByBlockEvent extends EntityDamageEvent implements Cance
      *
      * @return Block that damaged the player
      */
-    public Block getDamager() {
+    public @Nullable Block getDamager() {
         return damager;
     }
 }

@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public abstract class ChunkGenerator {
      * @param random Random generator to use in the calculation
      * @return Location containing a new spawn point, otherwise null
      */
-    public Location getFixedSpawnLocation(World world, Random random) {
+    public @Nullable Location getFixedSpawnLocation(World world, Random random) {
         return null;
     }
 }

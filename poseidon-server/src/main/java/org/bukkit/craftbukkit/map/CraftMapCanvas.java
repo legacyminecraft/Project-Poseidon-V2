@@ -5,6 +5,7 @@ import org.bukkit.map.MapCursorCollection;
 import org.bukkit.map.MapFont;
 import org.bukkit.map.MapFont.CharacterSprite;
 import org.bukkit.map.MapPalette;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.Image;
 import java.util.Arrays;
@@ -13,7 +14,7 @@ public class CraftMapCanvas implements MapCanvas {
     
     private final byte[] buffer = new byte[128 * 128];
     private final CraftMapView mapView;
-    private byte[] base;
+    private byte @Nullable [] base;
     private MapCursorCollection cursors = new MapCursorCollection();
     
     protected CraftMapCanvas(CraftMapView mapView) {

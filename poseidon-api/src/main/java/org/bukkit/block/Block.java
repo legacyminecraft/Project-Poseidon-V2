@@ -4,6 +4,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a block. This is a live object, and only one Block may exist for
@@ -23,12 +24,14 @@ public interface Block {
     /**
      * @deprecated use {@link #getRelative(BlockFace face)}
      */
-    @Deprecated Block getFace(BlockFace face);
+    @Deprecated
+    Block getFace(BlockFace face);
 
     /**
      * @deprecated use {@link #getRelative(BlockFace face, int distance)}
      */
-    @Deprecated Block getFace(BlockFace face, int distance);
+    @Deprecated
+    Block getFace(BlockFace face, int distance);
 
     /**
      * Gets the block at the given offsets
@@ -73,7 +76,7 @@ public interface Block {
      *
      * @return block type
      */
-    Material getType();
+    @Nullable Material getType();
 
     /**
      * Gets the type-id of this block
@@ -122,7 +125,6 @@ public interface Block {
      *
      * @return Location of block
      */
-
     Location getLocation();
 
     /**
@@ -176,7 +178,7 @@ public interface Block {
      * @param block Block to compare against this block
      * @return BlockFace of this block which has the requested block, or null
      */
-    BlockFace getFace(Block block);
+    @Nullable BlockFace getFace(Block block);
 
     /**
      * Captures the current state of this block. You may then cast that state
@@ -276,5 +278,5 @@ public interface Block {
      *
      * @return reaction
      */
-    PistonMoveReaction getPistonMoveReaction();
+    @Nullable PistonMoveReaction getPistonMoveReaction();
 }

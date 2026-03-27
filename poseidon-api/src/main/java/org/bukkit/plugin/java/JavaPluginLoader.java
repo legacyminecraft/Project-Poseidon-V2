@@ -107,6 +107,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.UnknownSoftDependencyException;
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.File;
@@ -300,7 +301,7 @@ public class JavaPluginLoader implements PluginLoader {
         return fileFilters;
     }
 
-    public Class<?> getClassByName(final String name) {
+    public @Nullable Class<?> getClassByName(final String name) {
         Class<?> cachedClass = classes.get(name);
 
         if (cachedClass != null) {

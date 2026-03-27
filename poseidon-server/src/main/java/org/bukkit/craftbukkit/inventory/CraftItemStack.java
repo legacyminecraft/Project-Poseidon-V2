@@ -2,11 +2,12 @@ package org.bukkit.craftbukkit.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 public class CraftItemStack extends ItemStack {
-    protected net.minecraft.server.ItemStack item;
+    protected net.minecraft.server.@Nullable ItemStack item;
 
-    public CraftItemStack(net.minecraft.server.ItemStack item) {
+    public CraftItemStack(net.minecraft.server.@Nullable ItemStack item) {
         super(
             item != null ? item.id: 0,
             item != null ? item.count : 0,
@@ -40,11 +41,11 @@ public class CraftItemStack extends ItemStack {
         this(type.getId(), amount, damage);
     }
 
-    public CraftItemStack(final Material type, final int amount, final short damage, final Byte data) {
+    public CraftItemStack(final Material type, final int amount, final short damage, final @Nullable Byte data) {
         this(type.getId(), amount, damage, data);
     }
 
-    public CraftItemStack(int type, int amount, short damage, Byte data) {
+    public CraftItemStack(int type, int amount, short damage, @Nullable Byte data) {
         this(new net.minecraft.server.ItemStack(type, amount, data != null ? data : damage));
     }
 
@@ -54,7 +55,7 @@ public class CraftItemStack extends ItemStack {
      */
 
     @Override
-    public Material getType() {
+    public @Nullable Material getType() {
         super.setTypeId(item != null ? item.id : 0); // sync, needed?
         return super.getType();
     }

@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.CreatureType;
+import org.jspecify.annotations.Nullable;
 
 public class CraftCreatureSpawner extends CraftBlockState implements CreatureSpawner {
     private final CraftWorld world;
@@ -17,7 +18,7 @@ public class CraftCreatureSpawner extends CraftBlockState implements CreatureSpa
         spawner = (TileEntityMobSpawner) world.getTileEntityAt(getX(), getY(), getZ());
     }
 
-    public CreatureType getCreatureType() {
+    public @Nullable CreatureType getCreatureType() {
         return CreatureType.fromName(spawner.mobName);
     }
 

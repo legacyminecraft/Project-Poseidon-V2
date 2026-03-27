@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +56,7 @@ public enum Achievement {
      * @param id ID of the achievement to return
      * @return Achievement with the given ID
      */
-    public static Achievement getAchievement(int id) {
+    public static @Nullable Achievement getAchievement(int id) {
         return achievements.get(id);
     }
 

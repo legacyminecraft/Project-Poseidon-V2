@@ -7,6 +7,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -65,11 +66,11 @@ public class ConsoleCommandSender implements CommandSender {
         return perm.addAttachment(plugin);
     }
 
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+    public @Nullable PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
         return perm.addAttachment(plugin, name, value, ticks);
     }
 
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+    public @Nullable PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         return perm.addAttachment(plugin, ticks);
     }
 

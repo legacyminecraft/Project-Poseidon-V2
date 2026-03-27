@@ -13,6 +13,7 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -315,7 +316,7 @@ public interface World {
      * @param type The creature to spawn
      * @return Resulting LivingEntity of this method, or null if it was unsuccessful
      */
-    LivingEntity spawnCreature(Location loc, CreatureType type);
+    @Nullable LivingEntity spawnCreature(Location loc, CreatureType type);
 
     /**
      * Strikes lightning at the given {@link Location}
@@ -572,7 +573,7 @@ public interface World {
      *
      * @return ChunkGenerator associated with this world
      */
-    ChunkGenerator getGenerator();
+    @Nullable ChunkGenerator getGenerator();
 
     /**
      * Saves world to disk
@@ -753,7 +754,7 @@ public interface World {
             return id;
         }
 
-        public static Environment getEnvironment(int id) {
+        public static @Nullable Environment getEnvironment(int id) {
             return lookup.get(id);
         }
 

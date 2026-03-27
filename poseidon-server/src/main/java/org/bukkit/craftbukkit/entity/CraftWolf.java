@@ -6,9 +6,10 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.jspecify.annotations.Nullable;
 
 public class CraftWolf extends CraftAnimals implements Wolf {
-    private AnimalTamer owner;
+    private @Nullable AnimalTamer owner;
 
     public CraftWolf(CraftServer server, EntityWolf wolf) {
         super(server, wolf);
@@ -41,7 +42,7 @@ public class CraftWolf extends CraftAnimals implements Wolf {
         getHandle().setTamed(tame);
     }
 
-    public AnimalTamer getOwner() {
+    public @Nullable AnimalTamer getOwner() {
         // If the wolf has a previously set owner use that, otherwise try and find the player who owns it
         if (owner == null) {
             // TODO try and recover owner from persistence store before defaulting to playername
@@ -50,7 +51,7 @@ public class CraftWolf extends CraftAnimals implements Wolf {
         return owner;
     }
 
-    public void setOwner(AnimalTamer tamer) {
+    public void setOwner(@Nullable AnimalTamer tamer) {
         owner = tamer;
         if (owner != null) {
             setTamed(true); /* Make him tame */
@@ -86,7 +87,7 @@ public class CraftWolf extends CraftAnimals implements Wolf {
      * TODO use this later to extend the API, when we have Path classes in Bukkit
      * @param pathentity currently the MC defined PathEntity class. Should be replaced with an API interface at some point.
      */
-    private void setPath(PathEntity pathentity) {
+    private void setPath(@Nullable PathEntity pathentity) {
         getHandle().setPathEntity(pathentity);
     }
 

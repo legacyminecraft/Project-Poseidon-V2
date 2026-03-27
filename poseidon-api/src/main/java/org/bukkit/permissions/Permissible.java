@@ -1,6 +1,7 @@
 package org.bukkit.permissions;
 
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public interface Permissible extends ServerOperator {
      * @param ticks Amount of ticks to automatically remove this attachment after
      * @return The PermissionAttachment that was just created
      */
-    PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks);
+    @Nullable PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks);
 
     /**
      * Temporarily adds a new empty {@link PermissionAttachment} to this object
@@ -80,7 +81,7 @@ public interface Permissible extends ServerOperator {
      * @param ticks Amount of ticks to automatically remove this attachment after
      * @return The PermissionAttachment that was just created
      */
-    PermissionAttachment addAttachment(Plugin plugin, int ticks);
+    @Nullable PermissionAttachment addAttachment(Plugin plugin, int ticks);
 
     /**
      * Removes the given {@link PermissionAttachment} from this object

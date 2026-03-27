@@ -1,6 +1,7 @@
 package org.bukkit.block;
 
 import org.bukkit.entity.CreatureType;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a creature spawner.
@@ -15,7 +16,7 @@ public interface CreatureSpawner extends BlockState {
      *
      * @return
      */
-    CreatureType getCreatureType();
+    @Nullable CreatureType getCreatureType();
 
     /**
      * Set the spawner creature type.

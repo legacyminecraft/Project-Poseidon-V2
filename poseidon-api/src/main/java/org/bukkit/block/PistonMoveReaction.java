@@ -1,5 +1,7 @@
 package org.bukkit.block;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ public enum PistonMoveReaction {
         return this.id;
     }
 
-    public static PistonMoveReaction getById(int id) {
+    public static @Nullable PistonMoveReaction getById(int id) {
         return byId.get(id);
     }
 }

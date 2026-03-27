@@ -1,16 +1,18 @@
 
 package org.bukkit.permissions;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Holds information on a permission and which {@link PermissionAttachment} provides it
  */
 public class PermissionAttachmentInfo {
     private final Permissible permissible;
     private final String permission;
-    private final PermissionAttachment attachment;
+    private final @Nullable PermissionAttachment attachment;
     private final boolean value;
 
-    public PermissionAttachmentInfo(Permissible permissible, String permission, PermissionAttachment attachment, boolean value) {
+    public PermissionAttachmentInfo(Permissible permissible, String permission, @Nullable PermissionAttachment attachment, boolean value) {
         if (permissible == null) {
             throw new IllegalArgumentException("Permissible may not be null");
         } else if (permission == null) {
@@ -47,7 +49,7 @@ public class PermissionAttachmentInfo {
      *
      * @return Attachment
      */
-    public PermissionAttachment getAttachment() {
+    public @Nullable PermissionAttachment getAttachment() {
         return attachment;
     }
 

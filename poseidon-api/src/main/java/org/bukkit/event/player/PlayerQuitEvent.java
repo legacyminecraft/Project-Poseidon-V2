@@ -1,13 +1,14 @@
 package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player leaves a server
  */
 public class PlayerQuitEvent extends PlayerEvent {
 
-    private String quitMessage;
+    private @Nullable String quitMessage;
 
     public PlayerQuitEvent(Player who, String quitMessage) {
         super(Type.PLAYER_QUIT, who);
@@ -19,7 +20,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @return string quit message
      */
-    public String getQuitMessage() {
+    public @Nullable String getQuitMessage() {
         return quitMessage;
     }
 
@@ -28,7 +29,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      *
      * @param quitMessage quit message
      */
-    public void setQuitMessage(String quitMessage) {
+    public void setQuitMessage(@Nullable String quitMessage) {
         this.quitMessage = quitMessage;
     }
 }

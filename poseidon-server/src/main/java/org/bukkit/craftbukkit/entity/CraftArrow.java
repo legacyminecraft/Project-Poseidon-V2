@@ -5,6 +5,7 @@ import net.minecraft.server.EntityLiving;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.Nullable;
 
 public class CraftArrow extends AbstractProjectile implements Arrow {
 
@@ -17,7 +18,7 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
         return "CraftArrow";
     }
 
-    public LivingEntity getShooter() {
+    public @Nullable LivingEntity getShooter() {
         if (((EntityArrow) getHandle()).shooter != null) {
             return (LivingEntity) ((EntityArrow) getHandle()).shooter.getBukkitEntity();
         }
@@ -26,7 +27,7 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
 
     }
 
-    public void setShooter(LivingEntity shooter) {
+    public void setShooter(@Nullable LivingEntity shooter) {
         if (shooter instanceof CraftLivingEntity) {
             ((EntityArrow) getHandle()).shooter = (EntityLiving) ((CraftLivingEntity) shooter).entity;
         }

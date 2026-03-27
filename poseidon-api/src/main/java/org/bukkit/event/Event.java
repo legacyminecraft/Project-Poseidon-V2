@@ -1,5 +1,7 @@
 package org.bukkit.event;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +9,7 @@ import java.io.Serializable;
  */
 public abstract class Event implements Serializable {
     private final Type type;
-    private final String name;
+    private final @Nullable String name;
 
     protected Event(final Type type) {
         exAssert(type != null, "type is null");
@@ -42,7 +44,7 @@ public abstract class Event implements Serializable {
      *
      * @return Name of this event
      */
-    public final String getEventName() {
+    public final @Nullable String getEventName() {
         return (type != Type.CUSTOM_EVENT) ? type.toString() : name;
     }
 

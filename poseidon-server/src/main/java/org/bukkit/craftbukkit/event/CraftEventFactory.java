@@ -48,6 +48,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.jspecify.annotations.Nullable;
 
 public class CraftEventFactory {
     private static boolean canBuild(CraftWorld world, Player player, int x, int z) {
@@ -132,13 +133,13 @@ public class CraftEventFactory {
      * Player Interact event
      */
 
-    public static PlayerInteractEvent callPlayerInteractEvent(EntityHuman who, Action action, ItemStack itemstack) {
+    public static PlayerInteractEvent callPlayerInteractEvent(EntityHuman who, Action action, @Nullable ItemStack itemstack) {
         if (action != Action.LEFT_CLICK_AIR && action != Action.RIGHT_CLICK_AIR) {
             throw new IllegalArgumentException();
         }
         return callPlayerInteractEvent(who, action, 0, 255, 0, 0, itemstack);
     }
-    public static PlayerInteractEvent callPlayerInteractEvent(EntityHuman who, Action action, int clickedX, int clickedY, int clickedZ, int clickedFace, ItemStack itemstack) {
+    public static PlayerInteractEvent callPlayerInteractEvent(EntityHuman who, Action action, int clickedX, int clickedY, int clickedZ, int clickedFace, @Nullable ItemStack itemstack) {
         Player player = (who == null) ? null : (Player) who.getBukkitEntity();
         CraftItemStack itemInHand = new CraftItemStack(itemstack);
 

@@ -13,6 +13,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.util.BlockVector;
+import org.jspecify.annotations.Nullable;
 
 public class CraftBlock implements Block {
     private final CraftChunk chunk;
@@ -99,7 +100,7 @@ public class CraftBlock implements Block {
         }
     }
 
-    public Material getType() {
+    public @Nullable Material getType() {
         return Material.getMaterial(getTypeId());
     }
 
@@ -131,7 +132,7 @@ public class CraftBlock implements Block {
         return getRelative(face.getModX() * distance, face.getModY() * distance, face.getModZ() * distance);
     }
 
-    public BlockFace getFace(final Block block) {
+    public @Nullable BlockFace getFace(final Block block) {
         BlockFace[] values = BlockFace.values();
 
         for (BlockFace face : values) {
@@ -309,7 +310,7 @@ public class CraftBlock implements Block {
         return (getType() == Material.WATER) || (getType() == Material.STATIONARY_WATER) || (getType() == Material.LAVA) || (getType() == Material.STATIONARY_LAVA);
     }
 
-    public PistonMoveReaction getPistonMoveReaction() {
+    public @Nullable PistonMoveReaction getPistonMoveReaction() {
         return PistonMoveReaction.getById(net.minecraft.server.Block.byId[this.getTypeId()].material.j());
 
     }

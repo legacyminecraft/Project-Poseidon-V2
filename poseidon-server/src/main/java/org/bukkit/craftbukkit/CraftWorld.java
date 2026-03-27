@@ -92,6 +92,7 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,12 +104,12 @@ public class CraftWorld implements World {
     private Environment environment;
     private final CraftServer server = (CraftServer)Bukkit.getServer();
     //private ConcurrentMap<Integer, CraftChunk> unloadedChunks = new MapMaker().weakValues().makeMap(); // Poseidon
-    private final ChunkGenerator generator;
+    private final @Nullable ChunkGenerator generator;
     private final List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
 
     private static final Random rand = new Random();
 
-    public CraftWorld(WorldServer world, ChunkGenerator gen, Environment env) {
+    public CraftWorld(WorldServer world, @Nullable ChunkGenerator gen, Environment env) {
         this.world = world;
         this.generator = gen;
 
@@ -312,7 +313,7 @@ public class CraftWorld implements World {
     }
 
     @SuppressWarnings("unchecked")
-    private void chunkLoadPostProcess(net.minecraft.server.Chunk chunk, int x, int z) {
+    private void chunkLoadPostProcess(net.minecraft.server.@Nullable Chunk chunk, int x, int z) {
         if (chunk != null) {
             world.chunkProviderServer.chunks.put(x, z, chunk);
             world.chunkProviderServer.chunkList.add(chunk);
@@ -384,7 +385,7 @@ public class CraftWorld implements World {
         return (Arrow) arrow.getBukkitEntity();
     }
 
-    public LivingEntity spawnCreature(Location loc, CreatureType creatureType) {
+    public @Nullable LivingEntity spawnCreature(Location loc, CreatureType creatureType) {
         LivingEntity creature;
         try {
             EntityLiving entityCreature = (EntityLiving) EntityTypes.a(creatureType.getName(), world);
@@ -430,7 +431,7 @@ public class CraftWorld implements World {
         }
     }
 
-    public TileEntity getTileEntityAt(final int x, final int y, final int z) {
+    public @Nullable TileEntity getTileEntityAt(final int x, final int y, final int z) {
         return world.getTileEntity(x, y, z);
     }
 
@@ -521,7 +522,7 @@ public class CraftWorld implements World {
         return getChunkAt(location.getBlockX() >> 4, location.getBlockZ() >> 4);
     }
 
-    public ChunkGenerator getGenerator() {
+    public @Nullable ChunkGenerator getGenerator() {
         return generator;
     }
 

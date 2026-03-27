@@ -3,6 +3,7 @@ package org.bukkit.event.player;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player throws an egg and it might hatch
@@ -55,7 +56,7 @@ public class PlayerEggThrowEvent extends PlayerEvent {
      *
      * @return The type of the mob being hatched by the egg
      */
-    public CreatureType getHatchType() {
+    public @Nullable CreatureType getHatchType() {
         return CreatureType.fromName(hatchType.getName());
     }
 

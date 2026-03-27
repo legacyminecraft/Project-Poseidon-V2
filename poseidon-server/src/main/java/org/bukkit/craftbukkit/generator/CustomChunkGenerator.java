@@ -7,6 +7,7 @@ import net.minecraft.server.World;
 import net.minecraft.server.WorldServer;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -42,7 +43,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         // Nothing!
     }
 
-    public boolean saveChunks(boolean bln, IProgressUpdate ipu) {
+    public boolean saveChunks(boolean bln, @Nullable IProgressUpdate ipu) {
         return true;
     }
 

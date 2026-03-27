@@ -2,6 +2,7 @@ package org.bukkit.material;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Handles specific metadata for certain items or blocks
@@ -50,7 +51,7 @@ public class MaterialData {
      *
      * @return Material represented by this MaterialData
      */
-    public Material getItemType() {
+    public @Nullable Material getItemType() {
         return Material.getMaterial(type);
     }
 

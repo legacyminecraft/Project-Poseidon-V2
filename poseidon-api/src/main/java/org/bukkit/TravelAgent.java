@@ -1,5 +1,7 @@
 package org.bukkit;
 
+import org.jspecify.annotations.Nullable;
+
 public interface TravelAgent {
 
     /**
@@ -59,7 +61,7 @@ public interface TravelAgent {
      *
      * @return Returns the location of the nearest portal to the location.
      */
-    Location findPortal(Location location);
+    @Nullable Location findPortal(Location location);
 
     /**
      * Attempt to create a portal near the given location.
