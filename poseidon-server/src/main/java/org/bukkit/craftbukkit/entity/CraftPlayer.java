@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet131;
 import net.minecraft.server.Packet200Statistic;
@@ -58,8 +57,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public boolean isOnline() {
-        for (Object obj: server.getHandle().players) {
-            EntityPlayer player = (EntityPlayer) obj;
+        for (EntityPlayer player : server.getHandle().players) {
             if (player.name.equalsIgnoreCase(getName())) {
                 return true;
             }
@@ -98,7 +96,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void setHandle(final EntityPlayer entity) {
-        super.setHandle((EntityHuman) entity);
+        super.setHandle(entity);
         this.entity = entity;
     }
 
@@ -132,10 +130,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             return false;
         }
         final CraftPlayer other = (CraftPlayer) obj;
-        if ((this.getName() == null) ? (other.getName() != null) : !this.getName().equals(other.getName())) {
-            return false;
-        }
-        return true;
+        return (this.getName() == null) ? (other.getName() == null) : this.getName().equals(other.getName());
     }
 
     @Override
@@ -241,10 +236,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         // To = Players new Location if Teleport is Successful
         Location to = location;
         // Create & Call the Teleport Event.
-        PlayerTeleportEvent event = new PlayerTeleportEvent((Player) this, from, to);
+        PlayerTeleportEvent event = new PlayerTeleportEvent(this, from, to);
         server.getPluginManager().callEvent(event);
         // Return False to inform the Plugin that the Teleport was unsuccessful/cancelled.
-        if (event.isCancelled() == true) {
+        if (event.isCancelled()) {
             return false;
         }
         // Update the From Location

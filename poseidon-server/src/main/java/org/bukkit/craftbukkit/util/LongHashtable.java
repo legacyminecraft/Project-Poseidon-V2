@@ -14,8 +14,7 @@ public class LongHashtable<V> extends LongHash {
 
     public void put(int msw, int lsw, V value) {
         put(toLong(msw, lsw), value);
-        if (value instanceof Chunk) {
-            Chunk c = (Chunk) value;
+        if (value instanceof Chunk c) {
             if (msw != c.x || lsw != c.z) {
                 MinecraftServer.log.info("Chunk (" + c.x + ", " + c.z + ") stored at  (" + msw + ", " + lsw + ")");
                 Throwable x = new Throwable();
@@ -27,8 +26,7 @@ public class LongHashtable<V> extends LongHash {
 
     public @Nullable V get(int msw, int lsw) {
         V value = get(toLong(msw, lsw));
-        if (value instanceof Chunk) {
-            Chunk c = (Chunk) value;
+        if (value instanceof Chunk c) {
             if (msw != c.x || lsw != c.z) {
                 MinecraftServer.log.info("Chunk (" + c.x + ", " + c.z + ") stored at  (" + msw + ", " + lsw + ")");
                 Throwable x = new Throwable();
@@ -114,7 +112,7 @@ public class LongHashtable<V> extends LongHash {
     }
 
     public synchronized ArrayList<V> values() {
-        ArrayList<V> ret = new ArrayList<V>();
+        ArrayList<V> ret = new ArrayList<>();
 
         for (@Nullable Object[][] outer: this.values) {
             if (outer == null) continue;

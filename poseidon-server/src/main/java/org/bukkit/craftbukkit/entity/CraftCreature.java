@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
 import net.minecraft.server.EntityCreature;
-import net.minecraft.server.EntityLiving;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
@@ -17,8 +16,7 @@ public class CraftCreature extends CraftLivingEntity implements Creature {
         if (target == null) {
             entity.target = null;
         } else if (target instanceof CraftLivingEntity) {
-            EntityLiving victim = ((CraftLivingEntity) target).getHandle();
-            entity.target = victim;
+            entity.target = ((CraftLivingEntity) target).getHandle();
             entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F);
         }
     }

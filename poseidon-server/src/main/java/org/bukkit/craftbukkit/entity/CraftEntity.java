@@ -36,7 +36,6 @@ import net.minecraft.server.EntityWeather;
 import net.minecraft.server.EntityWeatherStorm;
 import net.minecraft.server.EntityWolf;
 import net.minecraft.server.EntityZombie;
-import net.minecraft.server.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -47,6 +46,7 @@ import org.bukkit.util.Vector;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class CraftEntity implements org.bukkit.entity.Entity {
@@ -122,8 +122,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
                 return new CraftWeather(server, (EntityWeather)entity);
             }
         }
-        else if (entity instanceof EntityMinecart) {
-            EntityMinecart mc = (EntityMinecart) entity;
+        else if (entity instanceof EntityMinecart mc) {
             if (mc.type == CraftMinecart.Type.StorageMinecart.getId()) {
                 return new CraftStorageMinecart(server, mc);
             } else if (mc.type == CraftMinecart.Type.PoweredMinecart.getId()) {
@@ -154,7 +153,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     }
 
     public World getWorld() {
-        return ((WorldServer) entity.world).getWorld();
+        return entity.world.getWorld();
     }
 
     public boolean teleport(Location location) {
@@ -169,9 +168,8 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     }
 
     public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
-        @SuppressWarnings("unchecked")
         List<Entity> notchEntityList = entity.world.b(entity, entity.boundingBox.b(x, y, z));
-        List<org.bukkit.entity.Entity> bukkitEntityList = new java.util.ArrayList<org.bukkit.entity.Entity>(notchEntityList.size());
+        List<org.bukkit.entity.Entity> bukkitEntityList = new java.util.ArrayList<>(notchEntityList.size());
 
         for (Entity e: notchEntityList) {
             bukkitEntityList.add(e.getBukkitEntity());
@@ -220,13 +218,10 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             return false;
         }
         final CraftEntity other = (CraftEntity) obj;
-        if (this.server != other.server && (this.server == null || !this.server.equals(other.server))) {
+        if (!Objects.equals(this.server, other.server)) {
             return false;
         }
-        if (this.entity != other.entity && (this.entity == null || !this.entity.equals(other.entity))) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.entity, other.entity);
     }
 
     @Override

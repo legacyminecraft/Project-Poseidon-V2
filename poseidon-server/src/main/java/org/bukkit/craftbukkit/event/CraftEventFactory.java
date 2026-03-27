@@ -60,7 +60,7 @@ public class CraftEventFactory {
 
         ChunkCoordinates chunkcoordinates = worldServer.getSpawn();
 
-        int distanceFromSpawn = (int) Math.max(Math.abs(x - chunkcoordinates.x), Math.abs(z - chunkcoordinates.z));
+        int distanceFromSpawn = Math.max(Math.abs(x - chunkcoordinates.x), Math.abs(z - chunkcoordinates.z));
         return distanceFromSpawn > spawnSize;
     }
 
@@ -76,8 +76,8 @@ public class CraftEventFactory {
     }
 
     public static BlockPlaceEvent callBlockPlaceEvent(World world, EntityHuman who, BlockState replacedBlockState, int clickedX, int clickedY, int clickedZ, ItemStack itemstack) {
-        CraftWorld craftWorld = ((WorldServer) world).getWorld();
-        CraftServer craftServer = ((WorldServer) world).getServer();
+        CraftWorld craftWorld = world.getWorld();
+        CraftServer craftServer = world.getServer();
 
         Player player = (who == null) ? null : (Player) who.getBukkitEntity();
         CraftItemStack itemInHand = new CraftItemStack(itemstack);

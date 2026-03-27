@@ -17,9 +17,9 @@ import java.util.Map;
 
 public final class CraftMapView implements MapView {
     
-    private final Map<@Nullable CraftPlayer, RenderData> renderCache = new HashMap<CraftPlayer, RenderData>();
-    private final List<MapRenderer> renderers = new ArrayList<MapRenderer>();
-    private final Map<MapRenderer, Map<@Nullable CraftPlayer, CraftMapCanvas>> canvases = new HashMap<MapRenderer, Map<CraftPlayer, CraftMapCanvas>>();
+    private final Map<@Nullable CraftPlayer, RenderData> renderCache = new HashMap<>();
+    private final List<MapRenderer> renderers = new ArrayList<>();
+    private final Map<MapRenderer, Map<@Nullable CraftPlayer, CraftMapCanvas>> canvases = new HashMap<>();
     protected final WorldMap worldMap;
     
     public CraftMapView(WorldMap worldMap) {
@@ -42,7 +42,7 @@ public final class CraftMapView implements MapView {
     }
 
     public boolean isVirtual() {
-        return renderers.size() > 0 && !(renderers.get(0) instanceof CraftMapRenderer);
+        return !renderers.isEmpty() && !(renderers.get(0) instanceof CraftMapRenderer);
     }
 
     public @Nullable Scale getScale() {
@@ -84,13 +84,13 @@ public final class CraftMapView implements MapView {
     }
 
     public List<MapRenderer> getRenderers() {
-        return new ArrayList<MapRenderer>(renderers);
+        return new ArrayList<>(renderers);
     }
 
     public void addRenderer(MapRenderer renderer) {
         if (!renderers.contains(renderer)) {
             renderers.add(renderer);
-            canvases.put(renderer, new HashMap<CraftPlayer, CraftMapCanvas>());
+            canvases.put(renderer, new HashMap<>());
             renderer.initialize(this);
         }
     }

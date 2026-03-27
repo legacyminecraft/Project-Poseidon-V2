@@ -26,10 +26,10 @@ public class CraftScheduler implements BukkitScheduler, Runnable {
 
     private final CraftThreadManager craftThreadManager = new CraftThreadManager();
 
-    private final LinkedList<CraftTask> mainThreadQueue = new LinkedList<CraftTask>();
-    private final LinkedList<CraftTask> syncedTasks = new LinkedList<CraftTask>();
+    private final LinkedList<CraftTask> mainThreadQueue = new LinkedList<>();
+    private final LinkedList<CraftTask> syncedTasks = new LinkedList<>();
 
-    private final TreeMap<CraftTask, Boolean> schedulerQueue = new TreeMap<CraftTask, Boolean>();
+    private final TreeMap<CraftTask, Boolean> schedulerQueue = new TreeMap<>();
 
     private final Object currentTickSync = new Object();
     private Long currentTick = 0L;
@@ -240,7 +240,7 @@ public class CraftScheduler implements BukkitScheduler, Runnable {
     }
 
     public <T> Future<T> callSyncMethod(Plugin plugin, Callable<T> task) {
-        CraftFuture<T> craftFuture = new CraftFuture<T>(this, task);
+        CraftFuture<T> craftFuture = new CraftFuture<>(this, task);
         synchronized (craftFuture) {
             int taskId = scheduleSyncDelayedTask(plugin, craftFuture);
             craftFuture.setTaskId(taskId);
@@ -353,11 +353,11 @@ public class CraftScheduler implements BukkitScheduler, Runnable {
 
     public List<BukkitWorker> getActiveWorkers() {
         synchronized (craftThreadManager.workers) {
-            List<BukkitWorker> workerList = new ArrayList<BukkitWorker>(craftThreadManager.workers.size());
+            List<BukkitWorker> workerList = new ArrayList<>(craftThreadManager.workers.size());
             Iterator<CraftWorker> itr = craftThreadManager.workers.iterator();
 
             while (itr.hasNext()) {
-                workerList.add((BukkitWorker) itr.next());
+                workerList.add(itr.next());
             }
             return workerList;
         }
@@ -370,7 +370,7 @@ public class CraftScheduler implements BukkitScheduler, Runnable {
             synchronized (schedulerQueue) {
                 mainThreadLock.lock();
                 try {
-                    taskList = new ArrayList<CraftTask>(mainThreadQueue.size() + syncedTasks.size() + schedulerQueue.size());
+                    taskList = new ArrayList<>(mainThreadQueue.size() + syncedTasks.size() + schedulerQueue.size());
                     taskList.addAll(mainThreadQueue);
                     taskList.addAll(syncedTasks);
                     taskList.addAll(schedulerQueue.keySet());
@@ -381,10 +381,10 @@ public class CraftScheduler implements BukkitScheduler, Runnable {
         } finally {
             syncedTasksLock.unlock();
         }
-        List<BukkitTask> newTaskList = new ArrayList<BukkitTask>(taskList.size());
+        List<BukkitTask> newTaskList = new ArrayList<>(taskList.size());
 
         for (CraftTask craftTask : taskList) {
-            newTaskList.add((BukkitTask) craftTask);
+            newTaskList.add(craftTask);
         }
         return newTaskList;
     }

@@ -43,7 +43,7 @@ public class CraftInventoryPlayer extends CraftInventory implements PlayerInvent
     }
 
     public ItemStack getBoots() {
-        return getItem(getSize() + 0);
+        return getItem(getSize());
     }
 
     public void setHelmet(@Nullable ItemStack helmet) {
@@ -59,7 +59,7 @@ public class CraftInventoryPlayer extends CraftInventory implements PlayerInvent
     }
 
     public void setBoots(@Nullable ItemStack boots) {
-        setItem(getSize() + 0, boots);
+        setItem(getSize(), boots);
     }
 
     public @Nullable CraftItemStack[] getArmorContents() {

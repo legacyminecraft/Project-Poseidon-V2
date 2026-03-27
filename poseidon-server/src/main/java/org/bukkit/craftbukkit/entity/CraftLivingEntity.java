@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.server.Entity;
 import net.minecraft.server.EntityArrow;
 import net.minecraft.server.EntityEgg;
 import net.minecraft.server.EntityLiving;
@@ -38,7 +37,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         }
 
         if (entity instanceof EntityPlayer && health == 0) {
-            ((EntityPlayer) entity).die((Entity) null);
+            ((EntityPlayer) entity).die(null);
         }
 
         getHandle().health = health;
@@ -50,7 +49,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public void setHandle(final EntityLiving entity) {
-        super.setHandle((Entity) entity);
+        super.setHandle(entity);
         this.entity = entity;
     }
 
@@ -87,7 +86,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (maxDistance > 120) {
             maxDistance = 120;
         }
-        ArrayList<Block> blocks = new ArrayList<Block>();
+        ArrayList<Block> blocks = new ArrayList<>();
         Iterator<Block> itr = new BlockIterator(this, maxDistance);
         while (itr.hasNext()) {
             Block block = itr.next();
@@ -173,7 +172,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public void damage(int amount) {
-        entity.damageEntity((Entity) null, amount);
+        entity.damageEntity(null, amount);
     }
 
     public void damage(int amount, org.bukkit.entity.Entity source) {

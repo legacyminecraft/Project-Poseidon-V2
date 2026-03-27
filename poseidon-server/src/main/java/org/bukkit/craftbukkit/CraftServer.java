@@ -9,8 +9,6 @@ import net.minecraft.server.ConvertProgressUpdater;
 import net.minecraft.server.Convertable;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.EntityTracker;
-import net.minecraft.server.IProgressUpdate;
-import net.minecraft.server.IWorldAccess;
 import net.minecraft.server.Item;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -93,7 +91,7 @@ public final class CraftServer implements Server {
     private final PluginManager pluginManager = new SimplePluginManager(this, commandMap);
     protected final MinecraftServer console;
     protected final ServerConfigurationManager server;
-    private final Map<String, World> worlds = new LinkedHashMap<String, World>();
+    private final Map<String, World> worlds = new LinkedHashMap<>();
     private final Configuration configuration;
     private final Yaml yaml = new Yaml(new SafeConstructor());
 
@@ -126,7 +124,7 @@ public final class CraftServer implements Server {
         configuration.getString("settings.permissions-file", "permissions.yml");
 
         if (configuration.getNode("aliases") == null) {
-            List<String> icanhasbukkit = new ArrayList<String>();
+            List<String> icanhasbukkit = new ArrayList<>();
             icanhasbukkit.add("version");
             configuration.setProperty("aliases.icanhasbukkit", icanhasbukkit);
         }
@@ -198,7 +196,6 @@ public final class CraftServer implements Server {
         return serverVersion + " (MC: " + protocolVersion + ")";
     }
 
-    @SuppressWarnings("unchecked")
     public Player[] getOnlinePlayers() {
         List<EntityPlayer> online = server.players;
         Player[] players = new Player[online.size()];
@@ -250,7 +247,7 @@ public final class CraftServer implements Server {
     }
 
     public List<Player> matchPlayer(String partialName) {
-        List<Player> matchedPlayers = new ArrayList<Player>();
+        List<Player> matchedPlayers = new ArrayList<>();
 
         for (Player iterPlayer : this.getOnlinePlayers()) {
             String iterPlayerName = iterPlayer.getName();
@@ -261,7 +258,7 @@ public final class CraftServer implements Server {
                 matchedPlayers.add(iterPlayer);
                 break;
             }
-            if (iterPlayerName.toLowerCase().indexOf(partialName.toLowerCase()) != -1) {
+            if (iterPlayerName.toLowerCase().contains(partialName.toLowerCase())) {
                 // Partial match
                 matchedPlayers.add(iterPlayer);
             }
@@ -336,7 +333,7 @@ public final class CraftServer implements Server {
     }
 
     public List<World> getWorlds() {
-        return new ArrayList<World>(worlds.values());
+        return new ArrayList<>(worlds.values());
     }
 
     public ServerConfigurationManager getHandle() {
@@ -384,7 +381,7 @@ public final class CraftServer implements Server {
         int pollCount = 0;
 
         // Wait for at most 2.5 seconds for plugins to close their threads
-        while (pollCount < 50 && getScheduler().getActiveWorkers().size() > 0) {
+        while (pollCount < 50 && !getScheduler().getActiveWorkers().isEmpty()) {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {}
@@ -395,7 +392,7 @@ public final class CraftServer implements Server {
         for (BukkitWorker worker : overdueWorkers) {
             Plugin plugin = worker.getOwner();
             String author = "<NoAuthorGiven>";
-            if (plugin.getDescription().getAuthors().size() > 0) {
+            if (!plugin.getDescription().getAuthors().isEmpty()) {
                 author = plugin.getDescription().getAuthors().get(0);
             }
             getLogger().log(Level.SEVERE, String.format(
@@ -429,7 +426,7 @@ public final class CraftServer implements Server {
         try {
             perms = (Map<String, Map<String, Object>>)yaml.load(stream);
         } catch (MarkedYAMLException ex) {
-            getLogger().log(Level.WARNING, "Server permissions file " + file + " is not valid YAML: " + ex.toString());
+            getLogger().log(Level.WARNING, "Server permissions file " + file + " is not valid YAML: " + ex);
             return;
         } catch (Throwable ex) {
             getLogger().log(Level.WARNING, "Server permissions file " + file + " is not valid YAML.", ex);
@@ -505,7 +502,7 @@ public final class CraftServer implements Server {
         internal.worldMaps = console.worlds.get(0).worldMaps;
 
         internal.tracker = new EntityTracker(console, dimension);
-        internal.addIWorldAccess((IWorldAccess) new WorldManager(console, internal));
+        internal.addIWorldAccess(new WorldManager(console, internal));
         internal.spawnMonsters = 1;
         internal.setSpawnFlags(true, true);
         console.worlds.add(internal);
@@ -568,7 +565,7 @@ public final class CraftServer implements Server {
             return false;
         }
 
-        if (handle.players.size() > 0) {
+        if (!handle.players.isEmpty()) {
             return false;
         }
 
@@ -579,7 +576,7 @@ public final class CraftServer implements Server {
         }
 
         if (save) {
-            handle.save(true, (IProgressUpdate) null);
+            handle.save(true, null);
             handle.saveLevel();
             WorldSaveEvent event = new WorldSaveEvent(handle.getWorld());
             getPluginManager().callEvent(event);
@@ -657,17 +654,16 @@ public final class CraftServer implements Server {
 
     public boolean addRecipe(Recipe recipe) {
         CraftRecipe toAdd;
-        if (recipe instanceof CraftRecipe) {
-            toAdd = (CraftRecipe) recipe;
+        if (recipe instanceof CraftRecipe craftRecipe) {
+            toAdd = craftRecipe;
         } else {
-            if (recipe instanceof ShapedRecipe) {
-                toAdd = CraftShapedRecipe.fromBukkitRecipe((ShapedRecipe) recipe);
-            } else if (recipe instanceof ShapelessRecipe) {
-                toAdd = CraftShapelessRecipe.fromBukkitRecipe((ShapelessRecipe) recipe);
-            } else if (recipe instanceof FurnaceRecipe) {
-                toAdd = CraftFurnaceRecipe.fromBukkitRecipe((FurnaceRecipe) recipe);
-            } else {
-                return false;
+            switch (recipe) {
+                case ShapedRecipe shapedRecipe -> toAdd = CraftShapedRecipe.fromBukkitRecipe(shapedRecipe);
+                case ShapelessRecipe shapelessRecipe -> toAdd = CraftShapelessRecipe.fromBukkitRecipe(shapelessRecipe);
+                case FurnaceRecipe furnaceRecipe -> toAdd = CraftFurnaceRecipe.fromBukkitRecipe(furnaceRecipe);
+                default -> {
+                    return false;
+                }
             }
         }
         toAdd.addToCraftingManager();
@@ -676,11 +672,11 @@ public final class CraftServer implements Server {
 
     public Map<String, String[]> getCommandAliases() {
         ConfigurationNode node = configuration.getNode("aliases");
-        Map<String, String[]> result = new LinkedHashMap<String, String[]>();
+        Map<String, String[]> result = new LinkedHashMap<>();
 
         if (node != null) {
             for (String key : node.getKeys()) {
-                List<String> commands = new ArrayList<String>();
+                List<String> commands = new ArrayList<>();
 
                 if (node.getProperty(key) instanceof List) {
                     commands = node.getStringList(key, null);
@@ -765,8 +761,7 @@ public final class CraftServer implements Server {
         Set<Permissible> permissibles = getPluginManager().getPermissionSubscriptions(permission);
 
         for (Permissible permissible : permissibles) {
-            if (permissible instanceof CommandSender) {
-                CommandSender user = (CommandSender)permissible;
+            if (permissible instanceof CommandSender user) {
                 user.sendMessage(message);
                 count++;
             }
@@ -786,7 +781,7 @@ public final class CraftServer implements Server {
     }
 
     public Set<String> getIPBans() {
-        return new HashSet(server.banByIP);
+        return new HashSet<>(server.banByIP);
     }
 
     public void banIP(String address) {
@@ -798,10 +793,10 @@ public final class CraftServer implements Server {
     }
 
     public Set<OfflinePlayer> getBannedPlayers() {
-        Set<OfflinePlayer> result = new HashSet<OfflinePlayer>();
+        Set<OfflinePlayer> result = new HashSet<>();
 
-        for (Object name : server.banByName) {
-            result.add(getOfflinePlayer((String)name));
+        for (String name : server.banByName) {
+            result.add(getOfflinePlayer(name));
         }
 
         return result;
@@ -814,10 +809,10 @@ public final class CraftServer implements Server {
     }
 
     public Set<OfflinePlayer> getWhitelistedPlayers() {
-        Set<OfflinePlayer> result = new HashSet<OfflinePlayer>();
+        Set<OfflinePlayer> result = new HashSet<>();
 
-        for (Object name : server.e()) {
-            result.add(getOfflinePlayer((String)name));
+        for (String name : server.e()) {
+            result.add(getOfflinePlayer(name));
         }
 
         return result;

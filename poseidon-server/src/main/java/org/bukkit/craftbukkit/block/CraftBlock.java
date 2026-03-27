@@ -159,65 +159,41 @@ public class CraftBlock implements Block {
      * @return BlockFace the BlockFace represented by this number
      */
     public static BlockFace notchToBlockFace(int notch) {
-        switch (notch) {
-        case 0:
-            return BlockFace.DOWN;
-        case 1:
-            return BlockFace.UP;
-        case 2:
-            return BlockFace.EAST;
-        case 3:
-            return BlockFace.WEST;
-        case 4:
-            return BlockFace.NORTH;
-        case 5:
-            return BlockFace.SOUTH;
-        default:
-            return BlockFace.SELF;
-        }
+        return switch (notch) {
+            case 0 -> BlockFace.DOWN;
+            case 1 -> BlockFace.UP;
+            case 2 -> BlockFace.EAST;
+            case 3 -> BlockFace.WEST;
+            case 4 -> BlockFace.NORTH;
+            case 5 -> BlockFace.SOUTH;
+            default -> BlockFace.SELF;
+        };
     }
 
     public static int blockFaceToNotch(BlockFace face) {
-        switch(face) {
-            case DOWN:
-                return 0;
-            case UP:
-                return 1;
-            case EAST:
-                return 2;
-            case WEST:
-                return 3;
-            case NORTH:
-                return 4;
-            case SOUTH:
-                return 5;
-            default:
-                return 7; // Good as anything here, but technically invalid
-        }
+        return switch (face) {
+            case DOWN -> 0;
+            case UP -> 1;
+            case EAST -> 2;
+            case WEST -> 3;
+            case NORTH -> 4;
+            case SOUTH -> 5;
+            default -> 7; // Good as anything here, but technically invalid
+        };
     }
 
     public BlockState getState() {
         Material material = getType();
 
-        switch (material) {
-            case SIGN:
-            case SIGN_POST:
-            case WALL_SIGN:
-                return new CraftSign(this);
-            case CHEST:
-                return new CraftChest(this);
-            case BURNING_FURNACE:
-            case FURNACE:
-                return new CraftFurnace(this);
-            case DISPENSER:
-                return new CraftDispenser(this);
-            case MOB_SPAWNER:
-                return new CraftCreatureSpawner(this);
-            case NOTE_BLOCK:
-                return new CraftNoteBlock(this);
-            default:
-                return new CraftBlockState(this);
-        }
+        return switch (material) {
+            case SIGN, SIGN_POST, WALL_SIGN -> new CraftSign(this);
+            case CHEST -> new CraftChest(this);
+            case BURNING_FURNACE, FURNACE -> new CraftFurnace(this);
+            case DISPENSER -> new CraftDispenser(this);
+            case MOB_SPAWNER -> new CraftCreatureSpawner(this);
+            case NOTE_BLOCK -> new CraftNoteBlock(this);
+            default -> new CraftBlockState(this);
+        };
     }
 
     public Biome getBiome() {

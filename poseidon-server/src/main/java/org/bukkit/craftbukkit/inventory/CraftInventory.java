@@ -115,7 +115,7 @@ public class CraftInventory implements org.bukkit.inventory.Inventory {
     }
 
     public HashMap<Integer, ItemStack> all(int materialId) {
-        HashMap<Integer, ItemStack> slots = new HashMap<Integer, ItemStack>();
+        HashMap<Integer, ItemStack> slots = new HashMap<>();
 
         @Nullable ItemStack[] inventory = getContents();
         for (int i = 0; i < inventory.length; i++) {
@@ -132,7 +132,7 @@ public class CraftInventory implements org.bukkit.inventory.Inventory {
     }
 
     public HashMap<Integer, @Nullable ItemStack> all(@Nullable ItemStack item) {
-        HashMap<Integer, @Nullable ItemStack> slots = new HashMap<Integer, ItemStack>();
+        HashMap<Integer, @Nullable ItemStack> slots = new HashMap<>();
         if (item != null) {
             @Nullable ItemStack[] inventory = getContents();
             for (int i = 0; i < inventory.length; i++) {
@@ -212,7 +212,7 @@ public class CraftInventory implements org.bukkit.inventory.Inventory {
     }
 
     public HashMap<Integer, ItemStack> addItem(ItemStack... items) {
-        HashMap<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
+        HashMap<Integer, ItemStack> leftover = new HashMap<>();
 
         /* TODO: some optimization
          *  - Create a 'firstPartial' with a 'fromIndex'
@@ -270,7 +270,7 @@ public class CraftInventory implements org.bukkit.inventory.Inventory {
     }
 
     public HashMap<Integer, ItemStack> removeItem(ItemStack... items) {
-        HashMap<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
+        HashMap<Integer, ItemStack> leftover = new HashMap<>();
 
         // TODO: optimization
 

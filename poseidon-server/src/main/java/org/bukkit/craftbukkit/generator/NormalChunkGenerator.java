@@ -28,7 +28,7 @@ public class NormalChunkGenerator extends InternalChunkGenerator {
     }
 
     public List<BlockPopulator> getDefaultPopulators(org.bukkit.World world) {
-        return new ArrayList<BlockPopulator>();
+        return new ArrayList<>();
     }
 
     public boolean isChunkLoaded(int i, int i1) {

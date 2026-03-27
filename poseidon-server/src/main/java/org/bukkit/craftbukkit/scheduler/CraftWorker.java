@@ -79,11 +79,10 @@ public class CraftWorker implements Runnable, BukkitWorker {
             return false;
         }
 
-        if (!(other instanceof CraftWorker)) {
+        if (!(other instanceof CraftWorker otherCraftWorker)) {
             return false;
         }
 
-        CraftWorker otherCraftWorker = (CraftWorker) other;
         return otherCraftWorker.hashCode() == hashId;
     }
 

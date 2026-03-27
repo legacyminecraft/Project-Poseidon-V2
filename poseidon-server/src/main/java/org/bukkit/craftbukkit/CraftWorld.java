@@ -105,7 +105,7 @@ public class CraftWorld implements World {
     private final CraftServer server = (CraftServer)Bukkit.getServer();
     //private ConcurrentMap<Integer, CraftChunk> unloadedChunks = new MapMaker().weakValues().makeMap(); // Poseidon
     private final @Nullable ChunkGenerator generator;
-    private final List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
+    private final List<BlockPopulator> populators = new ArrayList<>();
 
     private static final Random rand = new Random();
 
@@ -302,7 +302,7 @@ public class CraftWorld implements World {
         }
 
         world.chunkProviderServer.unloadQueue.remove(x, z);
-        net.minecraft.server.Chunk chunk = (net.minecraft.server.Chunk) world.chunkProviderServer.chunks.get(x, z);
+        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(x, z);
 
         if (chunk == null) {
             chunk = world.chunkProviderServer.loadChunk(x, z);
@@ -312,7 +312,6 @@ public class CraftWorld implements World {
         return chunk != null;
     }
 
-    @SuppressWarnings("unchecked")
     private void chunkLoadPostProcess(net.minecraft.server.@Nullable Chunk chunk, int x, int z) {
         if (chunk != null) {
             world.chunkProviderServer.chunks.put(x, z, chunk);
@@ -416,19 +415,13 @@ public class CraftWorld implements World {
     }
 
     public boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate) {
-        switch (type) {
-            case BIG_TREE:
-                return new WorldGenBigTree().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-            case BIRCH:
-                return new WorldGenForest().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-            case REDWOOD:
-                return new WorldGenTaiga2().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-            case TALL_REDWOOD:
-                return new WorldGenTaiga1().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-            case TREE:
-            default:
-                return new WorldGenTrees().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-        }
+        return switch (type) {
+            case BIG_TREE -> new WorldGenBigTree().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            case BIRCH -> new WorldGenForest().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            case REDWOOD -> new WorldGenTaiga2().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            case TALL_REDWOOD -> new WorldGenTaiga1().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            default -> new WorldGenTrees().generate(delegate, rand, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        };
     }
 
     public @Nullable TileEntity getTileEntityAt(final int x, final int y, final int z) {
@@ -484,7 +477,7 @@ public class CraftWorld implements World {
     }
 
     public boolean createExplosion(double x, double y, double z, float power, boolean setFire) {
-        return world.createExplosion(null, x, y, z, power, setFire).wasCanceled ? false : true;
+        return !world.createExplosion(null, x, y, z, power, setFire).wasCanceled;
     }
 
     public boolean createExplosion(Location loc, float power) {
@@ -581,17 +574,14 @@ public class CraftWorld implements World {
     }
 
     public List<Entity> getEntities() {
-        List<Entity> list = new ArrayList<Entity>();
+        List<Entity> list = new ArrayList<>();
 
-        for (Object o: world.entityList) {
-            if (o instanceof net.minecraft.server.Entity) {
-                net.minecraft.server.Entity mcEnt = (net.minecraft.server.Entity) o;
-                Entity bukkitEntity = mcEnt.getBukkitEntity();
+        for (net.minecraft.server.Entity mcEnt : world.entityList) {
+            Entity bukkitEntity = mcEnt.getBukkitEntity();
 
-                // Assuming that bukkitEntity isn't null
-                if (bukkitEntity != null) {
-                    list.add(bukkitEntity);
-                }
+            // Assuming that bukkitEntity isn't null
+            if (bukkitEntity != null) {
+                list.add(bukkitEntity);
             }
         }
 
@@ -599,17 +589,14 @@ public class CraftWorld implements World {
     }
 
     public List<LivingEntity> getLivingEntities() {
-        List<LivingEntity> list = new ArrayList<LivingEntity>();
+        List<LivingEntity> list = new ArrayList<>();
 
-        for (Object o: world.entityList) {
-            if (o instanceof net.minecraft.server.Entity) {
-                net.minecraft.server.Entity mcEnt = (net.minecraft.server.Entity) o;
-                Entity bukkitEntity = mcEnt.getBukkitEntity();
+        for (net.minecraft.server.Entity mcEnt : world.entityList) {
+            Entity bukkitEntity = mcEnt.getBukkitEntity();
 
-                // Assuming that bukkitEntity isn't null
-                if (bukkitEntity != null && bukkitEntity instanceof LivingEntity) {
-                    list.add((LivingEntity) bukkitEntity);
-                }
+            // Assuming that bukkitEntity isn't null
+            if (bukkitEntity instanceof LivingEntity livingEntity) {
+                list.add(livingEntity);
             }
         }
 
@@ -617,16 +604,13 @@ public class CraftWorld implements World {
     }
 
     public List<Player> getPlayers() {
-        List<Player> list = new ArrayList<Player>();
+        List<Player> list = new ArrayList<>();
 
-        for (Object o : world.entityList) {
-            if (o instanceof net.minecraft.server.Entity) {
-                net.minecraft.server.Entity mcEnt = (net.minecraft.server.Entity) o;
-                Entity bukkitEntity = mcEnt.getBukkitEntity();
+        for (net.minecraft.server.Entity mcEnt : world.entityList) {
+            Entity bukkitEntity = mcEnt.getBukkitEntity();
 
-                if ((bukkitEntity != null) && (bukkitEntity instanceof Player)) {
-                    list.add((Player) bukkitEntity);
-                }
+            if (bukkitEntity instanceof Player) {
+                list.add((Player) bukkitEntity);
             }
         }
 
@@ -657,7 +641,7 @@ public class CraftWorld implements World {
     public void setStorm(boolean hasStorm) {
         CraftServer server = world.getServer();
 
-        WeatherChangeEvent weather = new WeatherChangeEvent((org.bukkit.World) this, hasStorm);
+        WeatherChangeEvent weather = new WeatherChangeEvent(this, hasStorm);
         server.getPluginManager().callEvent(weather);
         if (!weather.isCancelled()) {
             world.worldData.setStorm(hasStorm);
@@ -686,7 +670,7 @@ public class CraftWorld implements World {
     public void setThundering(boolean thundering) {
         CraftServer server = world.getServer();
 
-        ThunderChangeEvent thunder = new ThunderChangeEvent((org.bukkit.World) this, thundering);
+        ThunderChangeEvent thunder = new ThunderChangeEvent(this, thundering);
         server.getPluginManager().callEvent(thunder);
         if (!thunder.isCancelled()) {
             world.worldData.setThundering(thundering);

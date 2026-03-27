@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class CraftThreadManager {
 
-    final HashSet<CraftWorker> workers = new HashSet<CraftWorker>();
+    final HashSet<CraftWorker> workers = new HashSet<>();
 
     void executeTask(Runnable task, Plugin owner, int taskId) {
 

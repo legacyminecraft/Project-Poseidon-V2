@@ -34,8 +34,8 @@ public class CraftMapRenderer extends MapRenderer {
             cursors.removeCursor(cursors.getCursor(0));
         }
         for (int i = 0; i < worldMap.i.size(); ++i) {
-            WorldMapOrienter orienter = (WorldMapOrienter) worldMap.i.get(i);
-            cursors.addCursor(orienter.b, orienter.c, (byte)(orienter.d & 15), (byte)(orienter.a));
+            WorldMapOrienter orienter = worldMap.i.get(i);
+            cursors.addCursor(orienter.b, orienter.c, (byte)(orienter.d & 15), orienter.a);
         }
     }
     

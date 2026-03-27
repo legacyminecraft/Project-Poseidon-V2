@@ -13,14 +13,14 @@ public class CraftFuture<T> implements Runnable, Future<T> {
 
     private final CraftScheduler craftScheduler;
     private final Callable<T> callable;
-    private final ObjectContainer<T> returnStore = new ObjectContainer<T>();
+    private final ObjectContainer<T> returnStore = new ObjectContainer<>();
     private boolean done = false;
     private boolean running = false;
     private boolean cancelled = false;
     private @Nullable Exception e = null;
     private int taskId = -1;
 
-    CraftFuture(CraftScheduler craftScheduler, Callable callable) {
+    CraftFuture(CraftScheduler craftScheduler, Callable<T> callable) {
         this.callable = callable;
         this.craftScheduler = craftScheduler;
     }
@@ -92,11 +92,7 @@ public class CraftFuture<T> implements Runnable, Future<T> {
             if (taskId != -1) {
                 craftScheduler.cancelTask(taskId);
             }
-            if (!running && !done) {
-                return true;
-            } else {
-                return false;
-            }
+            return !running && !done;
         }
     }
 

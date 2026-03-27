@@ -72,34 +72,30 @@ public class CraftTask implements Comparable<Object>, BukkitTask {
     }
 
     public int compareTo(Object other) {
-        if (!(other instanceof CraftTask)) {
+        if (!(other instanceof CraftTask o)) {
             return 0;
         } else {
-            CraftTask o = (CraftTask) other;
             long timeDiff = executionTick - o.getExecutionTick();
             if (timeDiff > 0) {
                 return 1;
             } else if (timeDiff < 0) {
                 return -1;
             } else {
-                CraftTask otherCraftTask = (CraftTask) other;
-                return getIdNumber() - otherCraftTask.getIdNumber();
+                return getIdNumber() - o.getIdNumber();
             }
         }
     }
 
     @Override
     public boolean equals(Object other) {
-
         if (other == null) {
             return false;
         }
 
-        if (!(other instanceof CraftTask)) {
+        if (!(other instanceof CraftTask otherCraftTask)) {
             return false;
         }
 
-        CraftTask otherCraftTask = (CraftTask) other;
         return otherCraftTask.getIdNumber() == getIdNumber();
     }
 

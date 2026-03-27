@@ -25,7 +25,7 @@ public class CraftChunk implements Chunk {
     private int z;
 
     public CraftChunk(net.minecraft.server.Chunk chunk) {
-        this.weakChunk = new WeakReference<net.minecraft.server.Chunk>(chunk);
+        this.weakChunk = new WeakReference<>(chunk);
         worldServer = (WorldServer) getHandle().world;
         x = getHandle().x;
         z = getHandle().z;
@@ -39,7 +39,7 @@ public class CraftChunk implements Chunk {
         net.minecraft.server.Chunk c = weakChunk.get();
         if (c == null) {
             c = worldServer.getChunkAt(x, z);
-            weakChunk = new WeakReference<net.minecraft.server.Chunk>(c);
+            weakChunk = new WeakReference<>(c);
         }
         return c;
     }
@@ -102,10 +102,9 @@ public class CraftChunk implements Chunk {
         net.minecraft.server.Chunk chunk = getHandle();
         BlockState[] entities = new BlockState[chunk.tileEntities.size()];
         for (Object obj : chunk.tileEntities.keySet().toArray()) {
-            if (!(obj instanceof ChunkPosition)) {
+            if (!(obj instanceof ChunkPosition position)) {
                 continue;
             }
-            ChunkPosition position = (ChunkPosition) obj;
             entities[index++] = worldServer.getWorld().getBlockAt(position.x + (chunk.x << 4), position.y, position.z + (chunk.z << 4)).getState();
         }
         return entities;
