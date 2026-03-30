@@ -3,6 +3,7 @@ package org.bukkit.event.block;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 /**
  * Called when a block is formed or spreads based on world conditions.
@@ -18,6 +19,9 @@ import org.bukkit.event.Cancellable;
  * @see BlockSpreadEvent
  */
 public class BlockFormEvent extends BlockEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private boolean cancelled;
     private BlockState newState;
 
@@ -50,5 +54,14 @@ public class BlockFormEvent extends BlockEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

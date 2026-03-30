@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
  *
  * @author sk89q
  */
+@Deprecated
 public class VehicleListener implements Listener {
     public VehicleListener() {}
 

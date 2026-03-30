@@ -3,6 +3,8 @@ package org.bukkit.event.block;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
+
 /**
  * Called when a block fades, melts or disappears based on world conditions
  * <p />
@@ -15,6 +17,9 @@ import org.bukkit.event.Cancellable;
  * If a Block Fade event is cancelled, the block will not fade, melt or disappear.
  */
 public class BlockFadeEvent extends BlockEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private boolean cancelled;
     private BlockState newState;
 
@@ -39,5 +44,14 @@ public class BlockFadeEvent extends BlockEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

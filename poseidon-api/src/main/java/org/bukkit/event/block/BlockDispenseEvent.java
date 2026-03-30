@@ -2,6 +2,7 @@ package org.bukkit.event.block;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -11,6 +12,8 @@ import org.bukkit.util.Vector;
  * If a Block Dispense event is cancelled, the block will not dispense the item.
  */
 public class BlockDispenseEvent extends BlockEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private boolean cancelled = false;
     private ItemStack item;
@@ -67,5 +70,14 @@ public class BlockDispenseEvent extends BlockEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

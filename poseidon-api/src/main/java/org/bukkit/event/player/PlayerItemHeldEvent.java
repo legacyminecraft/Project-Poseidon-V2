@@ -1,11 +1,15 @@
 package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 /**
  * Fired when a player changes their currently held item
  */
 public class PlayerItemHeldEvent extends PlayerEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private int previous;
     private int current;
 
@@ -31,5 +35,14 @@ public class PlayerItemHeldEvent extends PlayerEvent {
      */
     public int getNewSlot() {
         return current;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

@@ -6,7 +6,7 @@ import org.bukkit.event.Event;
 /**
  * Represents an Entity-related event
  */
-public class EntityEvent extends Event {
+public abstract class EntityEvent extends Event {
     protected Entity entity;
 
     public EntityEvent(final Event.Type type, final Entity what) {

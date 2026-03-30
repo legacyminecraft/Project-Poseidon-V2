@@ -1,11 +1,15 @@
 package org.bukkit.event.block;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
 
 /**
  * Called when a redstone current changes
  */
 public class BlockRedstoneEvent extends BlockEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private int oldCurrent;
     private int newCurrent;
 
@@ -40,5 +44,14 @@ public class BlockRedstoneEvent extends BlockEvent {
      */
     public void setNewCurrent(int newCurrent) {
         this.newCurrent = newCurrent;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

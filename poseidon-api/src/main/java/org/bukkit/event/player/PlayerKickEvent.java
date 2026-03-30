@@ -2,12 +2,16 @@ package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player gets kicked from the server
  */
 public class PlayerKickEvent extends PlayerEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private @Nullable String leaveMessage;
     private String kickReason;
     private Boolean cancel;
@@ -37,14 +41,6 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
         return leaveMessage;
     }
 
-    public boolean isCancelled() {
-        return cancel;
-    }
-
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
-    }
-
     /**
      * Sets the reason why the player is getting kicked
      *
@@ -61,5 +57,22 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      */
     public void setLeaveMessage(@Nullable String leaveMessage) {
         this.leaveMessage = leaveMessage;
+    }
+
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

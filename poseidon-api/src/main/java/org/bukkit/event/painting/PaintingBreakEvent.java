@@ -2,11 +2,14 @@ package org.bukkit.event.painting;
 
 import org.bukkit.entity.Painting;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 /**
  * Triggered when a painting is removed
  */
 public class PaintingBreakEvent extends PaintingEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private boolean cancelled;
     private RemoveCause cause;
@@ -33,6 +36,15 @@ public class PaintingBreakEvent extends PaintingEvent implements Cancellable {
         this.cancelled = cancel;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
+
     /**
      * An enum to specify the cause of the removal
      */
@@ -45,6 +57,5 @@ public class PaintingBreakEvent extends PaintingEvent implements Cancellable {
          * Removed by the world - block the painting is on is destroyed, water flowing over etc
          */
         WORLD
-
     }
 }

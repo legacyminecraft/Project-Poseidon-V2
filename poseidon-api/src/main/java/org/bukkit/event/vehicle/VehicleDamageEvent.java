@@ -3,12 +3,16 @@ package org.bukkit.event.vehicle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Raised when a vehicle receives damage.
  */
 public class VehicleDamageEvent extends VehicleEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private @Nullable Entity attacker;
     private int damage;
     private boolean cancelled;
@@ -52,5 +56,14 @@ public class VehicleDamageEvent extends VehicleEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

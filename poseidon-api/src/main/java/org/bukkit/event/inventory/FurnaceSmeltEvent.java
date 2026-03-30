@@ -3,12 +3,16 @@ package org.bukkit.event.inventory;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Called when an ItemStack is successfully smelted in a furnace.
  */
-public class FurnaceSmeltEvent extends Event implements Cancellable{
+public class FurnaceSmeltEvent extends Event implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private Block furnace;
     private ItemStack source;
     private ItemStack result;
@@ -65,5 +69,14 @@ public class FurnaceSmeltEvent extends Event implements Cancellable{
 
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

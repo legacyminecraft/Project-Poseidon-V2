@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.Nullable;
@@ -13,6 +14,9 @@ import org.jspecify.annotations.Nullable;
  * Called when a player interacts with an object or air.
  */
 public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     protected @Nullable ItemStack item;
     protected Action action;
     protected @Nullable Block blockClicked;
@@ -39,31 +43,6 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      */
     public Action getAction() {
         return action;
-    }
-
-    /**
-     * Gets the cancellation state of this event. Set to true if you
-     * want to prevent buckets from placing water and so forth
-     *
-     * @return boolean cancellation state
-     */
-    public boolean isCancelled() {
-        return useInteractedBlock() == Result.DENY;
-    }
-
-    /**
-     * Sets the cancellation state of this event. A canceled event will not
-     * be executed in the server, but will still pass to other plugins
-     *
-     * Canceling this event will prevent use of food (player won't lose the
-     * food item), prevent bows/snowballs/eggs from firing, etc. (player won't
-     * lose the ammo)
-     *
-     * @param cancel true if you wish to cancel this event
-     */
-    public void setCancelled(boolean cancel) {
-        setUseInteractedBlock(cancel ? Result.DENY : useInteractedBlock() == Result.DENY ? Result.DEFAULT : useInteractedBlock());
-        setUseItemInHand(cancel ? Result.DENY : useItemInHand() == Result.DENY ? Result.DEFAULT : useItemInHand());
     }
 
     /**
@@ -170,5 +149,39 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
      */
     public void setUseItemInHand(Result useItemInHand) {
         this.useItemInHand = useItemInHand;
+    }
+
+    /**
+     * Gets the cancellation state of this event. Set to true if you
+     * want to prevent buckets from placing water and so forth
+     *
+     * @return boolean cancellation state
+     */
+    public boolean isCancelled() {
+        return useInteractedBlock() == Result.DENY;
+    }
+
+    /**
+     * Sets the cancellation state of this event. A canceled event will not
+     * be executed in the server, but will still pass to other plugins
+     *
+     * Canceling this event will prevent use of food (player won't lose the
+     * food item), prevent bows/snowballs/eggs from firing, etc. (player won't
+     * lose the ammo)
+     *
+     * @param cancel true if you wish to cancel this event
+     */
+    public void setCancelled(boolean cancel) {
+        setUseInteractedBlock(cancel ? Result.DENY : useInteractedBlock() == Result.DENY ? Result.DEFAULT : useInteractedBlock());
+        setUseItemInHand(cancel ? Result.DENY : useItemInHand() == Result.DENY ? Result.DEFAULT : useItemInHand());
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

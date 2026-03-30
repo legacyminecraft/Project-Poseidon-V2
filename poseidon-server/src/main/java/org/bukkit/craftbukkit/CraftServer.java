@@ -821,4 +821,10 @@ public final class CraftServer implements Server {
     public void reloadWhitelist() {
         server.f();
     }
+
+    // Poseidon start
+    public boolean isPrimaryThread() {
+        return console.isPrimaryThread();
+    }
+    // Poseidon end
 }

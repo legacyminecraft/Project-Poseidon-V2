@@ -3,11 +3,14 @@ package org.bukkit.event.player;
 import org.bukkit.Location;
 import org.bukkit.TravelAgent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 /**
  * Called when a player completes the portaling process by standing in a portal
  */
 public class PlayerPortalEvent extends PlayerTeleportEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     protected boolean useTravelAgent = true;
 
@@ -33,5 +36,14 @@ public class PlayerPortalEvent extends PlayerTeleportEvent {
 
     public void setPortalTravelAgent(TravelAgent travelAgent) {
         this.travelAgent = travelAgent;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

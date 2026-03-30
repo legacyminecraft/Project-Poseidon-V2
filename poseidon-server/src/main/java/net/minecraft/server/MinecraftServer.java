@@ -62,6 +62,10 @@ public class MinecraftServer implements Runnable, ICommandListener {
     public static int currentTick;
     // CraftBukkit end
 
+    // Poseidon start
+    private final Thread primaryThread;
+    // Poseidon end
+
     public MinecraftServer(OptionSet options) { // CraftBukkit - adds argument OptionSet
         new ThreadSleepForever(this);
 
@@ -69,6 +73,11 @@ public class MinecraftServer implements Runnable, ICommandListener {
         this.options = options;
         Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(this));
         // CraftBukkit end
+
+        // Poseidon start
+        this.primaryThread = new ThreadServerApplication("Server thread", this);
+        this.primaryThread.start();
+        // Poseidon end
     }
 
     private boolean init() throws UnknownHostException { // CraftBukkit - added throws UnknownHostException
@@ -502,11 +511,17 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
             // CraftBukkit - remove gui
 
-            (new ThreadServerApplication("Server thread", minecraftserver)).start();
+            //(new ThreadServerApplication("Server thread", minecraftserver)).start(); // Poseidon - moved to constructor
         } catch (Exception exception) {
             log.log(Level.SEVERE, "Failed to start the minecraft server", exception);
         }
     }
+
+    // Poseidon start
+    public boolean isPrimaryThread() {
+        return Thread.currentThread() == this.primaryThread;
+    }
+    // Poseidon end
 
     public File a(String s) {
         return new File(s);

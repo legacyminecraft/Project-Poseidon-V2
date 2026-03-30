@@ -10,6 +10,7 @@ import org.bukkit.event.Cancellable;
  * @author sk89q
  */
 public class VehicleEntityCollisionEvent extends VehicleCollisionEvent implements Cancellable {
+
     private Entity entity;
     private boolean cancelled = false;
     private boolean cancelledPickup = false;
@@ -22,14 +23,6 @@ public class VehicleEntityCollisionEvent extends VehicleCollisionEvent implement
 
     public Entity getEntity() {
         return entity;
-    }
-
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
     }
 
     public boolean isPickupCancelled() {
@@ -46,5 +39,13 @@ public class VehicleEntityCollisionEvent extends VehicleCollisionEvent implement
 
     public void setCollisionCancelled(boolean cancel) {
         cancelledCollision = cancel;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }

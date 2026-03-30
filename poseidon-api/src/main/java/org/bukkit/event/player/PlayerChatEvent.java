@@ -2,6 +2,7 @@ package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,6 +12,9 @@ import java.util.Set;
  * Holds information for player chat and commands
  */
 public class PlayerChatEvent extends PlayerEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private boolean cancel = false;
     private String message;
     private String format = "<%1$s> %2$s";
@@ -24,14 +28,6 @@ public class PlayerChatEvent extends PlayerEvent implements Cancellable {
         super(type, player);
         recipients = new HashSet<>(Arrays.asList(player.getServer().getOnlinePlayers()));
         this.message = message;
-    }
-
-    public boolean isCancelled() {
-        return cancel;
-    }
-
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
     }
 
     /**
@@ -95,5 +91,22 @@ public class PlayerChatEvent extends PlayerEvent implements Cancellable {
      */
     public Set<Player> getRecipients() {
         return recipients;
+    }
+
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

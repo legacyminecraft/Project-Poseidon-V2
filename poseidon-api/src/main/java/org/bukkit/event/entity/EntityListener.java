@@ -7,6 +7,7 @@ import org.bukkit.event.painting.PaintingPlaceEvent;
 /**
  * Handles all events fired in relation to entities
  */
+@Deprecated
 public class EntityListener implements Listener {
     public EntityListener() {}
 

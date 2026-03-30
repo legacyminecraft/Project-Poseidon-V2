@@ -1,12 +1,16 @@
 package org.bukkit.event.server;
 
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.map.MapView;
 
 /**
  * Called when a map is initialized.
  */
 public class MapInitializeEvent extends ServerEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private final MapView mapView;
     
     public MapInitializeEvent(MapView mapView) {
@@ -21,5 +25,14 @@ public class MapInitializeEvent extends ServerEvent {
      */
     public MapView getMap() {
         return mapView;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

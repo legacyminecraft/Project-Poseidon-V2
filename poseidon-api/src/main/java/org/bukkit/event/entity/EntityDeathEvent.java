@@ -1,6 +1,7 @@
 package org.bukkit.event.entity;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.List;
  * Thrown whenever a LivingEntity dies
  */
 public class EntityDeathEvent extends EntityEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private List<ItemStack> drops;
 
     public EntityDeathEvent(final Entity what, final List<ItemStack> drops) {
@@ -23,5 +27,14 @@ public class EntityDeathEvent extends EntityEvent {
      */
     public List<ItemStack> getDrops() {
         return drops;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

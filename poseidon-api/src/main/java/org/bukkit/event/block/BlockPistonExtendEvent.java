@@ -1,12 +1,16 @@
 package org.bukkit.event.block;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class BlockPistonExtendEvent extends BlockPistonEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private int length;
     private List<Block> blocks;
 
@@ -39,5 +43,14 @@ public class BlockPistonExtendEvent extends BlockPistonEvent {
             blocks = Collections.unmodifiableList(tmp);
         }
         return blocks;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

@@ -1,12 +1,15 @@
 package org.bukkit.event.player;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player leaves a server
  */
 public class PlayerQuitEvent extends PlayerEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private @Nullable String quitMessage;
 
@@ -31,5 +34,14 @@ public class PlayerQuitEvent extends PlayerEvent {
      */
     public void setQuitMessage(@Nullable String quitMessage) {
         this.quitMessage = quitMessage;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

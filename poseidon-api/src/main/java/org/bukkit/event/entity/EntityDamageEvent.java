@@ -3,11 +3,14 @@ package org.bukkit.event.entity;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * Stores data for damage events
  */
 public class EntityDamageEvent extends EntityEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private int damage;
     private boolean cancelled;
@@ -23,14 +26,6 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
         this.damage = damage;
 
         damagee.setLastDamageCause(this);
-    }
-
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    public void setCancelled(boolean cancel) {
-        cancelled = cancel;
     }
 
     /**
@@ -58,6 +53,23 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
      */
     public DamageCause getCause() {
         return cause;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancel) {
+        cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 
     /**

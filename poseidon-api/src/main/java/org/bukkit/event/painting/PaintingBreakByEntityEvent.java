@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
  * Triggered when a painting is removed by an entity
  */
 public class PaintingBreakByEntityEvent extends PaintingBreakEvent {
+
     private @Nullable Entity remover;
 
     public PaintingBreakByEntityEvent(final Painting painting, final @Nullable Entity remover) {

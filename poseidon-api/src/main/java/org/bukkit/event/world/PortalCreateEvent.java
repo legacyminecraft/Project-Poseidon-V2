@@ -3,6 +3,7 @@ package org.bukkit.event.world;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +12,9 @@ import java.util.Collection;
  * Called when the world attempts to create a matching end to a portal
  */
 public class PortalCreateEvent extends WorldEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private boolean cancel = false;
     private ArrayList<Block> blocks = new ArrayList<>();
 
@@ -34,5 +38,14 @@ public class PortalCreateEvent extends WorldEvent implements Cancellable {
 
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

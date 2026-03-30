@@ -5,7 +5,8 @@ import org.bukkit.Chunk;
 /**
  * Represents a Chunk related event
  */
-public class ChunkEvent extends WorldEvent {
+public abstract class ChunkEvent extends WorldEvent {
+
     protected Chunk chunk;
 
     protected ChunkEvent(Type type, Chunk chunk) {

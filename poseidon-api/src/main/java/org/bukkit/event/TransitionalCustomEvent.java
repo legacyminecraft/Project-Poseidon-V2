@@ -1,15 +1,12 @@
-package org.bukkit.event.world;
+package org.bukkit.event;
 
-import org.bukkit.World;
-import org.bukkit.event.HandlerList;
-
-public class WorldSaveEvent extends WorldEvent {
+/**
+ * A transitional class to avoid breaking plugins using custom events.
+ */
+@Deprecated
+public class TransitionalCustomEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
-
-    public WorldSaveEvent(World world) {
-        super(Type.WORLD_SAVE, world);
-    }
 
     @Override
     public HandlerList getHandlers() {

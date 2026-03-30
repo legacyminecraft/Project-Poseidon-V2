@@ -2,11 +2,14 @@ package org.bukkit.event.player;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 /**
  * This event is fired when the player is leaving a bed.
  */
 public class PlayerBedLeaveEvent extends PlayerEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private Block bed;
 
@@ -22,5 +25,14 @@ public class PlayerBedLeaveEvent extends PlayerEvent {
      */
     public Block getBed() {
         return bed;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

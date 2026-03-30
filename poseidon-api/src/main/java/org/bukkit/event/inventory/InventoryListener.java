@@ -1,9 +1,11 @@
 package org.bukkit.event.inventory;
 
 import org.bukkit.event.Listener;
+
 /**
 * Handles all events thrown in relation to Blocks
  */
+@Deprecated
 public class InventoryListener implements Listener {
     public InventoryListener() {}
 

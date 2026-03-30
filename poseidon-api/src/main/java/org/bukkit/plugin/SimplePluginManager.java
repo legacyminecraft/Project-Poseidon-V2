@@ -1,5 +1,6 @@
 package org.bukkit.plugin;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
 import org.bukkit.Server;
@@ -8,6 +9,8 @@ import org.bukkit.command.PluginCommandYamlParser;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
@@ -17,10 +20,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,8 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,24 +43,12 @@ public final class SimplePluginManager implements PluginManager {
     private final Map<Pattern, PluginLoader> fileAssociations = new HashMap<>();
     private final List<Plugin> plugins = new ArrayList<>();
     private final Map<String, Plugin> lookupNames = new HashMap<>();
-    private final Map<Event.Type, SortedSet<RegisteredListener>> listeners = new EnumMap<>(Event.Type.class);
     private static @Nullable File updateDirectory = null;
     private final SimpleCommandMap commandMap;
     private final Map<String, Permission> permissions = new HashMap<>();
     private final Map<Boolean, Set<Permission>> defaultPerms = new LinkedHashMap<>();
     private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<>();
     private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<>();
-    private final Comparator<RegisteredListener> comparer = new Comparator<>() {
-        public int compare(RegisteredListener i, RegisteredListener j) {
-            int result = i.getPriority().compareTo(j.getPriority());
-
-            if ((result == 0) && (i != j)) {
-                result = 1;
-            }
-
-            return result;
-        }
-    };
 
     public SimplePluginManager(Server instance, SimpleCommandMap commandMap) {
         server = instance;
@@ -279,6 +267,8 @@ public final class SimplePluginManager implements PluginManager {
             } catch (Throwable ex) {
                 server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?): " + ex.getMessage(), ex);
             }
+
+            HandlerList.bakeAll();
         }
     }
 
@@ -307,6 +297,12 @@ public final class SimplePluginManager implements PluginManager {
             } catch (Throwable ex) {
                 server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while unregistering services for " + plugin.getDescription().getFullName() + " (Is it up to date?): " + ex.getMessage(), ex);
             }
+
+            try {
+                HandlerList.unregisterAll(plugin);
+            } catch (Throwable ex) {
+                server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while unregistering events for " + plugin.getDescription().getFullName() + " (Is it up to date?): " + ex.getMessage(), ex);
+            }
         }
     }
 
@@ -315,7 +311,7 @@ public final class SimplePluginManager implements PluginManager {
             disablePlugins();
             plugins.clear();
             lookupNames.clear();
-            listeners.clear();
+            HandlerList.unregisterAll();
             fileAssociations.clear();
             permissions.clear();
             defaultPerms.get(true).clear();
@@ -324,39 +320,40 @@ public final class SimplePluginManager implements PluginManager {
     }
 
     /**
-     * Calls a player related event with the given details
+     * Calls an event with the given details
      *
-     * @param type Type of player related event to call
      * @param event Event details
      */
-    public synchronized void callEvent(Event event) {
-        SortedSet<RegisteredListener> eventListeners = listeners.get(event.getType());
+    public void callEvent(Event event) {
+        if (event.isAsynchronous()) {
+            if (Thread.holdsLock(this)) {
+                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.");
+            }
+            if (server.isPrimaryThread()) {
+                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from primary server thread.");
+            }
+            fireEvent(event);
+        } else {
+            synchronized (this) {
+                fireEvent(event);
+            }
+        }
+    }
 
-        if (eventListeners != null) {
-            for (RegisteredListener registration : eventListeners) {
-                try {
-                    registration.callEvent(event);
-                } catch (AuthorNagException ex) {
-                    Plugin plugin = registration.getPlugin();
+    private void fireEvent(Event event) {
+        HandlerList handlers = event.getHandlers();
+        RegisteredListener[] listeners = handlers.getRegisteredListeners();
 
-                    if (plugin.isNaggable()) {
-                        plugin.setNaggable(false);
+        for (int i = 0; i < listeners.length; i++) {
+            RegisteredListener registration = listeners[i];
+            if (!registration.getPlugin().isEnabled()) {
+                continue;
+            }
 
-                        String author = "<NoAuthorGiven>";
-
-                        if (!plugin.getDescription().getAuthors().isEmpty()) {
-                            author = plugin.getDescription().getAuthors().get(0);
-                        }
-                        server.getLogger().log(Level.SEVERE, String.format(
-                            "Nag author: '%s' of '%s' about the following: %s",
-                            author,
-                            plugin.getDescription().getName(),
-                            ex.getMessage()
-                        ));
-                    }
-                } catch (Throwable ex) {
-                    server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getType() + " to " + registration.getPlugin().getDescription().getName(), ex);
-                }
+            try {
+                registration.callEvent(event);
+            } catch (Throwable ex) {
+                server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getEventName() + " to " + registration.getPlugin().getDescription().getName(), ex);
             }
         }
     }
@@ -369,12 +366,9 @@ public final class SimplePluginManager implements PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
+    @Deprecated
     public void registerEvent(Event.Type type, Listener listener, Priority priority, Plugin plugin) {
-        if (!plugin.isEnabled()) {
-            throw new IllegalPluginAccessException("Plugin attempted to register " + type + " while not enabled");
-        }
-
-        getEventListeners(type).add(new RegisteredListener(listener, priority, plugin, type));
+        registerEvent(type.getEventClass(), listener, priority.getNewPriority(), plugin.getPluginLoader().createExecutor(type, listener), plugin);
     }
 
     /**
@@ -386,30 +380,63 @@ public final class SimplePluginManager implements PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
+    @Deprecated
     public void registerEvent(Event.Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin) {
-        if (!plugin.isEnabled()) {
-            throw new IllegalPluginAccessException("Plugin attempted to register " + type + " while not enabled");
-        }
-
-        getEventListeners(type).add(new RegisteredListener(listener, executor, priority, plugin));
+        registerEvent(type.getEventClass(), listener, priority.getNewPriority(), executor, plugin);
     }
 
-    /**
-     * Returns a SortedSet of RegisteredListener for the specified event type creating a new queue if needed
-     *
-     * @param type EventType to lookup
-     * @return SortedSet<RegisteredListener> the looked up or create queue matching the requested type
-     */
-    private SortedSet<RegisteredListener> getEventListeners(Event.Type type) {
-        SortedSet<RegisteredListener> eventListeners = listeners.get(type);
-
-        if (eventListeners != null) {
-            return eventListeners;
+    @Override
+    public void registerEvents(Listener listener, Plugin plugin) {
+        if (!plugin.isEnabled()) {
+            throw new IllegalPluginAccessException("Plugin attempted to register " + listener + " while not enabled");
         }
 
-        eventListeners = new TreeSet<>(comparer);
-        listeners.put(type, eventListeners);
-        return eventListeners;
+        for (Map.Entry<Class<? extends Event>, Set<RegisteredListener>> entry : plugin.getPluginLoader().createRegisteredListeners(listener, plugin).entrySet()) {
+            getEventListeners(getRegistrationClass(entry.getKey())).registerAll(entry.getValue());
+        }
+    }
+
+    @Override
+    public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin) {
+        registerEvent(event, listener, priority, executor, plugin, false);
+    }
+
+    public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin, boolean ignoreCancelled) {
+        Preconditions.checkArgument(listener != null, "listener cannot be null");
+        Preconditions.checkArgument(priority != null, "priority cannot be null");
+        Preconditions.checkArgument(executor != null, "executor cannot be null");
+        Preconditions.checkArgument(plugin != null, "plugin cannot be null");
+
+        if (!plugin.isEnabled()) {
+            throw new IllegalPluginAccessException("Plugin attempted to register " + event + " while not enabled");
+        }
+
+        getEventListeners(event).register(new RegisteredListener(listener, executor, priority, plugin, ignoreCancelled));
+    }
+
+    private HandlerList getEventListeners(Class<? extends Event> type) {
+        try {
+            Method method = getRegistrationClass(type).getDeclaredMethod("getHandlerList");
+            method.setAccessible(true);
+            return (HandlerList) method.invoke(null);
+        } catch (Exception e) {
+            throw new IllegalPluginAccessException(e.toString());
+        }
+    }
+
+    private Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz) {
+        try {
+            clazz.getDeclaredMethod("getHandlerList");
+            return clazz;
+        } catch (NoSuchMethodException e) {
+            if (clazz.getSuperclass() != null
+                    && !clazz.getSuperclass().equals(Event.class)
+                    && Event.class.isAssignableFrom(clazz.getSuperclass())) {
+                return getRegistrationClass(clazz.getSuperclass().asSubclass(Event.class));
+            } else {
+                throw new IllegalPluginAccessException("Unable to find handler list for event " + clazz.getName() + ". Static getHandlerList method required!");
+            }
+        }
     }
 
     public @Nullable Permission getPermission(String name) {

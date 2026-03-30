@@ -4,11 +4,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * Holds information for player movement events
  */
 public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private boolean cancel = false;
     private Location from;
     private Location to;
@@ -23,34 +27,6 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
         super(type, player);
         this.from = from;
         this.to = to;
-    }
-
-    /**
-     * Gets the cancellation state of this event. A cancelled event will not
-     * be executed in the server, but will still pass to other plugins
-     *
-     * If a move or teleport event is cancelled, the player will be moved or
-     * teleported back to the Location as defined by getFrom(). This will not
-     * fire an event
-     *
-     * @return true if this event is cancelled
-     */
-    public boolean isCancelled() {
-        return cancel;
-    }
-
-    /**
-     * Sets the cancellation state of this event. A cancelled event will not
-     * be executed in the server, but will still pass to other plugins
-     *
-     * If a move or teleport event is cancelled, the player will be moved or
-     * teleported back to the Location as defined by getFrom(). This will not
-     * fire an event
-     *
-     * @param cancel true if you wish to cancel this event
-     */
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
     }
 
     /**
@@ -87,5 +63,42 @@ public class PlayerMoveEvent extends PlayerEvent implements Cancellable {
      */
     public void setTo(Location to) {
         this.to = to;
+    }
+
+    /**
+     * Gets the cancellation state of this event. A cancelled event will not
+     * be executed in the server, but will still pass to other plugins
+     *
+     * If a move or teleport event is cancelled, the player will be moved or
+     * teleported back to the Location as defined by getFrom(). This will not
+     * fire an event
+     *
+     * @return true if this event is cancelled
+     */
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    /**
+     * Sets the cancellation state of this event. A cancelled event will not
+     * be executed in the server, but will still pass to other plugins
+     *
+     * If a move or teleport event is cancelled, the player will be moved or
+     * teleported back to the Location as defined by getFrom(). This will not
+     * fire an event
+     *
+     * @param cancel true if you wish to cancel this event
+     */
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

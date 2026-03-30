@@ -2,6 +2,7 @@ package org.bukkit.event.entity;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -10,6 +11,8 @@ import org.jspecify.annotations.Nullable;
  * If a Creeper Power event is cancelled, the Creeper will not be powered.
  */
 public class CreeperPowerEvent extends EntityEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private boolean canceled;
     private Entity creeper;
@@ -30,14 +33,6 @@ public class CreeperPowerEvent extends EntityEvent implements Cancellable {
         this.bolt = null;
     }
 
-    public boolean isCancelled() {
-        return canceled;
-    }
-
-    public void setCancelled(boolean cancel) {
-        canceled = cancel;
-    }
-
     /**
      * Gets the lightning bolt which is striking the Creeper.
      *
@@ -54,6 +49,23 @@ public class CreeperPowerEvent extends EntityEvent implements Cancellable {
      */
     public PowerCause getCause() {
         return cause;
+    }
+
+    public boolean isCancelled() {
+        return canceled;
+    }
+
+    public void setCancelled(boolean cancel) {
+        canceled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 
     /**

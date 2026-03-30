@@ -2,13 +2,18 @@ package org.bukkit.event.server;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.HandlerList;
 
 /**
  * Server Command events
  */
 public class ServerCommandEvent extends ServerEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private String command;
     private CommandSender sender;
+
     public ServerCommandEvent(ConsoleCommandSender console, String message) {
         super(Type.SERVER_COMMAND);
         command = message;
@@ -38,5 +43,14 @@ public class ServerCommandEvent extends ServerEvent {
      */
     public CommandSender getSender() {
         return sender;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

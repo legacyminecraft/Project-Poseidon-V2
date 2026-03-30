@@ -3,12 +3,16 @@ package org.bukkit.event.player;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Called when a player throws an egg and it might hatch
  */
 public class PlayerEggThrowEvent extends PlayerEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private Egg egg;
     private boolean hatching;
     private CreatureType hatchType;
@@ -93,5 +97,14 @@ public class PlayerEggThrowEvent extends PlayerEvent {
      */
     public void setNumHatches(byte numHatches) {
         this.numHatches = numHatches;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

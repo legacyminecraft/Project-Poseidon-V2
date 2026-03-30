@@ -3,13 +3,16 @@ package org.bukkit.event.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.util.Vector;
 
+/**
+ * Holds information for player velocity events
+ */
 public class PlayerVelocityEvent extends PlayerEvent implements Cancellable {
 
-    /**
-     * Holds information for player velocity events
-     */
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private boolean cancel = false;
     private Vector velocity;
 
@@ -21,26 +24,6 @@ public class PlayerVelocityEvent extends PlayerEvent implements Cancellable {
     PlayerVelocityEvent(final Event.Type type, final Player player, final Vector velocity) {
         super(type, player);
         this.velocity = velocity;
-    }
-
-    /**
-     * Gets the cancellation state of this event. A cancelled event will not
-     * be executed in the server, but will still pass to other plugins
-     *
-     * @return true if this event is cancelled
-     */
-    public boolean isCancelled() {
-        return cancel;
-    }
-
-    /**
-     * Sets the cancellation state of this event. A cancelled event will not
-     * be executed in the server, but will still pass to other plugins
-     *
-     * @param cancel true if you wish to cancel this event
-     */
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
     }
 
     /**
@@ -59,5 +42,22 @@ public class PlayerVelocityEvent extends PlayerEvent implements Cancellable {
      */
     public void setVelocity(Vector velocity) {
         this.velocity = velocity;
+    }
+
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

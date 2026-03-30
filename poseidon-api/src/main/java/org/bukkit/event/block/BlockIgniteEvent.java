@@ -4,6 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -12,6 +13,9 @@ import org.jspecify.annotations.Nullable;
  * If a Block Ignite event is cancelled, the block will not be ignited.
  */
 public class BlockIgniteEvent extends BlockEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     private IgniteCause cause;
     private boolean cancel;
     private @Nullable Player thePlayer;
@@ -21,14 +25,6 @@ public class BlockIgniteEvent extends BlockEvent implements Cancellable {
         this.cause = cause;
         this.thePlayer = thePlayer;
         this.cancel = false;
-    }
-
-    public boolean isCancelled() {
-        return cancel;
-    }
-
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
     }
 
     /**
@@ -47,6 +43,23 @@ public class BlockIgniteEvent extends BlockEvent implements Cancellable {
      */
     public @Nullable Player getPlayer() {
         return thePlayer;
+    }
+
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 
     /**

@@ -2,6 +2,7 @@ package org.bukkit.event.block;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -14,6 +15,9 @@ import org.jspecify.annotations.Nullable;
  * </ul>
  */
 public class BlockCanBuildEvent extends BlockEvent {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     protected boolean buildable;
     protected int material;
 
@@ -58,5 +62,14 @@ public class BlockCanBuildEvent extends BlockEvent {
      */
     public int getMaterialId() {
         return material;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }

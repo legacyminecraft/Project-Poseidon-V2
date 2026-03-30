@@ -1,29 +1,28 @@
 package org.bukkit.plugin;
 
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 /**
  * Stores relevant information for plugin listeners
  */
 public class RegisteredListener {
+
     private final Listener listener;
-    private final Event.Priority priority;
+    private final EventPriority priority;
     private final Plugin plugin;
     private final EventExecutor executor;
+    private final boolean ignoreCancelled;
 
-    public RegisteredListener(final Listener pluginListener, final EventExecutor eventExecutor, final Event.Priority eventPriority, final Plugin registeredPlugin) {
-        listener = pluginListener;
-        priority = eventPriority;
-        plugin = registeredPlugin;
-        executor = eventExecutor;
-    }
-
-    public RegisteredListener(final Listener pluginListener, final Event.Priority eventPriority, final Plugin registeredPlugin, Event.Type type) {
-        listener = pluginListener;
-        priority = eventPriority;
-        plugin = registeredPlugin;
-        executor = registeredPlugin.getPluginLoader().createExecutor(type, pluginListener);
+    public RegisteredListener(final Listener listener, final EventExecutor executor, final EventPriority priority, final Plugin plugin, final boolean ignoreCancelled) {
+        this.listener = listener;
+        this.priority = priority;
+        this.plugin = plugin;
+        this.executor = executor;
+        this.ignoreCancelled = ignoreCancelled;
     }
 
     /**
@@ -46,15 +45,28 @@ public class RegisteredListener {
      * Gets the priority for this registration
      * @return Registered Priority
      */
-    public Event.Priority getPriority() {
+    public EventPriority getPriority() {
         return priority;
     }
 
     /**
-     * Calls the event executor
-     * @return Registered Priority
+     * Whether this listener accepts cancelled events
+     * @return True when ignoring cancelled events
      */
-    public void callEvent(Event event) {
+    public boolean isIgnoringCancelled() {
+        return ignoreCancelled;
+    }
+
+    /**
+     * Calls the event executor
+     * @param event The event
+     */
+    public void callEvent(Event event) throws EventException {
+        if (event instanceof Cancellable cancellable) {
+            if (cancellable.isCancelled() && isIgnoringCancelled()) {
+                return;
+            }
+        }
         executor.execute(listener, event);
     }
 }

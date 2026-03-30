@@ -3,6 +3,7 @@ package org.bukkit.event;
 /**
  * Handles all custom events
  */
+@Deprecated
 public class CustomEventListener implements Listener {
     public CustomEventListener() {}
 

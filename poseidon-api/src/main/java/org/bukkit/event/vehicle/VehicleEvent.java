@@ -8,7 +8,7 @@ import org.bukkit.event.Event;
  *
  * @author sk89q
  */
-public class VehicleEvent extends Event {
+public abstract class VehicleEvent extends Event {
     protected Vehicle vehicle;
 
     public VehicleEvent(final Event.Type type, final Vehicle vehicle) {

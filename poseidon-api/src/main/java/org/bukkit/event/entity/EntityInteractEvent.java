@@ -3,11 +3,15 @@ package org.bukkit.event.entity;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 /**
  * Called when an entity interacts with an object
  */
 public class EntityInteractEvent extends EntityEvent implements Cancellable {
+
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     protected Block block;
 
     private boolean cancelled;
@@ -15,6 +19,15 @@ public class EntityInteractEvent extends EntityEvent implements Cancellable {
     public EntityInteractEvent(Entity entity, Block block) {
         super(Type.ENTITY_INTERACT, entity);
         this.block = block;
+    }
+
+    /**
+     * Returns the involved block
+     *
+     * @return the block clicked with this item.
+     */
+    public Block getBlock() {
+        return block;
     }
 
     public boolean isCancelled() {
@@ -25,12 +38,12 @@ public class EntityInteractEvent extends EntityEvent implements Cancellable {
         cancelled = cancel;
     }
 
-    /**
-     * Returns the involved block
-     *
-     * @return the block clicked with this item.
-     */
-    public Block getBlock() {
-        return block;
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }
