@@ -1,8 +1,6 @@
 package org.bukkit.plugin;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.MapMaker;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommandYamlParser;
@@ -31,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -455,7 +454,7 @@ public final class SimplePluginManager implements PluginManager {
     }
 
     public Set<Permission> getDefaultPermissions(boolean op) {
-        return ImmutableSet.copyOf(defaultPerms.get(op));
+        return Set.copyOf(defaultPerms.get(op));
     }
 
     public void removePermission(Permission perm) {
@@ -499,7 +498,7 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = permSubs.get(name);
 
         if (map == null) {
-            map = new MapMaker().weakKeys().makeMap();
+            map = new WeakHashMap<>();
             permSubs.put(name, map);
         }
 
@@ -524,9 +523,9 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = permSubs.get(name);
 
         if (map == null) {
-            return ImmutableSet.of();
+            return Set.of();
         } else {
-            return ImmutableSet.copyOf(map.keySet());
+            return Set.copyOf(map.keySet());
         }
     }
 
@@ -534,7 +533,7 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = defSubs.get(op);
 
         if (map == null) {
-            map = new MapMaker().weakKeys().makeMap();
+            map = new WeakHashMap<>();
             defSubs.put(op, map);
         }
 
@@ -557,9 +556,9 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = defSubs.get(op);
 
         if (map == null) {
-            return ImmutableSet.of();
+            return Set.of();
         } else {
-            return ImmutableSet.copyOf(map.keySet());
+            return Set.copyOf(map.keySet());
         }
     }
 

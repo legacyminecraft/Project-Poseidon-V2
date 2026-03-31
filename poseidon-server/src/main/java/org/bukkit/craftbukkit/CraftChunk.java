@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit;
 
-import com.google.common.collect.MapMaker;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.ChunkPosition;
 import net.minecraft.server.WorldChunkManager;
@@ -15,11 +14,10 @@ import org.bukkit.entity.Entity;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ConcurrentMap;
 
 public class CraftChunk implements Chunk {
     private WeakReference<net.minecraft.server.Chunk> weakChunk;
-    private final ConcurrentMap<Integer, Block> cache = new MapMaker().softValues().makeMap();
+    //private final ConcurrentMap<Integer, Block> cache = new MapMaker().softValues().makeMap(); // Poseidon
     private WorldServer worldServer;
     private int x;
     private int z;
@@ -64,18 +62,8 @@ public class CraftChunk implements Chunk {
     }
 
     public Block getBlock(int x, int y, int z) {
-        int pos = (x & 0xF) << 11 | (z & 0xF) << 7 | (y & 0x7F);
-        Block block = this.cache.get(pos);
-        if (block == null) {
-            Block newBlock = new CraftBlock(this, (getX() << 4) | (x & 0xF), y & 0x7F, (getZ() << 4) | (z & 0xF));
-            Block oldBlock = this.cache.put(pos, newBlock);
-            if (oldBlock == null) {
-                block = newBlock;
-            } else {
-                block = oldBlock;
-            }
-        }
-        return block;
+        // Poseidon - don't cache CraftBlock instances
+        return new CraftBlock(this, (getX() << 4) | (x & 0xF), y & 0x7F, (getZ() << 4) | (z & 0xF));
     }
 
     public Entity[] getEntities() {

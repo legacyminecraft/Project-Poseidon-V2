@@ -40,8 +40,8 @@
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
-            <artifactId>guava-collections</artifactId>
-            <version>r03</version>
+            <artifactId>guava</artifactId>
+            <version>33.5.0-jre</version>
         </dependency>
     </dependencies>
 
