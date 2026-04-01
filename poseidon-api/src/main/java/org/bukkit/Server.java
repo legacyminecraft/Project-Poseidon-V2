@@ -170,6 +170,14 @@ public interface Server {
     @Nullable Player getPlayerExact(String name);
 
     /**
+     * Gets the player with the given UUID.
+     *
+     * @param id UUID of the player to retrieve
+     * @return a player object if one was found, null otherwise
+     */
+    @Nullable Player getPlayer(UUID id);
+
+    /**
      * Attempts to match any players with the given name, and returns a list
      * of all possibly matches
      *
@@ -405,14 +413,44 @@ public interface Server {
     int broadcast(String message, String permission);
 
     /**
-     * Gets the player by the given name, regardless if they are offline or online.
+     * Gets the player by the given name, regardless if they are offline or
+     * online.
+     * <p>
+     * This method may involve a blocking web request to get the UUID for the
+     * given name.
+     * <p>
+     * This will return an object even if the player does not exist. To this
+     * method, all players will exist.
      *
-     * This will return an object even if the player does not exist. To this method, all players will exist.
-     *
-     * @param name Name of the player to retrieve
-     * @return OfflinePlayer object
+     * @param name the name the player to retrieve
+     * @return an offline player
      */
     OfflinePlayer getOfflinePlayer(String name);
+
+    /**
+     * Gets the player by the given name, regardless if they are offline or
+     * online.
+     * <p>
+     * This will not make a web request to get the UUID for the given name,
+     * thus this method will not block. However this method will return
+     * {@code null} if the player is not cached.
+     *
+     * @param name the name of the player to retrieve
+     * @return an offline player if cached, {@code null} otherwise
+     */
+    @Nullable OfflinePlayer getOfflinePlayerIfCached(String name);
+
+    /**
+     * Gets the player by the given UUID, regardless if they are offline or
+     * online.
+     * <p>
+     * This will return an object even if the player does not exist. To this
+     * method, all players will exist.
+     *
+     * @param id the UUID of the player to retrieve
+     * @return an offline player
+     */
+    OfflinePlayer getOfflinePlayer(UUID id);
 
     /**
      * Gets a set containing all current IPs that are banned

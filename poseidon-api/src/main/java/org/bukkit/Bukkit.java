@@ -111,6 +111,14 @@ public final class Bukkit {
         return server.getPlayer(name);
     }
 
+    public static @Nullable Player getPlayerExact(String name) {
+        return server.getPlayerExact(name);
+    }
+
+    public static @Nullable Player getPlayer(UUID id) {
+        return server.getPlayer(id);
+    }
+
     public static List<Player> matchPlayer(String name) {
         return server.matchPlayer(name);
     }
@@ -231,8 +239,12 @@ public final class Bukkit {
         return server.getOfflinePlayer(name);
     }
 
-    public static @Nullable Player getPlayerExact(String name) {
-        return server.getPlayerExact(name);
+    public static @Nullable OfflinePlayer getOfflinePlayerIfCached(String name) {
+        return server.getOfflinePlayerIfCached(name);
+    }
+
+    public static OfflinePlayer getOfflinePlayer(UUID id) {
+        return server.getOfflinePlayer(id);
     }
 
     public static Set<String> getIPBans() {

@@ -4,6 +4,8 @@ import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
+import com.google.common.collect.MapMaker;
+import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.ConvertProgressUpdater;
 import net.minecraft.server.Convertable;
@@ -94,6 +96,10 @@ public final class CraftServer implements Server {
     private final Map<String, World> worlds = new LinkedHashMap<>();
     private final Configuration configuration;
     private final Yaml yaml = new Yaml(new SafeConstructor());
+
+    // Poseidon start
+    private final Map<UUID, OfflinePlayer> offlinePlayers = new MapMaker().weakValues().makeMap();
+    // Poseidon end
 
     public CraftServer(MinecraftServer console, ServerConfigurationManager server) {
         this.console = console;
@@ -237,6 +243,17 @@ public final class CraftServer implements Server {
 
         return null;
     }
+
+    // Poseidon start
+    public @Nullable Player getPlayer(UUID id) {
+        for (Player player : getOnlinePlayers()) {
+            if (player.getUniqueId().equals(id)) {
+                return player;
+            }
+        }
+        return null;
+    }
+    // Poseidon end
 
     public int broadcastMessage(String message) {
         return broadcast(message, BROADCAST_CHANNEL_USERS);
@@ -770,15 +787,44 @@ public final class CraftServer implements Server {
         return count;
     }
 
+    // Poseidon start
     public OfflinePlayer getOfflinePlayer(String name) {
         OfflinePlayer result = getPlayerExact(name);
-
         if (result == null) {
-            result = new CraftOfflinePlayer(this, name);
+            PlayerProfile profile = null;
+
+            // TODO: get uuid from cache or call api
+
+            result = new CraftOfflinePlayer(this, profile);
+        } else {
+            this.offlinePlayers.remove(result.getUniqueId());
         }
 
         return result;
     }
+
+    public @Nullable OfflinePlayer getOfflinePlayerIfCached(String name) {
+        OfflinePlayer result = getPlayerExact(name);
+        if (result == null) {
+            // TODO: get uuid from cache
+        } else {
+            this.offlinePlayers.remove(result.getUniqueId());
+        }
+
+        return result;
+    }
+
+    public OfflinePlayer getOfflinePlayer(UUID id) {
+        OfflinePlayer result = getPlayer(id);
+        if (result == null) {
+            //TODO: result = this.offlinePlayers.computeIfAbsent(id, _ -> new CraftOfflinePlayer(this, new CraftPlayerProfile(id, null)));
+        } else {
+            this.offlinePlayers.remove(id);
+        }
+
+        return result;
+    }
+    // Poseidon end
 
     public Set<String> getIPBans() {
         return new HashSet<>(server.banByIP);

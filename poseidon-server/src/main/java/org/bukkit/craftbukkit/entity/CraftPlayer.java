@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet131;
 import net.minecraft.server.Packet200Statistic;
@@ -78,6 +79,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public EntityPlayer getHandle() {
         return (EntityPlayer) entity;
     }
+
+    // Poseidon start
+    public Player getPlayer() {
+        return this;
+    }
+
+    public PlayerProfile getPlayerProfile() {
+        return null; // TODO
+    }
+    // Poseidon end
 
     public double getEyeHeight() {
         return getEyeHeight(false);

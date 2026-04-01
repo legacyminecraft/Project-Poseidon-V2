@@ -1,8 +1,14 @@
 package org.bukkit;
 
+import com.legacyminecraft.poseidon.profile.PlayerProfile;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.ServerOperator;
+import org.jspecify.annotations.Nullable;
+
+import java.util.UUID;
 
 public interface OfflinePlayer extends ServerOperator {
+
     /**
      * Checks if this player is currently online
      *
@@ -13,9 +19,34 @@ public interface OfflinePlayer extends ServerOperator {
     /**
      * Returns the name of this player
      *
-     * @return Player name
+     * @return Player name or null if we have not seen a name for this player yet
      */
-    String getName();
+    @Nullable String getName();
+
+    /**
+     * Returns the UUID of this player
+     *
+     * @return Player UUID
+     */
+    UUID getUniqueId();
+
+    /**
+     * Returns a copy of this player's profile
+     *
+     * @return the player's profile
+     */
+    PlayerProfile getPlayerProfile();
+
+    /**
+     * Gets a {@link Player} object that this represents, if there is one
+     * <p>
+     * If the player is online, this will return that player. Otherwise,
+     * it will return null.
+     *
+     * @return Online player
+     */
+    @Nullable
+    Player getPlayer();
 
     /**
      * Checks if this player is banned or not
