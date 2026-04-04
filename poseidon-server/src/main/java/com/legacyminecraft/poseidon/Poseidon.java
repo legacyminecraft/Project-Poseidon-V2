@@ -4,6 +4,7 @@ import com.legacyminecraft.poseidon.config.PoseidonConfig;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
 import com.legacyminecraft.poseidon.profile.ProfileService;
 import com.legacyminecraft.poseidon.service.ServiceClient;
+import com.legacyminecraft.poseidon.session.SessionService;
 
 public final class Poseidon {
 
@@ -24,5 +25,9 @@ public final class Poseidon {
 
     public static ProfileService getProfileService() {
         return ProfileService.getInstance();
+    }
+
+    public static SessionService getSessionService() {
+        return SessionService.getInstance();
     }
 }

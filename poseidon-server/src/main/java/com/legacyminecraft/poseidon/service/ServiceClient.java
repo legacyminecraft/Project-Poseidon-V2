@@ -32,7 +32,7 @@ public final class ServiceClient {
                 .create();
     }
 
-    public <T> T get(URI uri, Class<T> responseClass) throws ServiceClientException {
+    public <T> @Nullable T get(URI uri, Class<T> responseClass) throws ServiceClientException {
         HttpRequest request;
         try {
             request = HttpRequest.newBuilder()
@@ -48,7 +48,7 @@ public final class ServiceClient {
         return sendRequest(request, responseClass);
     }
 
-    public <T> T post(URI uri, HttpRequest.BodyPublisher bodyPublisher, Class<T> responseClass) throws ServiceClientException {
+    public <T> @Nullable T post(URI uri, HttpRequest.BodyPublisher bodyPublisher, Class<T> responseClass) throws ServiceClientException {
         HttpRequest request;
         try {
             request = HttpRequest.newBuilder()
@@ -64,7 +64,7 @@ public final class ServiceClient {
         return sendRequest(request, responseClass);
     }
 
-    private <T> T sendRequest(HttpRequest request, Class<T> responseClass) throws ServiceClientException {
+    private <T> @Nullable T sendRequest(HttpRequest request, Class<T> responseClass) throws ServiceClientException {
         HttpResponse<String> response;
         try {
             response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -75,7 +75,7 @@ public final class ServiceClient {
         int status = response.statusCode();
         if (status < 400) {
             try {
-                return gson.fromJson(response.body(), responseClass);
+                return response.body().isEmpty() ? null : gson.fromJson(response.body(), responseClass);
             } catch (JsonParseException e) {
                 throw new ServiceClientException(ServiceClientException.ErrorType.BAD_RESPONSE, e);
             }
