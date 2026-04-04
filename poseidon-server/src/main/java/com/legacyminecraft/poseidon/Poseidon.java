@@ -2,7 +2,8 @@ package com.legacyminecraft.poseidon;
 
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
-import com.legacyminecraft.poseidon.profile.ProfileRepository;
+import com.legacyminecraft.poseidon.profile.ProfileService;
+import com.legacyminecraft.poseidon.service.ServiceClient;
 
 public final class Poseidon {
 
@@ -17,7 +18,11 @@ public final class Poseidon {
         return ProfileCache.getInstance();
     }
 
-    public static ProfileRepository getProfileRepository() {
-        return ProfileRepository.getInstance();
+    public static ServiceClient getServiceClient() {
+        return ServiceClient.getInstance();
+    }
+
+    public static ProfileService getProfileService() {
+        return ProfileService.getInstance();
     }
 }

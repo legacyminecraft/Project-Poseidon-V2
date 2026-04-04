@@ -4,5 +4,5 @@ public interface ProfileLookupCallback {
 
     void onLookupSuccess(MinecraftProfile profile);
 
-    void onLookupFailure(ProfileLookupException cause);
+    void onLookupFailure(Throwable cause);
 }

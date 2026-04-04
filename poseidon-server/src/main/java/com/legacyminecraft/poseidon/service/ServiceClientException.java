@@ -1,15 +1,15 @@
-package com.legacyminecraft.poseidon.profile;
+package com.legacyminecraft.poseidon.service;
 
-public class ProfileLookupException extends Exception {
+public class ServiceClientException extends Exception {
 
     private final ErrorType errorType;
 
-    public ProfileLookupException(ErrorType errorType) {
+    public ServiceClientException(ErrorType errorType) {
         super();
         this.errorType = errorType;
     }
 
-    public ProfileLookupException(ErrorType errorType, Throwable cause) {
+    public ServiceClientException(ErrorType errorType, Throwable cause) {
         super(cause);
         this.errorType = errorType;
     }
@@ -19,9 +19,9 @@ public class ProfileLookupException extends Exception {
     }
 
     public enum ErrorType {
+        BAD_REQUEST,
         SERVICE_UNREACHABLE,
         HTTP_ERROR,
-        BAD_RESPONSE,
-        PROFILE_NOT_FOUND
+        BAD_RESPONSE
     }
 }
