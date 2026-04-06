@@ -21,16 +21,14 @@ public class AsyncPlayerPreLoginEvent extends Event {
 
     private final PlayerProfile profile;
     private final InetAddress ipAddress;
-    private final InetAddress rawAddress;
 
     private Result result = Result.ALLOWED;
     private String message = "";
 
-    public AsyncPlayerPreLoginEvent(PlayerProfile profile, InetAddress ipAddress, InetAddress rawAddress) {
+    public AsyncPlayerPreLoginEvent(PlayerProfile profile, InetAddress ipAddress) {
         super(true);
         this.profile = profile;
         this.ipAddress = ipAddress;
-        this.rawAddress = rawAddress;
     }
 
     /**
@@ -122,15 +120,6 @@ public class AsyncPlayerPreLoginEvent extends Event {
      */
     public InetAddress getAddress() {
         return this.ipAddress;
-    }
-
-    /**
-     * Gets the raw address of the player logging in
-     *
-     * @return the raw address
-     */
-    public InetAddress getRawAddress() {
-        return this.rawAddress;
     }
 
     @Override

@@ -9,8 +9,18 @@ public class ServiceClientException extends Exception {
         this.errorType = errorType;
     }
 
+    public ServiceClientException(ErrorType errorType, String message) {
+        super(message);
+        this.errorType = errorType;
+    }
+
     public ServiceClientException(ErrorType errorType, Throwable cause) {
         super(cause);
+        this.errorType = errorType;
+    }
+
+    public ServiceClientException(ErrorType errorType, String message, Throwable cause) {
+        super(message, cause);
         this.errorType = errorType;
     }
 

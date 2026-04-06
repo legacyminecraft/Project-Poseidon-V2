@@ -21,9 +21,10 @@ public final class SessionService {
     }
 
     public boolean verifySession(String name, String serverId, @Nullable InetAddress ipAddress) throws ServiceClientException {
-        URI uri = this.hasJoined.resolve("?username=").resolve(name).resolve("&serverId=").resolve(serverId);
-        if (ipAddress != null) {
-            uri = uri.resolve("&ip=").resolve(ipAddress.getHostAddress());
+        InetAddress finalAddress = ipAddress == null || ipAddress.isLoopbackAddress() ? null : ipAddress;
+        URI uri = URI.create(this.hasJoined + "?username=" + name + "&serverId=" + serverId);
+        if (finalAddress != null) {
+            uri = URI.create(uri + "&ip=" + finalAddress.getHostAddress());
         }
 
         JsonObject response = this.client.get(uri, JsonObject.class);

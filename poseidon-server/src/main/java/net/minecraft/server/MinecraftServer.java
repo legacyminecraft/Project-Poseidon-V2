@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
@@ -27,7 +28,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,6 +67,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
     // Poseidon start
     private final Thread primaryThread;
+    private final Queue<Runnable> queuedSyncTasks = new ConcurrentLinkedQueue<>();
     // Poseidon end
 
     public MinecraftServer(OptionSet options) { // CraftBukkit - adds argument OptionSet
@@ -334,6 +338,11 @@ public class MinecraftServer implements Runnable, ICommandListener {
             this.saveChunks();
         }
         // CraftBukkit end
+
+        // Poseidon start
+        log.info("Saving usercache.json");
+        Poseidon.getProfileCache().save();
+        // Poseidon end
     }
 
     public void a() {
@@ -433,6 +442,18 @@ public class MinecraftServer implements Runnable, ICommandListener {
         Vec3D.a();
         ++this.ticks;
 
+        // Poseidon start
+        Runnable task;
+        int count = this.queuedSyncTasks.size();
+        while (count-- > 0 && (task = this.queuedSyncTasks.poll()) != null) {
+            try {
+                task.run();
+            } catch (Throwable t) {
+                log.log(Level.SEVERE, "Error executing queued task", t);
+            }
+        }
+        // Poseidon end
+
         ((CraftScheduler) this.server.getScheduler()).mainThreadHeartbeat(this.ticks); // CraftBukkit
 
         for (j = 0; j < this.worlds.size(); ++j) { // CraftBukkit
@@ -479,6 +500,12 @@ public class MinecraftServer implements Runnable, ICommandListener {
             log.log(Level.WARNING, "Unexpected exception while parsing console command", exception);
         }
     }
+
+    // Poseidon start
+    public void queueSyncTask(Runnable task) {
+        this.queuedSyncTasks.add(task);
+    }
+    // Poseidon end
 
     public void issueCommand(String s, ICommandListener icommandlistener) {
         this.s.add(new ServerCommand(s, icommandlistener));

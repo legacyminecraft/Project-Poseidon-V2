@@ -17,7 +17,7 @@ public final class MinecraftProfileDeserializer implements JsonDeserializer<Mine
             JsonObject object = element.getAsJsonObject();
             UUID id = UuidUtil.fromUndashedString(object.get("id").getAsString());
             String name = object.get("name").getAsString();
-            return new MinecraftProfile(id, name);
+            return new MinecraftProfile(id, name, true);
         } catch (Exception e) {
             throw new JsonParseException(e);
         }

@@ -80,7 +80,7 @@ public final class ServiceClient {
                 throw new ServiceClientException(ServiceClientException.ErrorType.BAD_RESPONSE, e);
             }
         } else {
-            throw new ServiceClientHttpException(response);
+            throw new ServiceClientHttpException(response, "Service at " + request.uri() + " returned response code " + response.statusCode());
         }
     }
 

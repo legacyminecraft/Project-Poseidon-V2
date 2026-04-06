@@ -54,7 +54,7 @@ public class NetworkListenThread {
                 a.log(Level.WARNING, "Failed to handle packet: " + exception, exception);
             }
 
-            if (netloginhandler.c) {
+            if (netloginhandler.c.get()) {
                 this.g.remove(i--);
             }
 

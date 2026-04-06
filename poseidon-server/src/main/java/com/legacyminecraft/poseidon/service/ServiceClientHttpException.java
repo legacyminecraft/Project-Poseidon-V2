@@ -11,6 +11,11 @@ public class ServiceClientHttpException extends ServiceClientException {
         this.response = response;
     }
 
+    public ServiceClientHttpException(HttpResponse<String> response, String message) {
+        super(ErrorType.HTTP_ERROR, message);
+        this.response = response;
+    }
+
     public HttpResponse<String> getResponse() {
         return this.response;
     }

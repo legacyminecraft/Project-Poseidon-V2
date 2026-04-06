@@ -1,9 +1,13 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.LoginProcessHandler;
 import org.jspecify.annotations.Nullable;
 
 import java.net.Socket;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class NetLoginHandler extends NetHandler {
@@ -11,12 +15,17 @@ public class NetLoginHandler extends NetHandler {
     public static Logger a = Logger.getLogger("Minecraft");
     private static Random d = new Random();
     public NetworkManager networkManager;
-    public boolean c = false;
+    public AtomicBoolean c = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
     private MinecraftServer server;
     private int f = 0;
     private @Nullable String g = null;
-    private @Nullable Packet1Login h = null;
+    private volatile @Nullable Packet1Login h = null; // Poseidon - volatile
     private String i = "";
+
+    // Poseidon start
+    private static final Executor ASYNC_EXECUTOR = Executors.newCachedThreadPool(
+            Thread.ofPlatform().name("LoginThread-", 1).factory());
+    // Poseidon end
 
     public NetLoginHandler(MinecraftServer minecraftserver, Socket socket, String s) {
         this.server = minecraftserver;
@@ -44,11 +53,17 @@ public class NetLoginHandler extends NetHandler {
     }
 
     public void disconnect(String s) {
+        // Poseidon start
+        if (!this.c.compareAndSet(false, true)) {
+            return;
+        }
+        // Poseidon end
+
         try {
             a.info("Disconnecting " + this.b() + ": " + s);
             this.networkManager.queue(new Packet255KickDisconnect(s));
             this.networkManager.d();
-            this.c = true;
+            //this.c = true; // Poseidon
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -72,11 +87,7 @@ public class NetLoginHandler extends NetHandler {
                 this.disconnect("Outdated client!");
             }
         } else {
-            if (!this.server.onlineMode) {
-                this.b(packet1login);
-            } else {
-                (new ThreadLoginVerifier(this, packet1login, this.server.server)).start(); // CraftBukkit
-            }
+            ASYNC_EXECUTOR.execute(new LoginProcessHandler(this.server, this, packet1login)); // Poseidon
         }
     }
 
@@ -103,12 +114,17 @@ public class NetLoginHandler extends NetHandler {
             entityplayer.syncInventory();
         }
 
-        this.c = true;
+        this.c.set(true); // Poseidon
     }
 
     public void a(String s, Object @Nullable [] aobject) {
+        // Poseidon start
+        if (!this.c.compareAndSet(false, true)) {
+            return;
+        }
+        // Poseidon end
+
         a.info(this.b() + " lost connection");
-        this.c = true;
     }
 
     public void a(Packet packet) {
@@ -123,11 +139,11 @@ public class NetLoginHandler extends NetHandler {
         return true;
     }
 
-    static String a(NetLoginHandler netloginhandler) {
+    public static String a(NetLoginHandler netloginhandler) { // Poseidon - public
         return netloginhandler.i;
     }
 
-    static Packet1Login a(NetLoginHandler netloginhandler, Packet1Login packet1login) {
+    public static Packet1Login a(NetLoginHandler netloginhandler, Packet1Login packet1login) { // Poseidon - public
         return netloginhandler.h = packet1login;
     }
 }
