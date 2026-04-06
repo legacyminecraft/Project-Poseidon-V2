@@ -5,7 +5,11 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.google.common.collect.MapMaker;
-import com.legacyminecraft.poseidon.profile.PlayerProfile;
+import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.profile.MinecraftProfile;
+import com.legacyminecraft.poseidon.profile.ProfileNotFoundException;
+import com.legacyminecraft.poseidon.profile.UuidUtil;
+import com.legacyminecraft.poseidon.service.ServiceClientException;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.ConvertProgressUpdater;
 import net.minecraft.server.Convertable;
@@ -77,6 +81,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -791,11 +796,22 @@ public final class CraftServer implements Server {
     public OfflinePlayer getOfflinePlayer(String name) {
         OfflinePlayer result = getPlayerExact(name);
         if (result == null) {
-            PlayerProfile profile = null;
+            MinecraftProfile profile = Poseidon.getProfileCache().getProfile(name).orElseGet(() -> {
+                try {
+                    MinecraftProfile onlineProfile = Poseidon.getProfileService().lookupProfileByName(name);
+                    Poseidon.getProfileCache().addProfile(onlineProfile);
+                    return onlineProfile;
+                } catch (ProfileNotFoundException | ServiceClientException e) {
+                    return null;
+                }
+            });
 
-            // TODO: get uuid from cache or call api
+            if (profile == null) {
+                profile = new MinecraftProfile(UuidUtil.createOfflineUuid(name), name, false);
+                Poseidon.getProfileCache().addProfile(profile);
+            }
 
-            result = new CraftOfflinePlayer(this, profile);
+            result = getOfflinePlayer(profile);
         } else {
             this.offlinePlayers.remove(result.getUniqueId());
         }
@@ -806,7 +822,10 @@ public final class CraftServer implements Server {
     public @Nullable OfflinePlayer getOfflinePlayerIfCached(String name) {
         OfflinePlayer result = getPlayerExact(name);
         if (result == null) {
-            // TODO: get uuid from cache
+            Optional<MinecraftProfile> optional = Poseidon.getProfileCache().getProfile(name);
+            if (optional.isPresent()) {
+                result = getOfflinePlayer(optional.get());
+            }
         } else {
             this.offlinePlayers.remove(result.getUniqueId());
         }
@@ -817,12 +836,21 @@ public final class CraftServer implements Server {
     public OfflinePlayer getOfflinePlayer(UUID id) {
         OfflinePlayer result = getPlayer(id);
         if (result == null) {
-            //TODO: result = this.offlinePlayers.computeIfAbsent(id, _ -> new CraftOfflinePlayer(this, new CraftPlayerProfile(id, null)));
+            result = this.offlinePlayers.computeIfAbsent(id, _ -> {
+                MinecraftProfile profile = Poseidon.getProfileCache().getProfile(id).orElse(new MinecraftProfile(id, "", false));
+                return new CraftOfflinePlayer(this, profile);
+            });
         } else {
             this.offlinePlayers.remove(id);
         }
 
         return result;
+    }
+
+    public OfflinePlayer getOfflinePlayer(MinecraftProfile profile) {
+        OfflinePlayer offlinePlayer = new CraftOfflinePlayer(this, profile);
+        this.offlinePlayers.put(profile.id(), offlinePlayer);
+        return offlinePlayer;
     }
     // Poseidon end
 

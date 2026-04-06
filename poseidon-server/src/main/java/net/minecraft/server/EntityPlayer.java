@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -28,7 +29,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     private int bO = 0;
     public boolean h;
 
-    public EntityPlayer(MinecraftServer minecraftserver, World world, String s, ItemInWorldManager iteminworldmanager) {
+    // Poseidon start
+    public final MinecraftProfile profile;
+    // Poseidon end
+
+    // Poseidon - change signature
+    public EntityPlayer(MinecraftServer minecraftserver, World world, MinecraftProfile profile, ItemInWorldManager iteminworldmanager) {
         super(world);
         iteminworldmanager.player = this;
         this.itemInWorldManager = iteminworldmanager;
@@ -46,8 +52,13 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.setPositionRotation((double) i + 0.5D, k, (double) j + 0.5D, 0.0F, 0.0F);
         this.b = minecraftserver;
         this.bs = 0.0F;
-        this.name = s;
+        this.name = profile.name(); // Poseidon
         this.height = 0.0F;
+
+        // Poseidon start
+        this.uniqueId = profile.id();
+        this.profile = profile;
+        // Poseidon end
 
         // CraftBukkit start
         this.displayName = this.name;

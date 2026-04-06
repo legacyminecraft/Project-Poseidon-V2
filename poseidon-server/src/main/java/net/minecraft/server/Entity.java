@@ -81,7 +81,7 @@ public abstract class Entity {
     public int bI;
     public int bJ;
     public boolean bK;
-    public UUID uniqueId = UUID.randomUUID(); // CraftBukkit
+    protected UUID uniqueId = UUID.randomUUID(); // CraftBukkit // Poseidon - protected
 
     public Entity(World world) {
         this.id = entityCount++;
@@ -942,11 +942,13 @@ public abstract class Entity {
         this.setPosition(this.locX, this.locY, this.locZ);
 
         // CraftBukkit start
-        long least = nbttagcompound.getLong("UUIDLeast");
-        long most = nbttagcompound.getLong("UUIDMost");
+        if (!(this instanceof EntityPlayer)) { // Poseidon - don't load UUID for players
+            long least = nbttagcompound.getLong("UUIDLeast");
+            long most = nbttagcompound.getLong("UUIDMost");
 
-        if (least != 0L && most != 0L) {
-            this.uniqueId = new UUID(most, least);
+            if (least != 0L && most != 0L) {
+                this.uniqueId = new UUID(most, least);
+            }
         }
         // CraftBukkit end
 
@@ -1330,4 +1332,10 @@ public abstract class Entity {
 
         return false;
     }
+
+    // Poseidon start
+    public UUID getUniqueId() {
+        return this.uniqueId;
+    }
+    // Poseidon end
 }

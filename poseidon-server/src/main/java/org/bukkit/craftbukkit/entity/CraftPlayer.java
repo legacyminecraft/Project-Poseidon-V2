@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
+import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet131;
 import net.minecraft.server.Packet200Statistic;
@@ -86,7 +87,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public PlayerProfile getPlayerProfile() {
-        return null; // TODO
+        return new PlayerProfileImpl(this.getHandle().profile);
     }
     // Poseidon end
 

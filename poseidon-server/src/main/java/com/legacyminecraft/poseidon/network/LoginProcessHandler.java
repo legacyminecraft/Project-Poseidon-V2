@@ -3,7 +3,6 @@ package com.legacyminecraft.poseidon.network;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
-import com.legacyminecraft.poseidon.profile.ProfileLookupCallback;
 import com.legacyminecraft.poseidon.profile.ProfileNotFoundException;
 import com.legacyminecraft.poseidon.profile.UuidUtil;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
@@ -61,33 +60,26 @@ public final class LoginProcessHandler implements Runnable {
     }
 
     private void getPlayerProfile() {
+        MinecraftProfile profile;
         Optional<MinecraftProfile> optional = Poseidon.getProfileCache().getProfile(getPlayerName(), true);
         if (optional.isPresent() && optional.get().onlineMode()) {
-            MinecraftProfile profile = new MinecraftProfile(optional.get().id(), getPlayerName(), optional.get().onlineMode());
-            callPreLoginEvents(profile);
+            profile = new MinecraftProfile(optional.get().id(), getPlayerName(), optional.get().onlineMode());
         } else {
-            Poseidon.getProfileService().lookupProfileByName(getPlayerName(), new ProfileLookupCallback() {
-                @Override
-                public void onLookupSuccess(MinecraftProfile profile) {
-                    MinecraftProfile corrected = new MinecraftProfile(profile.id(), getPlayerName(), profile.onlineMode());
-                    Poseidon.getProfileCache().addProfile(corrected);
-                    callPreLoginEvents(corrected);
-                }
-
-                @Override
-                public void onLookupFailure(Throwable cause) {
-                    if (cause instanceof ProfileNotFoundException) {
-                        // TODO: make handling of unknown profiles configurable
-                        String name = getPlayerName();
-                        MinecraftProfile offlineProfile = new MinecraftProfile(UuidUtil.createOfflineUuid(name), name, false);
-                        callPreLoginEvents(offlineProfile);
-                    } else {
-                        log.warn("Failed to lookup profile for {}", getPlayerName(), cause);
-                        disconnect("Failed to lookup profile");
-                    }
-                }
-            });
+            try {
+                MinecraftProfile onlineProfile = Poseidon.getProfileService().lookupProfileByName(getPlayerName());
+                profile = new MinecraftProfile(onlineProfile.id(), getPlayerName(), onlineProfile.onlineMode());
+            } catch (ProfileNotFoundException e) {
+                // TODO: make handling of unknown profiles configurable
+                profile = new MinecraftProfile(UuidUtil.createOfflineUuid(getPlayerName()), getPlayerName(), false);
+            } catch (ServiceClientException e) {
+                log.warn("Failed to lookup profile for {}", getPlayerName(), e);
+                disconnect("Failed to lookup profile");
+                return;
+            }
         }
+
+        Poseidon.getProfileCache().addProfile(profile);
+        callPreLoginEvents(profile);
     }
 
     private void callPreLoginEvents(MinecraftProfile profile) {
@@ -126,8 +118,8 @@ public final class LoginProcessHandler implements Runnable {
     private void connectPlayer(MinecraftProfile profile) {
         // TODO: kick player in case another player with their username or uuid is online
 
-        log.info("UUID of player {} is {}", getPlayerName(), profile.id());
-        NetLoginHandler.a(this.netLoginHandler, this.loginPacket);
+        log.info("UUID of player {} is {}", profile.name(), profile.id());
+        NetLoginHandler.a(this.netLoginHandler, profile);
     }
 
     private String getPlayerName() {

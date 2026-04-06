@@ -292,6 +292,6 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     }
 
     public UUID getUniqueId() {
-        return getHandle().uniqueId;
+        return getHandle().getUniqueId(); // Poseidon
     }
 }

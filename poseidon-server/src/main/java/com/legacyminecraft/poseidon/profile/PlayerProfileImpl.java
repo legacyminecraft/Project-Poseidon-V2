@@ -14,7 +14,7 @@ public final class PlayerProfileImpl implements PlayerProfile {
 
     @Override
     public @Nullable String getName() {
-        return this.profile.name();
+        return this.profile.name().isEmpty() ? null : this.profile.name();
     }
 
     @Override

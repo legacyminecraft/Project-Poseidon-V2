@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.network.LoginProcessHandler;
+import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.jspecify.annotations.Nullable;
 
 import java.net.Socket;
@@ -19,7 +20,7 @@ public class NetLoginHandler extends NetHandler {
     private MinecraftServer server;
     private int f = 0;
     private @Nullable String g = null;
-    private volatile @Nullable Packet1Login h = null; // Poseidon - volatile
+    private volatile @Nullable MinecraftProfile h = null; // Poseidon - volatile, Packet1Login -> MinecraftProfile
     private String i = "";
 
     // Poseidon start
@@ -91,8 +92,8 @@ public class NetLoginHandler extends NetHandler {
         }
     }
 
-    public void b(Packet1Login packet1login) {
-        EntityPlayer entityplayer = this.server.serverConfigurationManager.a(this, packet1login.name);
+    public void b(MinecraftProfile profile) { // Poseidon - change signature
+        EntityPlayer entityplayer = this.server.serverConfigurationManager.a(this, profile); // Poseidon - pass profile
 
         if (entityplayer != null) {
             this.server.serverConfigurationManager.b(entityplayer);
@@ -143,7 +144,8 @@ public class NetLoginHandler extends NetHandler {
         return netloginhandler.i;
     }
 
-    public static Packet1Login a(NetLoginHandler netloginhandler, Packet1Login packet1login) { // Poseidon - public
-        return netloginhandler.h = packet1login;
+    // Poseidon - public, Packet1Login -> MinecraftProfile
+    public static MinecraftProfile a(NetLoginHandler netloginhandler, MinecraftProfile profile) {
+        return netloginhandler.h = profile;
     }
 }

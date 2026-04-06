@@ -38,28 +38,26 @@ public final class ProfileService {
         this.lookupByNameBulk = profilesHost.resolve("/minecraft/profile/lookup/bulk/byname");
     }
 
-    public void lookupProfileByName(String name, ProfileLookupCallback callback) {
+    public MinecraftProfile lookupProfileByName(String name) throws ProfileNotFoundException, ServiceClientException {
         try {
-            MinecraftProfile profile = this.client.get(this.lookupByName.resolve(name), MinecraftProfile.class);
-            callback.onLookupSuccess(profile);
+            return this.client.get(this.lookupByName.resolve(name), MinecraftProfile.class);
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http && http.getResponse().statusCode() == 404) {
-                callback.onLookupFailure(new ProfileNotFoundException());
+                throw new ProfileNotFoundException();
             } else {
-                callback.onLookupFailure(e);
+                throw e;
             }
         }
     }
 
-    public void lookupProfileById(UUID id, ProfileLookupCallback callback) {
+    public MinecraftProfile lookupProfileById(UUID id) throws ProfileNotFoundException, ServiceClientException {
         try {
-            MinecraftProfile profile = this.client.get(this.lookupById.resolve(UuidUtil.toUndashedString(id)), MinecraftProfile.class);
-            callback.onLookupSuccess(profile);
+            return this.client.get(this.lookupById.resolve(UuidUtil.toUndashedString(id)), MinecraftProfile.class);
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http && http.getResponse().statusCode() == 404) {
-                callback.onLookupFailure(new ProfileNotFoundException());
+                throw new ProfileNotFoundException();
             } else {
-                callback.onLookupFailure(e);
+                throw e;
             }
         }
     }

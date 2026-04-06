@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit;
 
+import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
+import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -10,17 +12,17 @@ import java.util.UUID;
 
 public class CraftOfflinePlayer implements OfflinePlayer {
 
-    private final PlayerProfile profile; // Poseidon - replace name with profile
+    private final MinecraftProfile profile; // Poseidon - replace name with profile
     private final CraftServer server;
 
     // Poseidon - change signature
-    protected CraftOfflinePlayer(CraftServer server, PlayerProfile profile) {
+    protected CraftOfflinePlayer(CraftServer server, MinecraftProfile profile) {
         this.server = server;
         this.profile = profile;
     }
 
     public boolean isOnline() {
-        return false;
+        return getPlayer() != null; // Poseidon
     }
 
     // Poseidon start
@@ -30,20 +32,20 @@ public class CraftOfflinePlayer implements OfflinePlayer {
             return player.getName();
         }
 
-        PlayerProfile profile = this.profile;
-        if (profile.getName() != null && !profile.getName().isBlank()) {
-            return profile.getName();
+        MinecraftProfile profile = this.profile;
+        if (profile.name() != null && !profile.name().isBlank()) {
+            return profile.name();
         }
 
         return null;
     }
 
     public UUID getUniqueId() {
-        return this.profile.getUniqueId();
+        return this.profile.id();
     }
 
     public PlayerProfile getPlayerProfile() {
-        return this.profile;
+        return new PlayerProfileImpl(this.profile);
     }
 
     public @Nullable Player getPlayer() {
