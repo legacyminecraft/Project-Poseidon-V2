@@ -60,6 +60,7 @@ public final class PoseidonConfig {
     public Logging logging;
     public Services services;
     public Profiles profiles;
+    public UuidSupport uuidSupport;
     public NameValidation nameValidation;
 
     @ConfigSerializable
@@ -95,6 +96,11 @@ public final class PoseidonConfig {
             CORRECT,
             REJECT
         }
+    }
+
+    @ConfigSerializable
+    public static final class UuidSupport {
+        public boolean storePlayerDataByUuid = true;
     }
 
     @ConfigSerializable

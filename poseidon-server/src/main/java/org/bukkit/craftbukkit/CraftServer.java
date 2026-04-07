@@ -807,7 +807,7 @@ public final class CraftServer implements Server {
             });
 
             if (profile == null) {
-                profile = new MinecraftProfile(UuidUtil.createOfflineUuid(name), name, false);
+                profile = MinecraftProfile.createOffline(name);
                 Poseidon.getProfileCache().addProfile(profile);
             }
 

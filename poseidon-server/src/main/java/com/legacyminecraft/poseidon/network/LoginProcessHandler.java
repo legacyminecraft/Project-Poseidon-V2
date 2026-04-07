@@ -89,7 +89,7 @@ public final class LoginProcessHandler implements Runnable {
                 profile = Poseidon.getProfileService().lookupProfileByName(this.name);
             } catch (ProfileNotFoundException e) {
                 if (Poseidon.config().profiles.allowOfflineProfiles) {
-                    profile = new MinecraftProfile(UuidUtil.createOfflineUuid(this.name), this.name, false);
+                    profile = MinecraftProfile.createOffline(this.name);
                 } else {
                     log.info("Disconnecting {} as they do not have an online profile and offline profiles are disallowed.", this.name);
                     disconnect("Offline accounts are not supported");
@@ -102,7 +102,7 @@ public final class LoginProcessHandler implements Runnable {
             }
         }
 
-        log.info("UUID of player {} is {}", profile.name(), profile.id());
+        log.info("UUID of player {} is {}", this.name, profile.id());
         Poseidon.getProfileCache().addProfile(profile);
         callPreLoginEvents(profile);
     }

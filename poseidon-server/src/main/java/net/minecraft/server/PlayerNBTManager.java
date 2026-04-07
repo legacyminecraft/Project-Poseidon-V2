@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
@@ -7,8 +9,10 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -178,7 +182,14 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
 
             entityhuman.d(nbttagcompound);
             File file1 = new File(this.c, "_tmp_.dat");
-            File file2 = new File(this.c, entityhuman.name + ".dat");
+            // Poseidon start
+            File file2;
+            if (Poseidon.config().uuidSupport.storePlayerDataByUuid) {
+                file2 = new File(this.c, entityhuman.getUniqueId() + ".dat");
+            } else {
+                // Poseidon end
+                file2 = new File(this.c, entityhuman.name + ".dat");
+            }
 
             CompressedStreamTools.a(nbttagcompound, (OutputStream) (new FileOutputStream(file1)));
             if (file2.exists()) {
@@ -192,7 +203,14 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
     }
 
     public void b(EntityHuman entityhuman) {
-        NBTTagCompound nbttagcompound = this.a(entityhuman.name);
+        // Poseidon start
+        NBTTagCompound nbttagcompound;
+        if (entityhuman instanceof EntityPlayer entityplayer) {
+            nbttagcompound = this.a(entityplayer.profile);
+        } else {
+            nbttagcompound = this.a(MinecraftProfile.createOffline(entityhuman.name));
+        }
+        // Poseidon end
 
         if (nbttagcompound != null) {
             entityhuman.e(nbttagcompound);
@@ -212,6 +230,60 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
 
         return null;
     }
+
+    // Poseidon start
+    public @Nullable NBTTagCompound a(MinecraftProfile profile) {
+        try {
+            File file;
+            if (Poseidon.config().uuidSupport.storePlayerDataByUuid) {
+                file = getUuidDatFile(profile);
+            } else {
+                file = getNameDatFile(profile.name());
+            }
+
+            if (file.exists()) {
+                return CompressedStreamTools.a(new FileInputStream(file));
+            }
+        } catch (Exception exception) {
+            a.warning("Failed to load player data for " + profile.name());
+        }
+
+        return null;
+    }
+
+    private File getFileByNameIgnoreCase(String name) {
+        FilenameFilter filter = (_, fileName) -> fileName.equalsIgnoreCase(name);
+        File[] matches = this.c.listFiles(filter);
+        return matches.length == 0 ? new File(this.c, name) : matches[0];
+    }
+
+    private File getUuidDatFile(MinecraftProfile profile) throws IOException {
+        String fileName = profile.id() + ".dat";
+        File file = new File(this.c, fileName);
+        if (!file.exists()) {
+            File nameFile = getFileByNameIgnoreCase(profile.name() + ".dat");
+            if (nameFile.exists()) {
+                a.info("Moving player data of " + profile.name() + " to " + fileName);
+                Files.copy(nameFile.toPath(), file.toPath());
+                Files.move(nameFile.toPath(), new File(this.c, profile.name() + ".dat.backup").toPath());
+            }
+        }
+
+        return file;
+    }
+
+    private File getNameDatFile(String name) throws IOException {
+        String fileName = name + ".dat";
+        File file = getFileByNameIgnoreCase(fileName);
+        if (!file.getName().equals(fileName)) {
+            File correctFile = new File(this.c, fileName);
+            Files.move(file.toPath(), correctFile.toPath());
+            file = correctFile;
+        }
+
+        return file;
+    }
+    // Poseidon end
 
     public PlayerFileData d() {
         return this;
