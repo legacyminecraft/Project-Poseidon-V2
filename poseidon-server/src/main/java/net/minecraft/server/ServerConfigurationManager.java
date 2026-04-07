@@ -192,9 +192,12 @@ public class ServerConfigurationManager {
         for (int i = 0; i < this.players.size(); ++i) {
             EntityPlayer entityplayer = this.players.get(i);
 
-            if (entityplayer.name.equalsIgnoreCase(s)) {
-                entityplayer.netServerHandler.disconnect("You logged in from another location");
+            // Poseidon start - check for duplicate UUID, kick the connecting player instead of the online player
+            if (entityplayer.name.equalsIgnoreCase(s) || entityplayer.getUniqueId().equals(profile.id())) {
+                netloginhandler.disconnect("A player with your username or UUID is already online");
+                return null;
             }
+            // Poseidon end
         }
 
         return entity;

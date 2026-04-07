@@ -78,6 +78,7 @@ public final class LoginProcessHandler implements Runnable {
             }
         }
 
+        log.info("UUID of player {} is {}", profile.name(), profile.id());
         Poseidon.getProfileCache().addProfile(profile);
         callPreLoginEvents(profile);
     }
@@ -116,9 +117,6 @@ public final class LoginProcessHandler implements Runnable {
     }
 
     private void connectPlayer(MinecraftProfile profile) {
-        // TODO: kick player in case another player with their username or uuid is online
-
-        log.info("UUID of player {} is {}", profile.name(), profile.id());
         NetLoginHandler.a(this.netLoginHandler, profile);
     }
 
