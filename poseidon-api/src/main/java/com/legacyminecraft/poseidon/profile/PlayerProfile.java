@@ -22,4 +22,11 @@ public interface PlayerProfile {
      * @return the player's UUID
      */
     UUID getUniqueId();
+
+    /**
+     * Returns if the profile is an online profile
+     *
+     * @return {@code true} if it is an online profile
+     */
+    boolean isOnlineMode();
 }

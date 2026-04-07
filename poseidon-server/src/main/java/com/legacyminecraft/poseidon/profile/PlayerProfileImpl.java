@@ -21,4 +21,9 @@ public final class PlayerProfileImpl implements PlayerProfile {
     public UUID getUniqueId() {
         return this.profile.id();
     }
+
+    @Override
+    public boolean isOnlineMode() {
+        return this.profile.onlineMode();
+    }
 }
