@@ -139,6 +139,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
             log.warning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
         }
 
+        Poseidon.getProfileCache().load(); // Poseidon
+
         this.serverConfigurationManager = new ServerConfigurationManager(this);
         // CraftBukkit - removed trackers
         String s1 = this.propertyManager.getString("level-name", "world");

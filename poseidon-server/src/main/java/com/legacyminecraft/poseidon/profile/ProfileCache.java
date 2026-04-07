@@ -11,6 +11,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.legacyminecraft.poseidon.Poseidon;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public final class ProfileCache {
     private final ReentrantLock stateLock = new ReentrantLock();
 
     public void addProfile(MinecraftProfile profile) {
-        ZonedDateTime expiration = ZonedDateTime.now().plusDays(30); // TODO: make expiration configurable
+        ZonedDateTime expiration = ZonedDateTime.now().plusNanos(Poseidon.config().profiles.invalidateCachedProfilesAfter.getNanos());
         ProfileCacheEntry entry = new ProfileCacheEntry(profile, expiration);
         internalAdd(entry);
     }

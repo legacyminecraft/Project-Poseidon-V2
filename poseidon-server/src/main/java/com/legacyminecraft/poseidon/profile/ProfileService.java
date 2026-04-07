@@ -2,6 +2,7 @@ package com.legacyminecraft.poseidon.profile;
 
 import com.google.common.collect.Iterables;
 import com.google.gson.JsonArray;
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import com.legacyminecraft.poseidon.service.ServiceClientHttpException;
@@ -31,18 +32,19 @@ public final class ProfileService {
     private final URI lookupById;
     private final URI lookupByNameBulk;
 
-    private ProfileService(ServiceClient client, URI profilesHost) {
+    private ProfileService(ServiceClient client, URI profileHost) {
         this.client = client;
-        this.lookupByName = profilesHost.resolve("/minecraft/profile/lookup/name/");
-        this.lookupById = profilesHost.resolve("/minecraft/profile/lookup/");
-        this.lookupByNameBulk = profilesHost.resolve("/minecraft/profile/lookup/bulk/byname");
+        this.lookupByName = profileHost.resolve("/minecraft/profile/lookup/name/");
+        this.lookupById = profileHost.resolve("/minecraft/profile/lookup/");
+        this.lookupByNameBulk = profileHost.resolve("/minecraft/profile/lookup/bulk/byname");
     }
 
     public MinecraftProfile lookupProfileByName(String name) throws ProfileNotFoundException, ServiceClientException {
         try {
             return this.client.get(this.lookupByName.resolve(name), MinecraftProfile.class);
         } catch (ServiceClientException e) {
-            if (e instanceof ServiceClientHttpException http && http.getResponse().statusCode() == 404) {
+            if (e instanceof ServiceClientHttpException http &&
+                    (http.getResponse().statusCode() == 404 || http.getResponse().statusCode() == 400)) {
                 throw new ProfileNotFoundException();
             } else {
                 throw e;
@@ -116,7 +118,7 @@ public final class ProfileService {
 
     public static ProfileService getInstance() {
         if (instance == null) {
-            instance = new ProfileService(ServiceClient.getInstance(), URI.create("https://api.minecraftservices.com")); // TODO: make profile host configurable
+            instance = new ProfileService(Poseidon.getServiceClient(), Poseidon.config().services.profileHost);
         }
         return instance;
     }

@@ -1,6 +1,7 @@
 package com.legacyminecraft.poseidon.session;
 
 import com.google.gson.JsonObject;
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import org.jspecify.annotations.Nullable;
@@ -33,7 +34,7 @@ public final class SessionService {
 
     public static SessionService getInstance() {
         if (instance == null) {
-            instance = new SessionService(ServiceClient.getInstance(), URI.create("https://sessionserver.mojang.com")); // TODO: make session host configurable
+            instance = new SessionService(Poseidon.getServiceClient(), Poseidon.config().services.sessionHost);
         }
         return instance;
     }

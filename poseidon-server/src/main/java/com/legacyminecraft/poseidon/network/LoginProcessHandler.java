@@ -8,7 +8,6 @@ import com.legacyminecraft.poseidon.profile.UuidUtil;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.NetLoginHandler;
-import net.minecraft.server.Packet1Login;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.slf4j.Logger;
@@ -18,6 +17,7 @@ import java.net.InetAddress;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 public final class LoginProcessHandler implements Runnable {
 
@@ -25,54 +25,78 @@ public final class LoginProcessHandler implements Runnable {
 
     private final MinecraftServer server;
     private final NetLoginHandler netLoginHandler;
-    private final Packet1Login loginPacket;
+    private final String name;
 
-    public LoginProcessHandler(MinecraftServer server, NetLoginHandler netLoginHandler, Packet1Login loginPacket) {
+    public LoginProcessHandler(MinecraftServer server, NetLoginHandler netLoginHandler, String name) {
         this.server = server;
         this.netLoginHandler = netLoginHandler;
-        this.loginPacket = loginPacket;
+        this.name = name;
     }
 
     @Override
     public void run() {
-        if (!this.server.onlineMode) {
-            getPlayerProfile();
-        } else {
-            verifySession();
+        validateName();
+    }
+
+    private void validateName() {
+        if (Poseidon.config().nameValidation.enabled) {
+            int minLength = Poseidon.config().nameValidation.minimumLength;
+            int maxLength = Poseidon.config().nameValidation.maximumLength;
+            Pattern allowedChars = Poseidon.config().nameValidation.allowedCharacters;
+            if (this.name.length() < minLength) {
+                disconnect("Name too short, minimum " + minLength + " characters allowed");
+                return;
+            } else if (this.name.length() > maxLength) {
+                disconnect("Name too long, maximum " + maxLength + " characters allowed");
+                return;
+            } else if (!allowedChars.matcher(this.name).matches()) {
+                disconnect("Name has invalid characters, allowed characters: " + allowedChars);
+                return;
+            }
         }
+
+        verifySession();
     }
 
     private void verifySession() {
-        try {
-            String name = getPlayerName();
-            String serverId = NetLoginHandler.a(this.netLoginHandler);
-            InetAddress ipAddress = this.netLoginHandler.getSocket().getInetAddress();
-            if (Poseidon.getSessionService().verifySession(name, serverId, ipAddress)) {
-                getPlayerProfile();
-            } else {
-                log.info("{} tried to login with an invalid session", getPlayerName());
-                disconnect("Invalid session");
+        if (!this.server.onlineMode) {
+            getPlayerProfile();
+        } else {
+            try {
+                String name = this.name;
+                String serverId = NetLoginHandler.a(this.netLoginHandler);
+                InetAddress ipAddress = this.netLoginHandler.getSocket().getInetAddress();
+                if (Poseidon.getSessionService().verifySession(name, serverId, ipAddress)) {
+                    getPlayerProfile();
+                } else {
+                    log.info("{} tried to login with an invalid session", this.name);
+                    disconnect("Invalid session");
+                }
+            } catch (ServiceClientException e) {
+                log.warn("Failed to verify session for {}", this.name, e);
+                disconnect("Failed to verify session");
             }
-        } catch (ServiceClientException e) {
-            log.warn("Failed to verify session for {}", getPlayerName(), e);
-            disconnect("Failed to verify session");
         }
     }
 
     private void getPlayerProfile() {
         MinecraftProfile profile;
-        Optional<MinecraftProfile> optional = Poseidon.getProfileCache().getProfile(getPlayerName(), true);
+        Optional<MinecraftProfile> optional = Poseidon.getProfileCache().getProfile(this.name, true);
         if (optional.isPresent() && optional.get().onlineMode()) {
-            profile = new MinecraftProfile(optional.get().id(), getPlayerName(), optional.get().onlineMode());
+            profile = optional.get();
         } else {
             try {
-                MinecraftProfile onlineProfile = Poseidon.getProfileService().lookupProfileByName(getPlayerName());
-                profile = new MinecraftProfile(onlineProfile.id(), getPlayerName(), onlineProfile.onlineMode());
+                profile = Poseidon.getProfileService().lookupProfileByName(this.name);
             } catch (ProfileNotFoundException e) {
-                // TODO: make handling of unknown profiles configurable
-                profile = new MinecraftProfile(UuidUtil.createOfflineUuid(getPlayerName()), getPlayerName(), false);
+                if (Poseidon.config().profiles.allowOfflineProfiles) {
+                    profile = new MinecraftProfile(UuidUtil.createOfflineUuid(this.name), this.name, false);
+                } else {
+                    log.info("Disconnecting {} as they do not have an online profile and offline profiles are disallowed.", this.name);
+                    disconnect("Offline accounts are not supported");
+                    return;
+                }
             } catch (ServiceClientException e) {
-                log.warn("Failed to lookup profile for {}", getPlayerName(), e);
+                log.warn("Failed to lookup profile for {}", this.name, e);
                 disconnect("Failed to lookup profile");
                 return;
             }
@@ -107,21 +131,47 @@ public final class LoginProcessHandler implements Runnable {
                     return;
                 }
             } catch (InterruptedException | ExecutionException e) {
-                log.warn("Failed to call sync {} for {}", event.getClass().getSimpleName(), getPlayerName(), e);
+                log.warn("Failed to call sync {} for {}", event.getClass().getSimpleName(), this.name, e);
                 disconnect("Internal server error");
                 return;
             }
         }
 
-        connectPlayer(profile);
+        loginPlayer(profile);
     }
 
-    private void connectPlayer(MinecraftProfile profile) {
+    private void loginPlayer(MinecraftProfile profile) {
+        if (profile.onlineMode()) {
+            loginOnlineProfile(profile);
+        } else {
+            loginOfflineProfile(profile);
+        }
+    }
+
+    private void loginOnlineProfile(MinecraftProfile profile) {
+        if (this.name.equals(profile.name())) {
+            finishLogin(profile);
+        } else {
+            switch (Poseidon.config().profiles.handleLoginsWithWrongNameCasing) {
+                case KEEP -> {
+                    MinecraftProfile newProfile = new MinecraftProfile(profile.id(), this.name, profile.onlineMode());
+                    finishLogin(newProfile);
+                }
+                case CORRECT -> finishLogin(profile);
+                case REJECT -> {
+                    log.info("Disconnecting {} as the correct name is '{}' and wrongly cased names should be rejected.", this.name, profile.name());
+                    disconnect("Invalid name '" + this.name + "', correct name is '" + profile.name() + "'");
+                }
+            }
+        }
+    }
+
+    private void loginOfflineProfile(MinecraftProfile profile) {
+        finishLogin(profile);
+    }
+
+    private void finishLogin(MinecraftProfile profile) {
         NetLoginHandler.a(this.netLoginHandler, profile);
-    }
-
-    private String getPlayerName() {
-        return this.loginPacket.name;
     }
 
     private void disconnect(String message) {

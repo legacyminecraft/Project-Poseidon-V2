@@ -1,5 +1,6 @@
 package com.legacyminecraft.poseidon.config;
 
+import com.legacyminecraft.poseidon.config.type.Duration;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
@@ -8,7 +9,9 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import java.net.URI;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 @ConfigSerializable
 public final class PoseidonConfig {
@@ -39,7 +42,9 @@ public final class PoseidonConfig {
                 .path(Paths.get("poseidon.yml"))
                 .indent(2)
                 .nodeStyle(NodeStyle.BLOCK)
-                .defaultOptions(opt -> opt.header(HEADER))
+                .defaultOptions(opt -> opt
+                        .header(HEADER)
+                        .serializers(builder -> builder.register(Duration.SERIALIZER)))
                 .headerMode(HeaderMode.PRESET)
                 .build();
 
@@ -53,6 +58,9 @@ public final class PoseidonConfig {
     }
 
     public Logging logging;
+    public Services services;
+    public Profiles profiles;
+    public NameValidation nameValidation;
 
     @ConfigSerializable
     public static final class Logging {
@@ -68,5 +76,32 @@ public final class PoseidonConfig {
             public String latestFile = "logs/latest.log";
             public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
         }
+    }
+
+    @ConfigSerializable
+    public static final class Services {
+        public URI profileHost = URI.create("https://api.minecraftservices.com");
+        public URI sessionHost = URI.create("https://sessionserver.mojang.com");
+    }
+
+    @ConfigSerializable
+    public static final class Profiles {
+        public boolean allowOfflineProfiles = true;
+        public Duration invalidateCachedProfilesAfter = Duration.of("30d");
+        public WrongNameCasingHandlingMode handleLoginsWithWrongNameCasing = WrongNameCasingHandlingMode.KEEP;
+
+        public enum WrongNameCasingHandlingMode {
+            KEEP,
+            CORRECT,
+            REJECT
+        }
+    }
+
+    @ConfigSerializable
+    public static final class NameValidation {
+        public boolean enabled = true;
+        public int minimumLength = 3;
+        public int maximumLength = 16;
+        public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
     }
 }

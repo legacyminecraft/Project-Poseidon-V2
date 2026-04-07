@@ -88,11 +88,12 @@ public class NetLoginHandler extends NetHandler {
                 this.disconnect("Outdated client!");
             }
         } else {
-            ASYNC_EXECUTOR.execute(new LoginProcessHandler(this.server, this, packet1login)); // Poseidon
+            ASYNC_EXECUTOR.execute(new LoginProcessHandler(this.server, this, packet1login.name)); // Poseidon
         }
     }
 
     public void b(MinecraftProfile profile) { // Poseidon - change signature
+        this.g = profile.name(); // Poseidon
         EntityPlayer entityplayer = this.server.serverConfigurationManager.a(this, profile); // Poseidon - pass profile
 
         if (entityplayer != null) {
