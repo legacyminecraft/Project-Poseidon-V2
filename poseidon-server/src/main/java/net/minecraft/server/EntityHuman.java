@@ -364,6 +364,12 @@ public abstract class EntityHuman extends EntityLiving {
             nbttagcompound.a("SpawnZ", this.b.z);
             nbttagcompound.setString("SpawnWorld", this.spawnWorld); // CraftBukkit
         }
+
+        // Poseidon start
+        NBTTagCompound bukkitData = nbttagcompound.k("bukkit");
+        bukkitData.setString("lastKnownName", this.name);
+        nbttagcompound.a("bukkit", bukkitData);
+        // Poseidon end
     }
 
     public void a(IInventory iinventory) {}

@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -110,7 +110,7 @@ public final class ProfileCache {
             for (ProfileCacheEntry entry : entries) {
                 internalAdd(entry);
             }
-        } catch (FileNotFoundException _) {
+        } catch (NoSuchFileException _) {
         } catch (JsonSyntaxException | NullPointerException e) {
             log.warn("Profile cache is corrupted or has bad formatting. Deleting it to prevent further issues.", e);
             this.file.delete();

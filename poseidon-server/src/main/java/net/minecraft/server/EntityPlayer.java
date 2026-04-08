@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.event.profile.PlayerProfileNameChangedEvent;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
+import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -93,6 +95,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.itemInWorldManager = new ItemInWorldManager((WorldServer) world);
         this.itemInWorldManager.player = this;
     }
+
+    // Poseidon start
+    public void a(NBTTagCompound nbttagcompound) {
+        super.a(nbttagcompound);
+        NBTTagCompound bukkitData = nbttagcompound.k("bukkit");
+        String lastKnownName = bukkitData.getString("lastKnownName");
+        if (lastKnownName != null && !lastKnownName.isEmpty() && !this.profile.name().equals(lastKnownName)) {
+            MinecraftServer.log.info(lastKnownName + " has changed their name to " + this.profile.name() + " (UUID: " + this.profile.id() + ")");
+            new PlayerProfileNameChangedEvent(new PlayerProfileImpl(this.profile), lastKnownName).callEvent();
+        }
+    }
+    // Poseidon end
 
     public void syncInventory() {
         this.activeContainer.a((ICrafting) this);
