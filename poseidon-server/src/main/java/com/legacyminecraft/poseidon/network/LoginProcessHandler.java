@@ -4,7 +4,6 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import com.legacyminecraft.poseidon.profile.ProfileNotFoundException;
-import com.legacyminecraft.poseidon.profile.UuidUtil;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.NetLoginHandler;

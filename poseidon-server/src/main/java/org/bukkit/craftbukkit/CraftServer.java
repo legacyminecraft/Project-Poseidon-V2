@@ -4,11 +4,13 @@ import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
+import com.legacyminecraft.poseidon.profile.PlayerProfile;
+import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import com.legacyminecraft.poseidon.profile.ProfileNotFoundException;
-import com.legacyminecraft.poseidon.profile.UuidUtil;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.ConvertProgressUpdater;
@@ -851,6 +853,17 @@ public final class CraftServer implements Server {
         OfflinePlayer offlinePlayer = new CraftOfflinePlayer(this, profile);
         this.offlinePlayers.put(profile.id(), offlinePlayer);
         return offlinePlayer;
+    }
+
+    public PlayerProfile createProfile(UUID id, String name, boolean onlineMode) {
+        Preconditions.checkArgument(id != null, "id cannot be null");
+        Preconditions.checkArgument(name != null, "name cannot be null");
+        return new PlayerProfileImpl(new MinecraftProfile(id, name, onlineMode));
+    }
+
+    public PlayerProfile createOfflineProfile(String name) {
+        Preconditions.checkArgument(name != null, "name cannot be null");
+        return new PlayerProfileImpl(MinecraftProfile.createOffline(name));
     }
     // Poseidon end
 

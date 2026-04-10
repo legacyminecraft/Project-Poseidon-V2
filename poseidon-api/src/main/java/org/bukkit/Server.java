@@ -1,6 +1,7 @@
 package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
+import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -451,6 +452,29 @@ public interface Server {
      * @return an offline player
      */
     OfflinePlayer getOfflinePlayer(UUID id);
+
+    /**
+     * Creates a new {@link PlayerProfile} from the specified UUID, name and
+     * online mode.
+     *
+     * @param id the UUID
+     * @param name the name
+     * @param onlineMode if the profile is an online profile
+     * @return a PlayerProfile object
+     */
+    PlayerProfile createProfile(UUID id, String name, boolean onlineMode);
+
+    /**
+     * Creates a new offline {@link PlayerProfile} from the specified name.
+     * <p>
+     * This will generate a UUID for the profile based on the name. The name
+     * is case-insensitive, meaning that the same UUID will be generated for
+     * names which only differ in casing.
+     *
+     * @param name the name
+     * @return a PlayerProfile object
+     */
+    PlayerProfile createOfflineProfile(String name);
 
     /**
      * Gets a set containing all current IPs that are banned

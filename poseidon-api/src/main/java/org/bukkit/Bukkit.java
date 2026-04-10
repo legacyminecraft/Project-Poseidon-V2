@@ -1,6 +1,7 @@
 package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
+import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -245,6 +246,14 @@ public final class Bukkit {
 
     public static OfflinePlayer getOfflinePlayer(UUID id) {
         return server.getOfflinePlayer(id);
+    }
+
+    public static PlayerProfile createProfile(UUID id, String name, boolean onlineMode) {
+        return server.createProfile(id, name, onlineMode);
+    }
+
+    public static PlayerProfile createOfflineProfile(String name) {
+        return server.createOfflineProfile(name);
     }
 
     public static Set<String> getIPBans() {
