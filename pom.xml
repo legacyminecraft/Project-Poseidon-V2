@@ -26,6 +26,18 @@
         <developerConnection>scm:git:git@github.com:retromcorg/Project-Poseidon-V2.git</developerConnection>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>johnymuffin-nexus</id>
+            <url>https://repository.johnymuffin.com/repository/maven-releases/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>johnymuffin-nexus</id>
+            <url>https://repository.johnymuffin.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
