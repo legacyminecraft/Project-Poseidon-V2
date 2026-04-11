@@ -6,6 +6,7 @@ import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -119,6 +120,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.AnnotationTypeMismatchException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -1043,9 +1045,27 @@ public class JavaPluginLoader implements PluginLoader {
                     }
                 }
             };
-            eventSet.add(new RegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
+            eventSet.add(new RegisteredListener(listener, executor, getEventPriority(eh), plugin, eh.ignoreCancelled()));
         }
         return ret;
+    }
+
+    private static final Pattern LEGACY_PRIORITY = Pattern.compile("^org\\.bukkit\\.event\\.Event\\$Priority\\.");
+
+    // Helper method to convert any legacy usage of Event.Priority in
+    // EventHandler#priority() at runtime to EventPriority.
+    private EventPriority getEventPriority(EventHandler eh) {
+        try {
+            return eh.priority();
+        } catch (AnnotationTypeMismatchException e) {
+            String constant = LEGACY_PRIORITY.matcher(e.foundType()).replaceFirst("");
+            try {
+                return Event.Priority.valueOf(constant).getNewPriority();
+            } catch (IllegalArgumentException _) {
+            }
+        }
+
+        return EventPriority.NORMAL;
     }
 
     public void enablePlugin(final Plugin plugin) {
