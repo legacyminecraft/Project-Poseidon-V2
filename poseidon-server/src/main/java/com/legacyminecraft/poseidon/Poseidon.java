@@ -1,5 +1,6 @@
 package com.legacyminecraft.poseidon;
 
+import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
 import com.legacyminecraft.poseidon.profile.ProfileService;
@@ -7,37 +8,45 @@ import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.session.SessionService;
 import com.legacyminecraft.poseidon.version.PoseidonBuildInformation;
 import com.legacyminecraft.poseidon.version.PoseidonUpdateNotifier;
+import org.jspecify.annotations.Nullable;
 
 public final class Poseidon {
+
+    private static @Nullable PoseidonServer server;
 
     private Poseidon() {
     }
 
-    public static PoseidonConfig config() {
+    public static synchronized void setServer(PoseidonServer server) {
+        Preconditions.checkState(Poseidon.server == null, "cannot redefine server");
+        Poseidon.server = server;
+    }
+
+    public static PoseidonConfig getConfig() {
         return PoseidonConfig.getInstance();
     }
 
     public static PoseidonBuildInformation getBuildInformation() {
-        return PoseidonBuildInformation.getInstance();
+        return server.getBuildInformation();
     }
 
     public static PoseidonUpdateNotifier getUpdateNotifier() {
-        return PoseidonUpdateNotifier.getInstance();
+        return server.getUpdateNotifier();
     }
 
     public static ProfileCache getProfileCache() {
-        return ProfileCache.getInstance();
+        return server.getProfileCache();
     }
 
     public static ServiceClient getServiceClient() {
-        return ServiceClient.getInstance();
+        return server.getServiceClient();
     }
 
     public static ProfileService getProfileService() {
-        return ProfileService.getInstance();
+        return server.getProfileService();
     }
 
     public static SessionService getSessionService() {
-        return SessionService.getInstance();
+        return server.getSessionService();
     }
 }

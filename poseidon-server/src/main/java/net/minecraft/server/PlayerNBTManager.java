@@ -184,7 +184,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
             File file1 = new File(this.c, "_tmp_.dat");
             // Poseidon start
             File file2;
-            if (Poseidon.config().uuidSupport.storePlayerDataByUuid) {
+            if (Poseidon.getConfig().uuidSupport.storePlayerDataByUuid) {
                 file2 = new File(this.c, entityhuman.getUniqueId() + ".dat");
             } else {
                 // Poseidon end
@@ -235,7 +235,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
     public @Nullable NBTTagCompound a(MinecraftProfile profile) {
         try {
             File file;
-            if (Poseidon.config().uuidSupport.storePlayerDataByUuid) {
+            if (Poseidon.getConfig().uuidSupport.storePlayerDataByUuid) {
                 file = getUuidDatFile(profile);
             } else {
                 file = getNameDatFile(profile.name());

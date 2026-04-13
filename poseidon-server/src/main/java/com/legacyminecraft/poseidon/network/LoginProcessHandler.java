@@ -38,10 +38,10 @@ public final class LoginProcessHandler implements Runnable {
     }
 
     private void validateName() {
-        if (Poseidon.config().nameValidation.enabled) {
-            int minLength = Poseidon.config().nameValidation.minimumLength;
-            int maxLength = Poseidon.config().nameValidation.maximumLength;
-            Pattern allowedChars = Poseidon.config().nameValidation.allowedCharacters;
+        if (Poseidon.getConfig().nameValidation.enabled) {
+            int minLength = Poseidon.getConfig().nameValidation.minimumLength;
+            int maxLength = Poseidon.getConfig().nameValidation.maximumLength;
+            Pattern allowedChars = Poseidon.getConfig().nameValidation.allowedCharacters;
             if (this.name.length() < minLength) {
                 disconnect("Name too short, minimum " + minLength + " characters allowed");
                 return;
@@ -87,7 +87,7 @@ public final class LoginProcessHandler implements Runnable {
             try {
                 profile = Poseidon.getProfileService().lookupProfileByName(this.name);
             } catch (ProfileNotFoundException e) {
-                if (Poseidon.config().profiles.allowOfflineProfiles) {
+                if (Poseidon.getConfig().profiles.allowOfflineProfiles) {
                     profile = MinecraftProfile.createOffline(this.name);
                 } else {
                     log.info("Disconnecting {} as they do not have an online profile and offline profiles are disallowed.", this.name);
@@ -151,7 +151,7 @@ public final class LoginProcessHandler implements Runnable {
         if (this.name.equals(profile.name())) {
             finishLogin(profile);
         } else {
-            switch (Poseidon.config().profiles.handleLoginsWithWrongNameCasing) {
+            switch (Poseidon.getConfig().profiles.handleLoginsWithWrongNameCasing) {
                 case KEEP -> {
                     MinecraftProfile newProfile = new MinecraftProfile(profile.id(), this.name, profile.onlineMode());
                     finishLogin(newProfile);

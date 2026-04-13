@@ -6,9 +6,7 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import com.legacyminecraft.poseidon.service.ServiceClientHttpException;
-import org.jspecify.annotations.Nullable;
 
-import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,23 +23,16 @@ public final class ProfileService {
     private static final int DELAY_BETWEEN_PAGES = 100;
     private static final int DELAY_BETWEEN_FAILURES = 750;
 
-    private static @Nullable ProfileService instance;
-
     private final ServiceClient client;
-    private final URI lookupByName;
-    private final URI lookupById;
-    private final URI lookupByNameBulk;
 
-    private ProfileService(ServiceClient client, URI profileHost) {
+    public ProfileService(ServiceClient client) {
         this.client = client;
-        this.lookupByName = profileHost.resolve("/minecraft/profile/lookup/name/");
-        this.lookupById = profileHost.resolve("/minecraft/profile/lookup/");
-        this.lookupByNameBulk = profileHost.resolve("/minecraft/profile/lookup/bulk/byname");
     }
 
     public MinecraftProfile lookupProfileByName(String name) throws ProfileNotFoundException, ServiceClientException {
         try {
-            return this.client.get(this.lookupByName.resolve(name), MinecraftProfile.class);
+            String url = getProfileHost() + "/minecraft/profile/lookup/name/" + name;
+            return this.client.get(url, MinecraftProfile.class);
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http &&
                     (http.getResponse().statusCode() == 404 || http.getResponse().statusCode() == 400)) {
@@ -54,7 +45,8 @@ public final class ProfileService {
 
     public MinecraftProfile lookupProfileById(UUID id) throws ProfileNotFoundException, ServiceClientException {
         try {
-            return this.client.get(this.lookupById.resolve(UuidUtil.toUndashedString(id)), MinecraftProfile.class);
+            String url = getProfileHost() + "/minecraft/profile/lookup/" + UuidUtil.toUndashedString(id);
+            return this.client.get(url, MinecraftProfile.class);
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http && http.getResponse().statusCode() == 404) {
                 throw new ProfileNotFoundException();
@@ -65,6 +57,7 @@ public final class ProfileService {
     }
 
     public void lookupProfilesByNames(Collection<String> names, ProfileLookupCallback callback) {
+        String url = getProfileHost() + "/minecraft/profile/lookup/bulk/byname";
         Set<String> uniqueNames = names.stream()
                 .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toSet());
@@ -80,7 +73,7 @@ public final class ProfileService {
                 failed = false;
 
                 try {
-                    ProfileBulkLookupResponse response = this.client.post(this.lookupByNameBulk, body, ProfileBulkLookupResponse.class);
+                    ProfileBulkLookupResponse response = this.client.post(url, body, ProfileBulkLookupResponse.class);
                     failCount = 0;
 
                     Set<String> received = new HashSet<>();
@@ -116,10 +109,7 @@ public final class ProfileService {
         }
     }
 
-    public static ProfileService getInstance() {
-        if (instance == null) {
-            instance = new ProfileService(Poseidon.getServiceClient(), Poseidon.config().services.profileHost);
-        }
-        return instance;
+    private String getProfileHost() {
+        return Poseidon.getConfig().services.profileHost;
     }
 }

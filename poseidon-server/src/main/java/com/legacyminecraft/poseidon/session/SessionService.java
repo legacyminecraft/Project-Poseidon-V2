@@ -7,35 +7,27 @@ import com.legacyminecraft.poseidon.service.ServiceClientException;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetAddress;
-import java.net.URI;
 
 public final class SessionService {
 
-    private static @Nullable SessionService instance;
-
     private final ServiceClient client;
-    private final URI hasJoined;
 
-    public SessionService(ServiceClient client, URI sessionHost) {
+    public SessionService(ServiceClient client) {
         this.client = client;
-        this.hasJoined = sessionHost.resolve("/session/minecraft/hasJoined");
     }
 
     public boolean verifySession(String name, String serverId, @Nullable InetAddress ipAddress) throws ServiceClientException {
+        String url = getSessionHost() + "/session/minecraft/hasJoined?username=" + name + "&serverId=" + serverId;
         InetAddress finalAddress = ipAddress == null || ipAddress.isLoopbackAddress() ? null : ipAddress;
-        URI uri = URI.create(this.hasJoined + "?username=" + name + "&serverId=" + serverId);
         if (finalAddress != null) {
-            uri = URI.create(uri + "&ip=" + finalAddress.getHostAddress());
+            url += "&ip=" + finalAddress.getHostAddress();
         }
 
-        JsonObject response = this.client.get(uri, JsonObject.class);
+        JsonObject response = this.client.get(url, JsonObject.class);
         return response != null;
     }
 
-    public static SessionService getInstance() {
-        if (instance == null) {
-            instance = new SessionService(Poseidon.getServiceClient(), Poseidon.config().services.sessionHost);
-        }
-        return instance;
+    private String getSessionHost() {
+        return Poseidon.getConfig().services.sessionHost;
     }
 }

@@ -9,7 +9,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-import java.net.URI;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
@@ -89,8 +88,8 @@ public final class PoseidonConfig {
 
     @ConfigSerializable
     public static final class Services {
-        public URI profileHost = URI.create("https://api.minecraftservices.com");
-        public URI sessionHost = URI.create("https://sessionserver.mojang.com");
+        public String profileHost = "https://api.minecraftservices.com";
+        public String sessionHost = "https://sessionserver.mojang.com";
     }
 
     @ConfigSerializable

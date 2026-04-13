@@ -22,7 +22,7 @@ public final class ServerLoggingConfigurator extends ContextAwareBase implements
         HighlightingPatternLayoutEncoder consoleEncoder = new HighlightingPatternLayoutEncoder();
         consoleEncoder.setContext(context);
         consoleEncoder.setCharset(StandardCharsets.UTF_8);
-        consoleEncoder.setPattern(Poseidon.config().logging.consolePattern);
+        consoleEncoder.setPattern(Poseidon.getConfig().logging.consolePattern);
         consoleEncoder.start();
 
         JLineConsoleAppender<ILoggingEvent> consoleAppender = new JLineConsoleAppender<>();
@@ -35,18 +35,18 @@ public final class ServerLoggingConfigurator extends ContextAwareBase implements
         AnsiRemovingPatternLayoutEncoder fileEncoder = new AnsiRemovingPatternLayoutEncoder();
         fileEncoder.setContext(context);
         fileEncoder.setCharset(StandardCharsets.UTF_8);
-        fileEncoder.setPattern(Poseidon.config().logging.filePattern);
+        fileEncoder.setPattern(Poseidon.getConfig().logging.filePattern);
         fileEncoder.start();
 
         FileAppender<ILoggingEvent> fileAppender;
-        if (Poseidon.config().logging.rollingLogFile.enabled) {
+        if (Poseidon.getConfig().logging.rollingLogFile.enabled) {
             TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
             rollingPolicy.setContext(context);
-            rollingPolicy.setFileNamePattern(Poseidon.config().logging.rollingLogFile.fileNamePattern);
+            rollingPolicy.setFileNamePattern(Poseidon.getConfig().logging.rollingLogFile.fileNamePattern);
 
             RollingFileAppender<ILoggingEvent> rollingFileAppender = new RollingFileAppender<>();
             rollingFileAppender.setName("rolling-file-appender");
-            rollingFileAppender.setFile(Poseidon.config().logging.rollingLogFile.latestFile);
+            rollingFileAppender.setFile(Poseidon.getConfig().logging.rollingLogFile.latestFile);
             rollingFileAppender.setRollingPolicy(rollingPolicy);
 
             rollingPolicy.setParent(rollingFileAppender);
@@ -55,7 +55,7 @@ public final class ServerLoggingConfigurator extends ContextAwareBase implements
         } else {
             fileAppender = new FileAppender<>();
             fileAppender.setName("file-appender");
-            fileAppender.setFile(Poseidon.config().logging.file);
+            fileAppender.setFile(Poseidon.getConfig().logging.file);
         }
 
         fileAppender.setContext(context);
@@ -78,7 +78,7 @@ public final class ServerLoggingConfigurator extends ContextAwareBase implements
         asyncFileAppender.start();
 
         Logger rootLogger = context.getLogger(Logger.ROOT_LOGGER_NAME);
-        rootLogger.setLevel(Level.convertAnSLF4JLevel(Poseidon.config().logging.level));
+        rootLogger.setLevel(Level.convertAnSLF4JLevel(Poseidon.getConfig().logging.level));
         rootLogger.addAppender(asyncConsoleAppender);
         rootLogger.addAppender(asyncFileAppender);
 

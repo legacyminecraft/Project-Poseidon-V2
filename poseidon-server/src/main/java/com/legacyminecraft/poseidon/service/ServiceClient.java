@@ -18,8 +18,6 @@ public final class ServiceClient {
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofMillis(5000);
 
-    private static @Nullable ServiceClient instance;
-
     private final HttpClient client;
     private final Gson gson;
 
@@ -32,11 +30,11 @@ public final class ServiceClient {
                 .create();
     }
 
-    public <T> @Nullable T get(URI uri, Class<T> responseClass) throws ServiceClientException {
+    public <T> @Nullable T get(String url, Class<T> responseClass) throws ServiceClientException {
         HttpRequest request;
         try {
             request = HttpRequest.newBuilder()
-                    .uri(uri)
+                    .uri(new URI(url))
                     .header("Content-Type", "application/json")
                     .GET()
                     .timeout(REQUEST_TIMEOUT)
@@ -48,11 +46,11 @@ public final class ServiceClient {
         return sendRequest(request, responseClass);
     }
 
-    public <T> @Nullable T post(URI uri, HttpRequest.BodyPublisher bodyPublisher, Class<T> responseClass) throws ServiceClientException {
+    public <T> @Nullable T post(String url, HttpRequest.BodyPublisher bodyPublisher, Class<T> responseClass) throws ServiceClientException {
         HttpRequest request;
         try {
             request = HttpRequest.newBuilder()
-                    .uri(uri)
+                    .uri(new URI(url))
                     .header("Content-Type", "application/json")
                     .POST(bodyPublisher)
                     .timeout(REQUEST_TIMEOUT)
@@ -82,12 +80,5 @@ public final class ServiceClient {
         } else {
             throw new ServiceClientHttpException(response, "Service at " + request.uri() + " returned response code " + response.statusCode());
         }
-    }
-
-    public static ServiceClient getInstance() {
-        if (instance == null) {
-            instance = new ServiceClient();
-        }
-        return instance;
     }
 }

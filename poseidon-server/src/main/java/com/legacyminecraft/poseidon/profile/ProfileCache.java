@@ -12,7 +12,6 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.legacyminecraft.poseidon.Poseidon;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,15 +40,13 @@ public final class ProfileCache {
     private static final Logger log = LoggerFactory.getLogger(ProfileCache.class);
     private static final Gson gson;
 
-    private static @Nullable ProfileCache instance;
-
     private final File file = new File("usercache.json");
     private final Map<String, ProfileCacheEntry> profilesByName = new ConcurrentHashMap<>();
     private final Map<UUID, ProfileCacheEntry> profilesById = new ConcurrentHashMap<>();
     private final ReentrantLock stateLock = new ReentrantLock();
 
     public void addProfile(MinecraftProfile profile) {
-        ZonedDateTime expiration = ZonedDateTime.now().plusNanos(Poseidon.config().profiles.invalidateCachedProfilesAfter.getNanos());
+        ZonedDateTime expiration = ZonedDateTime.now().plusNanos(Poseidon.getConfig().profiles.invalidateCachedProfilesAfter.getNanos());
         ProfileCacheEntry entry = new ProfileCacheEntry(profile, expiration);
         internalAdd(entry);
     }
@@ -120,6 +117,7 @@ public final class ProfileCache {
     }
 
     public void save() {
+        log.info("Saving profile cache");
         List<ProfileCacheEntry> entries = getEntries();
         try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             gson.toJson(entries, ENTRY_TYPE, writer);
@@ -155,13 +153,6 @@ public final class ProfileCache {
                 return object;
             }
         }
-    }
-
-    public static ProfileCache getInstance() {
-        if (instance == null) {
-            instance = new ProfileCache();
-        }
-        return instance;
     }
 
     static {

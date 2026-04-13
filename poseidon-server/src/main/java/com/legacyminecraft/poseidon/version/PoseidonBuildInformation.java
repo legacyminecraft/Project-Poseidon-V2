@@ -1,6 +1,5 @@
 package com.legacyminecraft.poseidon.version;
 
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,8 +10,6 @@ import java.util.Properties;
 public final class PoseidonBuildInformation {
 
     private static final Logger log = LoggerFactory.getLogger(PoseidonBuildInformation.class);
-
-    private static @Nullable PoseidonBuildInformation instance;
 
     private final Properties versionProperties = new Properties();
 
@@ -48,12 +45,5 @@ public final class PoseidonBuildInformation {
 
     private String getProperty(String key) {
         return this.versionProperties.getProperty(key, "unknown");
-    }
-
-    public static PoseidonBuildInformation getInstance() {
-        if (instance == null) {
-            instance = new PoseidonBuildInformation();
-        }
-        return instance;
     }
 }

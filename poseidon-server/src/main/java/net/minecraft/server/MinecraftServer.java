@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
@@ -66,6 +67,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
     // CraftBukkit end
 
     // Poseidon start
+    private PoseidonServer poseidonServer;
     private final Thread primaryThread;
     private final Queue<Runnable> queuedSyncTasks = new ConcurrentLinkedQueue<>();
     // Poseidon end
@@ -87,7 +89,11 @@ public class MinecraftServer implements Runnable, ICommandListener {
     private boolean init() throws UnknownHostException { // CraftBukkit - added throws UnknownHostException
         long j = System.nanoTime(); // Poseidon - moved from below
 
-        PoseidonConfig.load(); // Poseidon
+        // Poseidon start
+        PoseidonConfig.load();
+        this.poseidonServer = new PoseidonServer();
+        Poseidon.setServer(this.poseidonServer);
+        // Poseidon end
 
         this.consoleCommandHandler = new ConsoleCommandHandler(this);
         ThreadCommandReader threadcommandreader = new ThreadCommandReader(this);
@@ -139,7 +145,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
             log.warning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
         }
 
-        Poseidon.getProfileCache().load(); // Poseidon
+        this.poseidonServer.initialize(); // Poseidon
 
         this.serverConfigurationManager = new ServerConfigurationManager(this);
         // CraftBukkit - removed trackers
@@ -171,13 +177,9 @@ public class MinecraftServer implements Runnable, ICommandListener {
         long elapsed = System.nanoTime() - j;
         String time = String.format("%.3fs", elapsed / 1_000_000_000.0D); // Poseidon - fix startup time message
         log.info("Done (" + time + ")! For help, type \"help\" or \"?\"");
-
-        if (Poseidon.config().updateNotifier.enabled) {
-            Poseidon.getUpdateNotifier().start();
-        } else {
-            log.info("The update notifier is disabled. The server will not check for new releases.");
-        }
         // Poseidon end
+
+        this.poseidonServer.postInitialize(); // Poseidon
 
         return true;
     }
@@ -347,12 +349,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
         }
         // CraftBukkit end
 
-        // Poseidon start
-        log.info("Saving usercache.json");
-        Poseidon.getProfileCache().save();
-
-        Poseidon.getUpdateNotifier().shutdown();
-        // Poseidon end
+        this.poseidonServer.shutdown(); // Poseidon
     }
 
     public void a() {
