@@ -57,11 +57,19 @@ public final class PoseidonConfig {
         }
     }
 
+    public UpdateNotifier updateNotifier;
     public Logging logging;
     public Services services;
     public Profiles profiles;
     public UuidSupport uuidSupport;
     public NameValidation nameValidation;
+
+    @ConfigSerializable
+    public static final class UpdateNotifier {
+        public boolean enabled = true;
+        public Duration interval = Duration.of("6h");
+        public boolean notifyIsRunningLatestRelease = true;
+    }
 
     @ConfigSerializable
     public static final class Logging {

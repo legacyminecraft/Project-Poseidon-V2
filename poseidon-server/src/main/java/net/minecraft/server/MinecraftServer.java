@@ -171,6 +171,12 @@ public class MinecraftServer implements Runnable, ICommandListener {
         long elapsed = System.nanoTime() - j;
         String time = String.format("%.3fs", elapsed / 1_000_000_000.0D); // Poseidon - fix startup time message
         log.info("Done (" + time + ")! For help, type \"help\" or \"?\"");
+
+        if (Poseidon.config().updateNotifier.enabled) {
+            Poseidon.getUpdateNotifier().start();
+        } else {
+            log.info("The update notifier is disabled. The server will not check for new releases.");
+        }
         // Poseidon end
 
         return true;
@@ -344,6 +350,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
         // Poseidon start
         log.info("Saving usercache.json");
         Poseidon.getProfileCache().save();
+
+        Poseidon.getUpdateNotifier().shutdown();
         // Poseidon end
     }
 

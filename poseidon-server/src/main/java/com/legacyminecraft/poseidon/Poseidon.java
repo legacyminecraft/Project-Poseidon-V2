@@ -5,6 +5,8 @@ import com.legacyminecraft.poseidon.profile.ProfileCache;
 import com.legacyminecraft.poseidon.profile.ProfileService;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.session.SessionService;
+import com.legacyminecraft.poseidon.version.PoseidonBuildInformation;
+import com.legacyminecraft.poseidon.version.PoseidonUpdateNotifier;
 
 public final class Poseidon {
 
@@ -13,6 +15,14 @@ public final class Poseidon {
 
     public static PoseidonConfig config() {
         return PoseidonConfig.getInstance();
+    }
+
+    public static PoseidonBuildInformation getBuildInformation() {
+        return PoseidonBuildInformation.getInstance();
+    }
+
+    public static PoseidonUpdateNotifier getUpdateNotifier() {
+        return PoseidonUpdateNotifier.getInstance();
     }
 
     public static ProfileCache getProfileCache() {
