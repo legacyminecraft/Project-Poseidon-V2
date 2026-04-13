@@ -7,6 +7,7 @@ import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.command.PoseidonCommand;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
@@ -121,6 +122,8 @@ public final class CraftServer implements Server {
         enablePlugins(PluginLoadOrder.STARTUP);
 
         ChunkCompressionThread.startThread();
+
+        this.commandMap.register("poseidon", new PoseidonCommand()); // Poseidon
     }
 
     private void loadConfig() {

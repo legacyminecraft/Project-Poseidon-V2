@@ -14,7 +14,7 @@ public final class PoseidonBuildInformation {
     private final Properties versionProperties = new Properties();
 
     public void load() {
-        try (InputStream in = PoseidonBuildInformation.class.getResourceAsStream("version.properties")) {
+        try (InputStream in = PoseidonBuildInformation.class.getClassLoader().getResourceAsStream("version.properties")) {
             if (in != null) {
                 this.versionProperties.load(in);
             }
@@ -41,6 +41,11 @@ public final class PoseidonBuildInformation {
 
     public String getGitCommit() {
         return getProperty("git_commit");
+    }
+
+    public String getShortGitCommit() {
+        String commitSha = getGitCommit();
+        return commitSha.length() <= 7 ? commitSha : commitSha.substring(0, 7);
     }
 
     private String getProperty(String key) {
