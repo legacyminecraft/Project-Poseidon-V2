@@ -58,6 +58,7 @@ public final class PoseidonConfig {
 
     public UpdateNotifier updateNotifier;
     public Logging logging;
+    public Performance performance;
     public Services services;
     public Profiles profiles;
     public UuidSupport uuidSupport;
@@ -83,6 +84,16 @@ public final class PoseidonConfig {
             public boolean enabled = false;
             public String latestFile = "logs/latest.log";
             public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
+        }
+    }
+
+    @ConfigSerializable
+    public static final class Performance {
+        public TickLoop tickLoop;
+
+        @ConfigSerializable
+        public static final class TickLoop {
+            public Duration sprintUntilTimeBehind = Duration.of("2s");
         }
     }
 

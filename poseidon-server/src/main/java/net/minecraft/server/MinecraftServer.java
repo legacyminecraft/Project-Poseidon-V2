@@ -3,6 +3,7 @@ package net.minecraft.server;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
+import com.legacyminecraft.poseidon.performance.TickRateManager;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.CraftServer;
@@ -359,34 +360,27 @@ public class MinecraftServer implements Runnable, ICommandListener {
     public void run() {
         try {
             if (this.init()) {
-                long i = System.currentTimeMillis();
+                // Poseidon start - improve tick loop
+                TickRateManager tickRateManager = Poseidon.getTickRateManager();
+                tickRateManager.initialize();
 
-                for (long j = 0L; this.isRunning; Thread.sleep(1L)) {
-                    long k = System.currentTimeMillis();
-                    long l = k - i;
+                while (this.isRunning) {
+                    long tickStart = System.nanoTime();
+                    long behind = tickRateManager.getTimeBehind(tickStart);
 
-                    if (l > 2000L) {
-                        log.warning("Can't keep up! Did the system time change, or is the server overloaded?");
-                        l = 2000L;
+                    if (behind > Poseidon.getConfig().performance.tickLoop.sprintUntilTimeBehind.getNanos()) {
+                        long ticksBehind = behind / tickRateManager.nanosPerTick();
+                        log.warning("Can't keep up! Did the system time change, or is the server overloaded? Running " + behind / 1_000_000 + "ms behind, skipping " + ticksBehind + " tick(s)");
+                        tickRateManager.setNextTickTime(tickStart);
                     }
 
-                    if (l < 0L) {
-                        log.warning("Time ran backwards! Did the system time change?");
-                        l = 0L;
-                    }
+                    tickRateManager.startTick();
+                    MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit
+                    this.h();
+                    tickRateManager.recordTick();
 
-                    j += l;
-                    i = k;
-                    if (this.worlds.get(0).everyoneDeeplySleeping()) { // CraftBukkit
-                        this.h();
-                        j = 0L;
-                    } else {
-                        while (j > 50L) {
-                            MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit
-                            j -= 50L;
-                            this.h();
-                        }
-                    }
+                    tickRateManager.waitForNextTick();
+                    // Poseidon end
                 }
             } else {
                 while (this.isRunning) {

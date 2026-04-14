@@ -2,6 +2,7 @@ package com.legacyminecraft.poseidon;
 
 import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
+import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
 import com.legacyminecraft.poseidon.profile.ProfileService;
 import com.legacyminecraft.poseidon.service.ServiceClient;
@@ -48,5 +49,9 @@ public final class Poseidon {
 
     public static SessionService getSessionService() {
         return server.getSessionService();
+    }
+
+    public static TickRateManager getTickRateManager() {
+        return server.getTickRateManager();
     }
 }

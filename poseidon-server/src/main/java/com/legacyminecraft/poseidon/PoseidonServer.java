@@ -1,5 +1,6 @@
 package com.legacyminecraft.poseidon;
 
+import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
 import com.legacyminecraft.poseidon.profile.ProfileService;
 import com.legacyminecraft.poseidon.service.ServiceClient;
@@ -15,6 +16,7 @@ public final class PoseidonServer {
     private final ServiceClient serviceClient;
     private final ProfileService profileService;
     private final SessionService sessionService;
+    private final TickRateManager tickRateManager;
 
     public PoseidonServer() {
         this.buildInformation = new PoseidonBuildInformation();
@@ -23,6 +25,7 @@ public final class PoseidonServer {
         this.updateNotifier = new PoseidonUpdateNotifier(this.serviceClient, this.buildInformation);
         this.profileService = new ProfileService(this.serviceClient);
         this.sessionService = new SessionService(this.serviceClient);
+        this.tickRateManager = new TickRateManager();
     }
 
     public void initialize() {
@@ -61,5 +64,9 @@ public final class PoseidonServer {
 
     public SessionService getSessionService() {
         return this.sessionService;
+    }
+
+    public TickRateManager getTickRateManager() {
+        return this.tickRateManager;
     }
 }
