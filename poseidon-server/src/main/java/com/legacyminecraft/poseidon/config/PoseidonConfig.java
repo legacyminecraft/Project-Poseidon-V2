@@ -89,7 +89,21 @@ public final class PoseidonConfig {
 
     @ConfigSerializable
     public static final class Performance {
+        public Watchdog watchdog;
         public TickLoop tickLoop;
+
+        @ConfigSerializable
+        public static final class Watchdog {
+            public boolean enabled = true;
+            public Duration killServerAfter = Duration.of("120s");
+            public ThreadDumps threadDumps;
+
+            @ConfigSerializable
+            public static final class ThreadDumps {
+                public boolean enabled = true;
+                public Duration dumpThreadAfter = Duration.of("10s");
+            }
+        }
 
         @ConfigSerializable
         public static final class TickLoop {

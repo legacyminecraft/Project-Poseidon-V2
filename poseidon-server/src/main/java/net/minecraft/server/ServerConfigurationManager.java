@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -47,8 +48,9 @@ public class ServerConfigurationManager {
     // CraftBukkit start
     private CraftServer cserver;
 
-    public ServerConfigurationManager(MinecraftServer minecraftserver) {
-        minecraftserver.server = new CraftServer(minecraftserver, this);
+    // Poseidon - change signature
+    public ServerConfigurationManager(MinecraftServer minecraftserver, PoseidonServer poseidonServer) {
+        minecraftserver.server = new CraftServer(minecraftserver, this, poseidonServer); // Poseidon - pass PoseidonServer
         minecraftserver.console = new ColouredConsoleSender(minecraftserver.server);
         this.cserver = minecraftserver.server;
         // CraftBukkit end

@@ -146,9 +146,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
             log.warning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
         }
 
-        this.poseidonServer.initialize(); // Poseidon
-
-        this.serverConfigurationManager = new ServerConfigurationManager(this);
+        this.serverConfigurationManager = new ServerConfigurationManager(this, this.poseidonServer); // Poseidon - pass PoseidonServer
         // CraftBukkit - removed trackers
         String s1 = this.propertyManager.getString("level-name", "world");
         String s2 = this.propertyManager.getString("level-seed", "");
@@ -376,6 +374,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
                     tickRateManager.startTick();
                     MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit
+                    Poseidon.getWatchdogThread().tick();
                     this.h();
                     tickRateManager.recordTick();
 

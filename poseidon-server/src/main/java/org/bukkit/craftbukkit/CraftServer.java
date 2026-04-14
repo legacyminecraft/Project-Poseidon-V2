@@ -7,6 +7,7 @@ import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.command.MsptCommand;
 import com.legacyminecraft.poseidon.command.PoseidonCommand;
 import com.legacyminecraft.poseidon.command.TpsCommand;
@@ -111,7 +112,8 @@ public final class CraftServer implements Server {
     private final Map<UUID, OfflinePlayer> offlinePlayers = new MapMaker().weakValues().makeMap();
     // Poseidon end
 
-    public CraftServer(MinecraftServer console, ServerConfigurationManager server) {
+    // Poseidon - change signature
+    public CraftServer(MinecraftServer console, ServerConfigurationManager server, PoseidonServer poseidonServer) {
         this.console = console;
         this.server = server;
         this.serverVersion = CraftServer.class.getPackage().getImplementationVersion();
@@ -120,16 +122,18 @@ public final class CraftServer implements Server {
 
         configuration = new Configuration((File) console.options.valueOf("bukkit-settings"));
         loadConfig();
-        loadPlugins();
-        enablePlugins(PluginLoadOrder.STARTUP);
-
-        ChunkCompressionThread.startThread();
 
         // Poseidon start
+        poseidonServer.initialize();
         this.commandMap.register("poseidon", new PoseidonCommand());
         this.commandMap.register("poseidon", new TpsCommand());
         this.commandMap.register("poseidon", new MsptCommand());
         // Poseidon end
+
+        loadPlugins();
+        enablePlugins(PluginLoadOrder.STARTUP);
+
+        ChunkCompressionThread.startThread();
     }
 
     private void loadConfig() {
