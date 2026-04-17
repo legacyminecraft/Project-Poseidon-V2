@@ -6,9 +6,11 @@ import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.PlayerInventory;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
@@ -159,27 +161,30 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             }
         }
 
-        org.bukkit.entity.Entity bukkitEntity = this.getBukkitEntity();
+        org.bukkit.entity.Player bukkitEntity = (org.bukkit.entity.Player) this.getBukkitEntity(); // Poseidon - cast to Player
         CraftWorld bworld = this.world.getWorld();
+        PlayerInventory inventoryToKeep = new CraftInventoryPlayer(new InventoryPlayer(null)); // Poseidon
 
-        EntityDeathEvent event = new EntityDeathEvent(bukkitEntity, loot);
+        PlayerDeathEvent event = new PlayerDeathEvent(bukkitEntity, loot, inventoryToKeep); // Poseidon - EntityDeathEvent -> PlayerDeathEvent
         this.world.getServer().getPluginManager().callEvent(event);
 
-        // CraftBukkit - we clean the player's inventory after the EntityDeathEvent is called so plugins can get the exact state of the inventory.
-        for (int i = 0; i < this.inventory.items.length; ++i) {
-            this.inventory.items[i] = null;
+        // Poseidon start
+        if (event.getDeathMessage() != null && !event.getDeathMessage().isBlank()) {
+            this.b.serverConfigurationManager.sendAll(new Packet3Chat(event.getDeathMessage()));
         }
 
-        for (int i = 0; i < this.inventory.armor.length; ++i) {
-            this.inventory.armor[i] = null;
-        }
+        event.getPlayer().getInventory().setContents(inventoryToKeep.getContents());
+        event.getPlayer().getInventory().setArmorContents(inventoryToKeep.getArmorContents());
+        // Poseidon end
 
-        for (org.bukkit.inventory.ItemStack stack: event.getDrops()) {
+        for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
             bworld.dropItemNaturally(bukkitEntity.getLocation(), stack);
         }
 
         this.y();
         // CraftBukkit end
+
+        updateInventory(this.activeContainer); // Poseidon
     }
 
     public boolean damageEntity(@Nullable Entity entity, int i) {
