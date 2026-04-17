@@ -166,7 +166,7 @@ public class ServerConfigurationManager {
         // Poseidon - pass profile
         EntityPlayer entity = new EntityPlayer(this.server, this.server.getWorldServer(0), profile, new ItemInWorldManager(this.server.getWorldServer(0)));
         Player player = (entity == null) ? null : (Player) entity.getBukkitEntity();
-        PlayerLoginEvent event = new PlayerLoginEvent(player);
+        PlayerLoginEvent event = new PlayerLoginEvent(player, netloginhandler.networkManager.socket.getInetAddress()); // Poseidon - pass IP address
 
         String s1 = netloginhandler.networkManager.getSocketAddress().toString();
 

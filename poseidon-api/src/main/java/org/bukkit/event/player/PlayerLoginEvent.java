@@ -3,6 +3,8 @@ package org.bukkit.event.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import java.net.InetAddress;
+
 /**
  * Stores details for players attempting to log in
  */
@@ -10,19 +12,32 @@ public class PlayerLoginEvent extends PlayerEvent {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
+    private final InetAddress ipAddress;
+
     private Result result;
     private String message;
 
-    public PlayerLoginEvent(final Player player) {
+    public PlayerLoginEvent(final Player player, final InetAddress ipAddress) {
         super(Type.PLAYER_LOGIN, player);
+        this.ipAddress = ipAddress;
         this.result = Result.ALLOWED;
         this.message = "";
     }
 
-    public PlayerLoginEvent(final Type type, final Player player, final Result result, final String message) {
+    public PlayerLoginEvent(final Type type, final Player player, final InetAddress ipAddress, final Result result, final String message) {
         super(type, player);
+        this.ipAddress = ipAddress;
         this.result = result;
         this.message = message;
+    }
+
+    /**
+     * Gets the player IP address
+     *
+     * @return the IP address
+     */
+    public InetAddress getAddress() {
+        return this.ipAddress;
     }
 
     /**
