@@ -1,5 +1,8 @@
 package net.minecraft.server;
 
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.jspecify.annotations.Nullable;
 
 public final class ItemStack {
@@ -123,6 +126,20 @@ public final class ItemStack {
 
     public void damage(int i, Entity entity) {
         if (this.d()) {
+            // Poseidon start
+            if (entity instanceof EntityPlayer) {
+                PlayerItemDamageEvent event = new PlayerItemDamageEvent((Player) entity.getBukkitEntity(), new CraftItemStack(this), i);
+                event.callEvent();
+                if (i != event.getDamage() || event.isCancelled()) {
+                    event.getPlayer().updateInventory();
+                }
+                if (event.isCancelled()) {
+                    return;
+                }
+                i = event.getDamage();
+            }
+            // Poseidon end
+
             this.damage += i;
             if (this.damage > this.i()) {
                 if (entity instanceof EntityHuman entityhuman) {
