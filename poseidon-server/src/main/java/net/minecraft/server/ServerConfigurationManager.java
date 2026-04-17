@@ -8,6 +8,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.command.ColouredConsoleSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -221,6 +222,7 @@ public class ServerConfigurationManager {
 
         // CraftBukkit start
         EntityPlayer entityplayer1 = entityplayer;
+        org.bukkit.World fromWorld = entityplayer1.getBukkitEntity().getWorld(); // Poseidon
 
         if (location == null) {
             boolean isBedSpawn = false;
@@ -276,6 +278,11 @@ public class ServerConfigurationManager {
         this.players.add(entityplayer1);
         this.updateClient(entityplayer1); // CraftBukkit
         entityplayer1.x();
+        // Poseidon start
+        if (fromWorld != location.getWorld()) {
+            new PlayerChangedWorldEvent((Player) entityplayer1.getBukkitEntity(), fromWorld).callEvent();
+        }
+        // Poseidon end
         return entityplayer1;
     }
 
