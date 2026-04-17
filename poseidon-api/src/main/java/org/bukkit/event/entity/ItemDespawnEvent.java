@@ -6,18 +6,19 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 /**
- * Called when an item is spawned into a world
+ * Called when an item is about to be removed from the world.
  */
-public class ItemSpawnEvent extends EntityEvent implements Cancellable {
+public class ItemDespawnEvent extends EntityEvent implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    private Location location;
-    private boolean canceled;
+    private final Location location;
 
-    public ItemSpawnEvent(Item spawnee, Location loc) {
-        super(Type.ITEM_SPAWN, spawnee);
-        this.location = loc;
+    private boolean cancelled;
+
+    public ItemDespawnEvent(Item despawnee, Location location) {
+        super(Type.FIXED_EVENT, despawnee);
+        this.location = location;
     }
 
     @Override
@@ -26,20 +27,22 @@ public class ItemSpawnEvent extends EntityEvent implements Cancellable {
     }
 
     /**
-     * Gets the location at which the item is spawning.
+     * Gets the location at which the item is despawning.
      *
-     * @return The location at which the item is spawning
+     * @return The location at which the item is despawning
      */
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
+    @Override
     public boolean isCancelled() {
-        return canceled;
+        return this.cancelled;
     }
 
+    @Override
     public void setCancelled(boolean cancel) {
-        canceled = cancel;
+        this.cancelled = cancel;
     }
 
     @Override

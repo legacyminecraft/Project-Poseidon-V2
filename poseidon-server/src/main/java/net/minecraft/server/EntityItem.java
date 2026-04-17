@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.jspecify.annotations.Nullable;
 
@@ -84,6 +85,12 @@ public class EntityItem extends Entity {
         ++this.e;
         ++this.b;
         if (this.b >= 6000) {
+            // Poseidon start
+            if (CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
+                this.b = 0;
+                return;
+            }
+            // Poseidon end
             this.die();
         }
     }

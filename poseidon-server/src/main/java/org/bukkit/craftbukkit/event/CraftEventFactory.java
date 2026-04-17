@@ -43,6 +43,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -253,7 +254,7 @@ public class CraftEventFactory {
      * ItemSpawnEvent
      */
     public static ItemSpawnEvent callItemSpawnEvent(EntityItem entityitem) {
-        org.bukkit.entity.Entity entity = entityitem.getBukkitEntity();
+        org.bukkit.entity.Item entity = (org.bukkit.entity.Item) entityitem.getBukkitEntity(); // Poseidon - cast to Item
         CraftServer craftServer = (CraftServer) entity.getServer();
 
         ItemSpawnEvent event = new ItemSpawnEvent(entity, entity.getLocation());
@@ -261,6 +262,21 @@ public class CraftEventFactory {
         craftServer.getPluginManager().callEvent(event);
         return event;
     }
+
+    // Poseidon start
+    /**
+     * ItemDespawnEvent
+     */
+    public static ItemDespawnEvent callItemDespawnEvent(EntityItem entityitem) {
+        org.bukkit.entity.Item entity = (org.bukkit.entity.Item) entityitem.getBukkitEntity();
+        CraftServer craftServer = (CraftServer) entity.getServer();
+
+        ItemDespawnEvent event = new ItemDespawnEvent(entity, entity.getLocation());
+
+        craftServer.getPluginManager().callEvent(event);
+        return event;
+    }
+    // Poseidon end
 
     /**
      * BlockFadeEvent
