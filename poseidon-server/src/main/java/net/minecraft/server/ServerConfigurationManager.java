@@ -218,6 +218,11 @@ public class ServerConfigurationManager {
     }
 
     public EntityPlayer moveToWorld(EntityPlayer entityplayer, int i, @Nullable Location location) {
+        // Poseidon start - fix cross-dimension dupe
+        entityplayer.defaultContainer.a((EntityHuman) entityplayer);
+        entityplayer.A();
+        // Poseidon end
+
         this.server.getTracker(entityplayer.dimension).untrackPlayer(entityplayer);
         // this.server.getTracker(entityplayer.dimension).untrackEntity(entityplayer); // CraftBukkit
         this.getPlayerManager(entityplayer.dimension).removePlayer(entityplayer);
