@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class PluginsCommand extends Command {
     public PluginsCommand(String name) {
@@ -20,14 +21,19 @@ public class PluginsCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
-        
-        sender.sendMessage("Plugins: " + getPluginList());
+
+        sender.sendMessage(getPluginList()); // Poseidon - change message
         return true;
     }
 
     private String getPluginList() {
         StringBuilder pluginList = new StringBuilder();
         Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
+
+        // Poseidon start
+        Arrays.sort(plugins, Comparator.comparing(plugin -> plugin.getDescription().getFullName()));
+        int enabled = 0;
+        // Poseidon end
         
         for (Plugin plugin : plugins) {
             if (!pluginList.isEmpty()) {
@@ -37,8 +43,14 @@ public class PluginsCommand extends Command {
             
             pluginList.append(plugin.isEnabled() ? ChatColor.GREEN : ChatColor.RED);
             pluginList.append(plugin.getDescription().getName());
+
+            // Poseidon start
+            if (plugin.isEnabled()) {
+                enabled++;
+            }
+            // Poseidon end
         }
 
-        return pluginList.toString();
+        return "Plugins (" + enabled + "/" + plugins.length + "): " + pluginList; // Poseidon - change message
     }
 }
