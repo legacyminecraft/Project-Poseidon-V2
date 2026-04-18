@@ -19,6 +19,19 @@ import java.util.UUID;
 
 public abstract class Entity {
 
+    // Poseidon start - use shared random for entities
+    private static final Random SHARED_RANDOM = new Random() {
+        private boolean locked = false;
+        @Override
+        public synchronized void setSeed(long seed) {
+            if (!this.locked) {
+                super.setSeed(seed);
+                this.locked = true;
+            }
+        }
+    };
+    // Poseidon end
+
     private static int entityCount = 0;
     public int id;
     public double aH;
@@ -104,7 +117,7 @@ public abstract class Entity {
         this.bs = 0.0F;
         this.bt = false;
         this.bu = 0.0F;
-        this.random = new Random();
+        this.random = SHARED_RANDOM; // Poseidon
         this.ticksLived = 0;
         this.maxFireTicks = 1;
         this.fireTicks = 0;
