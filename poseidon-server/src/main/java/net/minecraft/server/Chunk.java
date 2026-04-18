@@ -443,6 +443,10 @@ public class Chunk {
         if (this.getTypeId(i, j, k) != 0 && Block.byId[this.getTypeId(i, j, k)] instanceof BlockContainer) {
             tileentity.j();
             this.tileEntities.put(chunkposition, tileentity);
+            // Poseidon start - remove invalid mob spawner tile entities
+        } else if (tileentity instanceof TileEntityMobSpawner && !(Block.byId[this.getTypeId(i, j, k)] instanceof BlockMobSpawner)) {
+            this.tileEntities.remove(chunkposition);
+            // Poseidon end
         } else {
             System.out.println("Attempted to place a tile entity where there was no entity tile!");
         }
