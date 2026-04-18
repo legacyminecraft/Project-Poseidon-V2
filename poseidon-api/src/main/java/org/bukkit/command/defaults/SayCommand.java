@@ -16,7 +16,7 @@ public class SayCommand extends VanillaCommand {
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
-        if (args.length == 0)  {
+        if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
             return false;
         }
@@ -31,8 +31,8 @@ public class SayCommand extends VanillaCommand {
         if (!(sender instanceof ConsoleCommandSender)) {
             Bukkit.getLogger().info("[" + sender.getName() + "] " + message);
         }
-        
-        Bukkit.broadcastMessage("[Server] " + message);
+
+        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "[Server] " + message); // Poseidon - restore vanilla /say command color
 
         return true;
     }
