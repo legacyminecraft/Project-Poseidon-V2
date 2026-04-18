@@ -149,6 +149,11 @@ public class ServerConfigurationManager {
         this.cserver.getPluginManager().callEvent(playerQuitEvent);
         // CraftBukkit end
 
+        // Poseidon start - flush transient cursor/crafting state before save so disconnects cannot lose those items
+        entityplayer.defaultContainer.a((EntityHuman) entityplayer);
+        entityplayer.A();
+        // Poseidon end
+
         this.playerFileData.a(entityplayer);
         this.server.getWorldServer(entityplayer.dimension).kill(entityplayer);
         this.players.remove(entityplayer);
