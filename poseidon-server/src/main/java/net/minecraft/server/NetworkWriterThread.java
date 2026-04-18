@@ -47,7 +47,7 @@ class NetworkWriterThread extends Thread {
                         NetworkManager.a(this.a, ioexception);
                     }
 
-                    ioexception.printStackTrace();
+                    //ioexception.printStackTrace(); // Poseidon - remove
                 }
             } finally {
                 if (flag) {
