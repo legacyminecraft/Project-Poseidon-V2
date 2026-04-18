@@ -10,8 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public abstract class Packet {
+
+    private static final Logger log = Logger.getLogger("Minecraft"); // Poseidon
 
     private static Map<Integer, Class<? extends Packet>> a = new HashMap<>();
     private static Map<Class<? extends Packet>, Integer> b = new HashMap<>();
@@ -49,7 +52,7 @@ public abstract class Packet {
             return oclass == null ? null : oclass.getDeclaredConstructor().newInstance();
         } catch (Exception exception) {
             exception.printStackTrace();
-            System.out.println("Skipping packet with id " + i);
+            log.info("Skipping packet with id " + i); // Poseidon - use logger
             return null;
         }
     }
@@ -72,26 +75,29 @@ public abstract class Packet {
             }
 
             if (flag && !d.contains(i) || !flag && !c.contains(i)) {
-                throw new IOException("Bad packet id " + i);
+                // Poseidon start - don't throw IOException
+                log.info("Bad packet id: " + i);
+                return null;
+                // Poseidon end
             }
 
             packet = a(i);
             if (packet == null) {
-                throw new IOException("Bad packet id " + i);
+                throw new IOException("Bad packet id: " + i);
             }
 
             packet.a(datainputstream);
         } catch (EOFException eofexception) {
-            System.out.println("Reached end of stream");
+            log.info("Reached end of stream"); // Poseidon - use logger
             return null;
         }
 
         // CraftBukkit start
         catch (java.net.SocketTimeoutException exception) {
-            System.out.println("Read timed out");
+            log.info("Read timed out"); // Poseidon - use logger
             return null;
         } catch (java.net.SocketException exception) {
-            System.out.println("Connection reset");
+            log.info("Connection reset"); // Poseidon - use logger
             return null;
         }
         // CraftBukkit end
