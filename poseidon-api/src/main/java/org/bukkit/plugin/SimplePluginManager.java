@@ -183,6 +183,7 @@ public final class SimplePluginManager implements PluginManager {
 
         if (updateDirectory != null && updateDirectory.isDirectory() && (updateFile = new File(updateDirectory, file.getName())).isFile()) {
             if (FileUtil.copy(updateFile, file)) {
+                server.getLogger().info("An updated file for \"" + file.getName() + "\" has been found in the update folder. Replaced the original file.");
                 updateFile.delete();
             }
         }
