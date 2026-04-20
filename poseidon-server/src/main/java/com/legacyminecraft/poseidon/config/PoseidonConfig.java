@@ -63,6 +63,7 @@ public final class PoseidonConfig {
     public Profiles profiles;
     public UuidSupport uuidSupport;
     public NameValidation nameValidation;
+    public BugFixes bugFixes;
 
     @ConfigSerializable
     public static final class UpdateNotifier {
@@ -141,5 +142,10 @@ public final class PoseidonConfig {
         public int minimumLength = 3;
         public int maximumLength = 16;
         public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
+    }
+
+    @ConfigSerializable
+    public static final class BugFixes {
+        public boolean fixPistonGlitches = true;
     }
 }

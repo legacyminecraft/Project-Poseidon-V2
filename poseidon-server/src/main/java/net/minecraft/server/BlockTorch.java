@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
@@ -109,7 +110,8 @@ public class BlockTorch extends Block {
     }
 
     private boolean h(World world, int i, int j, int k) {
-        if (!this.canPlace(world, i, j, k)) {
+        if (!this.canPlace(world, i, j, k)
+                && (!Poseidon.getConfig().bugFixes.fixPistonGlitches || world.getTypeId(i, j, k) == this.id)) { // Poseidon - fix torch dupes using pistons
             this.g(world, i, j, k, world.getData(i, j, k));
             world.setTypeId(i, j, k, 0);
             return false;

@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -100,12 +101,22 @@ public class ItemBlock extends Item {
                     return true;
 
                 }
-                world.update(i, j, k, this.id); // <-- world.setTypeIdAndData does this on success (tell the world)
-
                 // CraftBukkit end
 
-                Block.byId[this.id].postPlace(world, i, j, k, l);
-                Block.byId[this.id].postPlace(world, i, j, k, entityhuman);
+                // Poseidon start - fix postPlace piston glitches
+                if (Poseidon.getConfig().bugFixes.fixPistonGlitches) {
+                    if (world.getTypeId(i, j, k) == this.id) {
+                        Block.byId[this.id].postPlace(world, i, j, k, l);
+                        Block.byId[this.id].postPlace(world, i, j, k, entityhuman);
+                    }
+                    world.update(i, j, k, this.id);
+                } else {
+                    // Poseidon end
+                    world.update(i, j, k, this.id);
+                    Block.byId[this.id].postPlace(world, i, j, k, l);
+                    Block.byId[this.id].postPlace(world, i, j, k, entityhuman);
+                }
+
                 world.makeSound((float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, block.stepSound.getName(), (block.stepSound.getVolume1() + 1.0F) / 2.0F, block.stepSound.getVolume2() * 0.8F);
                 --itemstack.count;
             }

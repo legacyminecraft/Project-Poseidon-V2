@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
@@ -9,6 +10,8 @@ public class BlockPiston extends Block {
 
     private boolean a;
     private boolean b;
+
+    private static boolean ignoreAllUpdates; // Poseidon
 
     public BlockPiston(int i, int j, boolean flag) {
         super(i, j, Material.PISTON);
@@ -35,19 +38,22 @@ public class BlockPiston extends Block {
         int l = c(world, i, j, k, (EntityHuman) entityliving);
 
         world.setData(i, j, k, l);
-        if (!world.isStatic) {
+        if (!world.isStatic
+                && (!Poseidon.getConfig().bugFixes.fixPistonGlitches || !ignoreAllUpdates)) { // Poseidon - fix piston merge transmutation
             this.g(world, i, j, k);
         }
     }
 
     public void doPhysics(World world, int i, int j, int k, int l) {
-        if (!world.isStatic && !this.b) {
+        if (!world.isStatic
+                && Poseidon.getConfig().bugFixes.fixPistonGlitches ? !ignoreAllUpdates : !this.b) { // Poseidon - fix piston merge transmutation
             this.g(world, i, j, k);
         }
     }
 
     public void c(World world, int i, int j, int k) {
-        if (!world.isStatic && world.getTileEntity(i, j, k) == null) {
+        if (!world.isStatic && world.getTileEntity(i, j, k) == null
+                && (!Poseidon.getConfig().bugFixes.fixPistonGlitches || !ignoreAllUpdates)) { // Poseidon - fix piston merge transmutation
             this.g(world, i, j, k);
         }
     }
@@ -100,6 +106,7 @@ public class BlockPiston extends Block {
 
     public void a(World world, int i, int j, int k, int l, int i1) {
         this.b = true;
+        ignoreAllUpdates = true; // Poseidon
         if (l == 0) {
             if (this.i(world, i, j, k, i1)) {
                 world.setData(i, j, k, i1 | 8);
@@ -137,8 +144,10 @@ public class BlockPiston extends Block {
 
                 if (!flag && i2 > 0 && a(i2, world, j1, k1, l1, false) && (Block.byId[i2].e() == 0 || i2 == Block.PISTON.id || i2 == Block.PISTON_STICKY.id)) {
                     this.b = false;
+                    ignoreAllUpdates = false; // Poseidon
                     world.setTypeId(j1, k1, l1, 0);
                     this.b = true;
+                    ignoreAllUpdates = true; // Poseidon
                     i += PistonBlockTextures.b[i1];
                     j += PistonBlockTextures.c[i1];
                     k += PistonBlockTextures.d[i1];
@@ -146,19 +155,24 @@ public class BlockPiston extends Block {
                     world.setTileEntity(i, j, k, BlockPistonMoving.a(i2, j2, i1, false, false));
                 } else if (!flag) {
                     this.b = false;
+                    ignoreAllUpdates = false; // Poseidon
                     world.setTypeId(i + PistonBlockTextures.b[i1], j + PistonBlockTextures.c[i1], k + PistonBlockTextures.d[i1], 0);
                     this.b = true;
+                    ignoreAllUpdates = true; // Poseidon
                 }
             } else {
                 this.b = false;
+                ignoreAllUpdates = false; // Poseidon
                 world.setTypeId(i + PistonBlockTextures.b[i1], j + PistonBlockTextures.c[i1], k + PistonBlockTextures.d[i1], 0);
                 this.b = true;
+                ignoreAllUpdates = true; // Poseidon
             }
 
             world.makeSound((double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D, "tile.piston.in", 0.5F, world.random.nextFloat() * 0.15F + 0.6F);
         }
 
         this.b = false;
+        ignoreAllUpdates = false; // Poseidon
     }
 
     public void a(IBlockAccess iblockaccess, int i, int j, int k) {

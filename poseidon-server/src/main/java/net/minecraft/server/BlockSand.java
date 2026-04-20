@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
+
 import java.util.Random;
 
 public class BlockSand extends Block {
@@ -27,6 +29,12 @@ public class BlockSand extends Block {
             byte b0 = 32;
 
             if (!instaFall && world.a(i - b0, j - b0, k - b0, i + b0, j + b0, k + b0)) {
+                // Poseidon start - fix gravity block dupes using pistons
+                if (Poseidon.getConfig().bugFixes.fixPistonGlitches) {
+                    world.setTypeId(i, j, k, 0);
+                }
+                // Poseidon end
+
                 // Poseidon - fix gravity block position at high coordinates
                 EntityFallingSand entityfallingsand = new EntityFallingSand(world, i + 0.5D, j + 0.5D, k + 0.5D, this.id);
 
