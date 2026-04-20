@@ -263,9 +263,12 @@ public class BlockPiston extends Block {
                 return false;
             }
 
-            TileEntity tileentity = world.getTileEntity(j, k, l);
+            // Poseidon start - fix piston + furnace server crash exploit
+            /*TileEntity tileentity = world.getTileEntity(j, k, l);
 
-            return tileentity == null;
+            return tileentity == null;*/
+            return !(Block.byId[i] instanceof BlockContainer);
+            // Poseidon end
         }
     }
 
