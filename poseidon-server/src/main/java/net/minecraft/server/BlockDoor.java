@@ -144,7 +144,8 @@ public class BlockDoor extends Block {
             boolean flag = false;
 
             if (world.getTypeId(i, j + 1, k) != this.id) {
-                return; // Poseidon - fix door dupe
+                world.setTypeId(i, j, k, 0);
+                flag = true;
             }
 
             if (!world.e(i, j - 1, k)) {
@@ -156,7 +157,7 @@ public class BlockDoor extends Block {
             }
 
             if (flag) {
-                if (!world.isStatic && (i1 & 8) == 0) { // Poseidon - fix door dupe
+                if (!world.isStatic) {
                     this.g(world, i, j, k, i1);
                 }
             } else if (l > 0 && Block.byId[l].isPowerSource()) {
