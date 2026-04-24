@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.event.profile.PlayerProfileNameChangedEvent;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
@@ -184,7 +185,19 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.y();
         // CraftBukkit end
 
-        updateInventory(this.activeContainer); // Poseidon
+        // Poseidon start - fix player death animation
+        if (Poseidon.getConfig().bugFixes.fixPlayerDeathAnimation) {
+            for (int i = 0; i < 5; ++i) {
+                ItemStack itemstack = this.bN[i];
+                if (itemstack != null && itemstack.id > 0) {
+                    this.b.getTracker(this.dimension).a(this, new Packet5EntityEquipment(this.id, i, null));
+                }
+            }
+            this.world.a(this, (byte) 3);
+        }
+        // Poseidon end
+
+        updateInventory(this.activeContainer); // Poseidon - update client-side inventory on death
     }
 
     public boolean damageEntity(@Nullable Entity entity, int i) {

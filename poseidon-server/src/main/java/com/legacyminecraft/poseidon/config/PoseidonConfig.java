@@ -147,5 +147,6 @@ public final class PoseidonConfig {
     @ConfigSerializable
     public static final class BugFixes {
         public boolean fixPistonGlitches = true;
+        public boolean fixPlayerDeathAnimation = true;
     }
 }
