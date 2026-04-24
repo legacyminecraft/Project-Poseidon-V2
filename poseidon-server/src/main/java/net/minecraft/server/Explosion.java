@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import org.bukkit.Location;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -122,8 +123,6 @@ public class Explosion {
                 if (damagee == null) {
                     // nothing was hurt
                 } else if (this.source == null) { // Block explosion
-                    // TODO: get the x/y/z of the tnt block?
-                    // does this even get called ever? @see EntityTNTPrimed - not BlockTNT or whatever
                     EntityDamageByBlockEvent event = new EntityDamageByBlockEvent(null, damagee, EntityDamageEvent.DamageCause.BLOCK_EXPLOSION, damageDone);
                     server.getPluginManager().callEvent(event);
 
@@ -135,7 +134,12 @@ public class Explosion {
                         entity.velocityChanged = true; // Poseidon
                     }
                 } else {
-                    EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.source.getBukkitEntity(), damagee, EntityDamageEvent.DamageCause.ENTITY_EXPLOSION, damageDone);
+                    // Poseidon start - supply correct DamageCause for TNT explosions
+                    org.bukkit.entity.Entity damager = this.source.getBukkitEntity();
+                    EntityDamageEvent.DamageCause damageCause = damager instanceof TNTPrimed ? EntityDamageEvent.DamageCause.BLOCK_EXPLOSION : EntityDamageEvent.DamageCause.ENTITY_EXPLOSION;
+
+                    EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.source.getBukkitEntity(), damagee, damageCause, damageDone);
+                    // Poseidon end
                     server.getPluginManager().callEvent(event);
 
                     if (!event.isCancelled()) {
