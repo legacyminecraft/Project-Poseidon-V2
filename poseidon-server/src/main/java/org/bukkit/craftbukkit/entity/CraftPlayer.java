@@ -243,6 +243,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public boolean teleport(Location location) {
+        // Grab the EntityPlayer
+        EntityPlayer entity = getHandle();
         // From = Players current Location
         Location from = this.getLocation();
         // To = Players new Location if Teleport is Successful
@@ -254,6 +256,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         if (event.isCancelled()) {
             return false;
         }
+        // Poseidon start - leave bed or vehicle before teleporting
+        if (entity.isSleeping()) {
+            entity.a(true, true, false);
+        }
+        entity.mount(null);
+        // Poseidon end
         // Update the From Location
         from = event.getFrom();
         // Grab the new To Location dependent on whether the event was cancelled.
@@ -261,8 +269,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         // Grab the To and From World Handles.
         WorldServer fromWorld = ((CraftWorld) from.getWorld()).getHandle();
         WorldServer toWorld = ((CraftWorld) to.getWorld()).getHandle();
-        // Grab the EntityPlayer
-        EntityPlayer entity = getHandle();
 
         // Check if the fromWorld and toWorld are the same.
         if (fromWorld == toWorld) {
