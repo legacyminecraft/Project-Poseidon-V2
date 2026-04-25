@@ -1,11 +1,10 @@
 package net.minecraft.server;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class EntityTrackerEntry {
 
@@ -28,7 +27,7 @@ public class EntityTrackerEntry {
     private boolean isMoving;
     private int t = 0;
     public boolean m = false;
-    public Set<EntityPlayer> trackedPlayers = new HashSet<>();
+    public ObjectOpenHashSet<EntityPlayer> trackedPlayers = new ObjectOpenHashSet<>(); // Poseidon - HashSet -> ObjectOpenHashSet
 
     public EntityTrackerEntry(Entity entity, int i, int j, boolean flag) {
         this.tracker = entity;
@@ -43,7 +42,7 @@ public class EntityTrackerEntry {
     }
 
     public boolean equals(Object object) {
-        return object instanceof EntityTrackerEntry && ((EntityTrackerEntry) object).tracker.id == this.tracker.id;
+        return object instanceof EntityTrackerEntry entitytrackerentry && entitytrackerentry.tracker.id == this.tracker.id;
     }
 
     public int hashCode() {
@@ -61,8 +60,8 @@ public class EntityTrackerEntry {
             this.scanPlayers(list);
         }
 
-        ++this.t;
-        if (++this.l % this.c == 0) {
+        if (++this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
+            ++this.t; // Poseidon - moved from above
             int i = MathHelper.floor(this.tracker.locX * 32.0D);
             int j = MathHelper.floor(this.tracker.locY * 32.0D);
             int k = MathHelper.floor(this.tracker.locZ * 32.0D);
@@ -74,9 +73,22 @@ public class EntityTrackerEntry {
             Packet object = null;
 
             // Poseidon start - lower update threshold and always update vehicles
-            boolean flag = Math.abs(i) >= 1 || Math.abs(j) >= 1 || Math.abs(k) >= 1
+            boolean flag = Math.abs(j1) >= 1 || Math.abs(k1) >= 1 || Math.abs(l1) >= 1
                     || this.tracker instanceof EntityBoat || this.tracker instanceof EntityMinecart;
             boolean flag1 = Math.abs(l - this.g) >= 1 || Math.abs(i1 - this.h) >= 1;
+            // Poseidon end
+
+            // Poseidon start - code moved from below
+            if (flag) {
+                this.d = i;
+                this.e = j;
+                this.f = k;
+            }
+
+            if (flag1) {
+                this.g = l;
+                this.h = i1;
+            }
             // Poseidon end
 
             if (j1 >= -128 && j1 < 128 && k1 >= -128 && k1 < 128 && l1 >= -128 && l1 < 128 && this.t <= 400) {
@@ -89,9 +101,14 @@ public class EntityTrackerEntry {
                 }
             } else {
                 this.t = 0;
-                this.tracker.locX = (double) i / 32.0D;
+                // Poseidon start
+                /*this.tracker.locX = (double) i / 32.0D;
                 this.tracker.locY = (double) j / 32.0D;
-                this.tracker.locZ = (double) k / 32.0D;
+                this.tracker.locZ = (double) k / 32.0D;*/
+                if (this.tracker instanceof EntityPlayer) {
+                    this.scanPlayers(new ObjectArrayList<>(this.trackedPlayers));
+                }
+                // Poseidon end
                 object = new Packet34EntityTeleport(this.tracker.id, i, j, k, (byte) l, (byte) i1);
             }
 
@@ -120,7 +137,8 @@ public class EntityTrackerEntry {
                 this.b(new Packet40EntityMetadata(this.tracker.id, datawatcher));
             }
 
-            if (flag) {
+            // Poseidon start - code moved up
+            /*if (flag) {
                 this.d = i;
                 this.e = j;
                 this.f = k;
@@ -129,7 +147,9 @@ public class EntityTrackerEntry {
             if (flag1) {
                 this.g = l;
                 this.h = i1;
-            }
+            }*/
+            this.tracker.airBorne = false;
+            // Poseidon end
         }
 
         if (this.tracker.velocityChanged) {
@@ -160,30 +180,26 @@ public class EntityTrackerEntry {
     }
 
     public void a(Packet packet) {
-        Iterator<EntityPlayer> iterator = this.trackedPlayers.iterator();
-
-        while (iterator.hasNext()) {
-            EntityPlayer entityplayer = iterator.next();
-
-            entityplayer.netServerHandler.sendPacket(packet);
-        }
+        this.trackedPlayers.forEach(entityplayer -> entityplayer.netServerHandler.sendPacket(packet)); // Poseidon - forEach
     }
 
     public void b(Packet packet) {
         this.a(packet);
-        if (this.tracker instanceof EntityPlayer) {
-            ((EntityPlayer) this.tracker).netServerHandler.sendPacket(packet);
+        if (this.tracker instanceof EntityPlayer entityplayer) {
+            entityplayer.netServerHandler.sendPacket(packet);
         }
     }
 
     public void a() {
-        this.a(new Packet29DestroyEntity(this.tracker.id));
+        this.trackedPlayers.forEach(entityplayer -> entityplayer.removeQueue.add(this.tracker.id)); // Poseidon
     }
 
     public void a(EntityPlayer entityplayer) {
-        if (this.trackedPlayers.contains(entityplayer)) {
-            this.trackedPlayers.remove(entityplayer);
+        // Poseidon start
+        if (this.trackedPlayers.remove(entityplayer)) {
+            entityplayer.removeQueue.add(this.tracker.id);
         }
+        // Poseidon end
     }
 
     public void b(EntityPlayer entityplayer) {
@@ -192,12 +208,31 @@ public class EntityTrackerEntry {
             double d1 = entityplayer.locZ - (double) (this.f / 32);
 
             if (d0 >= (double) (-this.b) && d0 <= (double) this.b && d1 >= (double) (-this.b) && d1 <= (double) this.b) {
-                if (!this.trackedPlayers.contains(entityplayer)) {
+                if (!this.trackedPlayers.contains(entityplayer) && this.d(entityplayer)) { // Poseidon
+                    entityplayer.removeQueue.rem(this.tracker.id); // Poseidon
                     this.trackedPlayers.add(entityplayer);
                     entityplayer.netServerHandler.sendPacket(this.b());
+
+                    // Poseidon start
+                    if (!this.tracker.datawatcher.d) {
+                        entityplayer.netServerHandler.sendPacket(new Packet40EntityMetadata(this.tracker.id, this.tracker.datawatcher));
+                    }
+
+                    this.i = this.tracker.motX;
+                    this.j = this.tracker.motY;
+                    this.k = this.tracker.motZ;
                     if (this.isMoving) {
                         entityplayer.netServerHandler.sendPacket(new Packet28EntityVelocity(this.tracker.id, this.tracker.motX, this.tracker.motY, this.tracker.motZ));
                     }
+
+                    if (this.tracker.vehicle != null) {
+                        entityplayer.netServerHandler.sendPacket(new Packet39AttachEntity(this.tracker, this.tracker.vehicle));
+                    }
+
+                    if (this.tracker.passenger != null) {
+                        entityplayer.netServerHandler.sendPacket(new Packet39AttachEntity(this.tracker.passenger, this.tracker));
+                    }
+                    // Poseidon end
 
                     @Nullable ItemStack[] aitemstack = this.tracker.getEquipment();
 
@@ -213,23 +248,34 @@ public class EntityTrackerEntry {
                         }
                     }
                 }
-            } else if (this.trackedPlayers.contains(entityplayer)) {
-                this.trackedPlayers.remove(entityplayer);
-                entityplayer.netServerHandler.sendPacket(new Packet29DestroyEntity(this.tracker.id));
+            } else if (this.trackedPlayers.remove(entityplayer)) { // Poseidon - remove redundant contains check
+                entityplayer.removeQueue.add(this.tracker.id); // Poseidon
             }
         }
     }
+
+    // Poseidon start
+    private boolean d(EntityPlayer entityplayer) {
+        return entityplayer.getWorldServer().getPlayerManager().a(entityplayer, this.tracker.bH, this.tracker.bJ);
+    }
+    // Poseidon end
 
     public void scanPlayers(List<EntityHuman> list) {
         for (int i = 0; i < list.size(); ++i) {
             EntityHuman entityhuman = list.get(i);
-            if (entityhuman instanceof EntityPlayer) {
-                this.b((EntityPlayer) list.get(i));
+            if (entityhuman instanceof EntityPlayer entityplayer) {
+                this.b(entityplayer);
             }
         }
     }
 
-    private Packet b() {
+    private @Nullable Packet b() {
+        // Poseidon start
+        if (this.tracker.dead) {
+            return null;
+        }
+        // Poseidon end
+
         if (this.tracker instanceof EntityItem entityitem) {
             Packet21PickupSpawn packet21pickupspawn = new Packet21PickupSpawn(entityitem);
 
@@ -308,9 +354,8 @@ public class EntityTrackerEntry {
     }
 
     public void c(EntityPlayer entityplayer) {
-        if (this.trackedPlayers.contains(entityplayer)) {
-            this.trackedPlayers.remove(entityplayer);
-            entityplayer.netServerHandler.sendPacket(new Packet29DestroyEntity(this.tracker.id));
+        if (this.trackedPlayers.remove(entityplayer)) { // Poseidon - remove redundant contains check
+            entityplayer.removeQueue.add(this.tracker.id); // Poseidon
         }
     }
 }

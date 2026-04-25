@@ -96,6 +96,10 @@ public abstract class Entity {
     public boolean bK;
     protected UUID uniqueId = UUID.randomUUID(); // CraftBukkit // Poseidon - protected
 
+    // Poseidon start
+    public boolean airBorne;
+    // Poseidon end
+
     public Entity(World world) {
         this.id = entityCount++;
         this.aH = 1.0D;
@@ -859,6 +863,7 @@ public abstract class Entity {
         this.motX += d0;
         this.motY += d1;
         this.motZ += d2;
+        this.airBorne = true; // Poseidon
     }
 
     protected void af() {

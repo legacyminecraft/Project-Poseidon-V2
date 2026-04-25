@@ -1,14 +1,14 @@
 package net.minecraft.server;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class EntityTracker {
 
-    private Set<EntityTrackerEntry> a = new HashSet<>();
-    private EntityList b = new EntityList();
+    private final Int2ObjectOpenHashMap<EntityTrackerEntry> entries = new Int2ObjectOpenHashMap<>(); // Poseidon
+
+    //private Set<EntityTrackerEntry> a = new HashSet<>(); // Poseidon - remove
+    //private EntityList b = new EntityList(); // Poseidon - remove
     private MinecraftServer c;
     private int d;
     private int e;
@@ -19,20 +19,16 @@ public class EntityTracker {
         this.d = minecraftserver.serverConfigurationManager.a();
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void track(Entity entity) {
+    public void track(Entity entity) {
         switch (entity) {
             case EntityPlayer entityplayer -> {
                 this.a(entity, 512, 2);
-                Iterator<EntityTrackerEntry> iterator = this.a.iterator();
 
-                while (iterator.hasNext()) {
-                    EntityTrackerEntry entitytrackerentry = iterator.next();
-
+                this.entries.values().forEach(entitytrackerentry -> { // Poseidon - forEach
                     if (entitytrackerentry.tracker != entityplayer) {
                         entitytrackerentry.b(entityplayer);
                     }
-                }
+                });
             }
             case EntityFish _ -> this.a(entity, 64, 5, true);
             case EntityArrow _ -> this.a(entity, 64, 20, false);
@@ -53,98 +49,80 @@ public class EntityTracker {
         this.a(entity, i, j, false);
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void a(Entity entity, int i, int j, boolean flag) {
+    public void a(Entity entity, int i, int j, boolean flag) {
         if (i > this.d) {
             i = this.d;
         }
 
-        if (this.b.b(entity.id)) {
-            // CraftBukkit - removed exception throw as tracking an already tracked entity theoretically shouldn't cause any issues.
-            // throw new IllegalStateException("Entity is already tracked!");
-        } else {
-            EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entity, i, j, flag);
-
-            this.a.add(entitytrackerentry);
-            this.b.a(entity.id, entitytrackerentry);
+        // Poseidon start
+        EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entity, i, j, flag);
+        if (this.entries.putIfAbsent(entity.id, entitytrackerentry) == null) {
             entitytrackerentry.scanPlayers(this.c.getWorldServer(this.e).players);
         }
+        // Poseidon end
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void untrackEntity(Entity entity) {
+    public void untrackEntity(Entity entity) {
         if (entity instanceof EntityPlayer entityplayer) {
-            Iterator<EntityTrackerEntry> iterator = this.a.iterator();
-
-            while (iterator.hasNext()) {
-                EntityTrackerEntry entitytrackerentry = iterator.next();
-
-                entitytrackerentry.a(entityplayer);
-            }
+            this.entries.values().forEach(entitytrackerentry -> entitytrackerentry.a(entityplayer)); // Poseidon - forEach
         }
 
-        EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry) this.b.d(entity.id);
-
+        // Poseidon start
+        EntityTrackerEntry entitytrackerentry1 = this.entries.remove(entity.id);
         if (entitytrackerentry1 != null) {
-            this.a.remove(entitytrackerentry1);
             entitytrackerentry1.a();
         }
+        // Poseidon end
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void updatePlayers() {
-        ArrayList<EntityPlayer> arraylist = new ArrayList<>();
-        Iterator<EntityTrackerEntry> iterator = this.a.iterator();
+    public void updatePlayers() {
+        ObjectArrayList<EntityPlayer> arraylist = new ObjectArrayList<>(); // Poseidon - ObjectArrayList
 
-        while (iterator.hasNext()) {
-            EntityTrackerEntry entitytrackerentry = iterator.next();
-
+        this.entries.values().forEach(entitytrackerentry -> { // Poseidon - forEach
             entitytrackerentry.track(this.c.getWorldServer(this.e).players);
-            if (entitytrackerentry.m && entitytrackerentry.tracker instanceof EntityPlayer) {
-                arraylist.add((EntityPlayer) entitytrackerentry.tracker);
+            if (entitytrackerentry.m && entitytrackerentry.tracker instanceof EntityPlayer entityplayer) {
+                arraylist.add(entityplayer);
             }
-        }
+        });
 
-        for (int i = 0; i < arraylist.size(); ++i) {
-            EntityPlayer entityplayer = arraylist.get(i);
-            Iterator<EntityTrackerEntry> iterator1 = this.a.iterator();
-
-            while (iterator1.hasNext()) {
-                EntityTrackerEntry entitytrackerentry1 = iterator1.next();
-
+        arraylist.forEach(entityplayer -> { // Poseidon - forEach
+            this.entries.values().forEach(entitytrackerentry1 -> { // Poseidon - forEach
                 if (entitytrackerentry1.tracker != entityplayer) {
                     entitytrackerentry1.b(entityplayer);
                 }
-            }
-        }
+            });
+        });
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void a(Entity entity, Packet packet) {
-        EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) this.b.a(entity.id);
+    public void a(Entity entity, Packet packet) {
+        EntityTrackerEntry entitytrackerentry = this.entries.get(entity.id); // Poseidon
 
         if (entitytrackerentry != null) {
             entitytrackerentry.a(packet);
         }
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void sendPacketToEntity(Entity entity, Packet packet) {
-        EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) this.b.a(entity.id);
+    public void sendPacketToEntity(Entity entity, Packet packet) {
+        EntityTrackerEntry entitytrackerentry = this.entries.get(entity.id); // Poseidon
 
         if (entitytrackerentry != null) {
             entitytrackerentry.b(packet);
         }
     }
 
-    // CraftBukkit - synchronized
-    public synchronized void untrackPlayer(EntityPlayer entityplayer) {
-        Iterator<EntityTrackerEntry> iterator = this.a.iterator();
-
-        while (iterator.hasNext()) {
-            EntityTrackerEntry entitytrackerentry = iterator.next();
-
-            entitytrackerentry.c(entityplayer);
-        }
+    public void untrackPlayer(EntityPlayer entityplayer) {
+        this.entries.values().forEach(entitytrackerentry -> entitytrackerentry.c(entityplayer)); // Poseidon - forEach
     }
+
+    // Poseidon start
+    public void a(EntityPlayer entityplayer, Chunk chunk) {
+        this.entries.values().forEach(entitytrackerentry -> {
+            if (entitytrackerentry.tracker != entityplayer
+                    && entitytrackerentry.tracker.bH == chunk.x
+                    && entitytrackerentry.tracker.bJ == chunk.z) {
+                entitytrackerentry.b(entityplayer);
+            }
+        });
+    }
+    // Poseidon end
 }

@@ -17,6 +17,8 @@ public class DataWatcher {
     private final Map<Integer, WatchableObject> b = new HashMap<>();
     private boolean c;
 
+    public boolean d = true; // Poseidon
+
     public DataWatcher() {}
 
     public void a(int i, Object object) {
@@ -32,6 +34,7 @@ public class DataWatcher {
             WatchableObject watchableobject = new WatchableObject(integer, i, object);
 
             this.b.put(i, watchableobject);
+            this.d = false; // Poseidon
         }
     }
 

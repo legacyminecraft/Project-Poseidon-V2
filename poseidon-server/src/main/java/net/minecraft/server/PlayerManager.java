@@ -175,6 +175,15 @@ public class PlayerManager {
         return this.f * 16 - 16;
     }
 
+    // Poseidon start
+    public boolean a(EntityPlayer entityplayer, int i, int j) {
+        PlayerInstance playerchunk = this.a(i, j, false);
+        return playerchunk != null
+                && PlayerInstance.b(playerchunk).contains(entityplayer)
+                && !entityplayer.chunkCoordIntPairQueue.contains(PlayerInstance.a(playerchunk));
+    }
+    // Poseidon end
+
     static PlayerList a(PlayerManager playermanager) {
         return playermanager.b;
     }

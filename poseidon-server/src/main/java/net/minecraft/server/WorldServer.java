@@ -181,4 +181,10 @@ public class WorldServer extends World implements BlockChangeDelegate {
             // CraftBukkit end
         }
     }
+
+    // Poseidon start
+    public PlayerManager getPlayerManager() {
+        return this.manager;
+    }
+    // Poseidon end
 }

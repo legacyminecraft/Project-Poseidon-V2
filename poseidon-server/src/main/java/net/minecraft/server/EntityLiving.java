@@ -369,6 +369,7 @@ public abstract class EntityLiving extends Entity {
                     this.world.a(this, (byte) 2);
                     this.af();
                     if (entity != null) {
+                        this.airBorne = true; // Poseidon
                         double d0 = entity.locX - this.locX;
 
                         double d1;
@@ -721,6 +722,7 @@ public abstract class EntityLiving extends Entity {
     }
 
     protected void O() {
+        this.airBorne = true; // Poseidon
         this.motY = 0.41999998688697815D;
     }
 

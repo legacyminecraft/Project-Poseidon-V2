@@ -4,6 +4,7 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.event.profile.PlayerProfileNameChangedEvent;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -36,6 +37,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     // Poseidon start
     public final MinecraftProfile profile;
+    public final IntArrayList removeQueue = new IntArrayList();
     // Poseidon end
 
     // Poseidon - change signature
@@ -229,8 +231,23 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         super.b(i, RegainReason.EATING);
     }
 
+    // Poseidon start
+    public WorldServer getWorldServer() {
+        return (WorldServer) this.world;
+    }
+    // Poseidon end
+
     public void a(boolean flag) {
         super.m_();
+
+        // Poseidon start
+        int length = Math.min(this.removeQueue.size(), 127);
+        for (int i = 0; i < length; i++) {
+            int entityId = this.removeQueue.getInt(i);
+            this.netServerHandler.sendPacket(new Packet29DestroyEntity(entityId));
+        }
+        this.removeQueue.removeElements(0, length);
+        // Poseidon end
 
         for (int i = 0; i < this.inventory.getSize(); ++i) {
             ItemStack itemstack = this.inventory.getItem(i);
@@ -256,6 +273,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
                     this.chunkCoordIntPairQueue.remove(chunkcoordintpair);
                     this.netServerHandler.sendPacket(new Packet51MapChunk(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, 16, 128, 16, worldserver));
+                    worldserver.tracker.a(this, world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z)); // Poseidon
                     List<TileEntity> list = worldserver.getTileEntities(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, chunkcoordintpair.x * 16 + 16, 128, chunkcoordintpair.z * 16 + 16);
 
                     for (int j = 0; j < list.size(); ++j) {
