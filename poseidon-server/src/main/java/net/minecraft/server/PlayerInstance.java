@@ -1,16 +1,17 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.util.ChunkPos;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class PlayerInstance {
 
-    private List<EntityPlayer> b;
+    private ObjectOpenHashSet<EntityPlayer> b; // Poseidon - List -> ObjectOpenHashSet
     private int chunkX;
     private int chunkZ;
-    private ChunkCoordIntPair location;
+    private long location; // Poseidon - ChunkCoordIntPair -> long
     private short[] dirtyBlocks;
     private int dirtyCount;
     private int h;
@@ -24,37 +25,34 @@ class PlayerInstance {
 
     public PlayerInstance(PlayerManager playermanager, int i, int j) {
         this.playerManager = playermanager;
-        this.b = new ArrayList<>();
+        this.b = new ObjectOpenHashSet<>(); // Poseidon - ArrayList -> ObjectOpenHashSet
         this.dirtyBlocks = new short[10];
         this.dirtyCount = 0;
         this.chunkX = i;
         this.chunkZ = j;
-        this.location = new ChunkCoordIntPair(i, j);
+        this.location = ChunkPos.of(i, j); // Poseidon
         playermanager.a().chunkProviderServer.getChunkAt(i, j);
     }
 
     public void a(EntityPlayer entityplayer) {
-        if (this.b.contains(entityplayer)) {
+        if (!this.b.add(entityplayer)) { // Poseidon - remove redundant contains check
             throw new IllegalStateException("Failed to add player. " + entityplayer + " already is in chunk " + this.chunkX + ", " + this.chunkZ);
         } else {
             // CraftBukkit start
             if (entityplayer.playerChunkCoordIntPairs.add(this.location)) {
-                entityplayer.netServerHandler.sendPacket(new Packet50PreChunk(this.location.x, this.location.z, true));
+                entityplayer.netServerHandler.sendPacket(new Packet50PreChunk(this.chunkX, this.chunkZ, true)); // Poseidon
             }
             // CraftBukkit end
 
-            this.b.add(entityplayer);
             entityplayer.chunkCoordIntPairQueue.add(this.location);
         }
     }
 
     public void b(EntityPlayer entityplayer) {
-        if (this.b.contains(entityplayer)) {
-            this.b.remove(entityplayer);
+        if (this.b.remove(entityplayer)) { // Poseidon - remove redundant contains check
             if (this.b.isEmpty()) {
-                long i = (long) this.chunkX + 2147483647L | (long) this.chunkZ + 2147483647L << 32;
+                PlayerManager.a(this.playerManager).remove(this.location); // Poseidon
 
-                PlayerManager.a(this.playerManager).b(i);
                 if (this.dirtyCount > 0) {
                     PlayerManager.b(this.playerManager).remove(this);
                 }
@@ -62,8 +60,7 @@ class PlayerInstance {
                 this.playerManager.a().chunkProviderServer.queueUnload(this.chunkX, this.chunkZ);
             }
 
-            entityplayer.chunkCoordIntPairQueue.remove(this.location);
-            // CraftBukkit - contains -> remove -- TODO VERIFY!!!!
+            entityplayer.chunkCoordIntPairQueue.rem(this.location); // Poseidon - remove -> rem
             if (entityplayer.playerChunkCoordIntPairs.remove(this.location)) {
                 entityplayer.netServerHandler.sendPacket(new Packet50PreChunk(this.chunkX, this.chunkZ, false));
             }
@@ -116,13 +113,11 @@ class PlayerInstance {
     }
 
     public void sendAll(Packet packet) {
-        for (int i = 0; i < this.b.size(); ++i) {
-            EntityPlayer entityplayer = this.b.get(i);
-
+        this.b.forEach(entityplayer -> { // Poseidon - forEach
             if (entityplayer.playerChunkCoordIntPairs.contains(this.location)) {
                 entityplayer.netServerHandler.sendPacket(packet);
             }
-        }
+        });
     }
 
     public void a() {
@@ -193,11 +188,11 @@ class PlayerInstance {
     }
 
     // Poseidon start
-    static ChunkCoordIntPair a(PlayerInstance playerchunk) {
+    static long a(PlayerInstance playerchunk) {
         return playerchunk.location;
     }
 
-    static List<EntityPlayer> b(PlayerInstance playerchunk) {
+    static ObjectOpenHashSet<EntityPlayer> b(PlayerInstance playerchunk) {
         return playerchunk.b;
     }
     // Poseidon end

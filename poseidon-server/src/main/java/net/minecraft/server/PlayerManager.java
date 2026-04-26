@@ -1,15 +1,15 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.util.ChunkPos;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jspecify.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerManager {
 
-    public List<EntityPlayer> managedPlayers = new ArrayList<>();
-    private PlayerList b = new PlayerList();
-    private List<PlayerInstance> c = new ArrayList<>();
+    public ObjectOpenHashSet<EntityPlayer> managedPlayers = new ObjectOpenHashSet<>(); // Poseidon - ArrayList -> ObjectOpenHashSet
+    private Long2ObjectOpenHashMap<PlayerInstance> b = new Long2ObjectOpenHashMap<>(); // Poseidon - PlayerList -> Long2ObjectOpenHashMap
+    private ObjectOpenHashSet<PlayerInstance> c = new ObjectOpenHashSet<>(); // Poseidon - ArrayList -> ObjectOpenHashSet
     private MinecraftServer server;
     private int e;
     private int f;
@@ -32,20 +32,20 @@ public class PlayerManager {
     }
 
     public void flush() {
-        for (int i = 0; i < this.c.size(); ++i) {
-            this.c.get(i).a();
-        }
+        this.c.forEach(playerinstance -> playerinstance.a()); // Poseidon - forEach
 
         this.c.clear();
     }
 
     private @Nullable PlayerInstance a(int i, int j, boolean flag) {
-        long k = (long) i + 2147483647L | (long) j + 2147483647L << 32;
-        PlayerInstance playerinstance = (PlayerInstance) this.b.a(k);
+        // Poseidon start
+        long k = ChunkPos.of(i, j);
+        PlayerInstance playerinstance = this.b.get(k);
+        // Poseidon end
 
         if (playerinstance == null && flag) {
             playerinstance = new PlayerInstance(this, i, j);
-            this.b.a(k, playerinstance);
+            this.b.put(k, playerinstance); // Poseidon
         }
 
         return playerinstance;
@@ -156,17 +156,23 @@ public class PlayerManager {
                 entityplayer.d = entityplayer.locX;
                 entityplayer.e = entityplayer.locZ;
 
-                // CraftBukkit start - send nearest chunks first
+                // Poseidon start - send nearest chunks first
                 if (i1 > 1 || i1 < -1 || j1 > 1 || j1 < -1) {
-                    final int x = i;
-                    final int z = j;
-                    List<ChunkCoordIntPair> chunksToSend = entityplayer.chunkCoordIntPairQueue;
+                    final double x = entityplayer.locX;
+                    final double z = entityplayer.locZ;
 
-                    java.util.Collections.sort(chunksToSend, (a, b) -> {
-                        return Math.max(Math.abs(a.x - x), Math.abs(a.z - z)) - Math.max(Math.abs(b.x - x), Math.abs(b.z - z));
+                    entityplayer.chunkCoordIntPairQueue.sort((a, b) -> {
+                        double ax = (ChunkPos.x(a) << 4) + 8;
+                        double az = (ChunkPos.z(a) << 4) + 8;
+                        double bx = (ChunkPos.x(b) << 4) + 8;
+                        double bz = (ChunkPos.z(b) << 4) + 8;
+
+                        double da = Math.pow(ax - x, 2) + Math.pow(az - z, 2);
+                        double db = Math.pow(bx - x, 2) + Math.pow(bz - z, 2);
+                        return Double.compare(da, db);
                     });
                 }
-                // CraftBukkit end
+                // Poseidon end
             }
         }
     }
@@ -184,11 +190,11 @@ public class PlayerManager {
     }
     // Poseidon end
 
-    static PlayerList a(PlayerManager playermanager) {
+    static Long2ObjectOpenHashMap<PlayerInstance> a(PlayerManager playermanager) { // Poseidon - PlayerList -> Long2ObjectOpenHashMap
         return playermanager.b;
     }
 
-    static List<PlayerInstance> b(PlayerManager playermanager) {
+    static ObjectOpenHashSet<PlayerInstance> b(PlayerManager playermanager) { // Poseidon - List -> ObjectOpenHashSet
         return playermanager.c;
     }
 }

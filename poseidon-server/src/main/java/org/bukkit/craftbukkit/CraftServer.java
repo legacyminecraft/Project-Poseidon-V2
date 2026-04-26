@@ -133,7 +133,7 @@ public final class CraftServer implements Server {
         loadPlugins();
         enablePlugins(PluginLoadOrder.STARTUP);
 
-        ChunkCompressionThread.startThread();
+        //ChunkCompressionThread.startThread(); // Poseidon - handle chunk compression when writing packet
     }
 
     private void loadConfig() {

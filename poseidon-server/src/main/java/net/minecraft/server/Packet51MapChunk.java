@@ -1,9 +1,12 @@
 package net.minecraft.server;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 public class Packet51MapChunk extends Packet {
@@ -14,9 +17,11 @@ public class Packet51MapChunk extends Packet {
     public int d;
     public int e;
     public int f;
-    public byte[] g;
+    public byte @Nullable [] g;
     public int h; // CraftBukkit - private -> public
     public byte[] rawData; // CraftBukkit
+
+    private static final ThreadLocal<Deflater> localDeflater = ThreadLocal.withInitial(Deflater::new); // Poseidon
 
     public Packet51MapChunk() {
         this.k = true;
@@ -51,6 +56,28 @@ public class Packet51MapChunk extends Packet {
         this.rawData = data; // CraftBukkit
     }
 
+    // Poseidon start - handle chunk compression when writing packet
+    private synchronized void compress() {
+        if (this.g != null) return;
+
+        byte[] deflateBuffer = new byte[this.rawData.length + 100];
+        Deflater deflater = localDeflater.get();
+        deflater.reset();
+        deflater.setLevel(Deflater.DEFAULT_COMPRESSION); // TODO: make compression level configurable
+        deflater.setInput(this.rawData);
+        deflater.finish();
+
+        int size = deflater.deflate(deflateBuffer);
+        if (size == 0) {
+            size = deflater.deflate(deflateBuffer);
+        }
+
+        this.g = new byte[size];
+        this.h = size;
+        System.arraycopy(deflateBuffer, 0, this.g, 0, size);
+    }
+    // Poseidon end
+
     public void a(DataInputStream datainputstream) throws IOException { // CraftBukkit - throws IOEXception
         this.a = datainputstream.readInt();
         this.b = datainputstream.readShort();
@@ -77,6 +104,7 @@ public class Packet51MapChunk extends Packet {
     }
 
     public void a(DataOutputStream dataoutputstream) throws IOException { // CraftBukkit - throws IOException
+        compress(); // Poseidon
         dataoutputstream.writeInt(this.a);
         dataoutputstream.writeShort(this.b);
         dataoutputstream.writeInt(this.c);

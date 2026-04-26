@@ -4,9 +4,11 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.event.profile.PlayerProfileNameChangedEvent;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
+import com.legacyminecraft.poseidon.util.ChunkPos;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -15,10 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class EntityPlayer extends EntityHuman implements ICrafting {
 
@@ -27,8 +26,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public ItemInWorldManager itemInWorldManager;
     public double d;
     public double e;
-    public List<ChunkCoordIntPair> chunkCoordIntPairQueue = new LinkedList<>();
-    public Set<ChunkCoordIntPair> playerChunkCoordIntPairs = new HashSet<>();
+    public LongArrayList chunkCoordIntPairQueue = new LongArrayList(); // Poseidon - LinkedList -> LongArrayList
+    public LongOpenHashSet playerChunkCoordIntPairs = new LongOpenHashSet(); // Poseidon - HashSet -> LongOpenHashSet
     private int bL = -99999999;
     private int bM = 60;
     private @Nullable ItemStack[] bN = new @Nullable ItemStack[] { null, null, null, null, null};
@@ -262,25 +261,20 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
 
         if (flag && !this.chunkCoordIntPairQueue.isEmpty()) {
-            ChunkCoordIntPair chunkcoordintpair = this.chunkCoordIntPairQueue.get(0);
+            // Poseidon start - improve chunk sending
+            WorldServer worldserver = this.getWorldServer();
+            for (int count = 0; !this.chunkCoordIntPairQueue.isEmpty() && count < 3; count++) { // TODO: make max chunk packets per tick configurable
+                long chunkPos = this.chunkCoordIntPairQueue.removeLong(0);
+                Chunk chunk = worldserver.chunkProviderServer.getChunkAt(ChunkPos.x(chunkPos), ChunkPos.z(chunkPos));
 
-            if (chunkcoordintpair != null) {
-                // CraftBukkit - Add check against Chunk Packets in the ChunkCompressionThread.
-                boolean flag1 = this.netServerHandler.b() + ChunkCompressionThread.getPlayerQueueSize(this) < 4;
+                this.netServerHandler.sendPacket(new Packet51MapChunk(chunk.x * 16, 0, chunk.z * 16, 16, 128, 16, worldserver));
+                worldserver.tracker.a(this, chunk);
 
-                if (flag1) {
-                    WorldServer worldserver = this.b.getWorldServer(this.dimension);
-
-                    this.chunkCoordIntPairQueue.remove(chunkcoordintpair);
-                    this.netServerHandler.sendPacket(new Packet51MapChunk(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, 16, 128, 16, worldserver));
-                    worldserver.tracker.a(this, world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z)); // Poseidon
-                    List<TileEntity> list = worldserver.getTileEntities(chunkcoordintpair.x * 16, 0, chunkcoordintpair.z * 16, chunkcoordintpair.x * 16 + 16, 128, chunkcoordintpair.z * 16 + 16);
-
-                    for (int j = 0; j < list.size(); ++j) {
-                        this.a(list.get(j));
-                    }
+                for (TileEntity tileEntity : chunk.tileEntities.values()) {
+                    this.a(tileEntity);
                 }
             }
+            // Poseidon end
         }
 
         if (this.E) {

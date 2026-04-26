@@ -3,7 +3,6 @@ package net.minecraft.server;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandException;
-import org.bukkit.craftbukkit.ChunkCompressionThread;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.TextWrapper;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -661,11 +660,13 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
                 this.networkManager.queue(new Packet3Chat(line));
             }
             packet = null;
-        } else if (packet.k) {
+        } // Poseidon start - handle chunk compression when writing packet
+        /*else if (packet.k) {
             // Reroute all low-priority packets through to compression thread.
             ChunkCompressionThread.sendPacket(this.player, packet);
             packet = null;
-        }
+        }*/
+        // Poseidon end
         if (packet != null) this.networkManager.queue(packet);
         // CraftBukkit end
 
