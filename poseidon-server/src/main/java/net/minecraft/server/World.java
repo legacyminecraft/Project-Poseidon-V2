@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.world.ChunkSection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -1942,17 +1943,25 @@ public class World implements IBlockAccess {
                 }
             }
 
-            for (k = 0; k < 80; ++k) {
-                this.g = this.g * 3 + 1013904223;
-                l = this.g >> 2;
-                j1 = l & 15;
-                k1 = l >> 8 & 15;
-                l1 = l >> 16 & 127;
-                i2 = chunk.b[j1 << 11 | k1 << 7 | l1] & 255;
-                if (Block.n[i2]) {
-                    Block.byId[i2].a(this, j1 + i, l1, k1 + j, this.random);
+            // Poseidon start - don't tick chunk sections which have no tickable blocks
+            ChunkSection[] sections = chunk.getSections();
+            for (int yPos = 0; yPos < sections.length; yPos++) {
+                ChunkSection section = sections[yPos];
+                if (section.hasTickableBlocks()) {
+                    for (k = 0; k < 10; ++k) {
+                        this.g = this.g * 3 + 1013904223;
+                        l = this.g >> 2;
+                        j1 = l & 15;
+                        k1 = l >> 8 & 15;
+                        l1 = (yPos << 4) + (l >> 16 & 15);
+                        i2 = chunk.b[j1 << 11 | k1 << 7 | l1] & 255;
+                        if (Block.n[i2]) {
+                            Block.byId[i2].a(this, j1 + i, l1, k1 + j, this.random);
+                        }
+                    }
                 }
             }
+            // Poseidon end
         }
     }
 

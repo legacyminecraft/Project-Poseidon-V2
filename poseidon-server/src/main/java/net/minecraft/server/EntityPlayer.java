@@ -267,7 +267,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                 long chunkPos = this.chunkCoordIntPairQueue.removeLong(0);
                 Chunk chunk = worldserver.chunkProviderServer.getChunkAt(ChunkPos.x(chunkPos), ChunkPos.z(chunkPos));
 
-                this.netServerHandler.sendPacket(new Packet51MapChunk(chunk.x * 16, 0, chunk.z * 16, 16, 128, 16, worldserver));
+                this.netServerHandler.sendPacket(new Packet51MapChunk(chunk));
                 worldserver.tracker.a(this, chunk);
 
                 for (TileEntity tileEntity : chunk.tileEntities.values()) {

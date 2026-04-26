@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.world.ChunkSection;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class Chunk {
     public boolean q;
     public long r;
 
+    private final ChunkSection[] sections; // Poseidon
+
     public Chunk(World world, int i, int j) {
         this.tileEntities = new HashMap<>();
         this.entitySlices = new List[8];
@@ -42,6 +45,13 @@ public class Chunk {
         this.x = i;
         this.z = j;
         this.heightMap = new byte[256];
+
+        // Poseidon start
+        this.sections = new ChunkSection[8];
+        for (int yPos = 0; yPos < this.sections.length; yPos++) {
+            this.sections[yPos] = new ChunkSection(this, yPos);
+        }
+        // Poseidon end
 
         for (int k = 0; k < this.entitySlices.length; ++k) {
             this.entitySlices[k] = new ArrayList<>();
@@ -60,6 +70,7 @@ public class Chunk {
         this.e = new NibbleArray(abyte.length);
         this.f = new NibbleArray(abyte.length);
         this.g = new NibbleArray(abyte.length);
+        initSections(); // Poseidon
     }
 
     public boolean a(int i, int j) {
@@ -71,6 +82,14 @@ public class Chunk {
     }
 
     public void a() {}
+
+    // Poseidon start
+    public void initSections() {
+        for (int yPos = 0; yPos < this.sections.length; yPos++) {
+            this.sections[yPos].calculateBlockCounts();
+        }
+    }
+    // Poseidon end
 
     public void initLighting() {
         int i = 127;
@@ -224,6 +243,12 @@ public class Chunk {
         }
     }
 
+    // Poseidon start
+    public ChunkSection[] getSections() {
+        return this.sections;
+    }
+    // Poseidon end
+
     public int getTypeId(int i, int j, int k) {
         return this.b[i << 11 | k << 7 | j] & 255;
     }
@@ -240,6 +265,7 @@ public class Chunk {
             int i2 = this.z * 16 + k;
 
             this.b[i << 11 | k << 7 | j] = (byte) (b0 & 255);
+            this.sections[j >> 4].update(k1, b0 & 255); // Poseidon
 
             // Poseidon start - fix liquid piston transmutation
             if (Poseidon.getConfig().bugFixes.fixPistonGlitches) {
@@ -293,6 +319,8 @@ public class Chunk {
             int l1 = this.z * 16 + k;
 
             this.b[i << 11 | k << 7 | j] = (byte) (b0 & 255);
+            this.sections[j >> 4].update(j1, b0 & 255); // Poseidon
+
             if (j1 != 0) {
                 Block.byId[j1].remove(this.world, k1, j, l1);
             }

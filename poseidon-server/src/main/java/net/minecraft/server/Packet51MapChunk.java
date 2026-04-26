@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.world.ChunkSection;
 import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
@@ -26,6 +27,13 @@ public class Packet51MapChunk extends Packet {
     public Packet51MapChunk() {
         this.k = true;
     }
+
+    // Poseidon start
+    public Packet51MapChunk(Chunk chunk) {
+        int height = calculateHeight(chunk);
+        this(chunk.x << 4, 0, chunk.z << 4, 16, height, 16, getChunkData(chunk, height));
+    }
+    // Poseidon end
 
     // CraftBukkit start
     public Packet51MapChunk(int i, int j, int k, int l, int i1, int j1, World world) {
@@ -78,7 +86,7 @@ public class Packet51MapChunk extends Packet {
     }
     // Poseidon end
 
-    public void a(DataInputStream datainputstream) throws IOException { // CraftBukkit - throws IOEXception
+    public void a(DataInputStream datainputstream) throws IOException { // CraftBukkit - throws IOException
         this.a = datainputstream.readInt();
         this.b = datainputstream.readShort();
         this.c = datainputstream.readInt();
@@ -122,4 +130,21 @@ public class Packet51MapChunk extends Packet {
     public int a() {
         return 17 + this.h;
     }
+
+    // Poseidon start
+    private static int calculateHeight(Chunk chunk) {
+        ChunkSection[] sections = chunk.getSections();
+        int yPos = sections.length;
+        while (yPos > 0 && !sections[yPos - 1].hasBlocks()) {
+            yPos--;
+        }
+        return yPos << 4;
+    }
+
+    private static byte[] getChunkData(Chunk chunk, int height) {
+        byte[] data = new byte[16 * height * 16 * 5 / 2];
+        chunk.getData(data, 0, 0, 0, 16, height, 16, 0);
+        return data;
+    }
+    // Poseidon end
 }

@@ -40,6 +40,7 @@ public class ChunkRegionLoader implements IChunkLoader {
                 }
 
                 chunk.h();
+                chunk.initSections(); // Poseidon
                 return chunk;
             }
         } else {
