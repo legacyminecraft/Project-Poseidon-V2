@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.legacyminecraft.poseidon.world.ChunkSection;
+import com.google.common.base.Preconditions;
 import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
@@ -29,9 +29,11 @@ public class Packet51MapChunk extends Packet {
     }
 
     // Poseidon start
-    public Packet51MapChunk(Chunk chunk) {
-        int height = calculateHeight(chunk);
-        this(chunk.x << 4, 0, chunk.z << 4, 16, height, 16, getChunkData(chunk, height));
+    public Packet51MapChunk(Chunk chunk, int startSection, int numSections) {
+        Preconditions.checkArgument(startSection >= 0, "startSection must be >= 0");
+        Preconditions.checkArgument(startSection < chunk.getSections().length, "startSection must be < chunk.getSections().length");
+        Preconditions.checkArgument(numSections > 0, "numSections must be > 0");
+        this(chunk.x << 4, startSection << 4, chunk.z << 4, 16, numSections << 4, 16, getSectionData(chunk, startSection, numSections));
     }
     // Poseidon end
 
@@ -132,18 +134,9 @@ public class Packet51MapChunk extends Packet {
     }
 
     // Poseidon start
-    private static int calculateHeight(Chunk chunk) {
-        ChunkSection[] sections = chunk.getSections();
-        int yPos = sections.length;
-        while (yPos > 0 && !sections[yPos - 1].hasBlocks()) {
-            yPos--;
-        }
-        return yPos << 4;
-    }
-
-    private static byte[] getChunkData(Chunk chunk, int height) {
-        byte[] data = new byte[16 * height * 16 * 5 / 2];
-        chunk.getData(data, 0, 0, 0, 16, height, 16, 0);
+    private static byte[] getSectionData(Chunk chunk, int startSection, int numSections) {
+        byte[] data = new byte[16 * (numSections << 4) * 16 * 5 / 2];
+        chunk.getData(data, 0, startSection << 4, 0, 16, (startSection << 4) + (numSections << 4), 16, 0);
         return data;
     }
     // Poseidon end

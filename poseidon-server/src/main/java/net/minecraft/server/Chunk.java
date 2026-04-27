@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.world.ChunkSection;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -246,6 +247,34 @@ public class Chunk {
     // Poseidon start
     public ChunkSection[] getSections() {
         return this.sections;
+    }
+
+    public List<Packet51MapChunk> createSectionPackets() {
+        ObjectArrayList<Packet51MapChunk> packets = new ObjectArrayList<>();
+        int startSection = -1;
+        int numSections = 0;
+
+        for (int yPos = 0; yPos < this.sections.length; yPos++) {
+            ChunkSection section = this.sections[yPos];
+            if (section.hasBlocks()) {
+                if (startSection == -1) {
+                    startSection = yPos;
+                }
+                numSections++;
+            } else if (startSection != -1) {
+                Packet51MapChunk packet = new Packet51MapChunk(this, startSection, numSections);
+                packets.add(packet);
+                startSection = -1;
+                numSections = 0;
+            }
+        }
+
+        if (startSection != -1) {
+            Packet51MapChunk packet = new Packet51MapChunk(this, startSection, numSections);
+            packets.add(packet);
+        }
+
+        return packets;
     }
     // Poseidon end
 
