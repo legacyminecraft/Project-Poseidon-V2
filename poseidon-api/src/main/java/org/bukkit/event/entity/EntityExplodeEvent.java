@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Called when an entity explodes
@@ -17,10 +17,10 @@ public class EntityExplodeEvent extends EntityEvent implements Cancellable {
 
     private boolean cancel;
     private Location location;
-    private List<Block> blocks;
+    private Set<Block> blocks;
     private float yield = 0.3F;
 
-    public EntityExplodeEvent(Entity what, Location location, List<Block> blocks) {
+    public EntityExplodeEvent(Entity what, Location location, Set<Block> blocks) {
         super(Type.ENTITY_EXPLODE, what);
         this.location = location;
         this.cancel = false;
@@ -31,7 +31,7 @@ public class EntityExplodeEvent extends EntityEvent implements Cancellable {
      * Returns the list of blocks that would have been removed or were
      * removed from the explosion event.
      */
-    public List<Block> blockList() {
+    public Set<Block> blockList() {
         return blocks;
     }
 

@@ -1,10 +1,12 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.util.BlockPos;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class Packet60Explosion extends Packet {
@@ -13,7 +15,7 @@ public class Packet60Explosion extends Packet {
     public double b;
     public double c;
     public float d;
-    public Set<ChunkPosition> e;
+    public LongOpenHashSet e; // Poseidon - Set -> LongOpenHashSet
 
     public Packet60Explosion() {}
 
@@ -22,8 +24,18 @@ public class Packet60Explosion extends Packet {
         this.b = d1;
         this.c = d2;
         this.d = f;
-        this.e = new HashSet<>(set);
+        this.e = new LongOpenHashSet(set.stream().map(cpos -> BlockPos.of(cpos.x, cpos.y, cpos.z)).toList()); // Poseidon
     }
+
+    // Poseidon start
+    public Packet60Explosion(double d0, double d1, double d2, float f, LongOpenHashSet set) {
+        this.a = d0;
+        this.b = d1;
+        this.c = d2;
+        this.d = f;
+        this.e = set.clone();
+    }
+    // Poseidon end
 
     public void a(DataInputStream datainputstream) throws IOException {
         this.a = datainputstream.readDouble();
@@ -32,7 +44,7 @@ public class Packet60Explosion extends Packet {
         this.d = datainputstream.readFloat();
         int i = datainputstream.readInt();
 
-        this.e = new HashSet<>();
+        this.e = new LongOpenHashSet(); // Poseidon
         int j = (int) this.a;
         int k = (int) this.b;
         int l = (int) this.c;
@@ -42,7 +54,7 @@ public class Packet60Explosion extends Packet {
             int k1 = datainputstream.readByte() + k;
             int l1 = datainputstream.readByte() + l;
 
-            this.e.add(new ChunkPosition(j1, k1, l1));
+            this.e.add(BlockPos.of(j1, k1, l1)); // Poseidon
         }
     }
 
@@ -55,13 +67,16 @@ public class Packet60Explosion extends Packet {
         int i = (int) this.a;
         int j = (int) this.b;
         int k = (int) this.c;
-        Iterator<ChunkPosition> iterator = this.e.iterator();
+
+        // Poseidon start - ChunkPosition -> long
+        LongIterator iterator = this.e.iterator();
 
         while (iterator.hasNext()) {
-            ChunkPosition chunkposition = iterator.next();
-            int l = chunkposition.x - i;
-            int i1 = chunkposition.y - j;
-            int j1 = chunkposition.z - k;
+            long blockPos = iterator.nextLong();
+            int l = BlockPos.x(blockPos) - i;
+            int i1 = BlockPos.y(blockPos) - j;
+            int j1 = BlockPos.z(blockPos) - k;
+            // Poseidon end
 
             dataoutputstream.writeByte(l);
             dataoutputstream.writeByte(i1);

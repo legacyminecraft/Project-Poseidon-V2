@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.world.ChunkSection;
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -74,6 +75,10 @@ public class World implements IBlockAccess {
     private int Q;
     private List<Entity> R;
     public boolean isStatic;
+
+    // Poseidon start
+    public final Int2DoubleOpenHashMap explosionDensityCache = new Int2DoubleOpenHashMap();
+    // Poseidon end
 
     public WorldChunkManager getWorldChunkManager() {
         return this.worldProvider.b;

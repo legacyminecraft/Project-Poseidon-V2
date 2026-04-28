@@ -248,10 +248,31 @@ public class CraftBlock implements Block {
         return chunk.getHandle().world.isBlockIndirectlyPowered(x, y, z);
     }
 
+    // Poseidon start
     @Override
     public boolean equals(Object o) {
-        return this == o;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CraftBlock other)) {
+            return false;
+        }
+
+        return this.getWorld().equals(other.getWorld())
+                && this.getX() == other.getX()
+                && this.getY() == other.getY()
+                && this.getZ() == other.getZ();
     }
+
+    @Override
+    public int hashCode() {
+        int result = getWorld().hashCode();
+        result = 31 * result + getX();
+        result = 31 * result + getY();
+        result = 31 * result + getZ();
+        return result;
+    }
+    // Poseidon end
 
     public boolean isBlockFacePowered(BlockFace face) {
         return chunk.getHandle().world.isBlockFacePowered(x, y, z, blockFaceToNotch(face));

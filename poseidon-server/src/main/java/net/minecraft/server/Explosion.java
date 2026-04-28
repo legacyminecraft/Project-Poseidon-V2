@@ -1,5 +1,9 @@
 package net.minecraft.server;
 
+import com.google.common.collect.Iterators;
+import com.legacyminecraft.poseidon.util.BlockPos;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import org.bukkit.Location;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -8,8 +12,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.AbstractSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -24,9 +28,11 @@ public class Explosion {
     public double posZ;
     public @Nullable Entity source;
     public float size;
-    public Set<ChunkPosition> blocks = new HashSet<>();
+    public LongOpenHashSet blocks = new LongOpenHashSet(); // Poseidon - HashSet -> LongOpenHashSet
 
     public boolean wasCanceled = false; // CraftBukkit
+
+    private static final double[] CACHED_RAYS; // Poseidon
 
     public Explosion(World world, @Nullable Entity entity, double d0, double d1, double d2, float f) {
         this.world = world;
@@ -39,60 +45,41 @@ public class Explosion {
 
     public void a() {
         float f = this.size;
-        byte b0 = 16;
 
-        int i;
-        int j;
-        int k;
-        double d0;
-        double d1;
-        double d2;
+        for (int i = 0; i < CACHED_RAYS.length; i += 3) { // Poseidon - optimize explosions
+            float f1 = this.size * (0.7F + this.world.random.nextFloat() * 0.6F);
 
-        for (i = 0; i < b0; ++i) {
-            for (j = 0; j < b0; ++j) {
-                for (k = 0; k < b0; ++k) {
-                    if (i == 0 || i == b0 - 1 || j == 0 || j == b0 - 1 || k == 0 || k == b0 - 1) {
-                        double d3 = (float) i / ((float) b0 - 1.0F) * 2.0F - 1.0F;
-                        double d4 = (float) j / ((float) b0 - 1.0F) * 2.0F - 1.0F;
-                        double d5 = (float) k / ((float) b0 - 1.0F) * 2.0F - 1.0F;
-                        double d6 = Math.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+            double d0 = this.posX;
+            double d1 = this.posY;
+            double d2 = this.posZ;
 
-                        d3 /= d6;
-                        d4 /= d6;
-                        d5 /= d6;
-                        float f1 = this.size * (0.7F + this.world.random.nextFloat() * 0.6F);
+            for (float f2 = 0.3F; f1 > 0.0F; f1 -= f2 * 0.75F) {
+                int l = MathHelper.floor(d0);
+                int i1 = MathHelper.floor(d1);
+                int j1 = MathHelper.floor(d2);
+                int k1 = this.world.getTypeId(l, i1, j1);
 
-                        d0 = this.posX;
-                        d1 = this.posY;
-                        d2 = this.posZ;
-
-                        for (float f2 = 0.3F; f1 > 0.0F; f1 -= f2 * 0.75F) {
-                            int l = MathHelper.floor(d0);
-                            int i1 = MathHelper.floor(d1);
-                            int j1 = MathHelper.floor(d2);
-                            int k1 = this.world.getTypeId(l, i1, j1);
-
-                            if (k1 > 0) {
-                                f1 -= (Block.byId[k1].a(this.source) + 0.3F) * f2;
-                            }
-
-                            if (f1 > 0.0F) {
-                                this.blocks.add(new ChunkPosition(l, i1, j1));
-                            }
-
-                            d0 += d3 * (double) f2;
-                            d1 += d4 * (double) f2;
-                            d2 += d5 * (double) f2;
-                        }
+                if (k1 > 0 && Block.byId[k1].j() != -1.0F) { // Poseidon - ignore indestructible blocks
+                    f1 -= (Block.byId[k1].a(this.source) + 0.3F) * f2;
+                    // Poseidon start - moved from below
+                    if (f1 > 0.0F) {
+                        this.blocks.add(BlockPos.of(l, i1, j1));
                     }
+                    // Poseidon end
                 }
+
+                // Poseidon start - optimize explosions
+                d0 += CACHED_RAYS[i] * (double) f2;
+                d1 += CACHED_RAYS[i + 1] * (double) f2;
+                d2 += CACHED_RAYS[i + 2] * (double) f2;
+                // Poseidon end
             }
         }
 
         this.size *= 2.0F;
-        i = MathHelper.floor(this.posX - (double) this.size - 1.0D);
-        j = MathHelper.floor(this.posX + (double) this.size + 1.0D);
-        k = MathHelper.floor(this.posY - (double) this.size - 1.0D);
+        int i = MathHelper.floor(this.posX - (double) this.size - 1.0D);
+        int j = MathHelper.floor(this.posX + (double) this.size + 1.0D);
+        int k = MathHelper.floor(this.posY - (double) this.size - 1.0D);
         int l1 = MathHelper.floor(this.posY + (double) this.size + 1.0D);
         int i2 = MathHelper.floor(this.posZ - (double) this.size - 1.0D);
         int j2 = MathHelper.floor(this.posZ + (double) this.size + 1.0D);
@@ -104,15 +91,15 @@ public class Explosion {
             double d7 = entity.f(this.posX, this.posY, this.posZ) / (double) this.size;
 
             if (d7 <= 1.0D) {
-                d0 = entity.locX - this.posX;
-                d1 = entity.locY - this.posY;
-                d2 = entity.locZ - this.posZ;
+                double d0 = entity.locX - this.posX;
+                double d1 = entity.locY - this.posY;
+                double d2 = entity.locZ - this.posZ;
                 double d8 = MathHelper.a(d0 * d0 + d1 * d1 + d2 * d2);
 
                 d0 /= d8;
                 d1 /= d8;
                 d2 /= d8;
-                double d9 = this.world.a(vec3d, entity.boundingBox);
+                double d9 = getBlockDensity(vec3d, entity); // Poseidon - optimize explosions
                 double d10 = (1.0D - d7) * d9;
 
                 // CraftBukkit start - explosion damage hook
@@ -156,44 +143,52 @@ public class Explosion {
         }
 
         this.size = f;
-        ArrayList<ChunkPosition> arraylist = new ArrayList<>();
+        // Poseidon start - remove
+        /*ArrayList<ChunkPosition> arraylist = new ArrayList<>();
 
-        arraylist.addAll(this.blocks);
+        arraylist.addAll(this.blocks);*/
+        // Poseidon end
+
         if (this.a) {
-            for (int l2 = arraylist.size() - 1; l2 >= 0; --l2) {
-                ChunkPosition chunkposition = arraylist.get(l2);
-                int i3 = chunkposition.x;
-                int j3 = chunkposition.y;
-                int k3 = chunkposition.z;
+            // Poseidon start - ChunkPosition -> long
+            this.blocks.forEach(blockPos -> {
+                int i3 = BlockPos.x(blockPos);
+                int j3 = BlockPos.y(blockPos);
+                int k3 = BlockPos.z(blockPos);
+                // Poseidon end
                 int l3 = this.world.getTypeId(i3, j3, k3);
                 int i4 = this.world.getTypeId(i3, j3 - 1, k3);
 
                 if (l3 == 0 && Block.o[i4] && this.h.nextInt(3) == 0) {
                     this.world.setTypeId(i3, j3, k3, Block.FIRE.id);
                 }
-            }
+            });
         }
     }
 
     public void a(boolean flag) {
         this.world.makeSound(this.posX, this.posY, this.posZ, "random.explode", 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F);
-        ArrayList<ChunkPosition> arraylist = new ArrayList<>();
+        // Poseidon start - remove
+        /*ArrayList<ChunkPosition> arraylist = new ArrayList<>();
 
-        arraylist.addAll(this.blocks);
+        arraylist.addAll(this.blocks);*/
+        // Poseidon end
 
         // CraftBukkit start
         org.bukkit.World bworld = this.world.getWorld();
         org.bukkit.entity.Entity explode = this.source == null ? null : this.source.getBukkitEntity();
         Location location = new Location(bworld, this.posX, this.posY, this.posZ);
 
-        List<org.bukkit.block.Block> blockList = new ArrayList<>();
-        for (int j = arraylist.size() - 1; j >= 0; j--) {
+        // Poseidon start - optimize explosions
+        Set<org.bukkit.block.Block> blockList = new TransformingBlockSet();
+        /*for (int j = arraylist.size() - 1; j >= 0; j--) {
             ChunkPosition cpos = arraylist.get(j);
             org.bukkit.block.Block block = bworld.getBlockAt(cpos.x, cpos.y, cpos.z);
             if (block.getType() != org.bukkit.Material.AIR) {
                 blockList.add(block);
             }
-        }
+        }*/
+        // Poseidon end
 
         EntityExplodeEvent event = new EntityExplodeEvent(explode, location, blockList);
         this.world.getServer().getPluginManager().callEvent(event);
@@ -204,21 +199,12 @@ public class Explosion {
         }
         // CraftBukkit end
 
-        // Poseidon start - fix explosion event
-        arraylist.clear();
-        this.blocks.clear();
-        for (org.bukkit.block.Block block : event.blockList()) {
-            ChunkPosition coords = new ChunkPosition(block.getX(), block.getY(), block.getZ());
-            arraylist.add(coords);
-            this.blocks.add(coords);
-        }
-        // Poseidon end
-
-        for (int i = arraylist.size() - 1; i >= 0; --i) {
-            ChunkPosition chunkposition = arraylist.get(i);
-            int j = chunkposition.x;
-            int k = chunkposition.y;
-            int l = chunkposition.z;
+        // Poseidon start - ChunkPosition -> long
+        this.blocks.forEach(blockPos -> {
+            int j = BlockPos.x(blockPos);
+            int k = BlockPos.y(blockPos);
+            int l = BlockPos.z(blockPos);
+            // Poseidon end
             int i1 = this.world.getTypeId(j, k, l);
 
             if (flag) {
@@ -250,6 +236,102 @@ public class Explosion {
                 this.world.setTypeId(j, k, l, 0);
                 Block.byId[i1].d(this.world, j, k, l);
             }
+        });
+    }
+
+    // Poseidon start - optimize explosions
+    private float getBlockDensity(Vec3D vec3d, Entity entity) {
+        int key = getCacheKey(entity.boundingBox);
+        return (float) this.world.explosionDensityCache.computeIfAbsent(key, _ -> this.world.a(vec3d, entity.boundingBox));
+    }
+
+    private int getCacheKey(AxisAlignedBB aabb) {
+        int result;
+        long temp;
+        result = this.world.hashCode();
+        temp = Double.doubleToLongBits(this.posX);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.posY);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.posZ);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(aabb.a);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(aabb.b);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(aabb.c);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(aabb.d);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(aabb.e);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(aabb.f);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    private class TransformingBlockSet extends AbstractSet<org.bukkit.block.Block> {
+
+        @Override
+        public boolean add(org.bukkit.block.Block block) {
+            return Explosion.this.blocks.add(BlockPos.of(block.getX(), block.getY(), block.getZ()));
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            if (!(o instanceof org.bukkit.block.Block block)) {
+                return false;
+            }
+            return Explosion.this.blocks.remove(BlockPos.of(block.getX(), block.getY(), block.getZ()));
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            if (!(o instanceof org.bukkit.block.Block block)) {
+                return false;
+            }
+            return Explosion.this.blocks.contains(BlockPos.of(block.getX(), block.getY(), block.getZ()));
+        }
+
+        @Override
+        public void clear() {
+            Explosion.this.blocks.clear();
+        }
+
+        @Override
+        public int size() {
+            return Explosion.this.blocks.size();
+        }
+
+        @Override
+        public Iterator<org.bukkit.block.Block> iterator() {
+            return Iterators.transform(Explosion.this.blocks.iterator(), blockPos ->
+                    Explosion.this.world.getWorld().getBlockAt(BlockPos.x(blockPos), BlockPos.y(blockPos), BlockPos.z(blockPos)));
         }
     }
+
+    static {
+        DoubleArrayList rayCoords = new DoubleArrayList();
+
+        byte b0 = 16;
+        for (int i = 0; i < b0; ++i) {
+            for (int j = 0; j < b0; ++j) {
+                for (int k = 0; k < b0; ++k) {
+                    if (i == 0 || i == b0 - 1 || j == 0 || j == b0 - 1 || k == 0 || k == b0 - 1) {
+                        double d3 = ((float) i / ((float) b0 - 1.0F) * 2.0F - 1.0F);
+                        double d4 = ((float) j / ((float) b0 - 1.0F) * 2.0F - 1.0F);
+                        double d5 = ((float) k / ((float) b0 - 1.0F) * 2.0F - 1.0F);
+                        double d6 = Math.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+
+                        rayCoords.add(d3 / d6);
+                        rayCoords.add(d4 / d6);
+                        rayCoords.add(d5 / d6);
+                    }
+                }
+            }
+        }
+
+        CACHED_RAYS = rayCoords.toDoubleArray();
+    }
+    // Poseidon end
 }
