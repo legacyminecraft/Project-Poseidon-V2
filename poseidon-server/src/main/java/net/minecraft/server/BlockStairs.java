@@ -2,7 +2,7 @@ package net.minecraft.server;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class BlockStairs extends Block {
@@ -34,7 +34,7 @@ public class BlockStairs extends Block {
         return false;
     }
 
-    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList<AxisAlignedBB> arraylist) {
+    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> arraylist) { // Poseidon - ArrayList -> List
         int l = world.getData(i, j, k);
 
         if (l == 0) {

@@ -2,7 +2,7 @@ package net.minecraft.server;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Block {
@@ -238,7 +238,7 @@ public class Block {
         return this.textureId;
     }
 
-    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList<AxisAlignedBB> arraylist) {
+    public void a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> arraylist) { // Poseidon - ArrayList -> List
         AxisAlignedBB axisalignedbb1 = this.e(world, i, j, k);
 
         if (axisalignedbb1 != null && axisalignedbb.a(axisalignedbb1)) {
