@@ -478,17 +478,12 @@ public class MinecraftServer implements Runnable, ICommandListener {
                 }
 
                 worldserver.cleanUp();
+                worldserver.tracker.updatePlayers(); // Poseidon
             }
         // } // CraftBukkit
 
         this.networkListenThread.a();
         this.serverConfigurationManager.b();
-
-        // CraftBukkit start
-        for (j = 0; j < this.worlds.size(); ++j) {
-            this.worlds.get(j).tracker.updatePlayers();
-        }
-        // CraftBukkit end
 
         for (j = 0; j < this.r.size(); ++j) {
             this.r.get(j).a();

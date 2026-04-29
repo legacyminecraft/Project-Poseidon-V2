@@ -60,7 +60,7 @@ public class EntityTrackerEntry {
             this.scanPlayers(list);
         }
 
-        if (++this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
+        if (this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
             ++this.t; // Poseidon - moved from above
             int i = MathHelper.floor(this.tracker.locX * 32.0D);
             int j = MathHelper.floor(this.tracker.locY * 32.0D);
@@ -72,10 +72,9 @@ public class EntityTrackerEntry {
             int l1 = k - this.f;
             Packet object = null;
 
-            // Poseidon start - lower update threshold and always update vehicles
-            boolean flag = Math.abs(j1) >= 1 || Math.abs(k1) >= 1 || Math.abs(l1) >= 1
-                    || this.tracker instanceof EntityBoat || this.tracker instanceof EntityMinecart;
-            boolean flag1 = Math.abs(l - this.g) >= 1 || Math.abs(i1 - this.h) >= 1;
+            // Poseidon start - lower update threshold
+            boolean flag = Math.abs(j1) >= 4 || Math.abs(k1) >= 4 || Math.abs(l1) >= 4 || this.l % 60 == 0;
+            boolean flag1 = Math.abs(l - this.g) >= 4 || Math.abs(i1 - this.h) >= 4;
             // Poseidon end
 
             // Poseidon start - code moved from below
@@ -152,6 +151,7 @@ public class EntityTrackerEntry {
             // Poseidon end
         }
 
+        ++this.l; // Poseidon
         if (this.tracker.velocityChanged) {
             // CraftBukkit start - create PlayerVelocity event
             boolean cancelled = false;
@@ -204,8 +204,10 @@ public class EntityTrackerEntry {
 
     public void b(EntityPlayer entityplayer) {
         if (entityplayer != this.tracker) {
-            double d0 = entityplayer.locX - (double) (this.d / 32);
-            double d1 = entityplayer.locZ - (double) (this.f / 32);
+            // Poseidon start - use location of tracked entity
+            double d0 = entityplayer.locX - this.tracker.locX;
+            double d1 = entityplayer.locZ - this.tracker.locZ;
+            // Poseidon end
 
             if (d0 >= (double) (-this.b) && d0 <= (double) this.b && d1 >= (double) (-this.b) && d1 <= (double) this.b) {
                 if (!this.trackedPlayers.contains(entityplayer) && this.d(entityplayer)) { // Poseidon
