@@ -295,4 +295,25 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      */
     void resetPlayerTime();
 
+    /**
+     * Hides a player from this player
+     *
+     * @param player Player to hide
+     */
+    void hidePlayer(Player player);
+
+    /**
+     * Allows this player to see a player that was previously hidden
+     *
+     * @param player Player to show
+     */
+    void showPlayer(Player player);
+
+    /**
+     * Checks to see if a player has been hidden from this player
+     *
+     * @param player Player to check
+     * @return True if the provided player is not being hidden from this player
+     */
+    boolean canSee(Player player);
 }

@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class EntityTracker {
 
-    private final Int2ObjectOpenHashMap<EntityTrackerEntry> entries = new Int2ObjectOpenHashMap<>(); // Poseidon
+    public final Int2ObjectOpenHashMap<EntityTrackerEntry> entries = new Int2ObjectOpenHashMap<>(); // Poseidon
 
     //private Set<EntityTrackerEntry> a = new HashSet<>(); // Poseidon - remove
     //private EntityList b = new EntityList(); // Poseidon - remove

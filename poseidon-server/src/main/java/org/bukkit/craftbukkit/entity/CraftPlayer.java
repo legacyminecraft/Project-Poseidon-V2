@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.entity;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.EntityTracker;
+import net.minecraft.server.EntityTrackerEntry;
 import net.minecraft.server.Packet131;
 import net.minecraft.server.Packet200Statistic;
 import net.minecraft.server.Packet3Chat;
@@ -30,8 +32,14 @@ import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class CraftPlayer extends CraftHumanEntity implements Player {
+
+    private final Set<UUID> hiddenPlayers = new HashSet<>(); // Poseidon
+
     public CraftPlayer(CraftServer server, EntityPlayer entity) {
         super(server, entity);
     }
@@ -394,4 +402,38 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             server.getHandle().l(getName().toLowerCase());
         }
     }
+
+    // Poseidon start - backport vanish API
+    public void hidePlayer(Player player) {
+        if (!this.equals(player) && this.hiddenPlayers.add(player.getUniqueId())) {
+            EntityTracker tracker = ((WorldServer) this.entity.world).tracker;
+            EntityPlayer other = ((CraftPlayer) player).getHandle();
+            EntityTrackerEntry entry = tracker.entries.get(other.id);
+
+            if (entry != null) {
+                entry.c(getHandle());
+            }
+        }
+    }
+
+    public void showPlayer(Player player) {
+        if (!this.equals(player) && this.hiddenPlayers.remove(player.getUniqueId())) {
+            EntityTracker tracker = ((WorldServer) this.entity.world).tracker;
+            EntityPlayer other = ((CraftPlayer) player).getHandle();
+            EntityTrackerEntry entry = tracker.entries.get(other.id);
+
+            if (entry != null && !entry.trackedPlayers.contains(getHandle())) {
+                entry.b(getHandle());
+            }
+        }
+    }
+
+    public boolean canSee(Player player) {
+        return !this.hiddenPlayers.contains(player.getUniqueId());
+    }
+
+    public void removeDisconnectingPlayer(Player player) {
+        this.hiddenPlayers.remove(player.getUniqueId());
+    }
+    // Poseidon end
 }

@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -211,6 +212,15 @@ public class EntityTrackerEntry {
 
             if (d0 >= (double) (-this.b) && d0 <= (double) this.b && d1 >= (double) (-this.b) && d1 <= (double) this.b) {
                 if (!this.trackedPlayers.contains(entityplayer) && this.d(entityplayer)) { // Poseidon
+                    // Poseidon start - backport vanish API
+                    if (this.tracker instanceof EntityPlayer tracked) {
+                        Player player = (Player) tracked.getBukkitEntity();
+                        Player other = (Player) entityplayer.getBukkitEntity();
+                        if (!other.canSee(player)) {
+                            return;
+                        }
+                    }
+                    // Poseidon end
                     entityplayer.removeQueue.rem(this.tracker.id); // Poseidon
                     this.trackedPlayers.add(entityplayer);
                     entityplayer.netServerHandler.sendPacket(this.b());

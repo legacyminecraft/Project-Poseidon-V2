@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.command.ColouredConsoleSender;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -158,6 +159,16 @@ public class ServerConfigurationManager {
         this.server.getWorldServer(entityplayer.dimension).kill(entityplayer);
         this.players.remove(entityplayer);
         this.getPlayerManager(entityplayer.dimension).removePlayer(entityplayer);
+
+        // Poseidon start - backport vanish API
+        Player player = (Player) entityplayer.getBukkitEntity();
+        this.players.forEach(entityplayer1 -> {
+            CraftPlayer other = (CraftPlayer) entityplayer1.getBukkitEntity();
+            if (!other.canSee(player)) {
+                other.removeDisconnectingPlayer(player);
+            }
+        });
+        // Poseidon end
 
         return playerQuitEvent.getQuitMessage(); // CraftBukkit
     }
