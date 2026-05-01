@@ -388,7 +388,13 @@ public final class CraftServer implements Server {
             return true;
         }
 
-        sender.sendMessage("Unknown command. Type \"help\" for help.");
+        // Poseidon start - fix "unknown command" message
+        if (sender instanceof Player) {
+            sender.sendMessage("Unknown command. Type \"/help\" for help.");
+        } else {
+            // Poseidon end
+            sender.sendMessage("Unknown command. Type \"help\" for help.");
+        }
 
         return false;
     }
