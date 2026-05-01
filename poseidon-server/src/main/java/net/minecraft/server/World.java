@@ -169,10 +169,6 @@ public class World implements IBlockAccess {
 
     protected void c() {
         this.isLoading = true;
-        int i = 0;
-        byte b0 = 64;
-
-        int j;
 
         // CraftBukkit start
         if (this.generator != null) {
@@ -189,11 +185,25 @@ public class World implements IBlockAccess {
                 }
             }
         }
-
-        for (j = 0; !this.canSpawn(i, j); j += this.random.nextInt(64) - this.random.nextInt(64)) {
-            i += this.random.nextInt(64) - this.random.nextInt(64);
-        }
         // CraftBukkit end
+
+        // Poseidon start - prevent OutOfMemoryError when finding a spawn location
+        int i = 0;
+        int j = 0;
+        byte b0 = 64;
+        int l = 0;
+
+        while (!this.canSpawn(i, j)) {
+            i += this.random.nextInt(64) - this.random.nextInt(64);
+            j += this.random.nextInt(64) - this.random.nextInt(64);
+            ++l;
+            if (l == 1000) {
+                i = 0;
+                j = 0;
+                break;
+            }
+        }
+        // Poseidon end
 
         this.worldData.setSpawn(i, b0, j);
         this.isLoading = false;
