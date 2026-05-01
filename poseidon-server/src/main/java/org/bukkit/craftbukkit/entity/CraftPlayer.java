@@ -136,6 +136,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         getHandle().displayName = name;
     }
 
+    // Poseidon start - implement name tag API
+    public String getNameTag() {
+        return getHandle().nameTag;
+    }
+
+    public void setNameTag(String tag) {
+        getHandle().nameTag = tag.length() <= 16 ? tag : tag.substring(0, 16);
+        EntityTracker tracker = ((WorldServer) getHandle().world).tracker;
+        tracker.untrackEntityImmediately(getHandle());
+        this.server.getServer().queueSyncTask(() -> tracker.track(getHandle()));
+    }
+    // Poseidon end
+
     @Override
     public String toString() {
         return "CraftPlayer{" + "name=" + getName() + '}';

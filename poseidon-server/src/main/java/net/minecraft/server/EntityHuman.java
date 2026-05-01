@@ -54,6 +54,8 @@ public abstract class EntityHuman extends EntityLiving {
     private int d = 0;
     public @Nullable EntityFish hookedFish = null;
 
+    public String nameTag; // Poseidon
+
     public EntityHuman(World world) {
         super(world);
         this.defaultContainer = new ContainerPlayer(this.inventory, !world.isStatic);

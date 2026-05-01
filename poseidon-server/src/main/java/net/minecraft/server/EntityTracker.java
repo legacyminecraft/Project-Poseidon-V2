@@ -75,6 +75,19 @@ public class EntityTracker {
         // Poseidon end
     }
 
+    // Poseidon start - implement name tag API
+    public void untrackEntityImmediately(Entity entity) {
+        if (entity instanceof EntityPlayer entityplayer) {
+            this.entries.values().forEach(entitytrackerentry -> entitytrackerentry.trackedPlayers.remove(entityplayer));
+        }
+
+        EntityTrackerEntry entitytrackerentry1 = this.entries.remove(entity.id);
+        if (entitytrackerentry1 != null) {
+            entitytrackerentry1.destroyImmediately();
+        }
+    }
+    // Poseidon end
+
     public void updatePlayers() {
         ObjectArrayList<EntityPlayer> arraylist = new ObjectArrayList<>(); // Poseidon - ObjectArrayList
 

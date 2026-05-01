@@ -58,7 +58,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.setPositionRotation((double) i + 0.5D, k, (double) j + 0.5D, 0.0F, 0.0F);
         this.b = minecraftserver;
         this.bs = 0.0F;
-        this.name = profile.name(); // Poseidon
+        // Poseidon start
+        this.name = profile.name();
+        this.nameTag = profile.name();
+        // Poseidon end
         this.height = 0.0F;
 
         // Poseidon start

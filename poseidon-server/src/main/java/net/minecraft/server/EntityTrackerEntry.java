@@ -195,6 +195,12 @@ public class EntityTrackerEntry {
         this.trackedPlayers.forEach(entityplayer -> entityplayer.removeQueue.add(this.tracker.id)); // Poseidon
     }
 
+    // Poseidon start - implement name tag API
+    public void destroyImmediately() {
+        this.a(new Packet29DestroyEntity(this.tracker.id));
+    }
+    // Poseidon end
+
     public void a(EntityPlayer entityplayer) {
         // Poseidon start
         if (this.trackedPlayers.remove(entityplayer)) {
@@ -298,11 +304,6 @@ public class EntityTrackerEntry {
             // Poseidon end
             return packet21pickupspawn;
         } else if (this.tracker instanceof EntityPlayer entityplayer) {
-            // CraftBukkit start - limit name length to 16 characters
-            if (entityplayer.name.length() > 16) {
-                entityplayer.name = entityplayer.name.substring(0, 16);
-            }
-            // CraftBukkit end
             return new Packet20NamedEntitySpawn(entityplayer);
         } else {
             if (this.tracker instanceof EntityMinecart entityminecart) {
