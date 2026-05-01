@@ -6,6 +6,7 @@ public class ThreadSleepForever extends Thread {
 
     public ThreadSleepForever(MinecraftServer minecraftserver) {
         this.a = minecraftserver;
+        this.setName("Timer hack thread"); // Poseidon
         this.setDaemon(true);
         this.start();
     }

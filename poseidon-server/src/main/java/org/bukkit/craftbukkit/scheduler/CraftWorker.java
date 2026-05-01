@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.scheduler;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitWorker;
 
+import java.util.concurrent.ThreadFactory;
+
 public class CraftWorker implements Runnable, BukkitWorker {
 
     private static int hashIdCounter = 1;
@@ -18,13 +20,15 @@ public class CraftWorker implements Runnable, BukkitWorker {
 
     private final Runnable task;
 
+    private static final ThreadFactory factory = Thread.ofPlatform().name("CraftWorker-", 1).factory(); // Poseidon
+
     CraftWorker(CraftThreadManager parent, Runnable task, Plugin owner, int taskId) {
         this.parent = parent;
         this.taskId = taskId;
         this.task = task;
         this.owner = owner;
         this.hashId = CraftWorker.getNextHashId();
-        t = new Thread(this);
+        t = factory.newThread(this); // Poseidon
         t.start();
     }
 

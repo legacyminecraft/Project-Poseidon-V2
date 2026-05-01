@@ -25,7 +25,7 @@ public final class PoseidonUpdateNotifier {
 
     public PoseidonUpdateNotifier(ServiceClient client, PoseidonBuildInformation buildInformation) {
         this.executor = Executors.newSingleThreadScheduledExecutor(
-                Thread.ofPlatform().name("UpdateNotifier").factory());
+                Thread.ofPlatform().name("Update Notifier").factory());
         this.client = client;
         this.buildInformation = buildInformation;
         this.latestRelease = getCurrentBuild();
