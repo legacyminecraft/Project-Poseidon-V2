@@ -33,6 +33,12 @@ public final class SpawnerCreature {
 
             for (i = 0; i < world.players.size(); ++i) {
                 EntityHuman entityhuman = world.players.get(i);
+                // Poseidon start - don't spawn mobs near dead players
+                if (entityhuman.dead) {
+                    continue;
+                }
+                // Poseidon end
+
                 int k = MathHelper.floor(entityhuman.locX / 16.0D);
 
                 j = MathHelper.floor(entityhuman.locZ / 16.0D);
