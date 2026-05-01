@@ -39,7 +39,7 @@ import java.util.logging.Logger;
 public class MinecraftServer implements Runnable, ICommandListener {
 
     public static Logger log = Logger.getLogger("Minecraft");
-    public static HashMap<String, Integer> trackerList = new HashMap<>();
+    //public static HashMap<String, Integer> trackerList = new HashMap<>(); // Poseidon - remove
     public NetworkListenThread networkListenThread;
     public PropertyManager propertyManager;
     // public WorldServer[] worldServer; // CraftBukkit - removed!
@@ -418,7 +418,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
     }
 
     private void h() {
-        ArrayList<String> arraylist = new ArrayList<>();
+        // Poseidon start - remove unused code
+        /*ArrayList<String> arraylist = new ArrayList<>();
         Iterator<String> iterator = trackerList.keySet().iterator();
 
         while (iterator.hasNext()) {
@@ -436,7 +437,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
         for (j = 0; j < arraylist.size(); ++j) {
             trackerList.remove(arraylist.get(j));
-        }
+        }*/
+        // Poseidon end
 
         AxisAlignedBB.a();
         Vec3D.a();
