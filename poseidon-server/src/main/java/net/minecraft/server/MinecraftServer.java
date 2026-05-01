@@ -70,6 +70,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
     // Poseidon start
     private PoseidonServer poseidonServer;
     private final Thread primaryThread;
+    private final Thread shutdownHook = new ServerShutdownThread(this);
     private final Queue<Runnable> queuedSyncTasks = new ConcurrentLinkedQueue<>();
     // Poseidon end
 
@@ -78,7 +79,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
         // CraftBukkit start
         this.options = options;
-        Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(this));
+        Runtime.getRuntime().addShutdownHook(this.shutdownHook); // Poseidon
         // CraftBukkit end
 
         // Poseidon start
@@ -412,6 +413,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
             } catch (Throwable throwable1) {
                 throwable1.printStackTrace();
             } finally {
+                Runtime.getRuntime().removeShutdownHook(this.shutdownHook); // Poseidon - prevent stop logic from being executed again
                 System.exit(0);
             }
         }
