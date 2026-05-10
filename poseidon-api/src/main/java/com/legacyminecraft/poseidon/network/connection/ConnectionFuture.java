@@ -13,6 +13,13 @@ public interface ConnectionFuture {
     PlayerConnection getConnection();
 
     /**
+     * Returns if this future is completed.
+     *
+     * @return {@code true} if this future is completed
+     */
+    boolean isCompleted();
+
+    /**
      * Adds a listener to this future. The listener will be executed once this
      * future completes.
      *

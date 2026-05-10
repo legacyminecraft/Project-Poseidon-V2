@@ -1,6 +1,6 @@
-package com.legacyminecraft.poseidon.network.packet;
+package com.legacyminecraft.poseidon.network.handler;
 
-import com.legacyminecraft.poseidon.network.handler.PacketHandler;
+import com.legacyminecraft.poseidon.network.packet.Packet;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -11,6 +11,15 @@ import org.jspecify.annotations.Nullable;
  * @param <P> the type of packet to be held by this holder
  */
 public interface PacketHolder<P extends Packet> {
+
+    /**
+     * Returns if this holder contains a packet.
+     *
+     * @return {@code true} if this holder contains a packet
+     */
+    default boolean hasPacket() {
+        return getPacket() != null;
+    }
 
     /**
      * Returns the packet inside this holder.

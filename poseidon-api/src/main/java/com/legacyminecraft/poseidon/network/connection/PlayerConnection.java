@@ -23,10 +23,15 @@ public interface PlayerConnection {
      * Disconnects the player.
      *
      * @param message the disconnect message
-     * @return a future which will complete when the player has been
-     *         disconnected
      */
-    ConnectionFuture disconnect(String message);
+    void disconnect(String message);
+
+    /**
+     * Returns a future which will complete when the player has disconnected.
+     *
+     * @return a future which will complete when the player has disconnected
+     */
+    ConnectionFuture getDisconnectFuture();
 
     /**
      * Returns if the player is connected to the server.
