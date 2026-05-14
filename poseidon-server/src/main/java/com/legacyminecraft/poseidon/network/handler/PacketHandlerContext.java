@@ -1,7 +1,7 @@
 package com.legacyminecraft.poseidon.network.handler;
 
 import com.google.common.base.Preconditions;
-import com.legacyminecraft.poseidon.network.packet.Packet;
+import com.legacyminecraft.poseidon.network.protocol.Packet;
 
 public record PacketHandlerContext<P extends Packet>(String name, PacketHandler<P> handler) {
 

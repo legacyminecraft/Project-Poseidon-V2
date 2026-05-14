@@ -1,13 +1,13 @@
 package com.legacyminecraft.poseidon.network.handler;
 
-import com.legacyminecraft.poseidon.network.packet.Packet;
+import com.legacyminecraft.poseidon.network.protocol.Packet;
 import org.jspecify.annotations.Nullable;
 
 public final class PacketHolderImpl<P extends Packet> implements PacketHolder<P> {
 
     private volatile @Nullable P packet;
 
-    public PacketHolderImpl(P packet) {
+    public PacketHolderImpl(@Nullable P packet) {
         this.packet = packet;
     }
 

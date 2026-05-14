@@ -1,6 +1,7 @@
 package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
@@ -134,6 +135,10 @@ public final class Bukkit {
 
     public static ServicesManager getServicesManager() {
         return server.getServicesManager();
+    }
+
+    public static ProtocolManager getProtocolManager() {
+        return server.getProtocolManager();
     }
 
     public static List<World> getWorlds() {

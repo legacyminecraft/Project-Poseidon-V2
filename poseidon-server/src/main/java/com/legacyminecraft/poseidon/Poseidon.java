@@ -2,6 +2,7 @@ package com.legacyminecraft.poseidon;
 
 import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.config.PoseidonConfig;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolManagerImpl;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.performance.WatchdogThread;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
@@ -58,5 +59,9 @@ public final class Poseidon {
 
     public static WatchdogThread getWatchdogThread() {
         return server.getWatchdogThread();
+    }
+
+    public static ProtocolManagerImpl getProtocolManager() {
+        return server.getProtocolManager();
     }
 }

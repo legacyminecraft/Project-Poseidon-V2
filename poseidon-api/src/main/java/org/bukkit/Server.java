@@ -1,6 +1,7 @@
 package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -210,6 +211,14 @@ public interface Server {
      * @return Services manager
      */
     ServicesManager getServicesManager();
+
+    /**
+     * Gets the protocol manager responsible for registering and
+     * unregistering packets.
+     *
+     * @return the protocol manager
+     */
+    ProtocolManager getProtocolManager();
 
     /**
      * Gets a list of all worlds on this server

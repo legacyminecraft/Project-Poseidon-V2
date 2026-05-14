@@ -1,8 +1,8 @@
 package com.legacyminecraft.poseidon.network.connection;
 
 import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
-import com.legacyminecraft.poseidon.network.packet.InboundPacket;
-import com.legacyminecraft.poseidon.network.packet.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 
 import java.net.InetSocketAddress;
 

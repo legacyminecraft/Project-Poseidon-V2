@@ -2,7 +2,7 @@ package com.legacyminecraft.poseidon.network.handler;
 
 import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
-import com.legacyminecraft.poseidon.network.packet.Packet;
+import com.legacyminecraft.poseidon.network.protocol.Packet;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

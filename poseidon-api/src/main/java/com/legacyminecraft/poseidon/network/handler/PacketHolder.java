@@ -1,6 +1,6 @@
 package com.legacyminecraft.poseidon.network.handler;
 
-import com.legacyminecraft.poseidon.network.packet.Packet;
+import com.legacyminecraft.poseidon.network.protocol.Packet;
 import org.jspecify.annotations.Nullable;
 
 /**

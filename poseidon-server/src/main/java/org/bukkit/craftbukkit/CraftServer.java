@@ -11,6 +11,7 @@ import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.command.MsptCommand;
 import com.legacyminecraft.poseidon.command.PoseidonCommand;
 import com.legacyminecraft.poseidon.command.TpsCommand;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
@@ -368,6 +369,12 @@ public final class CraftServer implements Server {
     public ServicesManager getServicesManager() {
         return servicesManager;
     }
+
+    // Poseidon start - network API
+    public ProtocolManager getProtocolManager() {
+        return Poseidon.getProtocolManager();
+    }
+    // Poseidon end
 
     public List<World> getWorlds() {
         return new ArrayList<>(worlds.values());

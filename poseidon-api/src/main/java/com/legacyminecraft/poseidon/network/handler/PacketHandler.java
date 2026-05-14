@@ -1,7 +1,7 @@
 package com.legacyminecraft.poseidon.network.handler;
 
 import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
-import com.legacyminecraft.poseidon.network.packet.Packet;
+import com.legacyminecraft.poseidon.network.protocol.Packet;
 
 /**
  * Represents a packet handler.
