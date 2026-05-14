@@ -4,21 +4,19 @@ import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketDecoder;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class ProtocolManagerImpl implements ProtocolManager {
 
-    private final Object2ObjectOpenHashMap<Class<? extends OutboundPacket>, OutboundRegistration<?>> outboundRegistrations = new Object2ObjectOpenHashMap<>();
-    private final Int2ObjectOpenHashMap<InboundRegistration<?>> inboundRegistrations = new Int2ObjectOpenHashMap<>();
+    private final Map<Class<? extends OutboundPacket>, OutboundRegistration<?>> outboundRegistrations = new ConcurrentHashMap<>();
+    private final Map<Integer, InboundRegistration<?>> inboundRegistrations = new ConcurrentHashMap<>();
 
     private record OutboundRegistration<P extends OutboundPacket>(int packetId, PacketEncoder<P> packetEncoder) {
     }
@@ -82,7 +80,7 @@ public final class ProtocolManagerImpl implements ProtocolManager {
     }
 
     private boolean checkUniqueOutbound(int packetId, Class<? extends OutboundPacket> packetClass) {
-        for (Object2ObjectMap.Entry<Class<? extends OutboundPacket>, OutboundRegistration<?>> entry : this.outboundRegistrations.object2ObjectEntrySet()) {
+        for (Map.Entry<Class<? extends OutboundPacket>, OutboundRegistration<?>> entry : this.outboundRegistrations.entrySet()) {
             if (entry.getKey().equals(packetClass) || entry.getValue().packetId() == packetId) {
                 return false;
             }
@@ -91,8 +89,8 @@ public final class ProtocolManagerImpl implements ProtocolManager {
     }
 
     private boolean checkUniqueInbound(int packetId, Class<? extends InboundPacket> packetClass) {
-        for (Int2ObjectMap.Entry<InboundRegistration<?>> entry : this.inboundRegistrations.int2ObjectEntrySet()) {
-            if (entry.getIntKey() == packetId || entry.getValue().packetClass().equals(packetClass)) {
+        for (Map.Entry<Integer, InboundRegistration<?>> entry : this.inboundRegistrations.entrySet()) {
+            if (entry.getKey().equals(packetId) || entry.getValue().packetClass().equals(packetClass)) {
                 return false;
             }
         }
@@ -131,7 +129,7 @@ public final class ProtocolManagerImpl implements ProtocolManager {
     }
 
     private <P extends InboundPacket> boolean internalUnregisterInbound(Class<P> packetClass) {
-        ObjectIterator<Int2ObjectMap.Entry<InboundRegistration<?>>> iterator = this.inboundRegistrations.int2ObjectEntrySet().iterator();
+        Iterator<Map.Entry<Integer, InboundRegistration<?>>> iterator = this.inboundRegistrations.entrySet().iterator();
         while (iterator.hasNext()) {
             if (iterator.next().getValue().packetClass().equals(packetClass)) {
                 iterator.remove();
