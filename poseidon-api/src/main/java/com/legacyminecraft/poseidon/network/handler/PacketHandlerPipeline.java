@@ -2,17 +2,22 @@ package com.legacyminecraft.poseidon.network.handler;
 
 import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
 import com.legacyminecraft.poseidon.network.protocol.Packet;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 /**
  * Represents a pipeline of {@link PacketHandler}s.
+ * <p>
+ * A pipeline calls its handlers in the order of their priority, from lowest
+ * to highest.
  *
- * @param <P> the type of packet to be handled by this pipeline
+ * @param <P> the type of packet to be accepted by this pipeline
  */
 public interface PacketHandlerPipeline<P extends Packet> {
+
+    byte LOWEST_PRIORITY = -128;
+    byte LOW_PRIORITY = -64;
+    byte NORMAL_PRIORITY = 0;
+    byte HIGH_PRIORITY = 64;
+    byte HIGHEST_PRIORITY = 127;
 
     /**
      * Returns the connection associated with this pipeline.
@@ -22,75 +27,24 @@ public interface PacketHandlerPipeline<P extends Packet> {
     PlayerConnection getConnection();
 
     /**
-     * Adds a handler at the first position of this pipeline.
+     * Adds a handler to this pipeline.
+     * <p>
+     * The {@code priority} determines if the handler will be called earlier
+     * or later in the pipeline.
      *
-     * @param name the handler's unique name
-     * @param handler the handler
+     * @param priority the priority, between {@code -128} (lowest) and
+     *                 {@code 127} (highest)
+     * @param handler the handler to add
      * @return this pipeline
-     * @throws IllegalArgumentException if a handler with the same name already
-     *         exists in this pipeline
      */
-    PacketHandlerPipeline<P> addFirst(String name, PacketHandler<P> handler);
-
-    /**
-     * Adds a handler at the last position of this pipeline.
-     *
-     * @param name the handler's unique name
-     * @param handler the handler
-     * @return this pipeline
-     * @throws IllegalArgumentException if a handler with the same name already
-     *         exists in this pipeline
-     */
-    PacketHandlerPipeline<P> addLast(String name, PacketHandler<P> handler);
-
-    /**
-     * Adds a handler before a handler present in this pipeline.
-     *
-     * @param baseName the existing handler's name
-     * @param name the handler's unique name
-     * @param handler the handler
-     * @return this pipeline
-     * @throws NoSuchElementException if no handler with the specified
-     *         {@code baseName} exists in this pipeline
-     * @throws IllegalArgumentException if a handler with the same name already
-     *         exists in this pipeline
-     */
-    PacketHandlerPipeline<P> addBefore(String baseName, String name, PacketHandler<P> handler);
-
-    /**
-     * Adds a handler after a handler present in this pipeline.
-     *
-     * @param baseName the existing handler's name
-     * @param name the handler's unique name
-     * @param handler the handler
-     * @return this pipeline
-     * @throws NoSuchElementException if no handler with the specified
-     *         {@code baseName} exists in this pipeline
-     * @throws IllegalArgumentException if a handler with the same name already
-     *         exists in this pipeline
-     */
-    PacketHandlerPipeline<P> addAfter(String baseName, String name, PacketHandler<P> handler);
+    PacketHandlerPipeline<P> addHandler(byte priority, PacketHandler<P> handler);
 
     /**
      * Removes a handler from this pipeline.
      *
-     * @param name the handler's name
-     * @return the removed handler, or null if no such handler existed
+     * @param handler the handler to remove
+     * @return {@code true} if the handler was removed, {@code false} if the
+     *         handler was not present in the pipeline
      */
-    @Nullable PacketHandler<P> remove(String name);
-
-    /**
-     * Gets a handler present in this pipeline.
-     *
-     * @param name the handler's name
-     * @return the handler, or null if no such handler exists
-     */
-    @Nullable PacketHandler<P> get(String name);
-
-    /**
-     * Returns a map of all handlers present in this pipeline.
-     *
-     * @return a map of all handlers
-     */
-    Map<String, PacketHandler<P>> toMap();
+    boolean removeHandler(PacketHandler<P> handler);
 }

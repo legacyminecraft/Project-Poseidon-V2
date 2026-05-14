@@ -4,6 +4,7 @@ import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
 import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipelineImpl;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 
@@ -48,11 +49,11 @@ public abstract class AbstractPlayerConnection implements PlayerConnection {
         return this.outboundPipeline;
     }
 
-    public boolean invokeInboundHandlers(InboundPacket packet) {
+    public @Nullable InboundPacket invokeInboundHandlers(InboundPacket packet) {
         return this.inboundPipeline.invokeHandlers(packet);
     }
 
-    public boolean invokeOutboundHandlers(OutboundPacket packet) {
+    public @Nullable OutboundPacket invokeOutboundHandlers(OutboundPacket packet) {
         return this.outboundPipeline.invokeHandlers(packet);
     }
 }
