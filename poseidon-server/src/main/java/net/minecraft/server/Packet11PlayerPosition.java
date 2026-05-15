@@ -1,16 +1,31 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 public class Packet11PlayerPosition extends Packet10Flying {
+
+    // Poseidon start
+    public static final PacketCodec<Packet11PlayerPosition> CODEC = PacketCodec.of(
+            Packet11PlayerPosition::a, Packet11PlayerPosition::new
+    );
+    // Poseidon end
 
     public Packet11PlayerPosition() {
         this.h = true;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    // Poseidon start
+    public Packet11PlayerPosition(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException {
         this.x = datainputstream.readDouble();
         this.y = datainputstream.readDouble();
         this.stance = datainputstream.readDouble();
@@ -18,7 +33,7 @@ public class Packet11PlayerPosition extends Packet10Flying {
         super.a(datainputstream);
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeDouble(this.x);
         dataoutputstream.writeDouble(this.y);
         dataoutputstream.writeDouble(this.stance);

@@ -1,10 +1,20 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.DuplexPacket;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolUtil;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet1Login extends Packet {
+public class Packet1Login extends Packet implements DuplexPacket { // Poseidon - implements DuplexPacket
+
+    // Poseidon start
+    public static final PacketCodec<Packet1Login> CODEC = PacketCodec.of(
+            Packet1Login::a, Packet1Login::new
+    );
+    // Poseidon end
 
     public int a;
     public String name;
@@ -20,16 +30,23 @@ public class Packet1Login extends Packet {
         this.d = b0;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    // Poseidon start
+    public Packet1Login(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
-        this.name = a(datainputstream, 16);
+        this.name = ProtocolUtil.readString(datainputstream, 16); // Poseidon
         this.c = datainputstream.readLong();
         this.d = datainputstream.readByte();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
-        a(this.name, dataoutputstream);
+        ProtocolUtil.writeString(this.name, dataoutputstream); // Poseidon
         dataoutputstream.writeLong(this.c);
         dataoutputstream.writeByte(this.d);
     }

@@ -2,7 +2,9 @@ package net.minecraft.server;
 
 import org.jspecify.annotations.Nullable;
 
+import java.io.DataInput;
 import java.io.DataInputStream;
+import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -153,9 +155,11 @@ public abstract class Packet {
         }
     }
 
-    public abstract void a(DataInputStream datainputstream) throws IOException; // CraftBukkit
+    // Poseidon - change signature
+    public abstract void a(DataInput datainputstream) throws IOException; // CraftBukkit
 
-    public abstract void a(DataOutputStream dataoutputstream) throws IOException; // CraftBukkit
+    // Poseidon - change signature
+    public abstract void a(DataOutput dataoutputstream) throws IOException; // CraftBukkit
 
     public abstract void a(NetHandler nethandler);
 

@@ -1,10 +1,20 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.DuplexPacket;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolUtil;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet2Handshake extends Packet {
+public class Packet2Handshake extends Packet implements DuplexPacket { // Poseidon - implements DuplexPacket
+
+    // Poseidon start
+    public static final PacketCodec<Packet2Handshake> CODEC = PacketCodec.of(
+            Packet2Handshake::a, Packet2Handshake::new
+    );
+    // Poseidon end
 
     public String a;
 
@@ -14,12 +24,19 @@ public class Packet2Handshake extends Packet {
         this.a = s;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
-        this.a = a(datainputstream, 32);
+    // Poseidon start
+    public Packet2Handshake(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException {
+        this.a = ProtocolUtil.readString(datainputstream, 32); // Poseidon
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
-        a(this.a, dataoutputstream);
+    public void a(DataOutput dataoutputstream) throws IOException {
+        ProtocolUtil.writeString(this.a, dataoutputstream); // Poseidon
     }
 
     public void a(NetHandler nethandler) {

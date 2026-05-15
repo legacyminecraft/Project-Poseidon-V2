@@ -1,9 +1,10 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.ProtocolUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +65,8 @@ public class DataWatcher {
         return this.c;
     }
 
-    public static void a(@Nullable List<WatchableObject> list, DataOutputStream dataoutputstream) throws IOException {
+    // Poseidon - change signature
+    public static void a(@Nullable List<WatchableObject> list, DataOutput dataoutputstream) throws IOException {
         if (list != null) {
             Iterator<WatchableObject> iterator = list.iterator();
 
@@ -102,7 +104,8 @@ public class DataWatcher {
         return arraylist;
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    // Poseidon - change signature
+    public void a(DataOutput dataoutputstream) throws IOException {
         Iterator<WatchableObject> iterator = this.b.values().iterator();
 
         while (iterator.hasNext()) {
@@ -114,7 +117,8 @@ public class DataWatcher {
         dataoutputstream.writeByte(127);
     }
 
-    private static void a(DataOutputStream dataoutputstream, WatchableObject watchableobject) throws IOException {
+    // Poseidon - change signature
+    private static void a(DataOutput dataoutputstream, WatchableObject watchableobject) throws IOException {
         int i = (watchableobject.c() << 5 | watchableobject.a() & 31) & 255;
 
         dataoutputstream.writeByte(i);
@@ -136,7 +140,7 @@ public class DataWatcher {
             break;
 
         case 4:
-            Packet.a((String) watchableobject.b(), dataoutputstream);
+            ProtocolUtil.writeString((String) watchableobject.b(), dataoutputstream); // Poseidon
             break;
 
         case 5:
@@ -156,7 +160,8 @@ public class DataWatcher {
         }
     }
 
-    public static @Nullable List<WatchableObject> a(DataInputStream datainputstream) throws IOException {
+    // Poseidon - change signature
+    public static @Nullable List<WatchableObject> a(DataInput datainputstream) throws IOException {
         ArrayList<WatchableObject> arraylist = null;
 
         for (byte b0 = datainputstream.readByte(); b0 != 127; b0 = datainputstream.readByte()) {
@@ -186,7 +191,7 @@ public class DataWatcher {
                 break;
 
             case 4:
-                watchableobject = new WatchableObject(i, j, Packet.a(datainputstream, 64));
+                watchableobject = new WatchableObject(i, j, ProtocolUtil.readString(datainputstream, 64)); // Poseidon
                 break;
 
             case 5:

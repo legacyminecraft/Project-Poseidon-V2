@@ -1,10 +1,15 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet28EntityVelocity extends Packet {
+public class Packet28EntityVelocity extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet28EntityVelocity> ENCODER = Packet28EntityVelocity::a; // Poseidon
 
     public int a;
     public int b;
@@ -50,14 +55,14 @@ public class Packet28EntityVelocity extends Packet {
         this.d = (int) (d2 * 8000.0D);
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
         this.b = datainputstream.readShort();
         this.c = datainputstream.readShort();
         this.d = datainputstream.readShort();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
         dataoutputstream.writeShort(this.b);
         dataoutputstream.writeShort(this.c);

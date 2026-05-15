@@ -1,15 +1,30 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 public class Packet13PlayerLookMove extends Packet10Flying {
+
+    // Poseidon start
+    public static final PacketCodec<Packet13PlayerLookMove> CODEC = PacketCodec.of(
+            Packet13PlayerLookMove::a, Packet13PlayerLookMove::new
+    );
+    // Poseidon end
 
     public Packet13PlayerLookMove() {
         this.hasLook = true;
         this.h = true;
     }
+
+    // Poseidon start
+    public Packet13PlayerLookMove(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
 
     public Packet13PlayerLookMove(double d0, double d1, double d2, double d3, float f, float f1, boolean flag) {
         this.x = d0;
@@ -23,7 +38,7 @@ public class Packet13PlayerLookMove extends Packet10Flying {
         this.h = true;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.x = datainputstream.readDouble();
         this.y = datainputstream.readDouble();
         this.stance = datainputstream.readDouble();
@@ -33,7 +48,7 @@ public class Packet13PlayerLookMove extends Packet10Flying {
         super.a(datainputstream);
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeDouble(this.x);
         dataoutputstream.writeDouble(this.y);
         dataoutputstream.writeDouble(this.stance);

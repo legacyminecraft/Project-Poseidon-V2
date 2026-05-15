@@ -1,10 +1,19 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.DuplexPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet18ArmAnimation extends Packet {
+public class Packet18ArmAnimation extends Packet implements DuplexPacket { // Poseidon - implements DuplexPacket
+
+    // Poseidon start
+    public static final PacketCodec<Packet18ArmAnimation> CODEC = PacketCodec.of(
+            Packet18ArmAnimation::a, Packet18ArmAnimation::new
+    );
+    // Poseidon end
 
     public int a;
     public int b;
@@ -16,12 +25,19 @@ public class Packet18ArmAnimation extends Packet {
         this.b = i;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    // Poseidon start
+    public Packet18ArmAnimation(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
         this.b = datainputstream.readByte();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
         dataoutputstream.writeByte(this.b);
     }

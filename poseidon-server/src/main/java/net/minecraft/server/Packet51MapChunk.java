@@ -1,16 +1,20 @@
 package net.minecraft.server;
 
 import com.google.common.base.Preconditions;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-public class Packet51MapChunk extends Packet {
+public class Packet51MapChunk extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet51MapChunk> ENCODER = Packet51MapChunk::a; // Poseidon
 
     public int a;
     public int b;
@@ -88,13 +92,13 @@ public class Packet51MapChunk extends Packet {
     }
     // Poseidon end
 
-    public void a(DataInputStream datainputstream) throws IOException { // CraftBukkit - throws IOException
+    public void a(DataInput datainputstream) throws IOException { // CraftBukkit - throws IOException
         this.a = datainputstream.readInt();
         this.b = datainputstream.readShort();
         this.c = datainputstream.readInt();
-        this.d = datainputstream.read() + 1;
-        this.e = datainputstream.read() + 1;
-        this.f = datainputstream.read() + 1;
+        this.d = datainputstream.readUnsignedByte() + 1;
+        this.e = datainputstream.readUnsignedByte() + 1;
+        this.f = datainputstream.readUnsignedByte() + 1;
         this.h = datainputstream.readInt();
         byte[] abyte = new byte[this.h];
 
@@ -113,7 +117,7 @@ public class Packet51MapChunk extends Packet {
         }
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException { // CraftBukkit - throws IOException
+    public void a(DataOutput dataoutputstream) throws IOException { // CraftBukkit - throws IOException
         compress(); // Poseidon
         dataoutputstream.writeInt(this.a);
         dataoutputstream.writeShort(this.b);

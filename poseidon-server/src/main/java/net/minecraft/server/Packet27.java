@@ -1,7 +1,7 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 public class Packet27 extends Packet {
@@ -15,7 +15,7 @@ public class Packet27 extends Packet {
 
     public Packet27() {}
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readFloat();
         this.b = datainputstream.readFloat();
         this.e = datainputstream.readFloat();
@@ -24,7 +24,7 @@ public class Packet27 extends Packet {
         this.d = datainputstream.readBoolean();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeFloat(this.a);
         dataoutputstream.writeFloat(this.b);
         dataoutputstream.writeFloat(this.e);

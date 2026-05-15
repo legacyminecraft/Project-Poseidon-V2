@@ -1,10 +1,20 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.DuplexPacket;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolUtil;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet3Chat extends Packet {
+public class Packet3Chat extends Packet implements DuplexPacket { // Poseidon - implements DuplexPacket
+
+    // Poseidon start
+    public static final PacketCodec<Packet3Chat> CODEC = PacketCodec.of(
+            Packet3Chat::a, Packet3Chat::new
+    );
+    // Poseidon end
 
     public String message;
 
@@ -20,12 +30,19 @@ public class Packet3Chat extends Packet {
         this.message = s;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException { // CraftBukkit
-        this.message = a(datainputstream, 119);
+    // Poseidon start
+    public Packet3Chat(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException { // CraftBukkit
+        this.message = ProtocolUtil.readString(datainputstream, 119); // Poseidon
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException { // CraftBukkit
-        a(this.message, dataoutputstream);
+    public void a(DataOutput dataoutputstream) throws IOException { // CraftBukkit
+        ProtocolUtil.writeString(this.message, dataoutputstream); // Poseidon
     }
 
     public void a(NetHandler nethandler) {

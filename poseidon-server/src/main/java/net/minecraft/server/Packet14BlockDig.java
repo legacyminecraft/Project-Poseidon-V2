@@ -1,10 +1,15 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketDecoder;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet14BlockDig extends Packet {
+public class Packet14BlockDig extends Packet implements InboundPacket { // Poseidon - implements InboundPacket
+
+    public static final PacketDecoder<Packet14BlockDig> DECODER = Packet14BlockDig::new; // Poseidon
 
     public int a;
     public int b;
@@ -14,15 +19,22 @@ public class Packet14BlockDig extends Packet {
 
     public Packet14BlockDig() {}
 
-    public void a(DataInputStream datainputstream) throws IOException {
-        this.e = datainputstream.read();
+    // Poseidon start
+    public Packet14BlockDig(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException {
+        this.e = datainputstream.readUnsignedByte();
         this.a = datainputstream.readInt();
-        this.b = datainputstream.read();
+        this.b = datainputstream.readUnsignedByte();
         this.c = datainputstream.readInt();
-        this.face = datainputstream.read();
+        this.face = datainputstream.readUnsignedByte();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.write(this.e);
         dataoutputstream.writeInt(this.a);
         dataoutputstream.write(this.b);

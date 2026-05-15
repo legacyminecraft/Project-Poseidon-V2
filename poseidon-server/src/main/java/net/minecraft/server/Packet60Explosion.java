@@ -1,15 +1,19 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
 import com.legacyminecraft.poseidon.util.BlockPos;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Set;
 
-public class Packet60Explosion extends Packet {
+public class Packet60Explosion extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet60Explosion> ENCODER = Packet60Explosion::a; // Poseidon
 
     public double a;
     public double b;
@@ -37,7 +41,7 @@ public class Packet60Explosion extends Packet {
     }
     // Poseidon end
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readDouble();
         this.b = datainputstream.readDouble();
         this.c = datainputstream.readDouble();
@@ -58,7 +62,7 @@ public class Packet60Explosion extends Packet {
         }
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeDouble(this.a);
         dataoutputstream.writeDouble(this.b);
         dataoutputstream.writeDouble(this.c);

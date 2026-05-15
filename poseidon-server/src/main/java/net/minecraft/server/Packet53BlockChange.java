@@ -1,10 +1,15 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet53BlockChange extends Packet {
+public class Packet53BlockChange extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet53BlockChange> ENCODER = Packet53BlockChange::a; // Poseidon
 
     public int a;
     public int b;
@@ -25,15 +30,15 @@ public class Packet53BlockChange extends Packet {
         this.data = world.getData(i, j, k);
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
-        this.b = datainputstream.read();
+        this.b = datainputstream.readUnsignedByte();
         this.c = datainputstream.readInt();
-        this.material = datainputstream.read();
-        this.data = datainputstream.read();
+        this.material = datainputstream.readUnsignedByte();
+        this.data = datainputstream.readUnsignedByte();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
         dataoutputstream.write(this.b);
         dataoutputstream.writeInt(this.c);

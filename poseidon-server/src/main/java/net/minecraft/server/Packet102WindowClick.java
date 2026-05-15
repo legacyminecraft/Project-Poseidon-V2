@@ -1,12 +1,16 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketDecoder;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet102WindowClick extends Packet {
+public class Packet102WindowClick extends Packet implements InboundPacket { // Poseidon - implements InboundPacket
+
+    public static final PacketDecoder<Packet102WindowClick> DECODER = Packet102WindowClick::new; // Poseidon
 
     public int a;
     public int b;
@@ -17,11 +21,18 @@ public class Packet102WindowClick extends Packet {
 
     public Packet102WindowClick() {}
 
+    // Poseidon start
+    public Packet102WindowClick(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
     public void a(NetHandler nethandler) {
         nethandler.a(this);
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readByte();
         this.b = datainputstream.readShort();
         this.c = datainputstream.readByte();
@@ -39,7 +50,7 @@ public class Packet102WindowClick extends Packet {
         }
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeByte(this.a);
         dataoutputstream.writeShort(this.b);
         dataoutputstream.writeByte(this.c);

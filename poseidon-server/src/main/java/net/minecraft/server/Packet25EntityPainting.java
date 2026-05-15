@@ -1,10 +1,16 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolUtil;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet25EntityPainting extends Packet {
+public class Packet25EntityPainting extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet25EntityPainting> ENCODER = Packet25EntityPainting::a; // Poseidon
 
     public int a;
     public int b;
@@ -24,18 +30,18 @@ public class Packet25EntityPainting extends Packet {
         this.f = entitypainting.e.A;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
-        this.f = a(datainputstream, EnumArt.z);
+        this.f = ProtocolUtil.readString(datainputstream, EnumArt.z); // Poseidon
         this.b = datainputstream.readInt();
         this.c = datainputstream.readInt();
         this.d = datainputstream.readInt();
         this.e = datainputstream.readInt();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
-        a(this.f, dataoutputstream);
+        ProtocolUtil.writeString(this.f, dataoutputstream); // Poseidon
         dataoutputstream.writeInt(this.b);
         dataoutputstream.writeInt(this.c);
         dataoutputstream.writeInt(this.d);

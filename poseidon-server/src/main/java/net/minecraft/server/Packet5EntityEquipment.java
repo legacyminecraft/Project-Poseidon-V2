@@ -1,12 +1,16 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet5EntityEquipment extends Packet {
+public class Packet5EntityEquipment extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet5EntityEquipment> ENCODER = Packet5EntityEquipment::a; // Poseidon
 
     public int a;
     public int b;
@@ -27,14 +31,14 @@ public class Packet5EntityEquipment extends Packet {
         }
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
         this.b = datainputstream.readShort();
         this.c = datainputstream.readShort();
         this.d = datainputstream.readShort();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
         dataoutputstream.writeShort(this.b);
         dataoutputstream.writeShort(this.c);

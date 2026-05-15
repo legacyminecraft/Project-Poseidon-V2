@@ -1,13 +1,17 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.List;
 
-public class Packet24MobSpawn extends Packet {
+public class Packet24MobSpawn extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet24MobSpawn> ENCODER = Packet24MobSpawn::a; // Poseidon
 
     public int a;
     public byte b;
@@ -32,7 +36,7 @@ public class Packet24MobSpawn extends Packet {
         this.h = entityliving.aa();
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
         this.b = datainputstream.readByte();
         this.c = datainputstream.readInt();
@@ -43,7 +47,7 @@ public class Packet24MobSpawn extends Packet {
         this.i = DataWatcher.a(datainputstream);
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
         dataoutputstream.writeByte(this.b);
         dataoutputstream.writeInt(this.c);

@@ -1,10 +1,16 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.ProtocolUtil;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet20NamedEntitySpawn extends Packet {
+public class Packet20NamedEntitySpawn extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet20NamedEntitySpawn> ENCODER = Packet20NamedEntitySpawn::a; // Poseidon
 
     public int a;
     public String b;
@@ -33,9 +39,9 @@ public class Packet20NamedEntitySpawn extends Packet {
         this.h = itemstack == null ? 0 : itemstack.id;
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
-        this.b = a(datainputstream, 16);
+        this.b = ProtocolUtil.readString(datainputstream, 16); // Poseidon
         this.c = datainputstream.readInt();
         this.d = datainputstream.readInt();
         this.e = datainputstream.readInt();
@@ -44,9 +50,9 @@ public class Packet20NamedEntitySpawn extends Packet {
         this.h = datainputstream.readShort();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
-        a(this.b, dataoutputstream);
+        ProtocolUtil.writeString(this.b, dataoutputstream); // Poseidon
         dataoutputstream.writeInt(this.c);
         dataoutputstream.writeInt(this.d);
         dataoutputstream.writeInt(this.e);

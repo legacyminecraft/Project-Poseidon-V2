@@ -1,12 +1,16 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketDecoder;
 import org.jspecify.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet15Place extends Packet {
+public class Packet15Place extends Packet implements InboundPacket { // Poseidon - implements InboundPacket
+
+    public static final PacketDecoder<Packet15Place> DECODER = Packet15Place::new; // Poseidon
 
     public int a;
     public int b;
@@ -16,11 +20,18 @@ public class Packet15Place extends Packet {
 
     public Packet15Place() {}
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    // Poseidon start
+    public Packet15Place(DataInput input) throws IOException {
+        this();
+        a(input);
+    }
+    // Poseidon end
+
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readInt();
-        this.b = datainputstream.read();
+        this.b = datainputstream.readUnsignedByte();
         this.c = datainputstream.readInt();
-        this.face = datainputstream.read();
+        this.face = datainputstream.readUnsignedByte();
         short short1 = datainputstream.readShort();
 
         if (short1 >= 0) {
@@ -33,7 +44,7 @@ public class Packet15Place extends Packet {
         }
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeInt(this.a);
         dataoutputstream.write(this.b);
         dataoutputstream.writeInt(this.c);

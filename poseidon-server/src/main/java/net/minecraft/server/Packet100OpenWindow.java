@@ -1,10 +1,15 @@
 package net.minecraft.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class Packet100OpenWindow extends Packet {
+public class Packet100OpenWindow extends Packet implements OutboundPacket { // Poseidon - implements OutboundPacket
+
+    public static final PacketEncoder<Packet100OpenWindow> ENCODER = Packet100OpenWindow::a; // Poseidon
 
     public int a;
     public int b;
@@ -24,14 +29,14 @@ public class Packet100OpenWindow extends Packet {
         nethandler.a(this);
     }
 
-    public void a(DataInputStream datainputstream) throws IOException {
+    public void a(DataInput datainputstream) throws IOException {
         this.a = datainputstream.readByte();
         this.b = datainputstream.readByte();
         this.c = datainputstream.readUTF();
         this.d = datainputstream.readByte();
     }
 
-    public void a(DataOutputStream dataoutputstream) throws IOException {
+    public void a(DataOutput dataoutputstream) throws IOException {
         dataoutputstream.writeByte(this.a);
         dataoutputstream.writeByte(this.b);
         dataoutputstream.writeUTF(this.c);
