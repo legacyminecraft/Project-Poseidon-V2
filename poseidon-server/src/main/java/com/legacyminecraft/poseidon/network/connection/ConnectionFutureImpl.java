@@ -14,7 +14,7 @@ public final class ConnectionFutureImpl implements ConnectionFuture {
 
     private final PlayerConnection connection;
     private @Nullable List<ConnectionFutureListener> waitingListeners;
-    private boolean completed = false;
+    private volatile boolean completed = false;
 
     public ConnectionFutureImpl(PlayerConnection connection) {
         Preconditions.checkArgument(connection != null, "connection cannot be null");
@@ -36,7 +36,9 @@ public final class ConnectionFutureImpl implements ConnectionFuture {
         synchronized (this) {
             if (!this.completed) {
                 this.completed = true;
-                this.waitingListeners.forEach(this::invokeListener);
+                if (waitingListeners != null) {
+                    this.waitingListeners.forEach(this::invokeListener);
+                }
             }
         }
     }
@@ -46,12 +48,12 @@ public final class ConnectionFutureImpl implements ConnectionFuture {
         Preconditions.checkArgument(listener != null, "listener cannot be null");
 
         synchronized (this) {
-            if (this.waitingListeners == null) {
-                this.waitingListeners = new ObjectArrayList<>();
-            }
             if (this.completed) {
                 invokeListener(listener);
             } else {
+                if (this.waitingListeners == null) {
+                    this.waitingListeners = new ObjectArrayList<>();
+                }
                 this.waitingListeners.add(listener);
             }
             return this;

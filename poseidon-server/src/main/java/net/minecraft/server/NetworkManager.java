@@ -1,10 +1,17 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
+import com.legacyminecraft.poseidon.network.connection.ConnectionFuture;
+import com.legacyminecraft.poseidon.network.connection.ConnectionFutureImpl;
+import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -12,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NetworkManager {
+public class NetworkManager extends AbstractPlayerConnection { // Poseidon - extends AbstractPlayerConnection
 
     public static final Object a = new Object();
     public static int b;
@@ -24,8 +31,8 @@ public class NetworkManager {
     private @Nullable DataOutputStream output;
     private boolean l = true;
     private List<Packet> m = Collections.synchronizedList(new ArrayList<>());
-    private List<Packet> highPriorityQueue = Collections.synchronizedList(new ArrayList<>());
-    private List<Packet> lowPriorityQueue = Collections.synchronizedList(new ArrayList<>());
+    private List<QueuedPacket> highPriorityQueue = Collections.synchronizedList(new ArrayList<>()); // Poseidon - List<Packet> -> List<QueuedPacket>
+    private List<QueuedPacket> lowPriorityQueue = Collections.synchronizedList(new ArrayList<>()); // Poseidon - List<Packet> -> List<QueuedPacket>
     private NetHandler p;
     private boolean q = false;
     private Thread r;
@@ -75,56 +82,99 @@ public class NetworkManager {
         this.p = nethandler;
     }
 
-    public void queue(Packet packet) {
-        if (!this.q) {
-            Object object = this.g;
+    // Poseidon start - network API
+    private record QueuedPacket(OutboundPacket packet, ConnectionFutureImpl future, long timestamp) {
+    }
 
+    @Override
+    public ConnectionFuture sendPacket(OutboundPacket packet) {
+        return queue(packet);
+    }
+
+    @Override
+    public void disconnect(String message) {
+        this.p.disconnect(message);
+    }
+
+    @Override
+    public boolean isProxyConnection() {
+        return false; // TODO: implement proxy support
+    }
+
+    @Override
+    public InetSocketAddress getRawAddress() {
+        return (InetSocketAddress) getSocketAddress();
+    }
+
+    @Override
+    public InetSocketAddress getClientAddress() {
+        return getRawAddress(); // TODO: implement proxy support
+    }
+    // Poseidon end
+
+    // Poseidon start - change signature, return ConnectionFuture
+    public ConnectionFuture queue(OutboundPacket packet) {
+        ConnectionFutureImpl future = new ConnectionFutureImpl(this);
+        if (!this.q) {
             synchronized (this.g) {
-                this.x += packet.a() + 1;
-                if (packet.k) {
-                    this.lowPriorityQueue.add(packet);
+                //this.x += packet.a() + 1;
+                QueuedPacket queuedPacket = new QueuedPacket(packet, future, System.currentTimeMillis());
+                if (packet instanceof Packet nmsPacket && nmsPacket.k) {
+                    this.lowPriorityQueue.add(queuedPacket);
                 } else {
-                    this.highPriorityQueue.add(packet);
+                    this.highPriorityQueue.add(queuedPacket);
                 }
             }
         }
+        return future;
     }
+    // Poseidon end
 
     private boolean f() {
         boolean flag = false;
 
         try {
             Object object;
-            Packet packet;
+            QueuedPacket queuedPacket; // Poseidon
             int i;
             int[] aint;
 
-            if (!this.highPriorityQueue.isEmpty() && (this.f == 0 || System.currentTimeMillis() - this.highPriorityQueue.get(0).timestamp >= (long) this.f)) {
-                object = this.g;
+            // Poseidon start
+            if (!this.highPriorityQueue.isEmpty()) {
                 synchronized (this.g) {
-                    packet = this.highPriorityQueue.remove(0);
-                    this.x -= packet.a() + 1;
+                    queuedPacket = this.highPriorityQueue.remove(0);
+                    //this.x -= packet.a() + 1;
                 }
 
-                Packet.a(packet, this.output);
-                aint = e;
+                OutboundPacket packet = invokeOutboundHandlers(queuedPacket.packet());
+                if (packet != null) {
+                    Poseidon.getProtocolManager().encodePacket(packet, this.output);
+                    queuedPacket.future().complete();
+                }
+                /*aint = e;
                 i = packet.b();
-                aint[i] += packet.a() + 1;
+                aint[i] += packet.a() + 1;*/
+                // Poseidon end
                 flag = true;
             }
 
             // CraftBukkit - don't allow low priority packet to be sent unless it was placed in the queue before the first packet on the high priority queue
             if ((flag || this.lowPriorityQueueDelay-- <= 0) && !this.lowPriorityQueue.isEmpty() && (this.highPriorityQueue.isEmpty() || this.highPriorityQueue.get(0).timestamp > this.lowPriorityQueue.get(0).timestamp)) {
-                object = this.g;
+                // Poseidon start
                 synchronized (this.g) {
-                    packet = this.lowPriorityQueue.remove(0);
-                    this.x -= packet.a() + 1;
+                    queuedPacket = this.lowPriorityQueue.remove(0);
+                    //this.x -= packet.a() + 1;
                 }
 
-                Packet.a(packet, this.output);
-                aint = e;
+                OutboundPacket packet = invokeOutboundHandlers(queuedPacket.packet());
+                if (packet != null) {
+                    Poseidon.getProtocolManager().encodePacket(packet, this.output);
+                    queuedPacket.future().complete();
+                }
+                /*aint = e;
                 i = packet.b();
-                aint[i] += packet.a() + 1;
+                aint[i] += packet.a() + 1;*/
+                // Poseidon end
                 this.lowPriorityQueueDelay = 0;
                 flag = true;
             }
@@ -148,14 +198,19 @@ public class NetworkManager {
         boolean flag = false;
 
         try {
-            Packet packet = Packet.a(this.input, this.p.c());
+            // Poseidon start
+            InboundPacket packet = Poseidon.getProtocolManager().decodePacket(this.input);
 
             if (packet != null) {
-                int[] aint = d;
+                /*int[] aint = d;
                 int i = packet.b();
 
-                aint[i] += packet.a() + 1;
-                this.m.add(packet);
+                aint[i] += packet.a() + 1;*/
+                packet = invokeInboundHandlers(packet);
+                if (packet instanceof Packet nmsPacket) {
+                    this.m.add(nmsPacket);
+                }
+                // Poseidon end
                 flag = true;
             } else {
                 this.a("disconnect.endOfStream");

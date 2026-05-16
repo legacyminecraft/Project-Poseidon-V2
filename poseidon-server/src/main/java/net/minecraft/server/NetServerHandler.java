@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandException;
@@ -667,7 +668,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             packet = null;
         }*/
         // Poseidon end
-        if (packet != null) this.networkManager.queue(packet);
+        if (packet instanceof OutboundPacket outbound) this.networkManager.queue(outbound); // Poseidon - only queue outbound packets
         // CraftBukkit end
 
         this.g = this.f;

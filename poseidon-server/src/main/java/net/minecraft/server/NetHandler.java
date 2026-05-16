@@ -8,6 +8,8 @@ public abstract class NetHandler {
 
     public abstract boolean c();
 
+    public abstract void disconnect(String s); // Poseidon
+
     public void a(Packet51MapChunk packet51mapchunk) {}
 
     public void a(Packet packet) {}

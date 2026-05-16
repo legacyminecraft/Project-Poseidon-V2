@@ -1,10 +1,12 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.EntityTracker;
 import net.minecraft.server.EntityTrackerEntry;
+import net.minecraft.server.NetServerHandler;
 import net.minecraft.server.Packet131;
 import net.minecraft.server.Packet200Statistic;
 import net.minecraft.server.Packet3Chat;
@@ -447,6 +449,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     public void removeDisconnectingPlayer(Player player) {
         this.hiddenPlayers.remove(player.getUniqueId());
+    }
+    // Poseidon end
+
+    // Poseidon start - network API
+    public @Nullable PlayerConnection getConnection() {
+        NetServerHandler netServerHandler = getHandle().netServerHandler;
+        return netServerHandler == null ? null : netServerHandler.networkManager;
     }
     // Poseidon end
 }

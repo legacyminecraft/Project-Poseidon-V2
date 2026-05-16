@@ -1,5 +1,6 @@
 package org.bukkit.entity;
 
+import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.Instrument;
@@ -331,4 +332,12 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @return True if the provided player is not being hidden from this player
      */
     boolean canSee(Player player);
+
+    /**
+     * Gets this player's connection to the server.
+     *
+     * @return the player connection, or null if this player is not connected
+     *         to the server anymore
+     */
+    @Nullable PlayerConnection getConnection();
 }
