@@ -3,6 +3,8 @@ package com.legacyminecraft.poseidon.network.connection;
 import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 
@@ -10,6 +12,13 @@ import java.net.InetSocketAddress;
  * Represents a player's connection to the server.
  */
 public interface PlayerConnection {
+
+    /**
+     * Returns the player associated with this connection.
+     *
+     * @return the player, or null if the player has not finished logging in
+     */
+    @Nullable Player getPlayer();
 
     /**
      * Sends a packet to the player.

@@ -8,6 +8,7 @@ import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
 import com.legacyminecraft.poseidon.network.handler.PacketRateLimitHandler;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedOutputStream;
@@ -88,7 +89,10 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     }
 
     // Poseidon start - network API
-    private record QueuedPacket(OutboundPacket packet, ConnectionFutureImpl future, long timestamp) {
+    @Override
+    public @Nullable Player getPlayer() {
+        NetHandler netHandler = this.p;
+        return netHandler instanceof NetServerHandler netServerHandler ? netServerHandler.getPlayer() : null;
     }
 
     @Override
@@ -132,6 +136,9 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             }
         }
         return future;
+    }
+
+    private record QueuedPacket(OutboundPacket packet, ConnectionFutureImpl future, long timestamp) {
     }
     // Poseidon end
 
