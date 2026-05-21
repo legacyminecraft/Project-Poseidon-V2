@@ -28,13 +28,14 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class NetServerHandler extends NetHandler implements ICommandListener {
 
     public static Logger a = Logger.getLogger("Minecraft");
     public NetworkManager networkManager;
-    public boolean disconnected = false;
+    public AtomicBoolean disconnected = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
     private MinecraftServer minecraftServer;
     public EntityPlayer player; // CraftBukkit - private -> public
     private int f;
@@ -91,8 +92,21 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     }
 
     public void disconnect(String s) {
-        if (this.disconnected) return; // Poseidon - fix disconnect spam
+        // Poseidon start - allow disconnect to be initiated async
+        if (!this.disconnected.compareAndSet(false, true)) {
+            return;
+        }
 
+        if (this.server.isPrimaryThread()) {
+            internalDisconnect(s);
+        } else {
+            this.server.getServer().queueSyncTask(() -> internalDisconnect(s));
+        }
+        // Poseidon end
+    }
+
+    // Poseidon start - move disconnect logic to separate method
+    private void internalDisconnect(String s) {
         // CraftBukkit start
         String leaveMessage = "\u00A7e" + this.player.name + " left the game.";
 
@@ -119,8 +133,9 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         // CraftBukkit end
 
         this.minecraftServer.serverConfigurationManager.disconnect(this.player);
-        this.disconnected = true;
+        //this.disconnected = true; // Poseidon
     }
+    // Poseidon end
 
     public void a(Packet27 packet27) {
         this.player.a(packet27.c(), packet27.e(), packet27.g(), packet27.h(), packet27.d(), packet27.f());
@@ -197,7 +212,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         }
 
         // Poseidon - fix disconnect spawm
-        if ((Double.isNaN(packet10flying.x) || Double.isNaN(packet10flying.y) || Double.isNaN(packet10flying.z) || Double.isNaN(packet10flying.stance)) && player.isOnline() && !this.disconnected) {
+        if ((Double.isNaN(packet10flying.x) || Double.isNaN(packet10flying.y) || Double.isNaN(packet10flying.z) || Double.isNaN(packet10flying.stance)) && player.isOnline() && !this.disconnected.get()) {
             player.teleport(player.getWorld().getSpawnLocation());
             System.err.println(player.getName() + " was caught trying to crash the server with an invalid position.");
             player.kickPlayer("Nope!");
@@ -628,7 +643,11 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     }
 
     public void a(String s, Object @Nullable [] aobject) {
-        if (this.disconnected) return; // CraftBukkit - rarely it would send a disconnect line twice
+        // Poseidon start - fix disconnect spam
+        if (!this.disconnected.compareAndSet(false, true)) {
+            return;
+        }
+        // Poseidon end
 
         a.info(this.player.name + " lost connection: " + s);
         // CraftBukkit start - we need to handle custom quit messages
@@ -637,7 +656,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             this.minecraftServer.serverConfigurationManager.sendAll(new Packet3Chat(quitMessage));
         }
         // CraftBukkit end
-        this.disconnected = true;
+        //this.disconnected = true; // Poseidon
     }
 
     public void a(Packet packet) {

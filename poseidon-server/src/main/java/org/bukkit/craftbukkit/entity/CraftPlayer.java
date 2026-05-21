@@ -176,7 +176,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public void kickPlayer(@Nullable String message) {
-        if (isOnline() && !getHandle().netServerHandler.disconnected) { // Poseidon - fix disconnect spam
+        if (isOnline() && !getHandle().netServerHandler.disconnected.get()) { // Poseidon - fix disconnect spam
             getHandle().netServerHandler.disconnect(message == null ? "" : message);
         }
     }

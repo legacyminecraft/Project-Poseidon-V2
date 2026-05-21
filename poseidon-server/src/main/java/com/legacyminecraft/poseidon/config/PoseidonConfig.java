@@ -59,6 +59,7 @@ public final class PoseidonConfig {
     public UpdateNotifier updateNotifier;
     public Logging logging;
     public Performance performance;
+    public Network network;
     public Services services;
     public Profiles profiles;
     public UuidSupport uuidSupport;
@@ -109,6 +110,18 @@ public final class PoseidonConfig {
         @ConfigSerializable
         public static final class TickLoop {
             public Duration sprintUntilTimeBehind = Duration.of("2s");
+        }
+    }
+
+    @ConfigSerializable
+    public static final class Network {
+        public PacketRateLimiting packetRateLimiting;
+
+        @ConfigSerializable
+        public static final class PacketRateLimiting {
+            public boolean enabled = true;
+            public int maxPacketRate = 500;
+            public Duration interval = Duration.of("7s");
         }
     }
 

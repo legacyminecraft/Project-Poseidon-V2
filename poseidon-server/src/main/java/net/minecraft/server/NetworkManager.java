@@ -4,6 +4,8 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.connection.ConnectionFuture;
 import com.legacyminecraft.poseidon.network.connection.ConnectionFutureImpl;
+import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
+import com.legacyminecraft.poseidon.network.handler.PacketRateLimitHandler;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.jspecify.annotations.Nullable;
@@ -51,6 +53,9 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         this.socket = socket;
         this.i = socket.getRemoteSocketAddress();
         this.p = nethandler;
+
+        // Poseidon - packet rate limiting
+        getInboundPipeline().addHandler(PacketHandlerPipeline.LOWEST_PRIORITY, new PacketRateLimitHandler());
 
         // CraftBukkit start - IPv6 stack in Java on BSD/OSX doesn't support setTrafficClass
         try {

@@ -71,7 +71,7 @@ public class NetworkListenThread {
                 netserverhandler.disconnect("Internal server error");
             }
 
-            if (netserverhandler.disconnected) {
+            if (netserverhandler.disconnected.get()) {
                 this.h.remove(i--);
             }
 
