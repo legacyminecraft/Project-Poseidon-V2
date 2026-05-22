@@ -8,7 +8,11 @@ public abstract class NetHandler {
 
     public abstract boolean c();
 
-    public abstract void disconnect(String s); // Poseidon
+    // Poseidon start
+    public abstract MinecraftServer getServer();
+
+    public abstract void disconnect(String s);
+    // Poseidon end
 
     public void a(Packet51MapChunk packet51mapchunk) {}
 

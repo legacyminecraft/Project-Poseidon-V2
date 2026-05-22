@@ -35,11 +35,13 @@ class NetworkReaderThread extends Thread {
                     ;
                 }
 
-                try {
+                // Poseidon start - do not sleep at all
+                /*try {
                     sleep(100L);
                 } catch (InterruptedException interruptedexception) {
                     ;
-                }
+                }*/
+                // Poseidon end
             } finally {
                 if (flag) {
                     Object object1 = NetworkManager.a;

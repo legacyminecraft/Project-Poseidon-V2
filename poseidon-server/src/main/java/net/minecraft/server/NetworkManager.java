@@ -18,9 +18,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class NetworkManager extends AbstractPlayerConnection { // Poseidon - extends AbstractPlayerConnection
 
@@ -33,9 +33,9 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     private @Nullable DataInputStream input;
     private @Nullable DataOutputStream output;
     private boolean l = true;
-    private List<Packet> m = Collections.synchronizedList(new ArrayList<>());
-    private List<QueuedPacket> highPriorityQueue = Collections.synchronizedList(new ArrayList<>()); // Poseidon - List<Packet> -> List<QueuedPacket>
-    private List<QueuedPacket> lowPriorityQueue = Collections.synchronizedList(new ArrayList<>()); // Poseidon - List<Packet> -> List<QueuedPacket>
+    //private List<Packet> m = Collections.synchronizedList(new ArrayList<>()); // Poseidon - remove
+    private Queue<QueuedPacket> highPriorityQueue = new ConcurrentLinkedQueue<>(); // Poseidon - List<Packet> -> ConcurrentLinkedQueue<QueuedPacket>
+    private Queue<QueuedPacket> lowPriorityQueue = new ConcurrentLinkedQueue<>(); // Poseidon - List<Packet> -> ConcurrentLinkedQueue<QueuedPacket>
     private NetHandler p;
     private boolean q = false;
     private Thread r;
@@ -49,6 +49,11 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     public static int[] e = new int[256];
     public int f = 0;
     private int lowPriorityQueueDelay = 50;
+
+    // Poseidon start
+    private final AtomicLong readPackets = new AtomicLong(0L);
+    private long lastReadPackets = 0L;
+    // Poseidon end
 
     public NetworkManager(Socket socket, String s, NetHandler nethandler) {
         this.socket = socket;
@@ -67,6 +72,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         try {
             // CraftBukkit start - cant compile these outside the try
             socket.setSoTimeout(30000);
+            socket.setTcpNoDelay(true); // Poseidon - disable Nagle's algorithm
             this.input = new DataInputStream(socket.getInputStream());
             this.output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream(), 5120));
         } catch (java.io.IOException socketexception) {
@@ -133,6 +139,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
                 } else {
                     this.highPriorityQueue.add(queuedPacket);
                 }
+                this.a();
             }
         }
         return future;
@@ -152,11 +159,8 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             int[] aint;
 
             // Poseidon start
-            if (!this.highPriorityQueue.isEmpty()) {
-                synchronized (this.g) {
-                    queuedPacket = this.highPriorityQueue.remove(0);
-                    //this.x -= packet.a() + 1;
-                }
+            if ((queuedPacket = this.highPriorityQueue.poll()) != null) {
+                //this.x -= packet.a() + 1;
 
                 OutboundPacket packet = invokeOutboundHandlers(queuedPacket.packet());
                 if (packet != null) {
@@ -171,12 +175,10 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             }
 
             // CraftBukkit - don't allow low priority packet to be sent unless it was placed in the queue before the first packet on the high priority queue
-            if ((flag || this.lowPriorityQueueDelay-- <= 0) && !this.lowPriorityQueue.isEmpty() && (this.highPriorityQueue.isEmpty() || this.highPriorityQueue.get(0).timestamp > this.lowPriorityQueue.get(0).timestamp)) {
-                // Poseidon start
-                synchronized (this.g) {
-                    queuedPacket = this.lowPriorityQueue.remove(0);
-                    //this.x -= packet.a() + 1;
-                }
+            // Poseidon start
+            if ((flag || this.lowPriorityQueueDelay-- <= 0) && !this.lowPriorityQueue.isEmpty() && (this.highPriorityQueue.isEmpty() || this.highPriorityQueue.peek().timestamp > this.lowPriorityQueue.peek().timestamp)) {
+                queuedPacket = this.lowPriorityQueue.poll();
+                //this.x -= packet.a() + 1;
 
                 OutboundPacket packet = invokeOutboundHandlers(queuedPacket.packet());
                 if (packet != null) {
@@ -218,10 +220,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
                 int i = packet.b();
 
                 aint[i] += packet.a() + 1;*/
-                packet = invokeInboundHandlers(packet);
-                if (packet instanceof Packet nmsPacket) {
-                    this.m.add(nmsPacket);
-                }
+                handleReadPacket(packet);
                 // Poseidon end
                 flag = true;
             } else {
@@ -237,6 +236,18 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             return false;
         }
     }
+
+    // Poseidon start
+    private void handleReadPacket(InboundPacket packet) {
+        this.readPackets.incrementAndGet();
+
+        InboundPacket finalPacket = invokeInboundHandlers(packet);
+        if (finalPacket instanceof Packet nmsPacket) {
+            NetHandler netHandler = this.p;
+            netHandler.getServer().queueSyncTask(() -> nmsPacket.a(netHandler));
+        }
+    }
+    // Poseidon end
 
     private void a(Exception exception) {
         exception.printStackTrace();
@@ -275,11 +286,17 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     }
 
     public void b() {
+        // Poseidon start
+        long readPackets = this.readPackets.get();
+        long newPackets = readPackets - this.lastReadPackets;
+        this.lastReadPackets = readPackets;
+        // Poseidon end
+
         if (this.x > 1048576) {
             this.a("disconnect.overflow");
         }
 
-        if (this.m.isEmpty()) {
+        if (newPackets == 0) { // Poseidon
             if (this.w++ == 1200) {
                 this.a("disconnect.timeout");
             }
@@ -287,16 +304,18 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             this.w = 0;
         }
 
-        int i = 100;
+        // Poseidon start - move packet handling to handleReadPacket()
+        /*int i = 100;
 
         while (!this.m.isEmpty() && i-- >= 0) {
             Packet packet = this.m.remove(0);
 
             packet.a(this.p);
-        }
+        }*/
+        // Poseidon end
 
         this.a();
-        if (this.t && this.m.isEmpty()) {
+        if (this.t && newPackets == 0) { // Poseidon
             this.p.a(this.u, this.v);
         }
     }

@@ -83,6 +83,12 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     }
     // CraftBukkit end
 
+    // Poseidon start
+    public MinecraftServer getServer() {
+        return this.minecraftServer;
+    }
+    // Poseidon end
+
     public void a() {
         this.i = false;
         this.networkManager.b();

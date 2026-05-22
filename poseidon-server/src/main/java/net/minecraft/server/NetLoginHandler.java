@@ -40,6 +40,12 @@ public class NetLoginHandler extends NetHandler {
     }
     // CraftBukkit end
 
+    // Poseidon start
+    public MinecraftServer getServer() {
+        return this.server;
+    }
+    // Poseidon end
+
     public void a() {
         if (this.h != null) {
             this.b(this.h);

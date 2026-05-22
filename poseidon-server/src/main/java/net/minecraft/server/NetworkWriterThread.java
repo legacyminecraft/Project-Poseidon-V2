@@ -33,12 +33,6 @@ class NetworkWriterThread extends Thread {
                 }
 
                 try {
-                    sleep(100L);
-                } catch (InterruptedException interruptedexception) {
-                    ;
-                }
-
-                try {
                     if (NetworkManager.e(this.a) != null) {
                         NetworkManager.e(this.a).flush();
                     }
@@ -49,6 +43,14 @@ class NetworkWriterThread extends Thread {
 
                     //ioexception.printStackTrace(); // Poseidon - remove
                 }
+
+                // Poseidon start - move from above, reduce sleep time to 2ms
+                try {
+                    sleep(2L);
+                } catch (InterruptedException interruptedexception) {
+                    ;
+                }
+                // Poseidon end
             } finally {
                 if (flag) {
                     Object object1 = NetworkManager.a;

@@ -1,7 +1,6 @@
 package com.legacyminecraft.poseidon.performance;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
 
 public final class TickRateManager {
 
@@ -26,6 +25,10 @@ public final class TickRateManager {
         return time - this.nextTickTime;
     }
 
+    public long getNextTickTime() {
+        return this.nextTickTime;
+    }
+
     public void setNextTickTime(long time) {
         this.nextTickTime = time;
     }
@@ -45,10 +48,6 @@ public final class TickRateManager {
         this.tickData1m.add(tickTime);
         this.tickData5m.add(tickTime);
         this.tickData15m.add(tickTime);
-    }
-
-    public void waitForNextTick() {
-        LockSupport.parkNanos(this.nextTickTime - System.nanoTime());
     }
 
     public long nanosPerTick() {

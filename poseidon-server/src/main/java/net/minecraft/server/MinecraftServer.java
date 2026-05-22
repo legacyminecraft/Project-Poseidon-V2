@@ -27,12 +27,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -379,7 +378,17 @@ public class MinecraftServer implements Runnable, ICommandListener {
                     this.h();
                     tickRateManager.recordTick();
 
-                    tickRateManager.waitForNextTick();
+                    long nextTickTime = tickRateManager.getNextTickTime();
+                    Runnable task;
+                    while (System.nanoTime() < nextTickTime && (task = this.queuedSyncTasks.poll()) != null) {
+                        try {
+                            task.run();
+                        } catch (Throwable t) {
+                            log.log(Level.SEVERE, "Error executing queued task", t);
+                        }
+                    }
+
+                    LockSupport.parkNanos(nextTickTime - System.nanoTime());
                     // Poseidon end
                 }
             } else {
