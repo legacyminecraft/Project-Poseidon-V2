@@ -199,7 +199,6 @@ public class ChunkProviderGenerate implements IChunkProvider {
     public Chunk getOrCreateChunk(int i, int j) {
         this.j.setSeed((long) i * 341873128712L + (long) j * 132897987541L);
         byte[] abyte = new byte['\u8000'];
-        Chunk chunk = new Chunk(this.p, abyte, i, j);
 
         this.v = this.p.getWorldChunkManager().a(this.v, i * 16, j * 16, 16, 16);
         double[] adouble = this.p.getWorldChunkManager().temperature;
@@ -207,6 +206,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
         this.a(i, j, abyte, this.v, adouble);
         this.a(i, j, abyte, this.v);
         this.u.a(this, this.p, i, j, abyte);
+        Chunk chunk = new Chunk(this.p, abyte, i, j); // Poseidon - moved from above
         chunk.initLighting();
         return chunk;
     }
