@@ -6,6 +6,8 @@ import com.legacyminecraft.poseidon.network.protocol.codec.PacketDecoder;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
 import net.minecraft.server.*;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -15,6 +17,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ProtocolManagerImpl implements ProtocolManager {
+
+    private static final Logger log = LoggerFactory.getLogger(ProtocolManagerImpl.class);
 
     private final Map<Class<? extends OutboundPacket>, OutboundRegistration<?>> outboundRegistrations = new ConcurrentHashMap<>();
     private final Map<Integer, InboundRegistration<?>> inboundRegistrations = new ConcurrentHashMap<>();
@@ -145,7 +149,11 @@ public final class ProtocolManagerImpl implements ProtocolManager {
 
         int packetId = input.readUnsignedByte();
         InboundRegistration<?> registration = this.inboundRegistrations.get(packetId);
-        return registration == null ? null : registration.packetDecoder().decode(input);
+        if (registration == null) {
+            log.info("Unknown inbound packet id: {}", packetId);
+            return null;
+        }
+        return registration.packetDecoder().decode(input);
     }
 
     public void encodePacket(OutboundPacket packet, DataOutput output) throws IOException {

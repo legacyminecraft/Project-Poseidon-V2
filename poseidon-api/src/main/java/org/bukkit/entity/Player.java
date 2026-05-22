@@ -340,4 +340,11 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      *         to the server anymore
      */
     @Nullable PlayerConnection getConnection();
+
+    /**
+     * Gets this player's estimated ping in milliseconds.
+     *
+     * @return the player's ping
+     */
+    int getPing();
 }
