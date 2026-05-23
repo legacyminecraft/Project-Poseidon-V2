@@ -1,6 +1,7 @@
 package com.legacyminecraft.poseidon.util;
 
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
@@ -11,25 +12,20 @@ class ChunkPosTest {
 
     @ParameterizedTest
     @MethodSource("arguments")
-    void canPackAndUnpack(Arguments args) {
-        int actualX = args.x();
-        int actualZ = args.z();
-        long pos = ChunkPos.of(actualX, actualZ);
+    void canPackAndUnpack(int x, int z) {
+        long pos = ChunkPos.of(x, z);
         int unpackedX = ChunkPos.x(pos);
         int unpackedZ = ChunkPos.z(pos);
 
-        assertThat(unpackedX).isEqualTo(actualX);
-        assertThat(unpackedZ).isEqualTo(actualZ);
+        assertThat(unpackedX).isEqualTo(x);
+        assertThat(unpackedZ).isEqualTo(z);
     }
 
     static Stream<Arguments> arguments() {
         return Stream.of(
-                new Arguments(-40, 138),
-                new Arguments(0, -1),
-                new Arguments(65535, -32767)
+                Arguments.of(-40, 138),
+                Arguments.of(0, -1),
+                Arguments.of(65535, -32767)
         );
-    }
-
-    record Arguments(int x, int z) {
     }
 }
