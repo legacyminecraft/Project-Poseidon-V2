@@ -44,7 +44,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
     // public WorldServer[] worldServer; // CraftBukkit - removed!
     public ServerConfigurationManager serverConfigurationManager;
     public ConsoleCommandHandler consoleCommandHandler; // CraftBukkit - made public
-    private boolean isRunning = true;
+    private volatile boolean isRunning = true; // Poseidon - volatile
     public boolean isStopped = false;
     int ticks = 0;
     public @Nullable String i;

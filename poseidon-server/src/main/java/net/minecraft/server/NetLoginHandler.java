@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.legacyminecraft.poseidon.network.LoginProcessHandler;
+import com.legacyminecraft.poseidon.network.login.LoginProcessHandler;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.jspecify.annotations.Nullable;
 
@@ -43,6 +43,10 @@ public class NetLoginHandler extends NetHandler {
     // Poseidon start
     public MinecraftServer getServer() {
         return this.server;
+    }
+
+    public boolean isDisconnecting() {
+        return this.c.get();
     }
     // Poseidon end
 
