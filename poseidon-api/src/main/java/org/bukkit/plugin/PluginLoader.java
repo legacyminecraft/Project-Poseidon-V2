@@ -46,9 +46,10 @@ public interface PluginLoader {
      * @param type Type of the event executor to create
      * @param listener the object that will handle the eventual call back
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     EventExecutor createExecutor(Event.Type type, Listener listener);
 
+    // Poseidon start
     /**
      * Creates and returns registered listeners for the event classes used in
      * this listener
@@ -58,6 +59,7 @@ public interface PluginLoader {
      * @return The registered listeners.
      */
     Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin);
+    // Poseidon end
 
     /**
      * Enables the specified plugin

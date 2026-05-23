@@ -171,6 +171,7 @@ public interface Server {
      */
     @Nullable Player getPlayerExact(String name);
 
+    // Poseidon start - profile API
     /**
      * Gets the player with the given UUID.
      *
@@ -178,6 +179,7 @@ public interface Server {
      * @return a player object if one was found, null otherwise
      */
     @Nullable Player getPlayer(UUID id);
+    // Poseidon end
 
     /**
      * Attempts to match any players with the given name, and returns a list
@@ -212,6 +214,7 @@ public interface Server {
      */
     ServicesManager getServicesManager();
 
+    // Poseidon start - network API
     /**
      * Gets the protocol manager responsible for registering and
      * unregistering packets.
@@ -219,6 +222,7 @@ public interface Server {
      * @return the protocol manager
      */
     ProtocolManager getProtocolManager();
+    // Poseidon end
 
     /**
      * Gets a list of all worlds on this server
@@ -437,6 +441,7 @@ public interface Server {
      */
     OfflinePlayer getOfflinePlayer(String name);
 
+    // Poseidon start - profile API
     /**
      * Gets the player by the given name, regardless if they are offline or
      * online.
@@ -484,6 +489,7 @@ public interface Server {
      * @return a PlayerProfile object
      */
     PlayerProfile createOfflineProfile(String name);
+    // Poseidon end
 
     /**
      * Gets a set containing all current IPs that are banned
@@ -513,6 +519,7 @@ public interface Server {
      */
     Set<OfflinePlayer> getBannedPlayers();
 
+    // Poseidon start
     /**
      * Checks the current thread against the expected primary thread for the
      * server.
@@ -521,4 +528,5 @@ public interface Server {
      *     false otherwise
      */
     boolean isPrimaryThread();
+    // Poseidon end
 }

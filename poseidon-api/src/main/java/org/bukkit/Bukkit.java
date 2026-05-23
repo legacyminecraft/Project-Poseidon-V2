@@ -117,9 +117,11 @@ public final class Bukkit {
         return server.getPlayerExact(name);
     }
 
+    // Poseidon start - profile API
     public static @Nullable Player getPlayer(UUID id) {
         return server.getPlayer(id);
     }
+    // Poseidon end
 
     public static List<Player> matchPlayer(String name) {
         return server.matchPlayer(name);
@@ -137,9 +139,11 @@ public final class Bukkit {
         return server.getServicesManager();
     }
 
+    // Poseidon start - network API
     public static ProtocolManager getProtocolManager() {
         return server.getProtocolManager();
     }
+    // Poseidon end
 
     public static List<World> getWorlds() {
         return server.getWorlds();
@@ -245,6 +249,7 @@ public final class Bukkit {
         return server.getOfflinePlayer(name);
     }
 
+    // Poseidon start - profile API
     public static @Nullable OfflinePlayer getOfflinePlayerIfCached(String name) {
         return server.getOfflinePlayerIfCached(name);
     }
@@ -260,6 +265,7 @@ public final class Bukkit {
     public static PlayerProfile createOfflineProfile(String name) {
         return server.createOfflineProfile(name);
     }
+    // Poseidon end
 
     public static Set<String> getIPBans() {
         return server.getIPBans();
@@ -289,7 +295,9 @@ public final class Bukkit {
         server.reloadWhitelist();
     }
 
+    // Poseidon start
     public static boolean isPrimaryThread() {
         return server.isPrimaryThread();
     }
+    // Poseidon end
 }

@@ -17,10 +17,10 @@ public class EntityExplodeEvent extends EntityEvent implements Cancellable {
 
     private boolean cancel;
     private Location location;
-    private Set<Block> blocks;
+    private Set<Block> blocks; // Poseidon - List -> Set
     private float yield = 0.3F;
 
-    public EntityExplodeEvent(Entity what, Location location, Set<Block> blocks) {
+    public EntityExplodeEvent(Entity what, Location location, Set<Block> blocks) { // Poseidon - List -> Set
         super(Type.ENTITY_EXPLODE, what);
         this.location = location;
         this.cancel = false;
@@ -31,7 +31,7 @@ public class EntityExplodeEvent extends EntityEvent implements Cancellable {
      * Returns the list of blocks that would have been removed or were
      * removed from the explosion event.
      */
-    public Set<Block> blockList() {
+    public Set<Block> blockList() { // Poseidon - List -> Set
         return blocks;
     }
 

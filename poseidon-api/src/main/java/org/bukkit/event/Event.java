@@ -99,9 +99,10 @@ import java.io.Serializable;
  */
 public abstract class Event implements Serializable {
 
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     private final Type type;
     private final String name;
+    // Poseidon start
     private final boolean isAsync;
 
     protected Event() {
@@ -113,24 +114,28 @@ public abstract class Event implements Serializable {
         this.name = getClass().getName();
         this.isAsync = isAsync;
     }
+    // Poseidon end
 
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     protected Event(final Type type) {
         Preconditions.checkArgument(type != null, "type is null");
         Preconditions.checkArgument(type != Type.CUSTOM_EVENT, "use Event(String) to make custom events");
         this.type = type;
+        // Poseidon start
         this.name = getClass().getName();
         this.isAsync = false;
+        // Poseidon end
     }
 
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     protected Event(final String name) {
         Preconditions.checkArgument(name != null, "name is null");
         this.type = Type.CUSTOM_EVENT;
         this.name = name;
-        this.isAsync = false;
+        this.isAsync = false; // Poseidon
     }
 
+    // Poseidon start
     /**
      * Calls the event and tests if cancelled.
      *
@@ -144,13 +149,14 @@ public abstract class Event implements Serializable {
             return true;
         }
     }
+    // Poseidon end
 
     /**
      * Gets the Type of this event
      *
      * @return Event type that this object represents
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     public final Type getType() {
         return type;
     }
@@ -161,9 +167,10 @@ public abstract class Event implements Serializable {
      * @return Name of this event
      */
     public final String getEventName() {
-        return name;
+        return name; // Poseidon
     }
 
+    // Poseidon start
     /**
      * Any custom event that should not by synchronized with other events must use the specific constructor.
      * These are the caveats of using an asynchronous event:
@@ -190,6 +197,7 @@ public abstract class Event implements Serializable {
             throw new IllegalStateException("Event must implement getHandlers()");
         }
     }
+    // Poseidon end
 
     public enum Result {
 
@@ -215,7 +223,7 @@ public abstract class Event implements Serializable {
     /**
      * Represents an events priority in execution
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     public enum Priority {
 
         /**
@@ -247,6 +255,7 @@ public abstract class Event implements Serializable {
          */
         Monitor(EventPriority.MONITOR);
 
+        // Poseidon start
         private final EventPriority priority;
 
         Priority(EventPriority priority) {
@@ -256,12 +265,13 @@ public abstract class Event implements Serializable {
         public EventPriority getNewPriority() {
             return this.priority;
         }
+        // Poseidon end
     }
 
     /**
      * Represents a category used by Type
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     public enum Category {
 
         /**
@@ -313,7 +323,7 @@ public abstract class Event implements Serializable {
      *
      * @see org.bukkit.event.
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     public enum Type {
 
         /**
@@ -946,17 +956,22 @@ public abstract class Event implements Serializable {
          * Represents a custom event, isn't actually used
          */
         CUSTOM_EVENT(Category.MISCELLANEOUS, TransitionalCustomEvent.class),
+
+        // Poseidon start
         /**
          * Represents an event using the new, Event.Type-less event system to avoid NPE-ing
          */
         FIXED_EVENT(Category.MISCELLANEOUS, Event.class);
+        // Poseidon end
 
         private final Category category;
+        // Poseidon start
         private final Class<? extends Event> eventClass;
 
         Type(Category category, Class<? extends Event> eventClass) {
             this.category = category;
             this.eventClass = eventClass;
+            // Poseidon end
         }
 
         /**
@@ -968,8 +983,10 @@ public abstract class Event implements Serializable {
             return category;
         }
 
+        // Poseidon start
         public Class<? extends Event> getEventClass() {
             return eventClass;
         }
+        // Poseidon end
     }
 }

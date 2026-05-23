@@ -51,6 +51,7 @@ public interface Plugin extends CommandExecutor {
      */
     Server getServer();
 
+    // Poseidon start
     /**
      * Returns the plugin logger associated with this server's logger. The
      * returned logger automatically tags all log messages with the plugin's
@@ -59,6 +60,7 @@ public interface Plugin extends CommandExecutor {
      * @return Logger associated with this plugin
      */
     Logger getLogger();
+    // Poseidon end
 
     /**
      * Returns a value indicating whether or not this plugin is currently enabled

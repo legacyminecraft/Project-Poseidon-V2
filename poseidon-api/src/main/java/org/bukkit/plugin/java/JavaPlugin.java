@@ -31,7 +31,7 @@ public abstract class JavaPlugin implements Plugin {
     private boolean initialized = false;
     private PluginLoader loader = null;
     private Server server = null;
-    private Logger logger = null;
+    private Logger logger = null; // Poseidon
     private File file = null;
     private PluginDescriptionFile description = null;
     private File dataFolder = null;
@@ -70,6 +70,7 @@ public abstract class JavaPlugin implements Plugin {
         return server;
     }
 
+    // Poseidon start
     /**
      * Returns the plugin logger associated with this server's logger. The
      * returned logger automatically tags all log messages with the plugin's
@@ -77,9 +78,10 @@ public abstract class JavaPlugin implements Plugin {
      *
      * @return Logger associated with this plugin
      */
-    public final Logger getLogger() {
+    public Logger getLogger() {
         return logger;
     }
+    // Poseidon end
 
     /**
      * Returns a value indicating whether or not this plugin is currently enabled
@@ -169,7 +171,7 @@ public abstract class JavaPlugin implements Plugin {
             this.description = description;
             this.dataFolder = dataFolder;
             this.classLoader = classLoader;
-            this.logger = new PluginLogger(this);
+            this.logger = new PluginLogger(this); // Poseidon
             this.config = new Configuration(new File(dataFolder, "config.yml"));
             this.config.load();
 

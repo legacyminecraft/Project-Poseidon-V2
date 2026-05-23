@@ -31,6 +31,7 @@ public class PlayerLoginEvent extends PlayerEvent {
         this.message = message;
     }
 
+    // Poseidon start
     /**
      * Gets the player IP address
      *
@@ -39,6 +40,7 @@ public class PlayerLoginEvent extends PlayerEvent {
     public InetAddress getAddress() {
         return this.ipAddress;
     }
+    // Poseidon end
 
     /**
      * Gets the current result of the login, as an enum

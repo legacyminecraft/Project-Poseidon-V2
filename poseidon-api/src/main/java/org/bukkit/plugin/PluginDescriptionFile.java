@@ -27,7 +27,7 @@ public final class PluginDescriptionFile {
     private String version = null;
     private @Nullable Object commands = null;
     private @Nullable String description = null;
-    private @Nullable String prefix = null;
+    private @Nullable String prefix = null; // Poseidon
     private ArrayList<String> authors = new ArrayList<>();
     private @Nullable String website = null;
     private boolean database = false;
@@ -130,6 +130,7 @@ public final class PluginDescriptionFile {
         return description;
     }
 
+    // Poseidon start
     /**
      * Gets the token to prefix plugin-specific logging messages with
      *
@@ -138,6 +139,7 @@ public final class PluginDescriptionFile {
     public @Nullable String getPrefix() {
         return prefix;
     }
+    // Poseidon end
 
     public ArrayList<String> getAuthors() {
         return authors;
@@ -239,6 +241,7 @@ public final class PluginDescriptionFile {
             }
         }
 
+        // Poseidon start
         if (map.containsKey("prefix")) {
             try {
                 prefix = (String) map.get("prefix");
@@ -246,6 +249,7 @@ public final class PluginDescriptionFile {
                 throw new InvalidDescriptionException(ex, "prefix is of wrong type");
             }
         }
+        // Poseidon end
 
         if (map.containsKey("load")) {
             try {
@@ -312,9 +316,11 @@ public final class PluginDescriptionFile {
         if (description != null) {
             map.put("description", description);
         }
+        // Poseidon start
         if (prefix != null) {
             map.put("prefix", prefix);
         }
+        // Poseidon end
 
         if (authors.size() == 1) {
             map.put("author", authors.get(0));

@@ -23,6 +23,7 @@ public interface OfflinePlayer extends ServerOperator {
      */
     @Nullable String getName();
 
+    // Poseidon start - profile API
     /**
      * Returns the UUID of this player
      *
@@ -47,6 +48,7 @@ public interface OfflinePlayer extends ServerOperator {
      */
     @Nullable
     Player getPlayer();
+    // Poseidon end
 
     /**
      * Checks if this player is banned or not

@@ -20,10 +20,12 @@ public class ItemSpawnEvent extends EntityEvent implements Cancellable {
         this.location = loc;
     }
 
+    // Poseidon start
     @Override
     public Item getEntity() {
         return (Item) this.entity;
     }
+    // Poseidon end
 
     /**
      * Gets the location at which the item is spawning.

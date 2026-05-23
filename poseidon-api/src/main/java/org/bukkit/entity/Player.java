@@ -40,6 +40,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      */
     void setDisplayName(String name);
 
+    // Poseidon start - name tag API
     /**
      * Gets the player's name tag
      *
@@ -54,6 +55,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @param tag the player's new name tag
      */
     void setNameTag(String tag);
+    // Poseidon end
 
     /**
      * Set the target of the player's compass.
@@ -311,6 +313,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      */
     void resetPlayerTime();
 
+    // Poseidon start - vanish API
     /**
      * Hides a player from this player
      *
@@ -332,7 +335,9 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @return True if the provided player is not being hidden from this player
      */
     boolean canSee(Player player);
+    // Poseidon end
 
+    // Poseidon start - network API
     /**
      * Gets this player's connection to the server.
      *
@@ -347,4 +352,5 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * @return the player's ping
      */
     int getPing();
+    // Poseidon end
 }

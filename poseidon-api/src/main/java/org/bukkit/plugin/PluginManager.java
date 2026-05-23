@@ -104,7 +104,7 @@ public interface PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     void registerEvent(Event.Type type, Listener listener, Priority priority, Plugin plugin);
 
     /**
@@ -116,9 +116,10 @@ public interface PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     void registerEvent(Event.Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin);
 
+    // Poseidon start
     /**
      * Registers all the events in the given listener class
      *
@@ -149,6 +150,7 @@ public interface PluginManager {
      * @param ignoreCancelled Whether to pass cancelled events or not
      */
     void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin, boolean ignoreCancelled);
+    // Poseidon end
 
     /**
      * Enables the specified plugin

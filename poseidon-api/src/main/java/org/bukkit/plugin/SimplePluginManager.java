@@ -42,12 +42,26 @@ public final class SimplePluginManager implements PluginManager {
     private final Map<Pattern, PluginLoader> fileAssociations = new HashMap<>();
     private final List<Plugin> plugins = new ArrayList<>();
     private final Map<String, Plugin> lookupNames = new HashMap<>();
+    //private final Map<Event.Type, SortedSet<RegisteredListener>> listeners = new EnumMap<>(Event.Type.class); // Poseidon - remove
     private static @Nullable File updateDirectory = null;
     private final SimpleCommandMap commandMap;
     private final Map<String, Permission> permissions = new HashMap<>();
     private final Map<Boolean, Set<Permission>> defaultPerms = new LinkedHashMap<>();
     private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<>();
     private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<>();
+    // Poseidon start - remove
+    /*private final Comparator<RegisteredListener> comparer = new Comparator<>() {
+        public int compare(RegisteredListener i, RegisteredListener j) {
+            int result = i.getPriority().compareTo(j.getPriority());
+
+            if ((result == 0) && (i != j)) {
+                result = 1;
+            }
+
+            return result;
+        }
+    };*/
+    // Poseidon end
 
     public SimplePluginManager(Server instance, SimpleCommandMap commandMap) {
         server = instance;
@@ -183,6 +197,7 @@ public final class SimplePluginManager implements PluginManager {
 
         if (updateDirectory != null && updateDirectory.isDirectory() && (updateFile = new File(updateDirectory, file.getName())).isFile()) {
             if (FileUtil.copy(updateFile, file)) {
+                // Poseidon - add log for replacing plugin file from update directory
                 server.getLogger().info("An updated file for \"" + file.getName() + "\" has been found in the update folder. Replaced the original file.");
                 updateFile.delete();
             }
@@ -268,7 +283,7 @@ public final class SimplePluginManager implements PluginManager {
                 server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while enabling " + plugin.getDescription().getFullName() + " (Is it up to date?): " + ex.getMessage(), ex);
             }
 
-            HandlerList.bakeAll();
+            HandlerList.bakeAll(); // Poseidon
         }
     }
 
@@ -298,11 +313,13 @@ public final class SimplePluginManager implements PluginManager {
                 server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while unregistering services for " + plugin.getDescription().getFullName() + " (Is it up to date?): " + ex.getMessage(), ex);
             }
 
+            // Poseidon start
             try {
                 HandlerList.unregisterAll(plugin);
             } catch (Throwable ex) {
                 server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while unregistering events for " + plugin.getDescription().getFullName() + " (Is it up to date?): " + ex.getMessage(), ex);
             }
+            // Poseidon end
         }
     }
 
@@ -311,7 +328,7 @@ public final class SimplePluginManager implements PluginManager {
             disablePlugins();
             plugins.clear();
             lookupNames.clear();
-            HandlerList.unregisterAll();
+            HandlerList.unregisterAll(); // Poseidon
             fileAssociations.clear();
             permissions.clear();
             defaultPerms.get(true).clear();
@@ -324,7 +341,8 @@ public final class SimplePluginManager implements PluginManager {
      *
      * @param event Event details
      */
-    public void callEvent(Event event) {
+    public void callEvent(Event event) { // Poseidon - not synchronized
+        // Poseidon start
         if (event.isAsynchronous()) {
             if (Thread.holdsLock(this)) {
                 throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.");
@@ -357,6 +375,7 @@ public final class SimplePluginManager implements PluginManager {
             }
         }
     }
+    // Poseidon end
 
     /**
      * Registers the given event to the specified listener
@@ -366,9 +385,9 @@ public final class SimplePluginManager implements PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     public void registerEvent(Event.Type type, Listener listener, Priority priority, Plugin plugin) {
-        registerEvent(type.getEventClass(), listener, priority.getNewPriority(), plugin.getPluginLoader().createExecutor(type, listener), plugin);
+        registerEvent(type.getEventClass(), listener, priority.getNewPriority(), plugin.getPluginLoader().createExecutor(type, listener), plugin); // Poseidon
     }
 
     /**
@@ -380,11 +399,12 @@ public final class SimplePluginManager implements PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
-    @Deprecated
+    @Deprecated // Poseidon - deprecate
     public void registerEvent(Event.Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin) {
-        registerEvent(type.getEventClass(), listener, priority.getNewPriority(), executor, plugin);
+        registerEvent(type.getEventClass(), listener, priority.getNewPriority(), executor, plugin); // Poseidon
     }
 
+    // Poseidon start
     @Override
     public void registerEvents(Listener listener, Plugin plugin) {
         if (!plugin.isEnabled()) {
@@ -438,6 +458,7 @@ public final class SimplePluginManager implements PluginManager {
             }
         }
     }
+    // Poseidon end
 
     public @Nullable Permission getPermission(String name) {
         return permissions.get(name.toLowerCase());
@@ -455,7 +476,7 @@ public final class SimplePluginManager implements PluginManager {
     }
 
     public Set<Permission> getDefaultPermissions(boolean op) {
-        return Set.copyOf(defaultPerms.get(op));
+        return Set.copyOf(defaultPerms.get(op)); // Poseidon - use JDK set
     }
 
     public void removePermission(Permission perm) {
@@ -499,7 +520,7 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = permSubs.get(name);
 
         if (map == null) {
-            map = new WeakHashMap<>();
+            map = new WeakHashMap<>(); // Poseidon - use WeakHashMap
             permSubs.put(name, map);
         }
 
@@ -524,9 +545,11 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = permSubs.get(name);
 
         if (map == null) {
+            // Poseidon start - use JDK set
             return Set.of();
         } else {
             return Set.copyOf(map.keySet());
+            // Poseidon end
         }
     }
 
@@ -534,7 +557,7 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = defSubs.get(op);
 
         if (map == null) {
-            map = new WeakHashMap<>();
+            map = new WeakHashMap<>(); // Poseidon - use WeakHashMap
             defSubs.put(op, map);
         }
 
@@ -557,9 +580,11 @@ public final class SimplePluginManager implements PluginManager {
         Map<Permissible, Boolean> map = defSubs.get(op);
 
         if (map == null) {
+            // Poseidon start - use JDK set
             return Set.of();
         } else {
             return Set.copyOf(map.keySet());
+            // Poseidon end
         }
     }
 

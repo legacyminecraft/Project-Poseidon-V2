@@ -973,6 +973,7 @@ public class JavaPluginLoader implements PluginLoader {
         throw new IllegalArgumentException("Event " + type + " is not supported");
     }
 
+    // Poseidon start
     public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin) {
         Preconditions.checkArgument(plugin != null, "plugin cannot be null");
         Preconditions.checkArgument(listener != null, "listener cannot be null");
@@ -1067,6 +1068,7 @@ public class JavaPluginLoader implements PluginLoader {
 
         return EventPriority.NORMAL;
     }
+    // Poseidon end
 
     public void enablePlugin(final Plugin plugin) {
         if (!(plugin instanceof JavaPlugin jPlugin)) {
