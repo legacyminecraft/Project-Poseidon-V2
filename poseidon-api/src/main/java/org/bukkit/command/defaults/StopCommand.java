@@ -3,6 +3,7 @@ package org.bukkit.command.defaults;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class StopCommand extends VanillaCommand {
     public StopCommand() {
@@ -18,6 +19,12 @@ public class StopCommand extends VanillaCommand {
 
         Command.broadcastCommandMessage(sender, "Stopping the server..");
         Bukkit.shutdown();
+
+        // Poseidon start - kick online players before stopping server
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.kickPlayer("Server closed");
+        }
+        // Poseidon end
 
         return true;
     }
