@@ -115,6 +115,8 @@ public final class PoseidonConfig {
 
     @ConfigSerializable
     public static final class Network {
+        public int chunkPacketCompressionLevel = 6;
+        public int maxChunkPacketsPerTick = 3;
         public PacketRateLimiting packetRateLimiting;
 
         @ConfigSerializable

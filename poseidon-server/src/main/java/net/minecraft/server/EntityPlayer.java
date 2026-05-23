@@ -266,8 +266,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         if (flag && !this.chunkCoordIntPairQueue.isEmpty()) {
             // Poseidon start - improve chunk sending
             WorldServer worldserver = this.getWorldServer();
+            int maxChunkPacketsPerTick = Poseidon.getConfig().network.maxChunkPacketsPerTick;
             LongArrayList chunksToRequeue = null;
-            for (int count = 0; !this.chunkCoordIntPairQueue.isEmpty() && count < 3; count++) { // TODO: make max chunk packets per tick configurable
+
+            for (int count = 0; !this.chunkCoordIntPairQueue.isEmpty() && count < maxChunkPacketsPerTick; count++) {
                 long chunkPos = this.chunkCoordIntPairQueue.removeLong(0);
                 Chunk chunk = worldserver.chunkProviderServer.getChunkAt(ChunkPos.x(chunkPos), ChunkPos.z(chunkPos));
 

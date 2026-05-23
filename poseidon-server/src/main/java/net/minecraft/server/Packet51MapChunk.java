@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.google.common.base.Preconditions;
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
 import org.jspecify.annotations.Nullable;
@@ -77,7 +78,7 @@ public class Packet51MapChunk extends Packet implements OutboundPacket { // Pose
         byte[] deflateBuffer = new byte[this.rawData.length + 100];
         Deflater deflater = localDeflater.get();
         deflater.reset();
-        deflater.setLevel(Deflater.DEFAULT_COMPRESSION); // TODO: make compression level configurable
+        deflater.setLevel(Poseidon.getConfig().network.chunkPacketCompressionLevel);
         deflater.setInput(this.rawData);
         deflater.finish();
 
