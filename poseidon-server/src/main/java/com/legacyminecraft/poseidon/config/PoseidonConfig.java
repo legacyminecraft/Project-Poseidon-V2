@@ -26,8 +26,8 @@ public final class PoseidonConfig {
         If you need help with the configuration or have any questions related to Poseidon,
         join us in our Discord or check the wiki page.
 
-        File Reference: https://github.com/retromcorg/Project-Poseidon-V2/wiki/Configuration
-        Wiki: https://github.com/retromcorg/Project-Poseidon-V2/wiki
+        File Reference: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki/Configuration
+        Wiki: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki
         Discord: https://discord.gg/FwKg676""";
 
     private static @Nullable PoseidonConfig instance;

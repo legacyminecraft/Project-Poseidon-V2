@@ -26,7 +26,7 @@
     </properties>
 
     <scm>
-        <developerConnection>scm:git:git@github.com:retromcorg/Project-Poseidon-V2.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:legacyminecraft/Project-Poseidon-V2.git</developerConnection>
     </scm>
 
     <distributionManagement>

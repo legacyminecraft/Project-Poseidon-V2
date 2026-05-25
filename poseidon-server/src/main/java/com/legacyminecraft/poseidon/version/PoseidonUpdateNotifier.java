@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 public final class PoseidonUpdateNotifier {
 
-    private static final String GITHUB_API_URL = "https://api.github.com/repos/retromcorg/Project-Poseidon-V2/releases/latest";
-    private static final String RELEASE_URL = "https://github.com/retromcorg/Project-Poseidon-V2/releases";
+    private static final String GITHUB_API_URL = "https://api.github.com/repos/legacyminecraft/Project-Poseidon-V2/releases/latest";
+    private static final String RELEASE_URL = "https://github.com/legacyminecraft/Project-Poseidon-V2/releases";
     private static final Logger log = LoggerFactory.getLogger(PoseidonUpdateNotifier.class);
 
     private final ScheduledExecutorService executor;
