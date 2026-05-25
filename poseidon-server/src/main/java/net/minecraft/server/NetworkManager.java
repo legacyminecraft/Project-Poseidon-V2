@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.connection.ConnectionFuture;
@@ -8,6 +9,7 @@ import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
 import com.legacyminecraft.poseidon.network.handler.PacketRateLimitHandler;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
+import com.legacyminecraft.poseidon.network.proxy.ProxyHelloPacketHandler;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
@@ -16,7 +18,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,7 +30,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     public static int c;
     private Object g = new Object();
     public @Nullable Socket socket; // CraftBukkit - private -> public
-    private final SocketAddress i;
+    private InetSocketAddress i; // Poseidon - not final, SocketAddress -> InetSocketAddress
     private @Nullable DataInputStream input;
     private @Nullable DataOutputStream output;
     private boolean l = true;
@@ -51,17 +52,23 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     private int lowPriorityQueueDelay = 50;
 
     // Poseidon start
+    private final InetSocketAddress rawAddress;
     private final AtomicLong readPackets = new AtomicLong(0L);
     private long lastReadPackets = 0L;
     // Poseidon end
 
     public NetworkManager(Socket socket, String s, NetHandler nethandler) {
         this.socket = socket;
-        this.i = socket.getRemoteSocketAddress();
+        this.i = (InetSocketAddress) socket.getRemoteSocketAddress();
+        this.rawAddress = this.i; // Poseidon
         this.p = nethandler;
 
-        // Poseidon - packet rate limiting
+        // Poseidon start - packet handlers
         getInboundPipeline().addHandler(PacketHandlerPipeline.LOWEST_PRIORITY, new PacketRateLimitHandler());
+        if (Poseidon.getConfig().network.proxySupport.enabled) {
+            getInboundPipeline().addHandler(PacketHandlerPipeline.LOWEST_PRIORITY, ProxyHelloPacketHandler.INSTANCE);
+        }
+        // Poseidon end
 
         // CraftBukkit start - IPv6 stack in Java on BSD/OSX doesn't support setTrafficClass
         try {
@@ -108,27 +115,31 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
 
     @Override
     public void disconnect(String message) {
+        Preconditions.checkArgument(message != null, "message cannot be null");
         this.p.disconnect(message);
     }
 
     @Override
-    public boolean isProxyConnection() {
-        return false; // TODO: implement proxy support
-    }
-
-    @Override
     public InetSocketAddress getRawAddress() {
-        return (InetSocketAddress) getSocketAddress();
+        return this.rawAddress;
     }
 
     @Override
     public InetSocketAddress getClientAddress() {
-        return getRawAddress(); // TODO: implement proxy support
+        return getSocketAddress();
+    }
+
+    @Override
+    public void setClientAddress(InetSocketAddress address) {
+        Preconditions.checkArgument(address != null, "address cannot be null");
+        this.i = address;
     }
     // Poseidon end
 
     // Poseidon start - change signature, return ConnectionFuture
     public ConnectionFuture queue(OutboundPacket packet) {
+        Preconditions.checkArgument(packet != null, "packet cannot be null");
+
         ConnectionFutureImpl future = new ConnectionFutureImpl(this);
         if (!this.q) {
             synchronized (this.g) {
@@ -320,7 +331,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         }
     }
 
-    public SocketAddress getSocketAddress() {
+    public InetSocketAddress getSocketAddress() { // Poseidon - SocketAddress -> InetSocketAddress
         return this.i;
     }
 

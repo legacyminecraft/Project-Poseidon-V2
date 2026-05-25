@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketCodec;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketDecoder;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+import com.legacyminecraft.poseidon.network.proxy.ProxyMessage;
 import net.minecraft.server.*;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -225,6 +226,7 @@ public final class ProtocolManagerImpl implements ProtocolManager {
         registerDuplexPacket(130, Packet130UpdateSign.class, Packet130UpdateSign.CODEC);
         registerOutboundPacket(131, Packet131.class, Packet131.ENCODER);
         registerOutboundPacket(200, Packet200Statistic.class, Packet200Statistic.ENCODER);
+        registerDuplexPacket(249, ProxyMessage.class, ProxyMessage.CODEC);
         registerDuplexPacket(255, Packet255KickDisconnect.class, Packet255KickDisconnect.CODEC);
     }
 }

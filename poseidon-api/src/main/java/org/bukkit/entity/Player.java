@@ -75,7 +75,7 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
      * Gets the socket address of this player
      * @return the player's address
      */
-    @Nullable InetSocketAddress getAddress();
+    InetSocketAddress getAddress();
 
     /**
      * Sends this sender a message raw

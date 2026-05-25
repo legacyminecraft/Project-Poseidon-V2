@@ -6,11 +6,14 @@ import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.HeaderMode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @ConfigSerializable
 public final class PoseidonConfig {
@@ -115,9 +118,29 @@ public final class PoseidonConfig {
 
     @ConfigSerializable
     public static final class Network {
+        public ProxySupport proxySupport;
+        public PacketRateLimiting packetRateLimiting;
         public int chunkPacketCompressionLevel = 6;
         public int maxChunkPacketsPerTick = 3;
-        public PacketRateLimiting packetRateLimiting;
+
+        @ConfigSerializable
+        public static final class ProxySupport {
+            private static final String RANDOM_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            public boolean enabled = false;
+            public boolean proxyRequiredToConnect = true;
+            public String secret = null;
+
+            @PostProcess
+            private void postProcess() {
+                if (this.secret == null) {
+                    this.secret = new SecureRandom().ints(0, RANDOM_CHARS.length())
+                            .limit(20)
+                            .mapToObj(RANDOM_CHARS::charAt)
+                            .map(String::valueOf)
+                            .collect(Collectors.joining());
+                }
+            }
+        }
 
         @ConfigSerializable
         public static final class PacketRateLimiting {

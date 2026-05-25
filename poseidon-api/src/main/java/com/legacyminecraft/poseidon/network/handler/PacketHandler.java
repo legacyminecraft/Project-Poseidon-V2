@@ -17,5 +17,5 @@ public interface PacketHandler<P extends Packet> {
      * @param connection the associated connection
      * @param holder the packet holder
      */
-    void handlePacket(PlayerConnection connection, PacketHolder<P> holder);
+    void handlePacket(PlayerConnection connection, PacketHolder<P> holder) throws Exception;
 }

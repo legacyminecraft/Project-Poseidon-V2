@@ -29,6 +29,18 @@ public interface PlayerConnection {
     ConnectionFuture sendPacket(OutboundPacket packet);
 
     /**
+     * Sends a proxy message to the proxy which the player is connected through.
+     *
+     * @param tag the message tag
+     * @param data the message data
+     * @return a future which will complete when the proxy message has been
+     *         sent
+     * @throws IllegalStateException if this connection is not a proxy
+     *         connection
+     */
+    ConnectionFuture sendProxyMessage(String tag, byte[] data);
+
+    /**
      * Disconnects the player.
      *
      * @param message the disconnect message
@@ -65,9 +77,9 @@ public interface PlayerConnection {
     InetSocketAddress getRawAddress();
 
     /**
-     * Returns the client address of the player. If the connection is behind
-     * a proxy, this will be the actual player address extracted from the proxy
-     * handshake.
+     * Returns the client address of the player. If this is a proxy connection,
+     * this will be the player's actual address extracted from the proxy hello
+     * packet.
      *
      * @return the client address
      */

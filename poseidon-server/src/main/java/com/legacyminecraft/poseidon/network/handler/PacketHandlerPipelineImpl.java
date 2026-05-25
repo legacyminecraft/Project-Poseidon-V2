@@ -74,6 +74,8 @@ public final class PacketHandlerPipelineImpl<P extends Packet> implements Packet
             } catch (Throwable t) {
                 log.warn("An error occurred while invoking handler {} with packet {}",
                         ctx.handler().getClass().getName(), packet.getClass().getName(), t);
+                this.connection.disconnect("Internal exception: " + t);
+                return null;
             }
         }
         return this.holder.getPacket();

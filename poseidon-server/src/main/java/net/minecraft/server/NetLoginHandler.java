@@ -1,6 +1,8 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.login.LoginProcessHandler;
+import com.legacyminecraft.poseidon.network.proxy.ProxyHelloPacketHandler;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.jspecify.annotations.Nullable;
 
@@ -90,6 +92,7 @@ public class NetLoginHandler extends NetHandler {
     }
 
     public void a(Packet1Login packet1login) {
+        this.networkManager.getInboundPipeline().removeHandler(ProxyHelloPacketHandler.INSTANCE); // Poseidon
         this.g = packet1login.name;
         if (packet1login.a != 14) {
             if (packet1login.a > 14) {
@@ -97,6 +100,10 @@ public class NetLoginHandler extends NetHandler {
             } else {
                 this.disconnect("Outdated client!");
             }
+        // Poseidon start
+        } else if (Poseidon.getConfig().network.proxySupport.proxyRequiredToConnect && !this.networkManager.isProxyConnection()) {
+            disconnect("You must connect through a proxy to join this server");
+            // Poseidon end
         } else {
             ASYNC_EXECUTOR.execute(new LoginProcessHandler(this.server, this, packet1login.name)); // Poseidon
         }

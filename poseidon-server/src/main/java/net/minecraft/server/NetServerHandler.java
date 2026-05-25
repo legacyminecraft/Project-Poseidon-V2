@@ -1,6 +1,6 @@
 package net.minecraft.server;
 
-import com.legacyminecraft.poseidon.network.PingCalculator;
+import com.legacyminecraft.poseidon.network.connection.PingCalculator;
 import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.ChatColor;

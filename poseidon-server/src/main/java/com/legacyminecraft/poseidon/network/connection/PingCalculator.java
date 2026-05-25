@@ -1,6 +1,5 @@
-package com.legacyminecraft.poseidon.network;
+package com.legacyminecraft.poseidon.network.connection;
 
-import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
 import com.legacyminecraft.poseidon.network.handler.PacketHandler;
 import com.legacyminecraft.poseidon.network.handler.PacketHolder;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;

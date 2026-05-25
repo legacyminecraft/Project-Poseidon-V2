@@ -33,7 +33,6 @@ import org.bukkit.map.MapView;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -77,13 +76,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return false;
     }
 
-    public @Nullable InetSocketAddress getAddress() {
-        SocketAddress addr = getHandle().netServerHandler.networkManager.getSocketAddress();
-        if (addr instanceof InetSocketAddress) {
-            return (InetSocketAddress) addr;
-        } else {
-            return null;
-        }
+    public InetSocketAddress getAddress() {
+        return getHandle().netServerHandler.networkManager.getSocketAddress();
     }
 
     @Override
