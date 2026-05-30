@@ -2,7 +2,7 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.login.LoginProcessHandler;
-import com.legacyminecraft.poseidon.network.proxy.ProxyHelloPacketHandler;
+import com.legacyminecraft.poseidon.network.login.LoginState;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import org.jspecify.annotations.Nullable;
 
@@ -47,8 +47,8 @@ public class NetLoginHandler extends NetHandler {
         return this.server;
     }
 
-    public boolean isDisconnecting() {
-        return this.c.get();
+    public boolean isConnected() {
+        return !this.c.get();
     }
     // Poseidon end
 
@@ -83,6 +83,15 @@ public class NetLoginHandler extends NetHandler {
     }
 
     public void a(Packet2Handshake packet2handshake) {
+        // Poseidon start
+        LoginState loginState = this.networkManager.getLoginState();
+        if (loginState != LoginState.INITIAL && loginState != LoginState.PROXY) {
+            disconnect("Unexpected handshake packet");
+            return;
+        }
+        this.networkManager.setLoginState(LoginState.HANDSHAKE);
+        // Poseidon end
+
         if (this.server.onlineMode) {
             this.i = Long.toHexString(d.nextLong());
             this.networkManager.queue(new Packet2Handshake(this.i));
@@ -92,7 +101,15 @@ public class NetLoginHandler extends NetHandler {
     }
 
     public void a(Packet1Login packet1login) {
-        this.networkManager.getInboundPipeline().removeHandler(ProxyHelloPacketHandler.INSTANCE); // Poseidon
+        // Poseidon start
+        LoginState loginState = this.networkManager.getLoginState();
+        if (loginState != LoginState.HANDSHAKE) {
+            disconnect("Unexpected login packet");
+            return;
+        }
+        this.networkManager.setLoginState(LoginState.LOGIN);
+        // Poseidon end
+
         this.g = packet1login.name;
         if (packet1login.a != 14) {
             if (packet1login.a > 14) {
@@ -101,7 +118,9 @@ public class NetLoginHandler extends NetHandler {
                 this.disconnect("Outdated client!");
             }
         // Poseidon start
-        } else if (Poseidon.getConfig().network.proxySupport.proxyRequiredToConnect && !this.networkManager.isProxyConnection()) {
+        } else if (Poseidon.getConfig().network.proxySupport.enabled
+                && Poseidon.getConfig().network.proxySupport.proxyRequiredToConnect
+                && !this.networkManager.isProxyConnection()) {
             disconnect("You must connect through a proxy to join this server");
             // Poseidon end
         } else {

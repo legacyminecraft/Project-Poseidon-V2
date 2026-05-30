@@ -1,7 +1,5 @@
 package com.legacyminecraft.poseidon.network.connection;
 
-import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
-import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
@@ -24,21 +22,18 @@ public interface PlayerConnection {
      * Sends a packet to the player.
      *
      * @param packet the packet to send
-     * @return a future which will complete when the packet has been sent
      */
-    ConnectionFuture sendPacket(OutboundPacket packet);
+    void sendPacket(OutboundPacket packet);
 
     /**
      * Sends a proxy message to the proxy which the player is connected through.
      *
      * @param tag the message tag
      * @param data the message data
-     * @return a future which will complete when the proxy message has been
-     *         sent
-     * @throws IllegalStateException if this connection is not a proxy
+     * @throws UnsupportedOperationException if this connection is not a proxy
      *         connection
      */
-    ConnectionFuture sendProxyMessage(String tag, byte[] data);
+    void sendProxyMessage(String tag, byte[] data);
 
     /**
      * Disconnects the player.
@@ -46,13 +41,6 @@ public interface PlayerConnection {
      * @param message the disconnect message
      */
     void disconnect(String message);
-
-    /**
-     * Returns a future which will complete when the player has disconnected.
-     *
-     * @return a future which will complete when the player has disconnected
-     */
-    ConnectionFuture getDisconnectFuture();
 
     /**
      * Returns if the player is connected to the server.
@@ -86,16 +74,12 @@ public interface PlayerConnection {
     InetSocketAddress getClientAddress();
 
     /**
-     * Returns the handler pipeline responsible for handling inbound packets.
+     * Returns this connection's estimated ping in milliseconds.
+     * <p>
+     * Note that this will return {@code 0} if the player has not finished
+     * logging in.
      *
-     * @return the inbound pipeline
+     * @return the ping
      */
-    PacketHandlerPipeline<InboundPacket> getInboundPipeline();
-
-    /**
-     * Returns the handler pipeline responsible for handling outbound packets.
-     *
-     * @return the outbound pipeline
-     */
-    PacketHandlerPipeline<OutboundPacket> getOutboundPipeline();
+    int getPing();
 }

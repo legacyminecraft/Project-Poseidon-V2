@@ -453,8 +453,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     public int getPing() {
-        NetServerHandler netServerHandler = getHandle().netServerHandler;
-        return netServerHandler == null ? 0 : netServerHandler.ping.get() / 1_000_000;
+        PlayerConnection connection = getConnection();
+        return connection == null ? 0 : connection.getPing();
     }
     // Poseidon end
 }

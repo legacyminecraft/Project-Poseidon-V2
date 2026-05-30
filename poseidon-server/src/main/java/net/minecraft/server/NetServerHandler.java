@@ -1,7 +1,5 @@
 package net.minecraft.server;
 
-import com.legacyminecraft.poseidon.network.connection.PingCalculator;
-import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class NetServerHandler extends NetHandler implements ICommandListener {
@@ -53,7 +50,6 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     private Map<Integer, Short> n = new HashMap<>();
 
     // Poseidon start
-    public final AtomicInteger ping = new AtomicInteger(0);
     private final Random idGenerator = new Random();
     private int ticks = 0;
     // Poseidon end
@@ -67,12 +63,6 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
         // CraftBukkit start
         this.server = minecraftserver.server;
-
-        // Poseidon start - ping calculation
-        PingCalculator pingCalculator = new PingCalculator();
-        this.networkManager.getOutboundPipeline().addHandler(PacketHandlerPipeline.HIGHEST_PRIORITY, pingCalculator.OUTBOUND_HANDLER);
-        this.networkManager.getInboundPipeline().addHandler(PacketHandlerPipeline.LOWEST_PRIORITY, pingCalculator.INBOUND_HANDLER);
-        // Poseidon end
     }
     private final CraftServer server;
     private int lastTick = MinecraftServer.currentTick;
@@ -102,6 +92,10 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     // Poseidon start
     public MinecraftServer getServer() {
         return this.minecraftServer;
+    }
+
+    public boolean isConnected() {
+        return !this.disconnected.get();
     }
     // Poseidon end
 

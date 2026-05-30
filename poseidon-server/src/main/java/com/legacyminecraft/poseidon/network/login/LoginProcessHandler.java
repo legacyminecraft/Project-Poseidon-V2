@@ -27,7 +27,7 @@ public final class LoginProcessHandler implements Runnable {
     @Override
     public void run() {
         Iterator<LoginStage> iterator = LOGIN_STAGES.iterator();
-        while (MinecraftServer.isRunning(this.server) && !this.netLoginHandler.isDisconnecting() && iterator.hasNext()) {
+        while (MinecraftServer.isRunning(this.server) && this.netLoginHandler.isConnected() && iterator.hasNext()) {
             LoginStage loginStage = iterator.next();
             loginStage.run(this);
         }

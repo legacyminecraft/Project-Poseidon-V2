@@ -11,6 +11,8 @@ public abstract class NetHandler {
     // Poseidon start
     public abstract MinecraftServer getServer();
 
+    public abstract boolean isConnected();
+
     public abstract void disconnect(String s);
     // Poseidon end
 

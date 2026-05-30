@@ -1,4 +1,4 @@
 @NullMarked
-package com.legacyminecraft.poseidon.network.handler;
+package com.legacyminecraft.poseidon.event.network;
 
 import org.jspecify.annotations.NullMarked;

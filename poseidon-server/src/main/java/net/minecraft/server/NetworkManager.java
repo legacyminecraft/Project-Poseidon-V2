@@ -2,14 +2,11 @@ package net.minecraft.server;
 
 import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.event.network.ServerReceivePacketEvent;
+import com.legacyminecraft.poseidon.event.network.ServerSendPacketEvent;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
-import com.legacyminecraft.poseidon.network.connection.ConnectionFuture;
-import com.legacyminecraft.poseidon.network.connection.ConnectionFutureImpl;
-import com.legacyminecraft.poseidon.network.handler.PacketHandlerPipeline;
-import com.legacyminecraft.poseidon.network.handler.PacketRateLimitHandler;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
-import com.legacyminecraft.poseidon.network.proxy.ProxyHelloPacketHandler;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
@@ -63,13 +60,6 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         this.rawAddress = this.i; // Poseidon
         this.p = nethandler;
 
-        // Poseidon start - packet handlers
-        getInboundPipeline().addHandler(PacketHandlerPipeline.LOWEST_PRIORITY, new PacketRateLimitHandler());
-        if (Poseidon.getConfig().network.proxySupport.enabled) {
-            getInboundPipeline().addHandler(PacketHandlerPipeline.LOWEST_PRIORITY, ProxyHelloPacketHandler.INSTANCE);
-        }
-        // Poseidon end
-
         // CraftBukkit start - IPv6 stack in Java on BSD/OSX doesn't support setTrafficClass
         try {
             socket.setTrafficClass(24);
@@ -109,14 +99,19 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     }
 
     @Override
-    public ConnectionFuture sendPacket(OutboundPacket packet) {
-        return queue(packet);
+    public void sendPacket(OutboundPacket packet) {
+        queue(packet);
     }
 
     @Override
     public void disconnect(String message) {
         Preconditions.checkArgument(message != null, "message cannot be null");
         this.p.disconnect(message);
+    }
+
+    @Override
+    public boolean isConnected() {
+        return this.p.isConnected();
     }
 
     @Override
@@ -136,27 +131,23 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     }
     // Poseidon end
 
-    // Poseidon start - change signature, return ConnectionFuture
-    public ConnectionFuture queue(OutboundPacket packet) {
+    // Poseidon start - change signature
+    public void queue(OutboundPacket packet) {
         Preconditions.checkArgument(packet != null, "packet cannot be null");
 
-        ConnectionFutureImpl future = new ConnectionFutureImpl(this);
         if (!this.q) {
-            synchronized (this.g) {
-                //this.x += packet.a() + 1;
-                QueuedPacket queuedPacket = new QueuedPacket(packet, future, System.currentTimeMillis());
-                if (packet instanceof Packet nmsPacket && nmsPacket.k) {
-                    this.lowPriorityQueue.add(queuedPacket);
-                } else {
-                    this.highPriorityQueue.add(queuedPacket);
-                }
-                this.a();
+            //this.x += packet.a() + 1;
+            QueuedPacket queuedPacket = new QueuedPacket(packet, System.nanoTime());
+            if (packet instanceof Packet nmsPacket && nmsPacket.k) {
+                this.lowPriorityQueue.add(queuedPacket);
+            } else {
+                this.highPriorityQueue.add(queuedPacket);
             }
+            this.a();
         }
-        return future;
     }
 
-    private record QueuedPacket(OutboundPacket packet, ConnectionFutureImpl future, long timestamp) {
+    private record QueuedPacket(OutboundPacket packet, long timestamp) {
     }
     // Poseidon end
 
@@ -173,10 +164,10 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             if ((queuedPacket = this.highPriorityQueue.poll()) != null) {
                 //this.x -= packet.a() + 1;
 
-                OutboundPacket packet = invokeOutboundHandlers(queuedPacket.packet());
-                if (packet != null) {
+                OutboundPacket packet = queuedPacket.packet();
+                boolean send = new ServerSendPacketEvent(this, queuedPacket.packet()).callEvent();
+                if (send) {
                     Poseidon.getProtocolManager().encodePacket(packet, this.output);
-                    queuedPacket.future().complete();
                 }
                 /*aint = e;
                 i = packet.b();
@@ -191,10 +182,10 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
                 queuedPacket = this.lowPriorityQueue.poll();
                 //this.x -= packet.a() + 1;
 
-                OutboundPacket packet = invokeOutboundHandlers(queuedPacket.packet());
-                if (packet != null) {
+                OutboundPacket packet = queuedPacket.packet();
+                boolean send = new ServerSendPacketEvent(this, queuedPacket.packet()).callEvent();
+                if (send) {
                     Poseidon.getProtocolManager().encodePacket(packet, this.output);
-                    queuedPacket.future().complete();
                 }
                 /*aint = e;
                 i = packet.b();
@@ -252,8 +243,8 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
     private void handleReadPacket(InboundPacket packet) {
         this.readPackets.incrementAndGet();
 
-        InboundPacket finalPacket = invokeInboundHandlers(packet);
-        if (finalPacket instanceof Packet nmsPacket) {
+        boolean handle = new ServerReceivePacketEvent(this, packet).callEvent();
+        if (handle && packet instanceof Packet nmsPacket) {
             NetHandler netHandler = this.p;
             netHandler.getServer().queueSyncTask(() -> nmsPacket.a(netHandler));
         }

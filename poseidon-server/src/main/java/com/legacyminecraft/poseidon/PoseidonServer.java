@@ -1,14 +1,20 @@
 package com.legacyminecraft.poseidon;
 
+import com.legacyminecraft.poseidon.network.connection.PacketRateLimiter;
+import com.legacyminecraft.poseidon.network.connection.PingCalculator;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManagerImpl;
+import com.legacyminecraft.poseidon.network.proxy.ProxyHelloPacketListener;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.performance.WatchdogThread;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
 import com.legacyminecraft.poseidon.profile.ProfileService;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.session.SessionService;
+import com.legacyminecraft.poseidon.util.InternalBukkitAccess;
 import com.legacyminecraft.poseidon.version.PoseidonBuildInformation;
 import com.legacyminecraft.poseidon.version.PoseidonUpdateNotifier;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 
 public final class PoseidonServer {
 
@@ -38,6 +44,10 @@ public final class PoseidonServer {
         getBuildInformation().load();
         getProfileCache().load();
         getProtocolManager().registerDefaults();
+        PluginManager pluginManager = Bukkit.getServer().getPluginManager();
+        pluginManager.registerEvents(PacketRateLimiter.LISTENER, InternalBukkitAccess.INSTANCE);
+        pluginManager.registerEvents(PingCalculator.LISTENER, InternalBukkitAccess.INSTANCE);
+        pluginManager.registerEvents(ProxyHelloPacketListener.INSTANCE, InternalBukkitAccess.INSTANCE);
     }
 
     public void postInitialize() {
