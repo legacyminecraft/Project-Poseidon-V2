@@ -146,7 +146,10 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         // CraftBukkit end
 
         this.player.B();
-        this.sendPacket(new Packet255KickDisconnect(s));
+        // Poseidon start - truncate kick message to 100 characters
+        String message = s.substring(0, Math.min(s.length(), 100));
+        this.sendPacket(new Packet255KickDisconnect(message));
+        // Poseidon end
         this.networkManager.d();
 
         // CraftBukkit start
