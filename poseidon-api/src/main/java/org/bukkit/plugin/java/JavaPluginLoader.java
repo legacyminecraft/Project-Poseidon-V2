@@ -125,10 +125,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -151,36 +151,25 @@ public class JavaPluginLoader implements PluginLoader {
         server = instance;
     }
 
-    public Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
+    public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException { // Poseidon - remove InvalidDescriptionException
         return loadPlugin(file, false);
     }
 
-    public Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
+    public Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, UnknownDependencyException { // Poseidon - remove InvalidDescriptionException
         JavaPlugin result = null;
         PluginDescriptionFile description = null;
 
         if (!file.exists()) {
             throw new InvalidPluginException(new FileNotFoundException(String.format("%s does not exist", file.getPath())));
         }
+
+        // Poseidon start
         try {
-            JarFile jar = new JarFile(file);
-            JarEntry entry = jar.getJarEntry("plugin.yml");
-
-            if (entry == null) {
-                throw new InvalidPluginException(new FileNotFoundException("Jar does not contain plugin.yml"));
-            }
-
-            InputStream stream = jar.getInputStream(entry);
-
-            description = new PluginDescriptionFile(stream);
-
-            stream.close();
-            jar.close();
-        } catch (IOException ex) {
-            throw new InvalidPluginException(ex);
-        } catch (YAMLException ex) {
-            throw new InvalidPluginException(ex);
+            description = getPluginDescription(file);
+        } catch (InvalidDescriptionException e) {
+            throw new InvalidPluginException(e);
         }
+        // Poseidon end
 
         File dataFolder = new File(file.getParentFile(), description.getName());
         File oldDataFolder = getDataFolder(file);
@@ -218,13 +207,14 @@ public class JavaPluginLoader implements PluginLoader {
             )));
         }
 
-        ArrayList<String> depend;
-
+        // Poseidon start - immutable list
+        List<String> depend;
         try {
-            depend = (ArrayList<String>) description.getDepend();
+            depend = description.getDepend();
             if (depend == null) {
-                depend = new ArrayList<>();
+                depend = List.of();
             }
+            // Poseidon end
         } catch (ClassCastException ex) {
             throw new InvalidPluginException(ex);
         }
@@ -241,13 +231,14 @@ public class JavaPluginLoader implements PluginLoader {
         }
 
         if (!ignoreSoftDependencies) {
-            ArrayList<String> softDepend;
-
+            // Poseidon start - immutable list
+            List<String> softDepend;
             try {
-                softDepend = (ArrayList<String>) description.getSoftDepend();
+                softDepend = description.getSoftDepend();
                 if (softDepend == null) {
-                    softDepend = new ArrayList<>();
+                    softDepend = List.of();
                 }
+                // Poseidon end
             } catch (ClassCastException ex) {
                 throw new InvalidPluginException(ex);
             }
@@ -287,6 +278,42 @@ public class JavaPluginLoader implements PluginLoader {
 
         return result;
     }
+
+    // Poseidon start
+    public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException {
+        JarFile jar = null;
+        InputStream stream = null;
+
+        try {
+            jar = new JarFile(file);
+            JarEntry entry = jar.getJarEntry("plugin.yml");
+
+            if (entry == null) {
+                throw new InvalidDescriptionException(new FileNotFoundException("Jar does not contain plugin.yml"));
+            }
+
+            stream = jar.getInputStream(entry);
+            return new PluginDescriptionFile(stream);
+        } catch (IOException ex) {
+            throw new InvalidDescriptionException(ex);
+        } catch (YAMLException ex) {
+            throw new InvalidDescriptionException(ex);
+        } finally {
+            if (jar != null) {
+                try {
+                    jar.close();
+                } catch (IOException e) {
+                }
+            }
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+    // Poseidon end
 
     protected File getDataFolder(File file) {
         File dataFolder = null;

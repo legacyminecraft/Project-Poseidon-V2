@@ -67,9 +67,8 @@ public interface PluginManager {
      * @param file File containing the plugin to load
      * @return The Plugin loaded, or null if it was invalid
      * @throws InvalidPluginException Thrown when the specified file is not a valid plugin
-     * @throws InvalidDescriptionException Thrown when the specified file contains an invalid description
      */
-    @Nullable Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
+    @Nullable Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException; // Poseidon - remove InvalidDescriptionException
 
     /**
      * Loads the plugins contained within the specified directory

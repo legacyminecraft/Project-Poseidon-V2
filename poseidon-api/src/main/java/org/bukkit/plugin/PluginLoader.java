@@ -22,7 +22,7 @@ public interface PluginLoader {
      * unsuccessful
      * @throws InvalidPluginException Thrown when the specified file is not a plugin
      */
-    Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
+    Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException; // Poseidon - remove InvalidDescriptionException
 
     /**
      * Loads the plugin contained in the specified file
@@ -33,7 +33,20 @@ public interface PluginLoader {
      * unsuccessful
      * @throws InvalidPluginException Thrown when the specified file is not a plugin
      */
-    Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException;
+    Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, UnknownDependencyException; // Poseidon - remove InvalidDescriptionException
+
+    // Poseidon start
+    /**
+     * Loads a PluginDescriptionFile from the specified file
+     *
+     * @param file File to attempt to load from
+     * @return A new PluginDescriptionFile loaded from the plugin.yml in the
+     *         specified file
+     * @throws InvalidDescriptionException If the plugin description file
+     *         could not be created
+     */
+    PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException;
+    // Poseidon end
 
     /**
      * Returns a list of all filename filters expected by this PluginLoader
