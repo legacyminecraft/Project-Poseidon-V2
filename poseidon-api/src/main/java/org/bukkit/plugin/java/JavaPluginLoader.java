@@ -281,36 +281,18 @@ public class JavaPluginLoader implements PluginLoader {
 
     // Poseidon start
     public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException {
-        JarFile jar = null;
-        InputStream stream = null;
-
-        try {
-            jar = new JarFile(file);
+        try (JarFile jar = new JarFile(file)) {
             JarEntry entry = jar.getJarEntry("plugin.yml");
 
             if (entry == null) {
                 throw new InvalidDescriptionException(new FileNotFoundException("Jar does not contain plugin.yml"));
             }
 
-            stream = jar.getInputStream(entry);
-            return new PluginDescriptionFile(stream);
-        } catch (IOException ex) {
-            throw new InvalidDescriptionException(ex);
-        } catch (YAMLException ex) {
-            throw new InvalidDescriptionException(ex);
-        } finally {
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch (IOException e) {
-                }
+            try (InputStream stream = jar.getInputStream(entry)) {
+                return new PluginDescriptionFile(stream);
             }
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                }
-            }
+        } catch (IOException | YAMLException ex) {
+            throw new InvalidDescriptionException(ex);
         }
     }
     // Poseidon end

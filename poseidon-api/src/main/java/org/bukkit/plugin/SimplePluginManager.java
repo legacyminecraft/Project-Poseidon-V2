@@ -130,8 +130,7 @@ public final class SimplePluginManager implements PluginManager {
         for (File file : directory.listFiles()) {
             PluginLoader loader = null;
             for (Pattern filter : filters) {
-                Matcher match = filter.matcher(file.getName());
-                if (match.find()) {
+                if (filter.matcher(file.getName()).find()) {
                     loader = fileAssociations.get(filter);
                 }
             }
