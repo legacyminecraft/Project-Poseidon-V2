@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -148,13 +149,17 @@ public final class ProtocolManagerImpl implements ProtocolManager {
     public @Nullable InboundPacket decodePacket(DataInput input) throws IOException {
         Preconditions.checkArgument(input != null, "input cannot be null");
 
-        int packetId = input.readUnsignedByte();
-        InboundRegistration<?> registration = this.inboundRegistrations.get(packetId);
-        if (registration == null) {
-            log.info("Unknown inbound packet id: {}", packetId);
+        try {
+            int packetId = input.readUnsignedByte();
+            InboundRegistration<?> registration = this.inboundRegistrations.get(packetId);
+            if (registration == null) {
+                log.info("Unknown inbound packet id: {}", packetId);
+                return null;
+            }
+            return registration.packetDecoder().decode(input);
+        } catch (EOFException _) {
             return null;
         }
-        return registration.packetDecoder().decode(input);
     }
 
     public void encodePacket(OutboundPacket packet, DataOutput output) throws IOException {
