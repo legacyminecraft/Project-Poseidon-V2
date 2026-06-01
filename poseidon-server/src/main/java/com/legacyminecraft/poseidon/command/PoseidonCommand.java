@@ -1,14 +1,18 @@
 package com.legacyminecraft.poseidon.command;
 
 import com.legacyminecraft.poseidon.Poseidon;
-import com.legacyminecraft.poseidon.config.PoseidonConfig;
+import com.legacyminecraft.poseidon.config.PoseidonGlobalConfig;
+import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.server.World;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.slf4j.Logger;
@@ -91,7 +95,9 @@ public final class PoseidonCommand extends Command {
 
     private int reload(CommandContext<CommandSender> context) {
         try {
-            PoseidonConfig.load();
+            PoseidonGlobalConfig.load();
+            PoseidonWorldConfig.loadDefaults();
+            Bukkit.getWorlds().stream().map(w -> ((CraftWorld) w).getHandle()).forEach(World::reloadConfig);
             context.getSource().sendMessage(ChatColor.GREEN + "Poseidon configuration reloaded.");
         } catch (Throwable e) {
             context.getSource().sendMessage(ChatColor.RED + "An error occured while reloading the configuration");

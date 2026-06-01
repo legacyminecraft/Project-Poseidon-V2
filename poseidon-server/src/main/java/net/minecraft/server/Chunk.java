@@ -1,6 +1,5 @@
 package net.minecraft.server;
 
-import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.world.ChunkSection;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jspecify.annotations.Nullable;
@@ -297,7 +296,7 @@ public class Chunk {
             this.sections[j >> 4].update(k1, b0 & 255); // Poseidon
 
             // Poseidon start - fix liquid piston transmutation
-            if (Poseidon.getConfig().bugFixes.fixPistonGlitches) {
+            if (this.world.getConfig().blocks.fixPistonPhysics) {
                 this.e.a(i, j, k, i1);
                 if (k1 != 0 && !this.world.isStatic) {
                     Block.byId[k1].remove(this.world, l1, j, i2);
@@ -324,7 +323,7 @@ public class Chunk {
 
             this.world.a(EnumSkyBlock.BLOCK, l1, j, i2, l1, j, i2);
             this.c(i, k);
-            if (!Poseidon.getConfig().bugFixes.fixPistonGlitches) { // Poseidon - fix liquid piston transmutation
+            if (!this.world.getConfig().blocks.fixPistonPhysics) { // Poseidon - fix liquid piston transmutation
                 this.e.a(i, j, k, i1);
             }
             if (l != 0) {

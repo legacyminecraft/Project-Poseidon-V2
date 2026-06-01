@@ -1,13 +1,10 @@
 package com.legacyminecraft.poseidon.config;
 
 import com.legacyminecraft.poseidon.config.type.Duration;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.loader.HeaderMode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
-import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.nio.file.Paths;
@@ -15,59 +12,46 @@ import java.security.SecureRandom;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.legacyminecraft.poseidon.config.PoseidonConfigurations.CONFIG_FOLDER;
+import static com.legacyminecraft.poseidon.config.PoseidonConfigurations.GLOBAL_CONFIG_FILE_NAME;
+
 @ConfigSerializable
-public final class PoseidonConfig {
+public final class PoseidonGlobalConfig {
 
     private static final String HEADER = """
-        This is the configuration file for Poseidon.
+        This is the global configuration file for Poseidon.
         As you can see, there's a lot to configure. Some options may impact gameplay, so use
         with caution, and make sure you know what each option does before configuring.
 
         If you need help with the configuration or have any questions related to Poseidon,
         join us in our Discord or check the wiki page.
 
-        File Reference: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki/Configuration
+        File Reference: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki/Global_Configuration
         Wiki: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki
         Discord: https://discord.gg/FwKg676""";
 
-    private static @Nullable PoseidonConfig instance;
+    private static PoseidonGlobalConfig instance;
 
-    public static PoseidonConfig getInstance() {
-        if (instance == null) {
-            load();
-        }
+    public static PoseidonGlobalConfig getInstance() {
         return instance;
     }
 
     public static synchronized void load() {
-        YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
-                .path(Paths.get("poseidon.yml"))
-                .indent(2)
-                .nodeStyle(NodeStyle.BLOCK)
-                .defaultOptions(opt -> opt
-                        .header(HEADER)
-                        .serializers(builder -> builder.register(Duration.SERIALIZER)))
-                .headerMode(HeaderMode.PRESET)
+        YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
+                .path(Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME))
+                .defaultOptions(opt -> opt.header(HEADER))
                 .build();
 
         try {
-            PoseidonConfig config = loader.load().get(PoseidonConfig.class);
-            loader.save(loader.createNode().set(config));
-            instance = config;
+            PoseidonGlobalConfig globalConfig = loader.load().get(PoseidonGlobalConfig.class);
+            loader.save(loader.createNode().set(globalConfig));
+            instance = globalConfig;
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
     }
 
     public UpdateNotifier updateNotifier;
-    public Logging logging;
-    public Performance performance;
-    public Network network;
-    public Services services;
-    public Profiles profiles;
-    public UuidSupport uuidSupport;
-    public NameValidation nameValidation;
-    public BugFixes bugFixes;
 
     @ConfigSerializable
     public static final class UpdateNotifier {
@@ -75,6 +59,8 @@ public final class PoseidonConfig {
         public Duration interval = Duration.of("6h");
         public boolean notifyIsRunningLatestRelease = true;
     }
+
+    public Logging logging;
 
     @ConfigSerializable
     public static final class Logging {
@@ -91,6 +77,8 @@ public final class PoseidonConfig {
             public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
         }
     }
+
+    public Performance performance;
 
     @ConfigSerializable
     public static final class Performance {
@@ -116,12 +104,11 @@ public final class PoseidonConfig {
         }
     }
 
+    public Network network;
+
     @ConfigSerializable
     public static final class Network {
         public ProxySupport proxySupport;
-        public PacketRateLimiting packetRateLimiting;
-        public int chunkPacketCompressionLevel = 6;
-        public int maxChunkPacketsPerTick = 3;
 
         @ConfigSerializable
         public static final class ProxySupport {
@@ -142,19 +129,28 @@ public final class PoseidonConfig {
             }
         }
 
+        public PacketRateLimiting packetRateLimiting;
+
         @ConfigSerializable
         public static final class PacketRateLimiting {
             public boolean enabled = true;
             public int maxPacketRate = 500;
             public Duration interval = Duration.of("7s");
         }
+
+        public int chunkPacketCompressionLevel = 6;
+        public int maxChunkPacketsPerTick = 3;
     }
+
+    public Services services;
 
     @ConfigSerializable
     public static final class Services {
         public String profileHost = "https://api.minecraftservices.com";
         public String sessionHost = "https://sessionserver.mojang.com";
     }
+
+    public Profiles profiles;
 
     @ConfigSerializable
     public static final class Profiles {
@@ -169,10 +165,14 @@ public final class PoseidonConfig {
         }
     }
 
+    public UuidSupport uuidSupport;
+
     @ConfigSerializable
     public static final class UuidSupport {
         public boolean storePlayerDataByUuid = true;
     }
+
+    public NameValidation nameValidation;
 
     @ConfigSerializable
     public static final class NameValidation {
@@ -182,9 +182,10 @@ public final class PoseidonConfig {
         public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
     }
 
+    public Misc misc;
+
     @ConfigSerializable
-    public static final class BugFixes {
-        public boolean fixPistonGlitches = true;
+    public static final class Misc {
         public boolean fixPlayerDeathAnimation = true;
     }
 }

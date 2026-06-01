@@ -2,7 +2,8 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
-import com.legacyminecraft.poseidon.config.PoseidonConfig;
+import com.legacyminecraft.poseidon.config.PoseidonGlobalConfig;
+import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
@@ -91,7 +92,8 @@ public class MinecraftServer implements Runnable, ICommandListener {
         long j = System.nanoTime(); // Poseidon - moved from below
 
         // Poseidon start
-        PoseidonConfig.load();
+        PoseidonGlobalConfig.load();
+        PoseidonWorldConfig.loadDefaults();
         this.poseidonServer = new PoseidonServer();
         Poseidon.setServer(this.poseidonServer);
         // Poseidon end

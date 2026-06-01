@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
 import com.legacyminecraft.poseidon.world.ChunkSection;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -78,6 +79,7 @@ public class World implements IBlockAccess {
     public boolean isStatic;
 
     // Poseidon start
+    private PoseidonWorldConfig worldConfig;
     private final List<Entity> S;
     public final Int2DoubleOpenHashMap explosionDensityCache = new Int2DoubleOpenHashMap();
     // Poseidon end
@@ -129,6 +131,7 @@ public class World implements IBlockAccess {
         this.S = new ObjectArrayList<>(); // Poseidon
         this.isStatic = false;
         this.w = idatamanager;
+        reloadConfig(); // Poseidon - add per-world configuration
         this.worldMaps = new WorldMapCollection(idatamanager);
         this.worldData = idatamanager.c();
         this.s = this.worldData == null;
@@ -160,6 +163,16 @@ public class World implements IBlockAccess {
 
         this.getServer().addWorld(this.world); // CraftBukkit
     }
+
+    // Poseidon start - add per-world configuration
+    public PoseidonWorldConfig getConfig() {
+        return this.worldConfig;
+    }
+
+    public void reloadConfig() {
+        this.worldConfig = PoseidonWorldConfig.load(this.w.a().toPath());
+    }
+    // Poseidon end
 
     protected IChunkProvider b() {
         IChunkLoader ichunkloader = this.w.a(this.worldProvider);

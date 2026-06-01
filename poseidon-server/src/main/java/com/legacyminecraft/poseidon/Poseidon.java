@@ -1,7 +1,7 @@
 package com.legacyminecraft.poseidon;
 
 import com.google.common.base.Preconditions;
-import com.legacyminecraft.poseidon.config.PoseidonConfig;
+import com.legacyminecraft.poseidon.config.PoseidonGlobalConfig;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManagerImpl;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.performance.WatchdogThread;
@@ -25,8 +25,8 @@ public final class Poseidon {
         Poseidon.server = server;
     }
 
-    public static PoseidonConfig getConfig() {
-        return PoseidonConfig.getInstance();
+    public static PoseidonGlobalConfig getConfig() {
+        return PoseidonGlobalConfig.getInstance();
     }
 
     public static PoseidonBuildInformation getBuildInformation() {

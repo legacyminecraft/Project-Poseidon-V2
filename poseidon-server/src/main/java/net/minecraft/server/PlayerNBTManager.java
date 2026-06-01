@@ -55,7 +55,7 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
         }
     }
 
-    protected File a() {
+    public File a() { // Poseidon - protected -> public
         return this.b;
     }
 

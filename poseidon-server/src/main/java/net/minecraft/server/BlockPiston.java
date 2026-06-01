@@ -1,6 +1,5 @@
 package net.minecraft.server;
 
-import com.legacyminecraft.poseidon.Poseidon;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
@@ -39,21 +38,21 @@ public class BlockPiston extends Block {
 
         world.setData(i, j, k, l);
         if (!world.isStatic
-                && (!Poseidon.getConfig().bugFixes.fixPistonGlitches || !ignoreAllUpdates)) { // Poseidon - fix piston merge transmutation
+                && (!world.getConfig().blocks.fixPistonPhysics || !ignoreAllUpdates)) { // Poseidon - fix piston merge transmutation
             this.g(world, i, j, k);
         }
     }
 
     public void doPhysics(World world, int i, int j, int k, int l) {
         if (!world.isStatic
-                && Poseidon.getConfig().bugFixes.fixPistonGlitches ? !ignoreAllUpdates : !this.b) { // Poseidon - fix piston merge transmutation
+                && world.getConfig().blocks.fixPistonPhysics ? !ignoreAllUpdates : !this.b) { // Poseidon - fix piston merge transmutation
             this.g(world, i, j, k);
         }
     }
 
     public void c(World world, int i, int j, int k) {
         if (!world.isStatic && world.getTileEntity(i, j, k) == null
-                && (!Poseidon.getConfig().bugFixes.fixPistonGlitches || !ignoreAllUpdates)) { // Poseidon - fix piston merge transmutation
+                && (!world.getConfig().blocks.fixPistonPhysics || !ignoreAllUpdates)) { // Poseidon - fix piston merge transmutation
             this.g(world, i, j, k);
         }
     }
