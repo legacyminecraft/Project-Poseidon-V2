@@ -7,8 +7,11 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,8 @@ public final class PoseidonGlobalConfig {
         Wiki: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki
         Discord: https://discord.gg/FwKg676""";
 
+    public static boolean isFirstLoad = false;
+
     private static PoseidonGlobalConfig instance;
 
     public static PoseidonGlobalConfig getInstance() {
@@ -37,8 +42,11 @@ public final class PoseidonGlobalConfig {
     }
 
     public static synchronized void load() {
+        Path globalConfigPath = Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME);
+        isFirstLoad = Files.notExists(globalConfigPath);
+
         YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
-                .path(Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME))
+                .path(globalConfigPath)
                 .defaultOptions(opt -> opt.header(HEADER))
                 .build();
 
@@ -69,12 +77,37 @@ public final class PoseidonGlobalConfig {
         public String filePattern = "[%d{yyyy-MM-dd HH:mm:ss}] [%thread/%level]: %msg%n";
         public String file = "server.log";
         public RollingLogFile rollingLogFile;
+        public List<String> redactedCommands = List.of();
 
         @ConfigSerializable
         public static final class RollingLogFile {
             public boolean enabled = false;
             public String latestFile = "logs/latest.log";
             public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
+        }
+
+        @PostProcess
+        private void postProcess() {
+            if (isFirstLoad) {
+                this.redactedCommands = List.of(
+                        "^authme changepassword .*",
+                        "^authme register .*",
+                        "^changepass .*",
+                        "^changepassword .*",
+                        "^changepw .*",
+                        "^cpw .*",
+                        "^l .*",
+                        "^login .*",
+                        "^reg .*",
+                        "^register .*",
+                        "^unregister .*",
+                        "^xauth changepass .*",
+                        "^xauth changepassword .*",
+                        "^xauth changepw .*",
+                        "^xauth cpw .*",
+                        "^xauth register .*"
+                );
+            }
         }
     }
 
@@ -115,11 +148,11 @@ public final class PoseidonGlobalConfig {
             private static final String RANDOM_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             public boolean enabled = false;
             public boolean proxyRequiredToConnect = true;
-            public String secret = null;
+            public String secret = "changeme";
 
             @PostProcess
             private void postProcess() {
-                if (this.secret == null) {
+                if (isFirstLoad) {
                     this.secret = new SecureRandom().ints(0, RANDOM_CHARS.length())
                             .limit(20)
                             .mapToObj(RANDOM_CHARS::charAt)

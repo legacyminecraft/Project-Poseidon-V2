@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,6 +32,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class NetServerHandler extends NetHandler implements ICommandListener {
 
@@ -793,8 +796,15 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         }
 
         try {
-            a.info(event.getPlayer().getName() + " issued server command: " + event.getMessage()); // Poseidon - log commands
-            this.server.dispatchCommand(event.getPlayer(), event.getMessage().substring(1)); // Poseidon - use player and message from event
+            // Poseidon start - log commands
+            String commandString = event.getMessage().substring(1);
+            boolean redact = Poseidon.getConfig().logging.redactedCommands.stream()
+                    .map(regex -> Pattern.compile(regex, Pattern.CASE_INSENSITIVE))
+                    .anyMatch(pattern -> pattern.matcher(commandString).find());
+            String message = redact ? "COMMAND REDACTED" : event.getMessage();
+            a.info(event.getPlayer().getName() + " issued server command: " + message);
+            // Poseidon end
+            this.server.dispatchCommand(event.getPlayer(), commandString); // Poseidon - use player and message from event
         } catch (CommandException ex) {
             player.sendMessage(ChatColor.RED + "An internal error occurred while attempting to perform this command");
             Logger.getLogger(NetServerHandler.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
