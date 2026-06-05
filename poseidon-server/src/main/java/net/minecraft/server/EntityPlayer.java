@@ -50,9 +50,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         int k = chunkcoordinates.y;
 
         if (!world.worldProvider.e) {
-            i += this.random.nextInt(20) - 10;
+            // Poseidon start - configurable spawn randomization radius
+            int radius = world.getConfig().spawnRandomizationRadius;
+            i += this.random.nextInt((radius * 2) + 1) - radius;
+            j += this.random.nextInt((radius * 2) + 1) - radius;
+            // Poseidon end
             k = world.f(i, j);
-            j += this.random.nextInt(20) - 10;
         }
 
         this.setPositionRotation((double) i + 0.5D, k, (double) j + 0.5D, 0.0F, 0.0F);

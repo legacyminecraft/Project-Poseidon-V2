@@ -79,4 +79,6 @@ public final class PoseidonWorldConfig {
     public static final class Blocks {
         public boolean fixPistonPhysics = true;
     }
+
+    public int spawnRandomizationRadius = 10;
 }
