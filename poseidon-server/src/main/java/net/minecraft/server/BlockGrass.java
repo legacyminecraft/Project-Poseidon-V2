@@ -15,7 +15,10 @@ public class BlockGrass extends Block {
 
     public void a(World world, int i, int j, int k, Random random) {
         if (!world.isStatic) {
-            if (world.getLightLevel(i, j + 1, k) < 4 && Block.q[world.getTypeId(i, j + 1, k)] > 2) {
+            // Poseidon start - optimize out unnecessary getLightLevel call
+            int lightAbove = world.getLightLevel(i, j + 1, k);
+            if (lightAbove < 4 && Block.q[world.getTypeId(i, j + 1, k)] > 2) {
+                // Poseidon end
                 if (random.nextInt(4) != 0) {
                     return;
                 }
@@ -32,7 +35,7 @@ public class BlockGrass extends Block {
                     blockState.update(true);
                 }
                 // Poseidon end
-            } else if (world.getLightLevel(i, j + 1, k) >= 9) {
+            } else if (lightAbove >= 9) { // Poseidon - optimize out unnecessary getLightLevel call
                 int l = i + random.nextInt(3) - 1;
                 int i1 = j + random.nextInt(5) - 3;
                 int j1 = k + random.nextInt(3) - 1;
