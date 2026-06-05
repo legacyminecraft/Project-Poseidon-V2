@@ -119,8 +119,10 @@ public class ServerConfigurationManager {
 
         worldserver.chunkProviderServer.getChunkAt((int) entityplayer.locX >> 4, (int) entityplayer.locZ >> 4);
 
-        while (!worldserver.getEntities(entityplayer, entityplayer.boundingBox).isEmpty()) {
-            entityplayer.setPosition(entityplayer.locX, entityplayer.locY + 1.0D, entityplayer.locZ);
+        if (worldserver.getConfig().teleportToHighestSafeBlockOnJoin) { // Poseidon - make teleporting to highest safe block on join configurable
+            while (!worldserver.getEntities(entityplayer, entityplayer.boundingBox).isEmpty()) {
+                entityplayer.setPosition(entityplayer.locX, entityplayer.locY + 1.0D, entityplayer.locZ);
+            }
         }
 
         // CraftBukkit start

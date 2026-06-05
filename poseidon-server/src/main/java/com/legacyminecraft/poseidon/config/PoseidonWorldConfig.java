@@ -81,4 +81,5 @@ public final class PoseidonWorldConfig {
     }
 
     public int spawnRandomizationRadius = 10;
+    public boolean teleportToHighestSafeBlockOnJoin = false;
 }
