@@ -92,6 +92,15 @@ public final class PoseidonWorldConfig {
             public int animals = 15;
             public int waterMobs = 5;
         }
+
+        public MobSpawnerEntityLimit mobSpawnerEntityLimit;
+
+        @ConfigSerializable
+        public static final class MobSpawnerEntityLimit {
+            public boolean enabled = true;
+            public int limit = 150;
+            public int radius = 128;
+        }
     }
 
     public int spawnRandomizationRadius = 10;

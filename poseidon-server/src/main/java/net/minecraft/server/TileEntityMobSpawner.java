@@ -68,6 +68,18 @@ public class TileEntityMobSpawner extends TileEntity {
                         return;
                     }
 
+                    // Poseidon start - add configurable mob spawner entity limit
+                    if (this.world.getConfig().entities.mobSpawnerEntityLimit.enabled) {
+                        double radius = this.world.getConfig().entities.mobSpawnerEntityLimit.radius;
+                        AxisAlignedBB area = AxisAlignedBB.b(this.x - radius, 0.0, this.z - radius, this.x + radius, 128.0, this.z + radius);
+                        int entityCount = this.world.a(entityliving.getClass(), area).size();
+                        if (entityCount >= this.world.getConfig().entities.mobSpawnerEntityLimit.limit) {
+                            this.c();
+                            return;
+                        }
+                    }
+                    // Poseidon end
+
                     if (entityliving != null) {
                         double d3 = (double) this.x + (this.world.random.nextDouble() - this.world.random.nextDouble()) * 4.0D;
                         double d4 = this.y + this.world.random.nextInt(3) - 1;
