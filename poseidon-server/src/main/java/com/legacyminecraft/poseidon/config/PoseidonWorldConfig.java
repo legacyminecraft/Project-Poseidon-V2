@@ -80,6 +80,20 @@ public final class PoseidonWorldConfig {
         public boolean fixPistonPhysics = true;
     }
 
+    public Entities entities;
+
+    @ConfigSerializable
+    public static final class Entities {
+        public MobCaps mobCaps;
+
+        @ConfigSerializable
+        public static final class MobCaps {
+            public int monsters = 70;
+            public int animals = 15;
+            public int waterMobs = 5;
+        }
+    }
+
     public int spawnRandomizationRadius = 10;
     public boolean teleportToHighestSafeBlockOnJoin = false;
 }

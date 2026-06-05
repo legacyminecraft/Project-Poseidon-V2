@@ -60,7 +60,10 @@ public final class SpawnerCreature {
             for (int j1 = 0; j1 < j; ++j1) {
                 EnumCreatureType enumcreaturetype = aenumcreaturetype[j1];
 
-                if ((!enumcreaturetype.d() || flag1) && (enumcreaturetype.d() || flag) && world.a(enumcreaturetype.a()) <= enumcreaturetype.b() * b.size() / 256) {
+                // Poseidon start - make mob caps configurable
+                int mobCap = enumcreaturetype.getMobCap(world);
+                if ((!enumcreaturetype.d() || flag1) && (enumcreaturetype.d() || flag) && world.a(enumcreaturetype.a()) <= mobCap * b.size() / 256) {
+                    // Poseidon end
                     Iterator<ChunkCoordIntPair> iterator = b.iterator();
 
                     label113:
