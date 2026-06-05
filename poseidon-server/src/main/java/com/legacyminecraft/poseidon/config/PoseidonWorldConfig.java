@@ -101,6 +101,15 @@ public final class PoseidonWorldConfig {
             public int limit = 150;
             public int radius = 128;
         }
+
+        public ItemEntityMerging itemEntityMerging;
+
+        @ConfigSerializable
+        public static final class ItemEntityMerging {
+            public boolean enabled = false;
+            public double horizontalRadius = 0.5;
+            public double verticalRadius = 0.25;
+        }
     }
 
     public int spawnRandomizationRadius = 10;

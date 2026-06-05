@@ -64,6 +64,26 @@ public class EntityItem extends Entity {
 
         this.g(this.locX, (this.boundingBox.b + this.boundingBox.e) / 2.0D, this.locZ);
         this.move(this.motX, this.motY, this.motZ);
+
+        // Poseidon start - add item entity merging
+        boolean itemMoved = MathHelper.floor(this.lastX) != MathHelper.floor(this.locX)
+                || MathHelper.floor(this.lastY) != MathHelper.floor(this.locY)
+                || MathHelper.floor(this.lastZ) != MathHelper.floor(this.locZ);
+
+        int rate = itemMoved ? 2 : 40;
+        if (this.ticksLived % rate == 0 && this.world.getConfig().entities.itemEntityMerging.enabled && this.isMergable()) {
+            double horizontalRadius = this.world.getConfig().entities.itemEntityMerging.horizontalRadius;
+            double verticalRadius = this.world.getConfig().entities.itemEntityMerging.verticalRadius;
+            for (Entity entity : this.world.a(EntityItem.class, this.boundingBox.b(horizontalRadius, verticalRadius, horizontalRadius))) {
+                EntityItem entityitem = (EntityItem) entity;
+                tryMerge(entityitem);
+                if (!this.isMergable()) {
+                    break;
+                }
+            }
+        }
+        // Poseidon end
+
         float f = 0.98F;
 
         if (this.onGround) {
@@ -166,4 +186,32 @@ public class EntityItem extends Entity {
             }
         }
     }
+
+    // Poseidon start - add item entity merging
+    public boolean isMergable() {
+        return !this.dead && this.itemStack.count < this.itemStack.getMaxStackSize();
+    }
+
+    public void tryMerge(EntityItem entityitem) {
+        if (entityitem == this || !this.isMergable() || !entityitem.isMergable()) {
+            return;
+        }
+
+        ItemStack item = this.itemStack;
+        ItemStack otherItem = entityitem.itemStack;
+        if (item.doMaterialsMatch(otherItem) && item.count + otherItem.count <= item.getMaxStackSize()) {
+            if (item.count > otherItem.count) {
+                item.count += otherItem.count;
+                this.pickupDelay = Math.max(this.pickupDelay, entityitem.pickupDelay);
+                this.b = Math.min(this.b, entityitem.b);
+                entityitem.die();
+            } else {
+                otherItem.count += item.count;
+                entityitem.pickupDelay = Math.max(this.pickupDelay, entityitem.pickupDelay);
+                entityitem.b = Math.min(this.b, entityitem.b);
+                this.die();
+            }
+        }
+    }
+    // Poseidon end
 }
