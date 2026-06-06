@@ -14,7 +14,9 @@ import com.legacyminecraft.poseidon.util.InternalBukkitAccess;
 import com.legacyminecraft.poseidon.version.PoseidonBuildInformation;
 import com.legacyminecraft.poseidon.version.PoseidonUpdateNotifier;
 import org.bukkit.Bukkit;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.util.permissions.DefaultPermissions;
 
 public final class PoseidonServer {
 
@@ -48,6 +50,18 @@ public final class PoseidonServer {
         pluginManager.registerEvents(PacketRateLimiter.LISTENER, InternalBukkitAccess.INSTANCE);
         pluginManager.registerEvents(PingCalculator.LISTENER, InternalBukkitAccess.INSTANCE);
         pluginManager.registerEvents(ProxyHelloPacketListener.INSTANCE, InternalBukkitAccess.INSTANCE);
+        DefaultPermissions.registerPermission(
+                "poseidon.anticheat.quick-movement-flagging.bypass",
+                "Allows a player to bypass the server's quick movement flagging",
+                PermissionDefault.OP);
+        DefaultPermissions.registerPermission(
+                "poseidon.anticheat.wrong-movement-flagging.bypass",
+                "Allows a player to bypass the server's wrong movement flagging",
+                PermissionDefault.OP);
+        DefaultPermissions.registerPermission(
+                "poseidon.anticheat.flight-flagging.bypass",
+                "Allows a player to bypass the server's flight flagging",
+                PermissionDefault.OP);
     }
 
     public void postInitialize() {

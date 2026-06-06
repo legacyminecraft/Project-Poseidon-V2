@@ -73,6 +73,34 @@ public final class PoseidonWorldConfig {
         }
     }
 
+    public Anticheat anticheat;
+
+    @ConfigSerializable
+    public static final class Anticheat {
+        public QuickMovementFlagging quickMovementFlagging;
+
+        @ConfigSerializable
+        public static final class QuickMovementFlagging {
+            public boolean enabled = true;
+            public double threshold = 200.0;
+            public MovementFlagAction action = MovementFlagAction.KICK;
+        }
+
+        public WrongMovementFlagging wrongMovementFlagging;
+
+        @ConfigSerializable
+        public static final class WrongMovementFlagging {
+            public boolean enabled = true;
+            public double threshold = 0.0625;
+            public MovementFlagAction action = MovementFlagAction.TELEPORT_BACK;
+        }
+
+        public enum MovementFlagAction {
+            KICK,
+            TELEPORT_BACK
+        }
+    }
+
     public Blocks blocks;
 
     @ConfigSerializable

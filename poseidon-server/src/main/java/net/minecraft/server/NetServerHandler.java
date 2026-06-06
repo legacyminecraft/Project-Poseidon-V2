@@ -364,11 +364,20 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             double d7 = d3 - this.player.locZ;
             double d8 = d4 * d4 + d6 * d6 + d7 * d7;
 
-            if (d8 > 200.0D && this.checkMovement) { // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
-                a.warning(this.player.name + " moved too quickly!");
-                this.disconnect("You moved too quickly :( (Hacking?)");
+            // Poseidon start - configurable quick movement flagging
+            if (worldserver.getConfig().anticheat.quickMovementFlagging.enabled
+                    && d8 > worldserver.getConfig().anticheat.quickMovementFlagging.threshold
+                    && this.checkMovement // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
+                    && !getPlayer().hasPermission("poseidon.anticheat.quick-movement-flagging.bypass")) {
+
+                a.warning(this.player.name + " moved too quickly! " + d4 + "," + d6 + "," + d7 + " (" + d4 + ", " + d6 + ", " + d7 + ")");
+                switch (worldserver.getConfig().anticheat.quickMovementFlagging.action) {
+                    case KICK -> this.disconnect("You moved too quickly :( (Hacking?)");
+                    case TELEPORT_BACK -> this.a(this.x, this.y, this.z, this.player.yaw, this.player.pitch);
+                }
                 return;
             }
+            // Poseidon end
 
             float f4 = 0.0625F;
             boolean flag = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).isEmpty();
@@ -382,26 +391,38 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
             d7 = d3 - this.player.locZ;
             d8 = d4 * d4 + d6 * d6 + d7 * d7;
-            boolean flag1 = false;
 
-            if (d8 > 0.0625D && !this.player.isSleeping()) {
-                flag1 = true;
+            // Poseidon start - configurable wrong movement flagging
+            //boolean flag1 = false;
+            if (worldserver.getConfig().anticheat.wrongMovementFlagging.enabled
+                    && d8 > worldserver.getConfig().anticheat.wrongMovementFlagging.threshold
+                    && !this.player.isSleeping()
+                    && !getPlayer().hasPermission("poseidon.anticheat.wrong-movement-flagging.bypass")) {
+
                 a.warning(this.player.name + " moved wrongly!");
-                System.out.println("Got position " + d1 + ", " + d2 + ", " + d3);
-                System.out.println("Expected " + this.player.locX + ", " + this.player.locY + ", " + this.player.locZ);
+                a.warning("Got position " + d1 + ", " + d2 + ", " + d3);
+                a.warning("Expected " + this.player.locX + ", " + this.player.locY + ", " + this.player.locZ);
+                switch (worldserver.getConfig().anticheat.wrongMovementFlagging.action) {
+                    case KICK -> this.disconnect("You moved wrongly (Hacking?)");
+                    case TELEPORT_BACK -> this.a(this.x, this.y, this.z, f2, f3);
+                }
+                return;
             }
+            // Poseidon end
 
             this.player.setLocation(d1, d2, d3, f2, f3);
             boolean flag2 = worldserver.getEntities(this.player, this.player.boundingBox.clone().shrink(f4, f4, f4)).isEmpty();
 
-            if (flag && (flag1 || !flag2) && !this.player.isSleeping()) {
+            if (flag && !flag2 && !this.player.isSleeping()) { // Poseidon
                 this.a(this.x, this.y, this.z, f2, f3);
                 return;
             }
 
             AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().b(f4, f4, f4).a(0.0D, -0.55D, 0.0D);
 
-            if (!this.minecraftServer.allowFlight && !worldserver.b(axisalignedbb)) {
+            if (!this.minecraftServer.allowFlight
+                    && !worldserver.b(axisalignedbb)
+                    && !getPlayer().hasPermission("poseidon.anticheat.flight-flagging.bypass")) { // Poseidon - add bypass permission
                 if (d6 >= -0.03125D) {
                     ++this.h;
                     if (this.h > 80) {
