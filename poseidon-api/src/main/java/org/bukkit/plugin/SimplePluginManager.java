@@ -19,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -146,14 +147,14 @@ public final class SimplePluginManager implements PluginManager {
                             // We have a dependency not found
                         } else if (!files.plugins.containsKey(dependency)) {
                             missingDependency = false;
-                            File file = files.plugins.get(plugin);
+                            Path path = files.plugins.get(plugin);
                             pluginIterator.remove();
                             files.softDependencies.remove(plugin);
                             files.dependencies.remove(plugin);
 
                             server.getLogger().log(
                                     Level.SEVERE,
-                                    "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'",
+                                    "Could not load '" + path + "' in folder '" + directory.getPath() + "'",
                                     new UnknownDependencyException(dependency));
                             break;
                         }
@@ -181,15 +182,15 @@ public final class SimplePluginManager implements PluginManager {
                 }
                 if (!(files.dependencies.containsKey(plugin) || files.softDependencies.containsKey(plugin)) && files.plugins.containsKey(plugin)) {
                     // We're clear to load, no more soft or hard dependencies left
-                    File file = files.plugins.get(plugin);
+                    Path path = files.plugins.get(plugin);
                     pluginIterator.remove();
                     missingDependency = false;
 
                     try {
-                        result.add(loadPlugin(file));
+                        result.add(loadPlugin(path.toFile()));
                         loadedPlugins.add(plugin);
                     } catch (InvalidPluginException | UnknownDependencyException ex) {
-                        server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                        server.getLogger().log(Level.SEVERE, "Could not load '" + path + "' in folder '" + directory.getPath() + "'", ex);
                     }
                 }
             }
@@ -205,15 +206,15 @@ public final class SimplePluginManager implements PluginManager {
                     if (!files.dependencies.containsKey(plugin)) {
                         files.softDependencies.remove(plugin);
                         missingDependency = false;
-                        File file = files.plugins.get(plugin);
+                        Path path = files.plugins.get(plugin);
                         pluginIterator.remove();
 
                         try {
-                            result.add(loadPlugin(file));
+                            result.add(loadPlugin(path.toFile()));
                             loadedPlugins.add(plugin);
                             break;
                         } catch (InvalidPluginException | UnknownDependencyException ex) {
-                            server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                            server.getLogger().log(Level.SEVERE, "Could not load '" + path + "' in folder '" + directory.getPath() + "'", ex);
                         }
                     }
                 }
@@ -221,23 +222,22 @@ public final class SimplePluginManager implements PluginManager {
                 if (missingDependency) {
                     files.softDependencies.clear();
                     files.dependencies.clear();
-                    Iterator<File> failedPluginIterator = files.plugins.values().iterator();
+                    Iterator<Path> failedPluginIterator = files.plugins.values().iterator();
 
                     while (failedPluginIterator.hasNext()) {
-                        File file = failedPluginIterator.next();
+                        Path path = failedPluginIterator.next();
                         failedPluginIterator.remove();
-                        server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': circular dependency detected");
+                        server.getLogger().log(Level.SEVERE, "Could not load '" + path + "' in folder '" + directory.getPath() + "': circular dependency detected");
                     }
                 }
             }
         }
-        // Poseidon end
 
         return result.toArray(new Plugin[result.size()]);
     }
 
-    public PluginFiles listPlugins(File directory, Set<Pattern> filters) { // Poseidon
-        Map<String, File> plugins = new HashMap<>();
+    PluginFiles listPlugins(File directory, Set<Pattern> filters) {
+        Map<String, Path> plugins = new HashMap<>();
         Map<String, Collection<String>> dependencies = new HashMap<>();
         Map<String, Collection<String>> softDependencies = new HashMap<>();
 
@@ -249,7 +249,9 @@ public final class SimplePluginManager implements PluginManager {
                 }
             }
 
-            if (loader == null) continue;
+            if (loader == null) {
+                continue;
+            }
 
             PluginDescriptionFile description;
             try {
@@ -259,13 +261,13 @@ public final class SimplePluginManager implements PluginManager {
                 continue;
             }
 
-            File replacedFile = plugins.put(description.getName(), file);
+            Path replacedFile = plugins.put(description.getName(), file.toPath());
             if (replacedFile != null) {
                 server.getLogger().severe(String.format(
                     "Ambiguous plugin name `%s' for files `%s' and `%s' in `%s'",
                     description.getName(),
                     file.getPath(),
-                    replacedFile.getPath(),
+                    replacedFile,
                     directory.getPath()
                 ));
             }
@@ -302,6 +304,14 @@ public final class SimplePluginManager implements PluginManager {
 
         return new PluginFiles(plugins, dependencies, softDependencies);
     }
+
+    record PluginFiles(
+            Map<String, Path> plugins,
+            Map<String, Collection<String>> dependencies,
+            Map<String, Collection<String>> softDependencies
+    ) {
+    }
+    // Poseidon end
 
     /**
      * Loads the plugin in the specified file
@@ -728,10 +738,4 @@ public final class SimplePluginManager implements PluginManager {
     public Set<Permission> getPermissions() {
         return new HashSet<>(permissions.values());
     }
-
-    public record PluginFiles(
-        Map<String, File> plugins,
-        Map<String, Collection<String>> dependencies,
-        Map<String, Collection<String>> softDependencies
-    ) {}
 }
