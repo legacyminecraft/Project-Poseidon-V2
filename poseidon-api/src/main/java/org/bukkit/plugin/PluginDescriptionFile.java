@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -22,8 +23,9 @@ public final class PluginDescriptionFile {
     private static final Yaml yaml = new Yaml(new SafeConstructor());
     private String name = null;
     private String main = null;
-    private @Nullable ArrayList<String> depend = null;
-    private @Nullable ArrayList<String> softDepend = null;
+    private List<String> depend = List.of(); // Poseidon - ArrayList -> List
+    private List<String> softDepend = List.of(); // Poseidon - ArrayList -> List
+    private List<String> loadBefore = List.of(); // Poseidon
     private String version = null;
     private @Nullable Object commands = null;
     private @Nullable String description = null;
@@ -109,13 +111,19 @@ public final class PluginDescriptionFile {
         return commands;
     }
 
-    public @Nullable Object getDepend() {
+    public List<String> getDepend() { // Poseidon - Object -> List<String>
         return depend;
     }
 
-    public @Nullable Object getSoftDepend() {
+    public List<String> getSoftDepend() { // Poseidon - Object -> List<String>
         return softDepend;
     }
+
+    // Poseidon start - backport loadbefore field
+    public List<String> getLoadBefore() {
+        return loadBefore;
+    }
+    // Poseidon end
 
     public PluginLoadOrder getLoad() {
         return order;
@@ -203,7 +211,7 @@ public final class PluginDescriptionFile {
 
         if (map.containsKey("depend")) {
             try {
-                depend = (ArrayList<String>) map.get("depend");
+                depend = List.copyOf((List<String>) map.get("depend")); // Poseidon - immutable list
             } catch (ClassCastException ex) {
                 throw new InvalidDescriptionException(ex, "depend is of wrong type");
             }
@@ -211,11 +219,21 @@ public final class PluginDescriptionFile {
 
         if (map.containsKey("softdepend")) {
             try {
-                softDepend = (ArrayList<String>) map.get("softdepend");
+                softDepend = List.copyOf((List<String>) map.get("softdepend")); // Poseidon - immutable list
             } catch (ClassCastException ex) {
                 throw new InvalidDescriptionException(ex, "softdepend is of wrong type");
             }
         }
+
+        // Poseidon start
+        if (map.containsKey("loadbefore")) {
+            try {
+                loadBefore = List.copyOf((List<String>) map.get("loadbefore"));
+            } catch (ClassCastException ex) {
+                throw new InvalidDescriptionException(ex, "loadbefore is of wrong type");
+            }
+        }
+        // Poseidon end
 
         if (map.containsKey("database")) {
             try {
@@ -310,6 +328,11 @@ public final class PluginDescriptionFile {
         if (softDepend != null) {
             map.put("softdepend", softDepend);
         }
+        // Poseidon start
+        if (loadBefore != null) {
+            map.put("loadbefore", loadBefore);
+        }
+        // Poseidon end
         if (website != null) {
             map.put("website", website);
         }

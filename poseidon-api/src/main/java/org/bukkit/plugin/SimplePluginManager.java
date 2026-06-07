@@ -19,8 +19,9 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -114,58 +115,203 @@ public final class SimplePluginManager implements PluginManager {
      */
     public Plugin[] loadPlugins(File directory) {
         List<Plugin> result = new ArrayList<>();
-        File[] files = directory.listFiles();
-
-        boolean allFailed = false;
-        boolean finalPass = false;
-
-        LinkedList<File> filesList = new LinkedList<>(Arrays.asList(files));
+        Set<Pattern> filters = fileAssociations.keySet();
 
         if (!(server.getUpdateFolder().equals(""))) {
             updateDirectory = new File(directory, server.getUpdateFolder());
         }
 
-        while (!allFailed || finalPass) {
-            allFailed = true;
-            Iterator<File> itr = filesList.iterator();
+        // Poseidon start - backport plugin load ordering from newer Bukkit
+        Set<String> loadedPlugins = new HashSet<>();
 
-            while (itr.hasNext()) {
-                File file = itr.next();
-                Plugin plugin = null;
+        // This is where it figures out all possible plugins
+        PluginFiles files = listPlugins(directory, filters);
 
-                try {
-                    plugin = loadPlugin(file, finalPass);
-                    itr.remove();
-                } catch (UnknownDependencyException ex) {
-                    if (finalPass) {
-                        server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': " + ex.getMessage(), ex);
-                        itr.remove();
-                    } else {
-                        plugin = null;
+        while (!files.plugins.isEmpty()) {
+            boolean missingDependency = true;
+            Iterator<String> pluginIterator = files.plugins.keySet().iterator();
+
+            while (pluginIterator.hasNext()) {
+                String plugin = pluginIterator.next();
+
+                if (files.dependencies.containsKey(plugin)) {
+                    Iterator<String> dependencyIterator = files.dependencies.get(plugin).iterator();
+
+                    while (dependencyIterator.hasNext()) {
+                        String dependency = dependencyIterator.next();
+
+                        // Dependency loaded
+                        if (loadedPlugins.contains(dependency)) {
+                            dependencyIterator.remove();
+
+                            // We have a dependency not found
+                        } else if (!files.plugins.containsKey(dependency)) {
+                            missingDependency = false;
+                            Path path = files.plugins.get(plugin);
+                            pluginIterator.remove();
+                            files.softDependencies.remove(plugin);
+                            files.dependencies.remove(plugin);
+
+                            server.getLogger().log(
+                                    Level.SEVERE,
+                                    "Could not load '" + path + "' in folder '" + directory.getPath() + "'",
+                                    new UnknownDependencyException(dependency));
+                            break;
+                        }
                     }
-                } catch (InvalidPluginException ex) {
-                    server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': ", ex.getCause());
-                    itr.remove();
-                } catch (InvalidDescriptionException ex) {
-                    server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': " + ex.getMessage(), ex);
-                    itr.remove();
-                }
 
-                if (plugin != null) {
-                    result.add(plugin);
-                    allFailed = false;
-                    finalPass = false;
+                    if (files.dependencies.containsKey(plugin) && files.dependencies.get(plugin).isEmpty()) {
+                        files.dependencies.remove(plugin);
+                    }
+                }
+                if (files.softDependencies.containsKey(plugin)) {
+                    Iterator<String> softDependencyIterator = files.softDependencies.get(plugin).iterator();
+
+                    while (softDependencyIterator.hasNext()) {
+                        String softDependency = softDependencyIterator.next();
+
+                        // Soft depend is no longer around
+                        if (!files.plugins.containsKey(softDependency)) {
+                            softDependencyIterator.remove();
+                        }
+                    }
+
+                    if (files.softDependencies.get(plugin).isEmpty()) {
+                        files.softDependencies.remove(plugin);
+                    }
+                }
+                if (!(files.dependencies.containsKey(plugin) || files.softDependencies.containsKey(plugin)) && files.plugins.containsKey(plugin)) {
+                    // We're clear to load, no more soft or hard dependencies left
+                    Path path = files.plugins.get(plugin);
+                    pluginIterator.remove();
+                    missingDependency = false;
+
+                    try {
+                        result.add(loadPlugin(path.toFile()));
+                        loadedPlugins.add(plugin);
+                    } catch (InvalidPluginException | UnknownDependencyException ex) {
+                        server.getLogger().log(Level.SEVERE, "Could not load '" + path + "' in folder '" + directory.getPath() + "'", ex);
+                    }
                 }
             }
-            if (finalPass) {
-                break;
-            } else if (allFailed) {
-                finalPass = true;
+
+            if (missingDependency) {
+                // We now iterate over plugins until something loads
+                // This loop will ignore soft dependencies
+                pluginIterator = files.plugins.keySet().iterator();
+
+                while (pluginIterator.hasNext()) {
+                    String plugin = pluginIterator.next();
+
+                    if (!files.dependencies.containsKey(plugin)) {
+                        files.softDependencies.remove(plugin);
+                        missingDependency = false;
+                        Path path = files.plugins.get(plugin);
+                        pluginIterator.remove();
+
+                        try {
+                            result.add(loadPlugin(path.toFile()));
+                            loadedPlugins.add(plugin);
+                            break;
+                        } catch (InvalidPluginException | UnknownDependencyException ex) {
+                            server.getLogger().log(Level.SEVERE, "Could not load '" + path + "' in folder '" + directory.getPath() + "'", ex);
+                        }
+                    }
+                }
+                // We have no plugins left without a depend
+                if (missingDependency) {
+                    files.softDependencies.clear();
+                    files.dependencies.clear();
+                    Iterator<Path> failedPluginIterator = files.plugins.values().iterator();
+
+                    while (failedPluginIterator.hasNext()) {
+                        Path path = failedPluginIterator.next();
+                        failedPluginIterator.remove();
+                        server.getLogger().log(Level.SEVERE, "Could not load '" + path + "' in folder '" + directory.getPath() + "': circular dependency detected");
+                    }
+                }
             }
         }
 
         return result.toArray(new Plugin[result.size()]);
     }
+
+    PluginFiles listPlugins(File directory, Set<Pattern> filters) {
+        Map<String, Path> plugins = new HashMap<>();
+        Map<String, Collection<String>> dependencies = new HashMap<>();
+        Map<String, Collection<String>> softDependencies = new HashMap<>();
+
+        for (File file : directory.listFiles()) {
+            PluginLoader loader = null;
+            for (Pattern filter : filters) {
+                if (filter.matcher(file.getName()).find()) {
+                    loader = fileAssociations.get(filter);
+                }
+            }
+
+            if (loader == null) {
+                continue;
+            }
+
+            PluginDescriptionFile description;
+            try {
+                description = loader.getPluginDescription(file);
+            } catch (InvalidDescriptionException ex) {
+                server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+                continue;
+            }
+
+            Path replacedFile = plugins.put(description.getName(), file.toPath());
+            if (replacedFile != null) {
+                server.getLogger().severe(String.format(
+                    "Ambiguous plugin name `%s' for files `%s' and `%s' in `%s'",
+                    description.getName(),
+                    file.getPath(),
+                    replacedFile,
+                    directory.getPath()
+                ));
+            }
+
+            Collection<String> softDependencySet = description.getSoftDepend();
+            if (softDependencySet != null && !softDependencySet.isEmpty()) {
+                if (softDependencies.containsKey(description.getName())) {
+                    // Duplicates do not matter, they will be removed together if applicable
+                    softDependencies.get(description.getName()).addAll(softDependencySet);
+                } else {
+                    softDependencies.put(description.getName(), new LinkedList<>(softDependencySet));
+                }
+            }
+
+            Collection<String> dependencySet = description.getDepend();
+            if (dependencySet != null && !dependencySet.isEmpty()) {
+                dependencies.put(description.getName(), new LinkedList<>(dependencySet));
+            }
+
+            Collection<String> loadBeforeSet = description.getLoadBefore();
+            if (loadBeforeSet != null && !loadBeforeSet.isEmpty()) {
+                for (String loadBeforeTarget : loadBeforeSet) {
+                    if (softDependencies.containsKey(loadBeforeTarget)) {
+                        softDependencies.get(loadBeforeTarget).add(description.getName());
+                    } else {
+                        // softDependencies is never iterated, so 'ghost' plugins aren't an issue
+                        Collection<String> shortSoftDependency = new LinkedList<>();
+                        shortSoftDependency.add(description.getName());
+                        softDependencies.put(loadBeforeTarget, shortSoftDependency);
+                    }
+                }
+            }
+        }
+
+        return new PluginFiles(plugins, dependencies, softDependencies);
+    }
+
+    record PluginFiles(
+            Map<String, Path> plugins,
+            Map<String, Collection<String>> dependencies,
+            Map<String, Collection<String>> softDependencies
+    ) {
+    }
+    // Poseidon end
 
     /**
      * Loads the plugin in the specified file
@@ -175,9 +321,8 @@ public final class SimplePluginManager implements PluginManager {
      * @param file File containing the plugin to load
      * @return The Plugin loaded, or null if it was invalid
      * @throws InvalidPluginException Thrown when the specified file is not a valid plugin
-     * @throws InvalidDescriptionException Thrown when the specified file contains an invalid description
      */
-    public synchronized @Nullable Plugin loadPlugin(File file) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
+    public synchronized @Nullable Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException { // Poseidon - remove InvalidDescriptionException
         return loadPlugin(file, true);
     }
 
@@ -190,9 +335,8 @@ public final class SimplePluginManager implements PluginManager {
      * @param ignoreSoftDependencies Loader will ignore soft dependencies if this flag is set to true
      * @return The Plugin loaded, or null if it was invalid
      * @throws InvalidPluginException Thrown when the specified file is not a valid plugin
-     * @throws InvalidDescriptionException Thrown when the specified file contains an invalid description
      */
-    public synchronized @Nullable Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, InvalidDescriptionException, UnknownDependencyException {
+    public synchronized @Nullable Plugin loadPlugin(File file, boolean ignoreSoftDependencies) throws InvalidPluginException, UnknownDependencyException { // Poseidon - remove InvalidDescriptionException
         File updateFile = null;
 
         if (updateDirectory != null && updateDirectory.isDirectory() && (updateFile = new File(updateDirectory, file.getName())).isFile()) {
@@ -288,9 +432,12 @@ public final class SimplePluginManager implements PluginManager {
     }
 
     public void disablePlugins() {
-        for (Plugin plugin: getPlugins()) {
-            disablePlugin(plugin);
+        // Poseidon start - reverse disabling order
+        Plugin[] plugins = getPlugins();
+        for (int i = plugins.length - 1; i >= 0; i--) {
+            disablePlugin(plugins[i]);
         }
+        // Poseidon end
     }
 
     public void disablePlugin(final Plugin plugin) {
