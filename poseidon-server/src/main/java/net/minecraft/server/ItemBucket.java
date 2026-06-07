@@ -134,13 +134,11 @@ public class ItemBucket extends Item {
                             }
                         } else {
                             // Poseidon start - correctly drop block when a source is placed inside of it
-                            if (this.l(world, i, j, k)) {
-                                int l1 = world.getTypeId(i, j, k);
-                                if (l1 > 0 && this.a != Block.LAVA.id) {
-                                    Block.byId[l1].g(world, i, j, k, world.getData(i, j, k));
-                                }
-                                world.setTypeIdAndData(i, j, k, this.a, 0);
+                            int l1 = world.getTypeId(i, j, k);
+                            if (l1 > 0 && this.a != Block.LAVA.id) {
+                                Block.byId[l1].g(world, i, j, k, world.getData(i, j, k));
                             }
+                            world.setTypeIdAndData(i, j, k, this.a, 0);
                             // Poseidon end
                         }
 
@@ -170,21 +168,4 @@ public class ItemBucket extends Item {
 
         return itemstack;
     }
-
-    // Poseidon start - code copied from BlockFlowing.java
-    private boolean l(World world, int i, int j, int k) {
-        int material = world.getTypeId(i, j, k);
-        return material != this.a && material != Block.LAVA.id && !this.k(world, i, j, k);
-    }
-
-    private boolean k(World world, int i, int j, int k) {
-        int l = world.getTypeId(i, j, k);
-        if (l == 0) {
-            return false;
-        } else {
-            Material material = Block.byId[l].material;
-            return material.isSolid();
-        }
-    }
-    // Poseidon end
 }
