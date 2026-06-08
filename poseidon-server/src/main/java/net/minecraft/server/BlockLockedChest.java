@@ -18,6 +18,8 @@ public class BlockLockedChest extends Block {
     }
 
     public void a(World world, int i, int j, int k, Random random) {
-        world.setTypeId(i, j, k, 0);
+        if (world.getConfig().blocks.lockedChestsDecay) { // Poseidon
+            world.setTypeId(i, j, k, 0);
+        }
     }
 }

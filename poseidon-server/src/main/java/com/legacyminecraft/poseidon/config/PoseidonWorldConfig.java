@@ -111,6 +111,7 @@ public final class PoseidonWorldConfig {
     public static final class Blocks {
         public boolean fixPistonPhysics = true;
         public boolean spongesTriggerBlockUpdates = false;
+        public boolean lockedChestsDecay = true;
     }
 
     public Chunks chunks;
