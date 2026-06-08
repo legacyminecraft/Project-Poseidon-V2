@@ -118,6 +118,7 @@ public final class PoseidonWorldConfig {
     public static final class Chunks {
         @PositiveOrZero
         public int chunkTickingRange = 9;
+        public boolean regenerateCorruptChunks = false;
     }
 
     public Entities entities;

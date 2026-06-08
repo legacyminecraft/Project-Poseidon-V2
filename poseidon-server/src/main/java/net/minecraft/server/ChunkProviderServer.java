@@ -8,10 +8,14 @@ import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.generator.BlockPopulator;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
 public class ChunkProviderServer implements IChunkProvider {
+
+    private static final Logger log = LoggerFactory.getLogger(ChunkProviderServer.class); // Poseidon
 
     // CraftBukkit start
     public LongLinkedOpenHashSet unloadQueue = new LongLinkedOpenHashSet(); // Poseidon - LongHashset -> LongLinkedOpenHashSet
@@ -107,11 +111,22 @@ public class ChunkProviderServer implements IChunkProvider {
         // CraftBukkit start
         Chunk chunk = this.chunks.get(ChunkPos.of(i, j)); // Poseidon
 
-        chunk = chunk == null ? (!this.world.isLoading && !this.forceChunkLoad ? this.emptyChunk : this.getChunkAt(i, j)) : chunk;
+        try {
+            chunk = chunk == null ? (!this.world.isLoading && !this.forceChunkLoad ? this.emptyChunk : this.getChunkAt(i, j)) : chunk;
+        } catch (Exception e) {
+            // Poseidon start - regenerate corrupt chunks
+            log.error("Error occurred while loading chunk ({}, {})", i, j, e);
+            if (this.world.getConfig().chunks.regenerateCorruptChunks) {
+                log.info("Regenerating chunk ({}, {})", i, j);
+                chunk = this.emptyChunk;
+            }
+            // Poseidon end
+        }
+
         if (chunk == this.emptyChunk) return chunk;
         if (i != chunk.x || j != chunk.z) {
-            MinecraftServer.log.info("Chunk (" + chunk.x + ", " + chunk.z + ") stored at  (" + i + ", " + j + ")");
-            MinecraftServer.log.info(chunk.getClass().getName());
+            // Poseidon - use slf4j logger
+            log.error("Chunk ({}, {}) stored at ({}, {})", chunk.x, chunk.z, i, j);
             Throwable ex = new Throwable();
             ex.fillInStackTrace();
             ex.printStackTrace();
