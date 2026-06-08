@@ -2023,10 +2023,11 @@ public class World implements IBlockAccess {
 
             i = MathHelper.floor(entityhuman.locX / 16.0D);
             j = MathHelper.floor(entityhuman.locZ / 16.0D);
-            byte b0 = 9;
+            // Poseidon - configurable chunk ticking range
+            int range = Math.min(getConfig().chunks.chunkTickingRange, getServer().getViewDistance());
 
-            for (k = -b0; k <= b0; ++k) {
-                for (l = -b0; l <= b0; ++l) {
+            for (k = -range; k <= range; ++k) {
+                for (l = -range; l <= range; ++l) {
                     this.P.add(new ChunkCoordIntPair(k + i, l + j));
                 }
             }
@@ -2048,7 +2049,8 @@ public class World implements IBlockAccess {
             int k1;
             int l1;
 
-            if (this.Q == 0) {
+            // Poseidon start - remove
+            /*if (this.Q == 0) {
                 this.g = this.g * 3 + 1013904223;
                 k = this.g >> 2;
                 l = k & 15;
@@ -2065,7 +2067,8 @@ public class World implements IBlockAccess {
                         this.Q = this.random.nextInt(12000) + 6000;
                     }
                 }
-            }
+            }*/
+            // Poseidon end
 
             if (this.random.nextInt(100000) == 0 && this.v() && this.u()) {
                 this.g = this.g * 3 + 1013904223;

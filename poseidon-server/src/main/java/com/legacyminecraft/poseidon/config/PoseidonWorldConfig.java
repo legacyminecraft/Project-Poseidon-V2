@@ -108,6 +108,13 @@ public final class PoseidonWorldConfig {
         public boolean fixPistonPhysics = true;
     }
 
+    public Chunks chunks;
+
+    @ConfigSerializable
+    public static final class Chunks {
+        public int chunkTickingRange = 9;
+    }
+
     public Entities entities;
 
     @ConfigSerializable
