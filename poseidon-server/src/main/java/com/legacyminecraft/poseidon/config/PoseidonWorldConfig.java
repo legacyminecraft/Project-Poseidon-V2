@@ -130,6 +130,7 @@ public final class PoseidonWorldConfig {
             public int radius = 128;
         }
 
+        public int mobSpawningRange = 8;
         public ItemEntityMerging itemEntityMerging;
 
         @ConfigSerializable

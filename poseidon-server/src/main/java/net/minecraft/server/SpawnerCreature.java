@@ -42,10 +42,11 @@ public final class SpawnerCreature {
                 int k = MathHelper.floor(entityhuman.locX / 16.0D);
 
                 j = MathHelper.floor(entityhuman.locZ / 16.0D);
-                byte b0 = 8;
+                // Poseidon - configurable mob spawning range
+                int range = Math.min(world.getConfig().entities.mobSpawningRange, world.getServer().getViewDistance());
 
-                for (int l = -b0; l <= b0; ++l) {
-                    for (int i1 = -b0; i1 <= b0; ++i1) {
+                for (int l = -range; l <= range; ++l) {
+                    for (int i1 = -range; i1 <= range; ++i1) {
                         b.add(new ChunkCoordIntPair(l + k, i1 + j));
                     }
                 }
