@@ -76,7 +76,7 @@ public class World implements IBlockAccess {
     public boolean allowMonsters = true; // CraftBukkit - private -> public
     public boolean allowAnimals = true; // CraftBukkit - private -> public
     static int A = 0;
-    private Set<ChunkCoordIntPair> P = new HashSet<>();
+    //private Set<ChunkCoordIntPair> P = new HashSet<>(); // Poseidon - remove
     private int Q;
     private List<Entity> R;
     public boolean isStatic;
@@ -2007,7 +2007,7 @@ public class World implements IBlockAccess {
     }
 
     protected void j() {
-        this.P.clear();
+        //this.P.clear(); // Poseidon
 
         int i;
         int j;
@@ -2024,28 +2024,27 @@ public class World implements IBlockAccess {
 
             for (k = -range; k <= range; ++k) {
                 for (l = -range; l <= range; ++l) {
-                    this.P.add(new ChunkCoordIntPair(k + i, l + j));
+                    tickChunk(k + i, l + j); // Poseidon - tick chunks directly inside loop
                 }
             }
         }
+    }
 
-        if (this.Q > 0) {
-            --this.Q;
-        }
+    // Poseidon - extract ticking logic into separate method
+    private void tickChunk(int x, int z) {
+        int i;
+        int j;
+        int k;
+        int l;
+        int j1;
+        int k1;
+        int l1;
 
-        Iterator<ChunkCoordIntPair> iterator = this.P.iterator();
+        i = x * 16;
+        j = z * 16;
+        Chunk chunk = this.getChunkAt(x, z);
 
-        while (iterator.hasNext()) {
-            ChunkCoordIntPair chunkcoordintpair = iterator.next();
-
-            i = chunkcoordintpair.x * 16;
-            j = chunkcoordintpair.z * 16;
-            Chunk chunk = this.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
-            int j1;
-            int k1;
-            int l1;
-
-            // Poseidon start - remove
+        // Poseidon start - remove
             /*if (this.Q == 0) {
                 this.g = this.g * 3 + 1013904223;
                 k = this.g >> 2;
@@ -2064,79 +2063,78 @@ public class World implements IBlockAccess {
                     }
                 }
             }*/
-            // Poseidon end
+        // Poseidon end
 
-            if (this.random.nextInt(100000) == 0 && this.v() && this.u()) {
-                this.g = this.g * 3 + 1013904223;
-                k = this.g >> 2;
-                l = i + (k & 15);
-                j1 = j + (k >> 8 & 15);
-                k1 = this.e(l, j1);
-                if (this.s(l, k1, j1)) {
-                    this.strikeLightning(new EntityWeatherStorm(this, l, k1, j1));
-                    this.m = 2;
-                }
+        if (this.random.nextInt(100000) == 0 && this.v() && this.u()) {
+            this.g = this.g * 3 + 1013904223;
+            k = this.g >> 2;
+            l = i + (k & 15);
+            j1 = j + (k >> 8 & 15);
+            k1 = this.e(l, j1);
+            if (this.s(l, k1, j1)) {
+                this.strikeLightning(new EntityWeatherStorm(this, l, k1, j1));
+                this.m = 2;
             }
+        }
 
-            int i2;
+        int i2;
 
-            if (this.random.nextInt(16) == 0) {
-                this.g = this.g * 3 + 1013904223;
-                k = this.g >> 2;
-                l = k & 15;
-                j1 = k >> 8 & 15;
-                k1 = this.e(l + i, j1 + j);
-                if (this.getWorldChunkManager().getBiome(l + i, j1 + j).c() && k1 >= 0 && k1 < 128 && chunk.a(EnumSkyBlock.BLOCK, l, k1, j1) < 10) {
-                    l1 = chunk.getTypeId(l, k1 - 1, j1);
-                    i2 = chunk.getTypeId(l, k1, j1);
-                    if (this.v() && i2 == 0 && Block.SNOW.canPlace(this, l + i, k1, j1 + j) && l1 != 0 && l1 != Block.ICE.id && Block.byId[l1].material.isSolid()) {
-                        // CraftBukkit start
-                        BlockState blockState = this.getWorld().getBlockAt(l + i, k1, j1 + j).getState();
-                        blockState.setTypeId(Block.SNOW.id);
-
-                        BlockFormEvent snow = new BlockFormEvent(blockState.getBlock(), blockState);
-                        this.getServer().getPluginManager().callEvent(snow);
-                        if (!snow.isCancelled()) {
-                            blockState.update(true);
-                        }
-                        // CraftBukkit end
-                    }
-
+        if (this.random.nextInt(16) == 0) {
+            this.g = this.g * 3 + 1013904223;
+            k = this.g >> 2;
+            l = k & 15;
+            j1 = k >> 8 & 15;
+            k1 = this.e(l + i, j1 + j);
+            if (this.getWorldChunkManager().getBiome(l + i, j1 + j).c() && k1 >= 0 && k1 < 128 && chunk.a(EnumSkyBlock.BLOCK, l, k1, j1) < 10) {
+                l1 = chunk.getTypeId(l, k1 - 1, j1);
+                i2 = chunk.getTypeId(l, k1, j1);
+                if (this.v() && i2 == 0 && Block.SNOW.canPlace(this, l + i, k1, j1 + j) && l1 != 0 && l1 != Block.ICE.id && Block.byId[l1].material.isSolid()) {
                     // CraftBukkit start
-                        if (l1 == Block.STATIONARY_WATER.id && chunk.getData(l, k1 - 1, j1) == 0) {
-                            BlockState blockState = this.getWorld().getBlockAt(l + i, k1 - 1, j1 + j).getState();
-                            blockState.setTypeId(Block.ICE.id);
+                    BlockState blockState = this.getWorld().getBlockAt(l + i, k1, j1 + j).getState();
+                    blockState.setTypeId(Block.SNOW.id);
 
-                            BlockFormEvent iceBlockForm = new BlockFormEvent(blockState.getBlock(), blockState);
-                            this.getServer().getPluginManager().callEvent(iceBlockForm);
-                            if (!iceBlockForm.isCancelled()) {
-                                blockState.update(true);
-                            }
+                    BlockFormEvent snow = new BlockFormEvent(blockState.getBlock(), blockState);
+                    this.getServer().getPluginManager().callEvent(snow);
+                    if (!snow.isCancelled()) {
+                        blockState.update(true);
                     }
                     // CraftBukkit end
                 }
-            }
 
-            // Poseidon start - don't tick chunk sections which have no tickable blocks
-            ChunkSection[] sections = chunk.getSections();
-            for (int yPos = 0; yPos < sections.length; yPos++) {
-                ChunkSection section = sections[yPos];
-                if (section.hasTickableBlocks()) {
-                    for (k = 0; k < 10; ++k) {
-                        this.g = this.g * 3 + 1013904223;
-                        l = this.g >> 2;
-                        j1 = l & 15;
-                        k1 = l >> 8 & 15;
-                        l1 = (yPos << 4) + (l >> 16 & 15);
-                        i2 = chunk.b[j1 << 11 | k1 << 7 | l1] & 255;
-                        if (Block.n[i2]) {
-                            Block.byId[i2].a(this, j1 + i, l1, k1 + j, this.random);
-                        }
+                // CraftBukkit start
+                if (l1 == Block.STATIONARY_WATER.id && chunk.getData(l, k1 - 1, j1) == 0) {
+                    BlockState blockState = this.getWorld().getBlockAt(l + i, k1 - 1, j1 + j).getState();
+                    blockState.setTypeId(Block.ICE.id);
+
+                    BlockFormEvent iceBlockForm = new BlockFormEvent(blockState.getBlock(), blockState);
+                    this.getServer().getPluginManager().callEvent(iceBlockForm);
+                    if (!iceBlockForm.isCancelled()) {
+                        blockState.update(true);
+                    }
+                }
+                // CraftBukkit end
+            }
+        }
+
+        // Poseidon start - don't tick chunk sections which have no tickable blocks
+        ChunkSection[] sections = chunk.getSections();
+        for (int yPos = 0; yPos < sections.length; yPos++) {
+            ChunkSection section = sections[yPos];
+            if (section.hasTickableBlocks()) {
+                for (k = 0; k < 10; ++k) {
+                    this.g = this.g * 3 + 1013904223;
+                    l = this.g >> 2;
+                    j1 = l & 15;
+                    k1 = l >> 8 & 15;
+                    l1 = (yPos << 4) + (l >> 16 & 15);
+                    i2 = chunk.b[j1 << 11 | k1 << 7 | l1] & 255;
+                    if (Block.n[i2]) {
+                        Block.byId[i2].a(this, j1 + i, l1, k1 + j, this.random);
                     }
                 }
             }
-            // Poseidon end
         }
+        // Poseidon end
     }
 
     public boolean a(boolean flag) {

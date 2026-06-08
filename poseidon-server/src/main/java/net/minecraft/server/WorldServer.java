@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.craftbukkit.generator.CustomChunkGenerator;
 import org.bukkit.craftbukkit.generator.InternalChunkGenerator;
@@ -19,7 +20,7 @@ public class WorldServer extends World implements BlockChangeDelegate {
     public boolean weirdIsOpCache = false;
     public boolean canSave;
     public final MinecraftServer server; // CraftBukkit - private -> public final
-    private EntityList G = new EntityList();
+    private Int2ObjectOpenHashMap<Entity> G = new Int2ObjectOpenHashMap<>(); // Poseidon - EntityList -> Int2ObjectOpenHashMap
 
     // CraftBukkit start - change signature
     public WorldServer(MinecraftServer minecraftserver, IDataManager idatamanager, String s, int i, long j, org.bukkit.World.Environment env, @Nullable ChunkGenerator gen) {
@@ -102,16 +103,16 @@ public class WorldServer extends World implements BlockChangeDelegate {
 
     protected void c(Entity entity) {
         super.c(entity);
-        this.G.a(entity.id, entity);
+        this.G.put(entity.id, entity); // Poseidon
     }
 
     protected void d(Entity entity) {
         super.d(entity);
-        this.G.d(entity.id);
+        this.G.remove(entity.id); // Poseidon
     }
 
     public @Nullable Entity getEntity(int i) {
-        return (Entity) this.G.a(i);
+        return this.G.get(i); // Poseidon
     }
 
     public boolean strikeLightning(Entity entity) {

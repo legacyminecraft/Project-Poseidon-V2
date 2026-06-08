@@ -1,12 +1,13 @@
 package net.minecraft.server;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jspecify.annotations.Nullable;
 
 public class Pathfinder {
 
     private IBlockAccess a;
     private Path b = new Path();
-    private EntityList c = new EntityList();
+    private Int2ObjectOpenHashMap<PathPoint> c = new Int2ObjectOpenHashMap<>(); // Poseidon - EntityList -> Int2ObjectOpenHashMap
     private PathPoint[] d = new PathPoint[32];
 
     public Pathfinder(IBlockAccess iblockaccess) {
@@ -23,7 +24,7 @@ public class Pathfinder {
 
     private @Nullable PathEntity a(Entity entity, double d0, double d1, double d2, float f) {
         this.b.a();
-        this.c.a();
+        this.c.clear(); // Poseidon
         PathPoint pathpoint = this.a(MathHelper.floor(entity.boundingBox.a), MathHelper.floor(entity.boundingBox.b), MathHelper.floor(entity.boundingBox.c));
         PathPoint pathpoint1 = this.a(MathHelper.floor(d0 - (double) (entity.length / 2.0F)), MathHelper.floor(d1), MathHelper.floor(d2 - (double) (entity.length / 2.0F)));
         PathPoint pathpoint2 = new PathPoint(MathHelper.d(entity.length + 1.0F), MathHelper.d(entity.width + 1.0F), MathHelper.d(entity.length + 1.0F));
@@ -148,11 +149,11 @@ public class Pathfinder {
 
     private final PathPoint a(int i, int j, int k) {
         int l = PathPoint.a(i, j, k);
-        PathPoint pathpoint = (PathPoint) this.c.a(l);
+        PathPoint pathpoint = this.c.get(l); // Poseidon
 
         if (pathpoint == null) {
             pathpoint = new PathPoint(i, j, k);
-            this.c.a(l, pathpoint);
+            this.c.put(l, pathpoint); // Poseidon
         }
 
         return pathpoint;
