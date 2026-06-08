@@ -1,5 +1,8 @@
 package com.legacyminecraft.poseidon.config;
 
+import com.legacyminecraft.poseidon.config.constraint.Max;
+import com.legacyminecraft.poseidon.config.constraint.Min;
+import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.type.Duration;
 import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
@@ -77,7 +80,6 @@ public final class PoseidonGlobalConfig {
         public String filePattern = "[%d{yyyy-MM-dd HH:mm:ss}] [%thread/%level]: %msg%n";
         public String file = "server.log";
         public RollingLogFile rollingLogFile;
-        public List<String> redactedCommands = List.of();
 
         @ConfigSerializable
         public static final class RollingLogFile {
@@ -85,6 +87,8 @@ public final class PoseidonGlobalConfig {
             public String latestFile = "logs/latest.log";
             public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
         }
+
+        public List<String> redactedCommands = List.of();
 
         @PostProcess
         private void postProcess() {
@@ -116,7 +120,6 @@ public final class PoseidonGlobalConfig {
     @ConfigSerializable
     public static final class Performance {
         public Watchdog watchdog;
-        public TickLoop tickLoop;
 
         @ConfigSerializable
         public static final class Watchdog {
@@ -130,6 +133,8 @@ public final class PoseidonGlobalConfig {
                 public Duration dumpThreadAfter = Duration.of("10s");
             }
         }
+
+        public TickLoop tickLoop;
 
         @ConfigSerializable
         public static final class TickLoop {
@@ -167,11 +172,15 @@ public final class PoseidonGlobalConfig {
         @ConfigSerializable
         public static final class PacketRateLimiting {
             public boolean enabled = true;
+            @Positive
             public int maxPacketRate = 500;
             public Duration interval = Duration.of("7s");
         }
 
+        @Min(0)
+        @Max(9)
         public int chunkPacketCompressionLevel = 6;
+        @Positive
         public int maxChunkPacketsPerTick = 3;
     }
 
@@ -210,7 +219,11 @@ public final class PoseidonGlobalConfig {
     @ConfigSerializable
     public static final class NameValidation {
         public boolean enabled = true;
+        @Min(1)
+        @Max(16)
         public int minimumLength = 3;
+        @Min(1)
+        @Max(16)
         public int maximumLength = 16;
         public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
     }

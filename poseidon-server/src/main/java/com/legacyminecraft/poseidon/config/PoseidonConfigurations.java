@@ -1,7 +1,12 @@
 package com.legacyminecraft.poseidon.config;
 
+import com.legacyminecraft.poseidon.config.constraint.Max;
+import com.legacyminecraft.poseidon.config.constraint.Min;
+import com.legacyminecraft.poseidon.config.constraint.Positive;
+import com.legacyminecraft.poseidon.config.constraint.PositiveOrZero;
 import com.legacyminecraft.poseidon.config.type.Duration;
 import org.spongepowered.configurate.loader.HeaderMode;
+import org.spongepowered.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -24,6 +29,13 @@ public final class PoseidonConfigurations {
     }
 
     private static Consumer<TypeSerializerCollection.Builder> registerSerializers() {
-        return builder -> builder.register(Duration.SERIALIZER);
+        return builder -> builder
+                .register(Duration.SERIALIZER)
+                .registerAnnotatedObjects(ObjectMapper.factoryBuilder()
+                        .addConstraint(Positive.class, Number.class, new Positive.Factory())
+                        .addConstraint(PositiveOrZero.class, Number.class, new PositiveOrZero.Factory())
+                        .addConstraint(Min.class, Number.class, new Min.Factory())
+                        .addConstraint(Max.class, Number.class, new Max.Factory())
+                        .build());
     }
 }

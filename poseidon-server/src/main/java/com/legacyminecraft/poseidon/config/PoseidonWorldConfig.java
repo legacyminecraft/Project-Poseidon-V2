@@ -1,5 +1,7 @@
 package com.legacyminecraft.poseidon.config;
 
+import com.legacyminecraft.poseidon.config.constraint.Positive;
+import com.legacyminecraft.poseidon.config.constraint.PositiveOrZero;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -82,6 +84,7 @@ public final class PoseidonWorldConfig {
         @ConfigSerializable
         public static final class QuickMovementFlagging {
             public boolean enabled = true;
+            @Positive
             public double threshold = 200.0;
             public MovementFlagAction action = MovementFlagAction.KICK;
         }
@@ -91,6 +94,7 @@ public final class PoseidonWorldConfig {
         @ConfigSerializable
         public static final class WrongMovementFlagging {
             public boolean enabled = true;
+            @Positive
             public double threshold = 0.0625;
             public MovementFlagAction action = MovementFlagAction.TELEPORT_BACK;
         }
@@ -112,6 +116,7 @@ public final class PoseidonWorldConfig {
 
     @ConfigSerializable
     public static final class Chunks {
+        @PositiveOrZero
         public int chunkTickingRange = 9;
     }
 
@@ -123,8 +128,11 @@ public final class PoseidonWorldConfig {
 
         @ConfigSerializable
         public static final class MobCaps {
+            @PositiveOrZero
             public int monsters = 70;
+            @PositiveOrZero
             public int animals = 15;
+            @PositiveOrZero
             public int waterMobs = 5;
         }
 
@@ -133,10 +141,13 @@ public final class PoseidonWorldConfig {
         @ConfigSerializable
         public static final class MobSpawnerEntityLimit {
             public boolean enabled = true;
+            @PositiveOrZero
             public int limit = 150;
+            @Positive
             public int radius = 128;
         }
 
+        @PositiveOrZero
         public int mobSpawningRange = 8;
         public boolean perPlayerMobSpawning = false;
         public ItemEntityMerging itemEntityMerging;
@@ -144,11 +155,14 @@ public final class PoseidonWorldConfig {
         @ConfigSerializable
         public static final class ItemEntityMerging {
             public boolean enabled = false;
+            @Positive
             public double horizontalRadius = 0.5;
+            @Positive
             public double verticalRadius = 0.25;
         }
     }
 
+    @PositiveOrZero
     public int spawnRandomizationRadius = 10;
     public boolean teleportToHighestSafeBlockOnJoin = false;
 }
