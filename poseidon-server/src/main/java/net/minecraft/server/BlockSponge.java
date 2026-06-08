@@ -22,6 +22,12 @@ public class BlockSponge extends Block {
     }
 
     public void remove(World world, int i, int j, int k) {
+        // Poseidon start
+        if (!world.getConfig().blocks.spongesTriggerBlockUpdates) {
+            return;
+        }
+        // Poseidon end
+
         byte b0 = 2;
 
         for (int l = i - b0; l <= i + b0; ++l) {

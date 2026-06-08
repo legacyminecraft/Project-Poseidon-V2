@@ -110,6 +110,7 @@ public final class PoseidonWorldConfig {
     @ConfigSerializable
     public static final class Blocks {
         public boolean fixPistonPhysics = true;
+        public boolean spongesTriggerBlockUpdates = false;
     }
 
     public Chunks chunks;
