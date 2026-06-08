@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import com.legacyminecraft.poseidon.util.ChunkPos;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.EntityArrow;
@@ -226,10 +227,12 @@ public class CraftWorld implements World {
             world.chunkProviderServer.saveChunkNOP(chunk);
         }
 
-        //preserveChunk((CraftChunk) chunk.bukkitChunk); // Poseidon
-        world.chunkProviderServer.unloadQueue.remove(x, z);
-        world.chunkProviderServer.chunks.remove(x, z);
-        world.chunkProviderServer.chunkList.remove(chunk);
+        // Poseidon start
+        //preserveChunk((CraftChunk) chunk.bukkitChunk);
+        world.chunkProviderServer.unloadQueue.remove(ChunkPos.of(x, z));
+        world.chunkProviderServer.chunks.remove(ChunkPos.of(x, z));
+        //world.chunkProviderServer.chunkList.remove(chunk);
+        // Poseidon end
 
         return true;
     }
@@ -237,7 +240,7 @@ public class CraftWorld implements World {
     public boolean regenerateChunk(int x, int z) {
         unloadChunk(x, z, false, false);
 
-        world.chunkProviderServer.unloadQueue.remove(x, z);
+        world.chunkProviderServer.unloadQueue.remove(ChunkPos.of(x, z)); // Poseidon
 
         net.minecraft.server.Chunk chunk = null;
 
@@ -301,8 +304,8 @@ public class CraftWorld implements World {
             return world.chunkProviderServer.getChunkAt(x, z) != null;
         }
 
-        world.chunkProviderServer.unloadQueue.remove(x, z);
-        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(x, z);
+        world.chunkProviderServer.unloadQueue.remove(ChunkPos.of(x, z)); // Poseidon
+        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(ChunkPos.of(x, z)); // Poseidon
 
         if (chunk == null) {
             chunk = world.chunkProviderServer.loadChunk(x, z);
@@ -314,8 +317,8 @@ public class CraftWorld implements World {
 
     private void chunkLoadPostProcess(net.minecraft.server.@Nullable Chunk chunk, int x, int z) {
         if (chunk != null) {
-            world.chunkProviderServer.chunks.put(x, z, chunk);
-            world.chunkProviderServer.chunkList.add(chunk);
+            world.chunkProviderServer.chunks.put(ChunkPos.of(x, z), chunk); // Poseidon
+            //world.chunkProviderServer.chunkList.add(chunk); // Poseidon
 
             chunk.loadNOP();
             chunk.addEntities();

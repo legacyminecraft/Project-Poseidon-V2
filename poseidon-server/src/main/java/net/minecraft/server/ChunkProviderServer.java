@@ -1,27 +1,26 @@
 package net.minecraft.server;
 
-import org.bukkit.craftbukkit.util.LongHashset;
-import org.bukkit.craftbukkit.util.LongHashtable;
+import com.legacyminecraft.poseidon.util.ChunkPos;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.generator.BlockPopulator;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class ChunkProviderServer implements IChunkProvider {
 
     // CraftBukkit start
-    public LongHashset unloadQueue = new LongHashset();
+    public LongLinkedOpenHashSet unloadQueue = new LongLinkedOpenHashSet(); // Poseidon - LongHashset -> LongLinkedOpenHashSet
     public Chunk emptyChunk;
     public IChunkProvider chunkProvider; // CraftBukkit
     private IChunkLoader e;
     public boolean forceChunkLoad = false;
-    public LongHashtable<Chunk> chunks = new LongHashtable<>();
-    public List<Chunk> chunkList = new ArrayList<>();
+    public Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>(); // Poseidon - LongHashtable -> Long2ObjectOpenHashMap
+    //public List<Chunk> chunkList = new ArrayList<>(); // Poseidon - remove
     public WorldServer world;
     // CraftBukkit end
 
@@ -33,7 +32,7 @@ public class ChunkProviderServer implements IChunkProvider {
     }
 
     public boolean isChunkLoaded(int i, int j) {
-        return this.chunks.containsKey(i, j); // CraftBukkit
+        return this.chunks.containsKey(ChunkPos.of(i, j)); // CraftBukkit // Poseidon
     }
 
     public void queueUnload(int i, int j) {
@@ -43,14 +42,14 @@ public class ChunkProviderServer implements IChunkProvider {
         short short1 = 128;
 
         if (k < -short1 || k > short1 || l < -short1 || l > short1 || !(this.world.keepSpawnInMemory)) { // CraftBukkit - added 'this.world.keepSpawnInMemory'
-            this.unloadQueue.add(i, j); // CraftBukkit
+            this.unloadQueue.add(ChunkPos.of(i, j)); // CraftBukkit // Poseidon
         }
     }
 
     public Chunk getChunkAt(int i, int j) {
         // CraftBukkit start
-        this.unloadQueue.remove(i, j);
-        Chunk chunk = this.chunks.get(i, j);
+        this.unloadQueue.remove(ChunkPos.of(i, j)); // Poseidon
+        Chunk chunk = this.chunks.get(ChunkPos.of(i, j)); // Poseidon
         boolean newChunk = false;
         // CraftBukkit end
 
@@ -65,8 +64,8 @@ public class ChunkProviderServer implements IChunkProvider {
                 newChunk = true; // CraftBukkit
             }
 
-            this.chunks.put(i, j, chunk); // CraftBukkit
-            this.chunkList.add(chunk);
+            this.chunks.put(ChunkPos.of(i, j), chunk); // CraftBukkit // Poseidon
+            //this.chunkList.add(chunk); // Poseidon
             if (chunk != null) {
                 chunk.loadNOP();
                 chunk.addEntities();
@@ -106,7 +105,7 @@ public class ChunkProviderServer implements IChunkProvider {
 
     public Chunk getOrCreateChunk(int i, int j) {
         // CraftBukkit start
-        Chunk chunk = this.chunks.get(i, j);
+        Chunk chunk = this.chunks.get(ChunkPos.of(i, j)); // Poseidon
 
         chunk = chunk == null ? (!this.world.isLoading && !this.forceChunkLoad ? this.emptyChunk : this.getChunkAt(i, j)) : chunk;
         if (chunk == this.emptyChunk) return chunk;
@@ -195,9 +194,8 @@ public class ChunkProviderServer implements IChunkProvider {
     public boolean saveChunks(boolean flag, @Nullable IProgressUpdate iprogressupdate) {
         int i = 0;
 
-        for (int j = 0; j < this.chunkList.size(); ++j) {
-            Chunk chunk = this.chunkList.get(j);
-
+        // Poseidon - iterate directly over values
+        for (Chunk chunk : this.chunks.values()) {
             if (flag && !chunk.p) {
                 this.saveChunkNOP(chunk);
             }
@@ -228,7 +226,7 @@ public class ChunkProviderServer implements IChunkProvider {
             // CraftBukkit start
             org.bukkit.Server server = this.world.getServer();
             for (int i = 0; i < 50 && !this.unloadQueue.isEmpty(); i++) {
-                long chunkcoordinates = this.unloadQueue.popFirst();
+                long chunkcoordinates = this.unloadQueue.removeFirstLong(); // Poseidon
                 Chunk chunk = this.chunks.get(chunkcoordinates);
                 if (chunk == null) continue;
 
@@ -240,7 +238,7 @@ public class ChunkProviderServer implements IChunkProvider {
                     this.saveChunkNOP(chunk);
                     // this.unloadQueue.remove(integer);
                     this.chunks.remove(chunkcoordinates); // CraftBukkit
-                    this.chunkList.remove(chunk);
+                    //this.chunkList.remove(chunk); // Poseidon
                 }
             }
             // CraftBukkit end

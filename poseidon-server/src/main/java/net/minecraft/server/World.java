@@ -1,8 +1,10 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
+import com.legacyminecraft.poseidon.util.ChunkPos;
 import com.legacyminecraft.poseidon.world.ChunkSection;
 import com.legacyminecraft.poseidon.world.LocalCreatureSpawner;
+import com.legacyminecraft.poseidon.world.FifoChunkCache;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
@@ -83,6 +85,7 @@ public class World implements IBlockAccess {
     private PoseidonWorldConfig worldConfig;
     private final List<Entity> S;
     public final Int2DoubleOpenHashMap explosionDensityCache = new Int2DoubleOpenHashMap();
+    private final FifoChunkCache chunkCache = new FifoChunkCache(4);
     // Poseidon end
 
     public WorldChunkManager getWorldChunkManager() {
@@ -94,10 +97,6 @@ public class World implements IBlockAccess {
     public boolean pvpMode;
     public boolean keepSpawnInMemory = true;
     public @Nullable ChunkGenerator generator;
-    Chunk lastChunkAccessed;
-    int lastXAccessed = Integer.MIN_VALUE;
-    int lastZAccessed = Integer.MIN_VALUE;
-    final Object chunkLock = new Object();
     private List<TileEntity> tileEntitiesToUnload;
 
     private boolean canSpawn(int x, int z) {
@@ -301,24 +300,20 @@ public class World implements IBlockAccess {
         return this.getChunkAt(i >> 4, j >> 4);
     }
 
-    // CraftBukkit start
     public Chunk getChunkAt(int i, int j) {
-        Chunk result = null;
-        synchronized (this.chunkLock) {
-            if (this.lastChunkAccessed == null || this.lastXAccessed != i || this.lastZAccessed != j) {
-                this.lastXAccessed = i;
-                this.lastZAccessed = j;
-                this.lastChunkAccessed = this.chunkProvider.getOrCreateChunk(i, j);
-            }
-            result = this.lastChunkAccessed;
+        // Poseidon start - try to access recently accessed chunks
+        Chunk chunk = this.chunkCache.getChunk(i, j);
+        if (chunk == null) {
+            chunk = this.chunkProvider.getOrCreateChunk(i, j);
+            this.chunkCache.storeChunk(i, j, chunk);
         }
-        return result;
+        return chunk;
+        // Poseidon end
     }
-    // CraftBukkit end
 
     // Poseidon start
     public @Nullable Chunk getChunkIfLoaded(int i, int j) {
-        return ((WorldServer) this).chunkProviderServer.chunks.get(i, j);
+        return ((WorldServer) this).chunkProviderServer.chunks.get(ChunkPos.of(i, j));
     }
     // Poseidon end
 
@@ -1880,6 +1875,7 @@ public class World implements IBlockAccess {
         // CraftBukkit end
 
         this.chunkProvider.unloadChunks();
+        this.chunkCache.clear(); // Poseidon
         int j = this.a(1.0F);
 
         if (j != this.f) {
