@@ -100,7 +100,7 @@ public final class PoseidonCommand extends Command {
             Bukkit.getWorlds().stream().map(w -> ((CraftWorld) w).getHandle()).forEach(World::reloadConfig);
             context.getSource().sendMessage(ChatColor.GREEN + "Poseidon configuration reloaded.");
         } catch (Throwable e) {
-            context.getSource().sendMessage(ChatColor.RED + "An error occured while reloading the configuration");
+            context.getSource().sendMessage(ChatColor.RED + "An error occurred while reloading the configuration");
             log.error("Failed to reload configuration", e);
         }
 
