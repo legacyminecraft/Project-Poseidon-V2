@@ -26,6 +26,12 @@ public class WorldChunkManager {
         return this.getBiome(chunkcoordintpair.x << 4, chunkcoordintpair.z << 4);
     }
 
+    // Poseidon start
+    public BiomeBase a(int chunkX, int chunkZ) {
+        return this.getBiome(chunkX << 4, chunkZ << 4);
+    }
+    // Poseidon end
+
     public BiomeBase getBiome(int i, int j) {
         return this.getBiomeData(i, j, 1, 1)[0];
     }

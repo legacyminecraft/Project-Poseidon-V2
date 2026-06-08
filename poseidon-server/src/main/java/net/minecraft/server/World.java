@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
 import com.legacyminecraft.poseidon.world.ChunkSection;
+import com.legacyminecraft.poseidon.world.LocalCreatureSpawner;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
@@ -1868,7 +1869,13 @@ public class World implements IBlockAccess {
 
         // CraftBukkit start - Only call spawner if we have players online and the world allows for mobs or animals
         if ((this.allowMonsters || this.allowAnimals) && (this instanceof WorldServer && !this.getServer().getHandle().players.isEmpty())) {
-            SpawnerCreature.spawnEntities(this, this.allowMonsters, this.allowAnimals);
+            // Poseidon start - add per-player mob spawning
+            if (getConfig().entities.perPlayerMobSpawning) {
+                LocalCreatureSpawner.spawnCreatures(this, this.allowMonsters, this.allowAnimals);
+            } else {
+                // Poseidon end
+                SpawnerCreature.spawnEntities(this, this.allowMonsters, this.allowAnimals);
+            }
         }
         // CraftBukkit end
 

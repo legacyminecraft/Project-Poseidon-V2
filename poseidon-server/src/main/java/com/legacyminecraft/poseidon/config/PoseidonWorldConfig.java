@@ -131,6 +131,7 @@ public final class PoseidonWorldConfig {
         }
 
         public int mobSpawningRange = 8;
+        public boolean perPlayerMobSpawning = false;
         public ItemEntityMerging itemEntityMerging;
 
         @ConfigSerializable
