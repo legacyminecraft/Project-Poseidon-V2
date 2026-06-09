@@ -2,6 +2,7 @@ package com.legacyminecraft.poseidon.config;
 
 import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.constraint.PositiveOrZero;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -35,6 +36,15 @@ public final class PoseidonWorldConfig {
         
         World: %s""";
 
+    private static @Nullable PoseidonWorldConfig defaults;
+
+    public static PoseidonWorldConfig getDefaults() {
+        if (defaults == null) {
+            loadDefaults();
+        }
+        return defaults;
+    }
+
     public static synchronized void loadDefaults() {
         YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
                 .path(Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME))
@@ -44,29 +54,23 @@ public final class PoseidonWorldConfig {
         try {
             PoseidonWorldConfig worldDefaults = loader.load().get(PoseidonWorldConfig.class);
             loader.save(loader.createNode().set(worldDefaults));
+            defaults = worldDefaults;
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static synchronized PoseidonWorldConfig load(Path worldFolder) {
-        YamlConfigurationLoader worldDefaultsLoader = PoseidonConfigurations.createLoaderBuilder()
-                .path(Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME))
-                .defaultOptions(opt -> opt.header(DEFAULTS_HEADER))
-                .build();
-
-        YamlConfigurationLoader worldConfigLoader = PoseidonConfigurations.createLoaderBuilder()
+        YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
                 .path(worldFolder.resolve(WORLD_CONFIG_FILE_NAME))
                 .defaultOptions(opt -> opt.header(
                         WORLD_HEADER.formatted(CONFIG_FOLDER, WORLD_DEFAULTS_FILE_NAME, worldFolder.getFileName())))
                 .build();
 
         try {
-            ConfigurationNode worldDefaults = worldDefaultsLoader.load();
-            worldDefaults.require(PoseidonWorldConfig.class);
-
-            ConfigurationNode worldConfig = worldConfigLoader.load();
-            worldConfigLoader.save(worldConfig);
+            ConfigurationNode worldDefaults = loader.createNode().set(getDefaults());
+            ConfigurationNode worldConfig = loader.load();
+            loader.save(worldConfig);
 
             worldConfig.mergeFrom(worldDefaults);
             return worldConfig.require(PoseidonWorldConfig.class);

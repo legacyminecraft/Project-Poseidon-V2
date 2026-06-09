@@ -4,6 +4,7 @@ import com.legacyminecraft.poseidon.config.constraint.Max;
 import com.legacyminecraft.poseidon.config.constraint.Min;
 import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.type.Duration;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -38,9 +39,12 @@ public final class PoseidonGlobalConfig {
 
     public static boolean isFirstLoad = false;
 
-    private static PoseidonGlobalConfig instance;
+    private static @Nullable PoseidonGlobalConfig instance;
 
     public static PoseidonGlobalConfig getInstance() {
+        if (instance == null) {
+            load();
+        }
         return instance;
     }
 
