@@ -61,7 +61,7 @@ public class EntityTrackerEntry {
             this.scanPlayers(list);
         }
 
-        if (this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
+        if (++this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
             ++this.t; // Poseidon - moved from above
             int i = MathHelper.floor(this.tracker.locX * 32.0D);
             int j = MathHelper.floor(this.tracker.locY * 32.0D);
@@ -152,7 +152,6 @@ public class EntityTrackerEntry {
             // Poseidon end
         }
 
-        ++this.l; // Poseidon
         if (this.tracker.velocityChanged) {
             // CraftBukkit start - create PlayerVelocity event
             boolean cancelled = false;
