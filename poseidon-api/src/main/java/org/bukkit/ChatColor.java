@@ -1,9 +1,11 @@
 package org.bukkit;
 
+import com.google.common.base.Preconditions;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * All supported color values for chat
@@ -75,6 +77,14 @@ public enum ChatColor {
      */
     WHITE(0xF);
 
+    // Poseidon start
+    /**
+     * The special character which precedes all chat color codes.
+     */
+    public static final char COLOR_CHAR = '\u00A7';
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-Fa-f]");
+    // Poseidon end
+
     private final int code;
     private static final Map<Integer, ChatColor> colors = new HashMap<>();
 
@@ -100,7 +110,7 @@ public enum ChatColor {
      * Gets the color represented by the specified color code
      *
      * @param code Code to check
-     * @return Associative {@link Color} with the given code, or null if it doesn't exist
+     * @return Associative {@link ChatColor} with the given code, or null if it doesn't exist
      */
     public static @Nullable ChatColor getByCode(final int code) {
         return colors.get(code);
@@ -117,8 +127,35 @@ public enum ChatColor {
             return null;
         }
 
-        return input.replaceAll("(?i)\u00A7[0-F]", "");
+        return STRIP_COLOR_PATTERN.matcher(input).replaceAll(""); // Poseidon
     }
+
+    // Poseidon start - backport translateAlternateColorCodes method
+    /**
+     * Translates a string using an alternate color code character into a
+     * string that uses the internal {@link #COLOR_CHAR} color code
+     * character. The alternate color code character will only be replaced if
+     * it is immediately followed by 0-9, A-F or a-f.
+     *
+     * @param altColorChar The alternate color code character to replace.
+     *        Ex: {@literal &}
+     * @param textToTranslate Text containing the alternate color code
+     *        character.
+     * @return Text containing the {@link #COLOR_CHAR} color code character.
+     */
+    public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+        Preconditions.checkArgument(textToTranslate != null, "textToTranslate cannot be null");
+
+        char[] chars = textToTranslate.toCharArray();
+        for (int i = 0; i < chars.length - 1; i++) {
+            if (chars[i] == altColorChar && "0123456789AaBbCcDdEeFf".indexOf(chars[i + 1]) > -1) {
+                chars[i] = ChatColor.COLOR_CHAR;
+                chars[i + 1] = Character.toLowerCase(chars[i + 1]);
+            }
+        }
+        return new String(chars);
+    }
+    // Poseidon end
 
     static {
         for (ChatColor color : ChatColor.values()) {

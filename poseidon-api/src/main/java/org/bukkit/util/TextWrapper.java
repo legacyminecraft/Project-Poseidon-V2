@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
+import static org.bukkit.ChatColor.COLOR_CHAR;
+
 /**
  * Provides utility methods for line-wrapping text which should be displayed to
  * clients.
@@ -35,11 +37,6 @@ public class TextWrapper {
     };
 
     // Poseidon start - private -> public
-    /**
-     * The character which precedes a color code.
-     */
-    public static final char COLOR_CHAR = '\u00A7';
-
     /**
      * The width of a vanilla client's chat window in pixels.
      */
