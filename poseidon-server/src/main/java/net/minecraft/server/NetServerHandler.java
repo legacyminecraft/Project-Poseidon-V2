@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandException;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.TextWrapper;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Player;
@@ -24,6 +23,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.util.TextWrapper;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -767,7 +767,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             s = s.trim();
 
             for (int i = 0; i < s.length(); ++i) {
-                if (FontAllowedCharacters.allowedCharacters.indexOf(s.charAt(i)) < 0) {
+                if (TextWrapper.allowedChars.indexOf(s.charAt(i)) < 0) { // Poseidon
                     this.disconnect("Illegal characters in chat");
                     return;
                 }
@@ -1063,7 +1063,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
                     flag = false;
                 } else {
                     for (i = 0; i < packet130updatesign.lines[j].length(); ++i) {
-                        if (FontAllowedCharacters.allowedCharacters.indexOf(packet130updatesign.lines[j].charAt(i)) < 0) {
+                        if (TextWrapper.allowedChars.indexOf(packet130updatesign.lines[j].charAt(i)) < 0) { // Poseidon
                             flag = false;
                         }
                     }

@@ -1,16 +1,14 @@
 package net.minecraft.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 public class FontAllowedCharacters {
 
-    public static final String allowedCharacters = a();
+    //public static final String allowedCharacters = a(); // Poseidon - remove
     public static final char[] b = new char[] { '/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'};
 
     public FontAllowedCharacters() {}
 
-    private static String a() {
+    // Poseidon start - move to TextWrapper
+    /*private static String a() {
         String s = "";
 
         try {
@@ -29,5 +27,6 @@ public class FontAllowedCharacters {
         }
 
         return s;
-    }
+    }*/
+    // Poseidon end
 }
