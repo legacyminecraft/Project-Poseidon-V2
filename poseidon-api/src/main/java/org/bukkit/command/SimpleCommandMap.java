@@ -1,31 +1,6 @@
 package org.bukkit.command;
 
 import org.bukkit.Server;
-import org.bukkit.command.defaults.BanCommand;
-import org.bukkit.command.defaults.BanIpCommand;
-import org.bukkit.command.defaults.DeopCommand;
-import org.bukkit.command.defaults.GiveCommand;
-import org.bukkit.command.defaults.HelpCommand;
-import org.bukkit.command.defaults.KickCommand;
-import org.bukkit.command.defaults.KillCommand;
-import org.bukkit.command.defaults.ListCommand;
-import org.bukkit.command.defaults.MeCommand;
-import org.bukkit.command.defaults.OpCommand;
-import org.bukkit.command.defaults.PardonCommand;
-import org.bukkit.command.defaults.PardonIpCommand;
-import org.bukkit.command.defaults.PluginsCommand;
-import org.bukkit.command.defaults.ReloadCommand;
-import org.bukkit.command.defaults.SaveCommand;
-import org.bukkit.command.defaults.SaveOffCommand;
-import org.bukkit.command.defaults.SaveOnCommand;
-import org.bukkit.command.defaults.SayCommand;
-import org.bukkit.command.defaults.StopCommand;
-import org.bukkit.command.defaults.TeleportCommand;
-import org.bukkit.command.defaults.TellCommand;
-import org.bukkit.command.defaults.TimeCommand;
-import org.bukkit.command.defaults.VanillaCommand;
-import org.bukkit.command.defaults.VersionCommand;
-import org.bukkit.command.defaults.WhitelistCommand;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,42 +17,20 @@ public class SimpleCommandMap implements CommandMap {
     protected final Map<String, Command> knownCommands = new HashMap<>();
     protected final Set<String> aliases = new HashSet<>();
     private final Server server;
-    protected static final Set<VanillaCommand> fallbackCommands = new HashSet<>();
-
-    static {
-        fallbackCommands.add(new ListCommand());
-        fallbackCommands.add(new StopCommand());
-        fallbackCommands.add(new SaveCommand());
-        fallbackCommands.add(new SaveOnCommand());
-        fallbackCommands.add(new SaveOffCommand());
-        fallbackCommands.add(new OpCommand());
-        fallbackCommands.add(new DeopCommand());
-        fallbackCommands.add(new BanIpCommand());
-        fallbackCommands.add(new PardonIpCommand());
-        fallbackCommands.add(new BanCommand());
-        fallbackCommands.add(new PardonCommand());
-        fallbackCommands.add(new KickCommand());
-        fallbackCommands.add(new TeleportCommand());
-        fallbackCommands.add(new GiveCommand());
-        fallbackCommands.add(new TimeCommand());
-        fallbackCommands.add(new SayCommand());
-        fallbackCommands.add(new WhitelistCommand());
-        fallbackCommands.add(new TellCommand());
-        fallbackCommands.add(new MeCommand());
-        fallbackCommands.add(new KillCommand());
-        fallbackCommands.add(new HelpCommand());
-    }
+    protected final Map<String, Command> fallbackCommands = new HashMap<>(); // Poseidon - not static, Set<VanillaCommand> -> Map<String, Command>
 
     public SimpleCommandMap(final Server server) {
         this.server = server;
-        setDefaultCommands(server);
+        // Poseidon start - move command registration to CraftServer constructor
+        //setDefaultCommands(server);
     }
 
-    private void setDefaultCommands(final Server server) {
-        register("bukkit", new VersionCommand("version"));
+    protected void setDefaultCommands(final Server server) { // Poseidon - private -> protected
+        /*register("bukkit", new VersionCommand("version"));
         register("bukkit", new ReloadCommand("reload"));
-        register("bukkit", new PluginsCommand("plugins"));
+        register("bukkit", new PluginsCommand("plugins"));*/
     }
+    // Poseidon end
 
     /**
      * {@inheritDoc}
@@ -118,7 +71,7 @@ public class SimpleCommandMap implements CommandMap {
 
     /**
      * Registers a command with the given name is possible, otherwise uses fallbackPrefix to create a unique name if its not an alias
-     * @param name the name of the command, without the '/'-prefix.
+     * @param label the name of the command, without the '/'-prefix.
      * @param fallbackPrefix a prefix which is prepended to the command with a ':' one or more times to make the command unique
      * @param command the command to register
      * @return true if command was registered with the passed in label, false otherwise.
@@ -156,13 +109,7 @@ public class SimpleCommandMap implements CommandMap {
     }
 
     protected @Nullable Command getFallback(String label) {
-        for (VanillaCommand cmd : fallbackCommands) {
-            if (cmd.matches(label)) {
-                return cmd;
-            }
-        }
-
-        return null;
+        return this.fallbackCommands.get(label); // Poseidon
     }
 
     /**
@@ -178,7 +125,7 @@ public class SimpleCommandMap implements CommandMap {
         String sentCommandLabel = args[0].toLowerCase();
         Command target = getCommand(sentCommandLabel);
         if (target == null) {
-            target = getFallback(commandLine.toLowerCase());
+            target = getFallback(sentCommandLabel); // Poseidon - pass sentCommandLabel
         }
         if (target == null) {
             return false;

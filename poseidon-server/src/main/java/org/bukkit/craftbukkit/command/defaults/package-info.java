@@ -1,4 +1,4 @@
 @NullMarked
-package org.bukkit.command.defaults;
+package org.bukkit.craftbukkit.command.defaults;
 
 import org.jspecify.annotations.NullMarked;

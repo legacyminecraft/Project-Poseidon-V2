@@ -1,4 +1,4 @@
-package org.bukkit.command.defaults;
+package org.bukkit.craftbukkit.command.defaults;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

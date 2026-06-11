@@ -8,9 +8,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
-import com.legacyminecraft.poseidon.command.MsptCommand;
-import com.legacyminecraft.poseidon.command.PoseidonCommand;
-import com.legacyminecraft.poseidon.command.TpsCommand;
+import com.legacyminecraft.poseidon.command.InternalCommandMap;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
@@ -42,7 +40,6 @@ import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.craftbukkit.inventory.CraftFurnaceRecipe;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
@@ -101,7 +98,7 @@ public final class CraftServer implements Server {
     private final String protocolVersion = "1.7.3";
     private final ServicesManager servicesManager = new SimpleServicesManager();
     private final BukkitScheduler scheduler = new CraftScheduler(this);
-    private final SimpleCommandMap commandMap = new SimpleCommandMap(this);
+    private final InternalCommandMap commandMap = new InternalCommandMap(this); // Poseidon - SimpleCommandMap -> InternalCommandMap
     private final PluginManager pluginManager = new SimplePluginManager(this, commandMap);
     protected final MinecraftServer console;
     protected final ServerConfigurationManager server;
@@ -126,9 +123,7 @@ public final class CraftServer implements Server {
 
         // Poseidon start
         poseidonServer.initialize();
-        this.commandMap.register("poseidon", new PoseidonCommand());
-        this.commandMap.register("poseidon", new TpsCommand());
-        this.commandMap.register("poseidon", new MsptCommand());
+        this.commandMap.setDefaultCommands(this);
         // Poseidon end
 
         loadPlugins();

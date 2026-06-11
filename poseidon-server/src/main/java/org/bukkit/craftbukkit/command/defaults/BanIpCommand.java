@@ -1,16 +1,16 @@
-package org.bukkit.command.defaults;
+package org.bukkit.craftbukkit.command.defaults;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-public class BanCommand extends VanillaCommand {
-    public BanCommand() {
-        super("ban");
-        this.description = "Prevents the specified player from using this server";
-        this.usageMessage = "/ban <player>";
-        this.setPermission("bukkit.command.ban.player");
+public class BanIpCommand extends VanillaCommand {
+    public BanIpCommand() {
+        super("ban-ip");
+        this.description = "Prevents the specified IP address from using this server";
+        this.usageMessage = "/ban-ip <address>";
+        this.setPermission("bukkit.command.ban.ip");
     }
 
     @Override
@@ -21,14 +21,14 @@ public class BanCommand extends VanillaCommand {
             return false;
         }
 
-        Bukkit.getOfflinePlayer(args[0]).setBanned(true);
-        Command.broadcastCommandMessage(sender, "Banning " + args[0]);
+        Bukkit.banIP(args[0]);
+        Command.broadcastCommandMessage(sender, "Banning ip " + args[0]);
 
         return true;
     }
 
     @Override
     public boolean matches(String input) {
-        return input.startsWith("ban ");
+        return input.startsWith("ban-ip ");
     }
 }
