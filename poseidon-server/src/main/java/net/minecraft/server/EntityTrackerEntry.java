@@ -61,7 +61,7 @@ public class EntityTrackerEntry {
             this.scanPlayers(list);
         }
 
-        if (++this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
+        if (this.l % this.c == 0 || this.tracker.airBorne || this.tracker.aa().a()) { // Poseidon
             ++this.t; // Poseidon - moved from above
             int i = MathHelper.floor(this.tracker.locX * 32.0D);
             int j = MathHelper.floor(this.tracker.locY * 32.0D);
@@ -74,7 +74,7 @@ public class EntityTrackerEntry {
             Packet object = null;
 
             // Poseidon start - lower update threshold
-            boolean flag = Math.abs(j1) >= 4 || Math.abs(k1) >= 4 || Math.abs(l1) >= 4 || this.l % 60 == 0;
+            boolean flag = Math.abs(j1) >= 4 || Math.abs(k1) >= 4 || Math.abs(l1) >= 4;
             boolean flag1 = Math.abs(l - this.g) >= 4 || Math.abs(i1 - this.h) >= 4;
             // Poseidon end
 
@@ -152,6 +152,7 @@ public class EntityTrackerEntry {
             // Poseidon end
         }
 
+        ++this.l; // Poseidon
         if (this.tracker.velocityChanged) {
             // CraftBukkit start - create PlayerVelocity event
             boolean cancelled = false;
