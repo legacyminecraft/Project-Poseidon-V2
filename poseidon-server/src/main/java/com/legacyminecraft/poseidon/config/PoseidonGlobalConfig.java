@@ -231,11 +231,4 @@ public final class PoseidonGlobalConfig {
         public int maximumLength = 16;
         public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
     }
-
-    public Misc misc;
-
-    @ConfigSerializable
-    public static final class Misc {
-        public boolean fixPlayerDeathAnimation = true;
-    }
 }

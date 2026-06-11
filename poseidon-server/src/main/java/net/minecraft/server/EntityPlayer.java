@@ -193,7 +193,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         // CraftBukkit end
 
         // Poseidon start - fix player death animation
-        if (Poseidon.getConfig().misc.fixPlayerDeathAnimation) {
+        if (this.world.getConfig().entities.fixPlayerDeathAnimation) {
             for (int i = 0; i < 5; ++i) {
                 ItemStack itemstack = this.bN[i];
                 if (itemstack != null && itemstack.id > 0) {

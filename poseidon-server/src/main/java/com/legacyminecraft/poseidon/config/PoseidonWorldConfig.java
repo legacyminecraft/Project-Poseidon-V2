@@ -167,6 +167,8 @@ public final class PoseidonWorldConfig {
             @Positive
             public double verticalRadius = 0.25;
         }
+
+        public boolean fixPlayerDeathAnimation = true;
     }
 
     @PositiveOrZero
