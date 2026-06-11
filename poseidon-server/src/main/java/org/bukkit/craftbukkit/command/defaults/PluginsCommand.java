@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.command.defaults;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -8,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class PluginsCommand extends Command {
     public PluginsCommand(String name) {
@@ -28,19 +30,20 @@ public class PluginsCommand extends Command {
 
     private String getPluginList() {
         StringBuilder pluginList = new StringBuilder();
-        Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
-
         // Poseidon start
-        Arrays.sort(plugins, Comparator.comparing(plugin -> plugin.getDescription().getFullName()));
+        List<Plugin> plugins = Arrays.stream(Bukkit.getPluginManager().getPlugins())
+                .filter(plugin -> !Poseidon.getConfig().plugins.hiddenPlugins.contains(plugin.getDescription().getName()))
+                .sorted(Comparator.comparing(plugin -> plugin.getDescription().getName()))
+                .toList();
         int enabled = 0;
         // Poseidon end
-        
+
         for (Plugin plugin : plugins) {
             if (!pluginList.isEmpty()) {
                 pluginList.append(ChatColor.WHITE);
                 pluginList.append(", ");
             }
-            
+
             pluginList.append(plugin.isEnabled() ? ChatColor.GREEN : ChatColor.RED);
             pluginList.append(plugin.getDescription().getName());
 
@@ -51,6 +54,6 @@ public class PluginsCommand extends Command {
             // Poseidon end
         }
 
-        return "Plugins (" + enabled + "/" + plugins.length + "): " + pluginList; // Poseidon - change message
+        return "Plugins (" + enabled + "/" + plugins.size() + "): " + pluginList; // Poseidon - change message
     }
 }

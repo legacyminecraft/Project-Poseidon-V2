@@ -231,4 +231,11 @@ public final class PoseidonGlobalConfig {
         public int maximumLength = 16;
         public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
     }
+
+    public Plugins plugins;
+
+    @ConfigSerializable
+    public static final class Plugins {
+        public List<String> hiddenPlugins = List.of();
+    }
 }
