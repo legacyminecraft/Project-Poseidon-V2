@@ -95,6 +95,9 @@ public class Main {
 
                 acceptsAll(asList("nojline"), "Disables jline and emulates the vanilla console");
 
+                // Poseidon - accept nogui option despite graphical console not existing
+                acceptsAll(asList("nogui"), "No-op, only exists for compatibility");
+
                 acceptsAll(asList("v", "version"), "Show the CraftBukkit Version");
             }
         };
