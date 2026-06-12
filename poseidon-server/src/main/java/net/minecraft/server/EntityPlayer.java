@@ -285,7 +285,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                     continue;
                 }
 
-                chunk.createSectionPackets().forEach(this.netServerHandler::sendPacket);
+                this.netServerHandler.sendPacket(new Packet51MapChunk(chunk.x << 4, 0, chunk.z << 4, 16, 128, 16, worldserver));
                 worldserver.tracker.a(this, chunk);
                 chunk.tileEntities.values().forEach(this::a);
             }

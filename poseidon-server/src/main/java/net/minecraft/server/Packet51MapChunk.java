@@ -1,6 +1,5 @@
 package net.minecraft.server;
 
-import com.google.common.base.Preconditions;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
@@ -32,15 +31,6 @@ public class Packet51MapChunk extends Packet implements OutboundPacket { // Pose
     public Packet51MapChunk() {
         this.k = true;
     }
-
-    // Poseidon start
-    public Packet51MapChunk(Chunk chunk, int startSection, int numSections) {
-        Preconditions.checkArgument(startSection >= 0, "startSection must be >= 0");
-        Preconditions.checkArgument(startSection < chunk.getSections().length, "startSection must be < chunk.getSections().length");
-        Preconditions.checkArgument(numSections > 0, "numSections must be > 0");
-        this(chunk.x << 4, startSection << 4, chunk.z << 4, 16, numSections << 4, 16, getSectionData(chunk, startSection, numSections));
-    }
-    // Poseidon end
 
     // CraftBukkit start
     public Packet51MapChunk(int i, int j, int k, int l, int i1, int j1, World world) {
@@ -137,12 +127,4 @@ public class Packet51MapChunk extends Packet implements OutboundPacket { // Pose
     public int a() {
         return 17 + this.h;
     }
-
-    // Poseidon start
-    private static byte[] getSectionData(Chunk chunk, int startSection, int numSections) {
-        byte[] data = new byte[16 * (numSections << 4) * 16 * 5 / 2];
-        chunk.getData(data, 0, startSection << 4, 0, 16, (startSection << 4) + (numSections << 4), 16, 0);
-        return data;
-    }
-    // Poseidon end
 }
