@@ -265,6 +265,11 @@ public class Chunk {
 
             this.b[i << 11 | k << 7 | j] = (byte) (b0 & 255);
             this.sections[j >> 4].update(k1, b0 & 255); // Poseidon
+            // Poseidon start - anti-xray
+            if (this.world.antiXrayEngine.isEnabled()) {
+                this.world.antiXrayEngine.updateNearbyBlocks(l1, j, i2);
+            }
+            // Poseidon end
             if (k1 != 0 && !this.world.isStatic) {
                 Block.byId[k1].remove(this.world, l1, j, i2);
             }
@@ -315,6 +320,11 @@ public class Chunk {
 
             this.b[i << 11 | k << 7 | j] = (byte) (b0 & 255);
             this.sections[j >> 4].update(j1, b0 & 255); // Poseidon
+            // Poseidon start - anti-xray
+            if (this.world.antiXrayEngine.isEnabled()) {
+                this.world.antiXrayEngine.updateNearbyBlocks(k1, j, l1);
+            }
+            // Poseidon end
 
             if (j1 != 0) {
                 Block.byId[j1].remove(this.world, k1, j, l1);

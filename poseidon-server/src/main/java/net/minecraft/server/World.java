@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
 import com.legacyminecraft.poseidon.util.ChunkPos;
+import com.legacyminecraft.poseidon.world.AntiXrayEngine;
 import com.legacyminecraft.poseidon.world.ChunkSection;
 import com.legacyminecraft.poseidon.world.LocalCreatureSpawner;
 import com.legacyminecraft.poseidon.world.FifoChunkCache;
@@ -86,6 +87,7 @@ public class World implements IBlockAccess {
     private final List<Entity> S;
     public final Int2DoubleOpenHashMap explosionDensityCache = new Int2DoubleOpenHashMap();
     private final FifoChunkCache chunkCache = new FifoChunkCache(4);
+    public final AntiXrayEngine antiXrayEngine;
     // Poseidon end
 
     public WorldChunkManager getWorldChunkManager() {
@@ -132,6 +134,7 @@ public class World implements IBlockAccess {
         this.isStatic = false;
         this.w = idatamanager;
         reloadConfig(); // Poseidon - add per-world configuration
+        this.antiXrayEngine = new AntiXrayEngine(this); // Poseidon - anti-xray
         this.worldMaps = new WorldMapCollection(idatamanager);
         this.worldData = idatamanager.c();
         this.s = this.worldData == null;

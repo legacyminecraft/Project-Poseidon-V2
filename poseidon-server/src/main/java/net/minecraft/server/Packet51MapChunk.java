@@ -3,6 +3,7 @@ package net.minecraft.server;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.codec.PacketEncoder;
+import com.legacyminecraft.poseidon.world.AntiXrayEngine;
 import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
@@ -26,11 +27,30 @@ public class Packet51MapChunk extends Packet implements OutboundPacket { // Pose
     public int h; // CraftBukkit - private -> public
     public byte[] rawData; // CraftBukkit
 
-    private static final ThreadLocal<Deflater> localDeflater = ThreadLocal.withInitial(Deflater::new); // Poseidon
+    // Poseidon start
+    private boolean obfuscate;
+    private @Nullable AntiXrayEngine antiXrayEngine;
+    private byte @Nullable [] chunkSnapshot;
+    private static final ThreadLocal<Deflater> localDeflater = ThreadLocal.withInitial(Deflater::new);
+    // Poseidon end
 
     public Packet51MapChunk() {
         this.k = true;
     }
+
+    // Poseidon start
+    public Packet51MapChunk(Chunk chunk, boolean obfuscate) {
+        byte[] data = new byte[81920];
+        chunk.getData(data, 0, 0, 0, 16, 128, 16, 0);
+        AntiXrayEngine antiXrayEngine = chunk.world.antiXrayEngine;
+        if (obfuscate && antiXrayEngine.isEnabled()) {
+            this.obfuscate = true;
+            this.antiXrayEngine = antiXrayEngine;
+            this.chunkSnapshot = antiXrayEngine.createChunkSnapshot(chunk.x, chunk.z);
+        }
+        this(chunk.x << 4, 0, chunk.z << 4, 16, 128, 16, data);
+    }
+    // Poseidon end
 
     // CraftBukkit start
     public Packet51MapChunk(int i, int j, int k, int l, int i1, int j1, World world) {
@@ -61,9 +81,15 @@ public class Packet51MapChunk extends Packet implements OutboundPacket { // Pose
         this.rawData = data; // CraftBukkit
     }
 
-    // Poseidon start - handle chunk compression when writing packet
+    // Poseidon start - handle chunk obfuscation and compression when writing packet
     private synchronized void compress() {
         if (this.g != null) return;
+
+        AntiXrayEngine antiXrayEngine = this.antiXrayEngine;
+        byte[] chunkSnapshot = this.chunkSnapshot;
+        if (this.obfuscate && antiXrayEngine != null && antiXrayEngine.isEnabled() && chunkSnapshot != null) {
+            antiXrayEngine.obfuscate(this.rawData, chunkSnapshot);
+        }
 
         byte[] deflateBuffer = new byte[this.rawData.length + 100];
         Deflater deflater = localDeflater.get();

@@ -4,8 +4,6 @@ import com.legacyminecraft.poseidon.util.ChunkPos;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
 class PlayerInstance {
 
     private ObjectOpenHashSet<EntityPlayer> b; // Poseidon - List -> ObjectOpenHashSet
@@ -14,19 +12,21 @@ class PlayerInstance {
     private long location; // Poseidon - ChunkCoordIntPair -> long
     private short[] dirtyBlocks;
     private int dirtyCount;
-    private int h;
+    // Poseidon start - change update notification algorithm
+    /*private int h;
     private int i;
     private int j;
     private int k;
     private int l;
-    private int m;
+    private int m;*/
+    // Poseidon end
 
     final PlayerManager playerManager;
 
     public PlayerInstance(PlayerManager playermanager, int i, int j) {
         this.playerManager = playermanager;
         this.b = new ObjectOpenHashSet<>(); // Poseidon - ArrayList -> ObjectOpenHashSet
-        this.dirtyBlocks = new short[10];
+        this.dirtyBlocks = new short[64]; // Poseidon - 10 -> 64
         this.dirtyCount = 0;
         this.chunkX = i;
         this.chunkZ = j;
@@ -70,12 +70,13 @@ class PlayerInstance {
     public void a(int i, int j, int k) {
         if (this.dirtyCount == 0) {
             PlayerManager.b(this.playerManager).add(this);
-            this.h = this.i = i;
+            // Poseidon start - change update notification algorithm
+            /*this.h = this.i = i;
             this.j = this.k = j;
-            this.l = this.m = k;
+            this.l = this.m = k;*/
         }
 
-        if (this.h > i) {
+        /*if (this.h > i) {
             this.h = i;
         }
 
@@ -97,9 +98,10 @@ class PlayerInstance {
 
         if (this.m < k) {
             this.m = k;
-        }
+        }*/
 
-        if (this.dirtyCount < 10) {
+        if (this.dirtyCount < this.dirtyBlocks.length) {
+            // Poseidon end
             short short1 = (short) (i << 12 | k << 8 | j);
 
             for (int l = 0; l < this.dirtyCount; ++l) {
@@ -129,9 +131,11 @@ class PlayerInstance {
             int k;
 
             if (this.dirtyCount == 1) {
-                i = this.chunkX * 16 + this.h;
-                j = this.j;
-                k = this.chunkZ * 16 + this.l;
+                // Poseidon start - change update notification algorithm
+                i = this.chunkX * 16 + (this.dirtyBlocks[0] >> 12 & 15);
+                j = this.dirtyBlocks[0] & 255;
+                k = this.chunkZ * 16 + (this.dirtyBlocks[0] >> 8 & 15);
+                // Poseidon end
                 this.sendAll(new Packet53BlockChange(i, j, k, worldserver));
                 if (Block.isTileEntity[worldserver.getTypeId(i, j, k)]) {
                     this.sendTileEntity(worldserver.getTileEntity(i, j, k));
@@ -139,22 +143,19 @@ class PlayerInstance {
             } else {
                 int l;
 
-                if (this.dirtyCount == 10) {
-                    this.j = this.j / 2 * 2;
+                // Poseidon start - change update notification algorithm
+                if (this.dirtyCount == this.dirtyBlocks.length) {
+                    /*this.j = this.j / 2 * 2;
                     this.k = (this.k / 2 + 1) * 2;
                     i = this.h + this.chunkX * 16;
                     j = this.j;
                     k = this.l + this.chunkZ * 16;
                     l = this.i - this.h + 1;
                     int i1 = this.k - this.j + 2;
-                    int j1 = this.m - this.l + 1;
+                    int j1 = this.m - this.l + 1;*/
 
-                    this.sendAll(new Packet51MapChunk(i, j, k, l, i1, j1, worldserver));
-                    List<TileEntity> list = worldserver.getTileEntities(i, j, k, i + l, j + i1, k + j1);
-
-                    for (int k1 = 0; k1 < list.size(); ++k1) {
-                        this.sendTileEntity(list.get(k1));
-                    }
+                    this.b.forEach(entityplayer -> entityplayer.chunkCoordIntPairQueue.add(this.location));
+                    // Poseidon end
                 } else {
                     this.sendAll(new Packet52MultiBlockChange(this.chunkX, this.chunkZ, this.dirtyBlocks, this.dirtyCount, worldserver));
 

@@ -51,6 +51,10 @@ public final class PoseidonServer {
         pluginManager.registerEvents(PingCalculator.LISTENER, InternalBukkitAccess.INSTANCE);
         pluginManager.registerEvents(ProxyHelloPacketListener.INSTANCE, InternalBukkitAccess.INSTANCE);
         DefaultPermissions.registerPermission(
+                "poseidon.anticheat.anti-xray.exempt",
+                "Makes a player exempt from the server's anti-xray obfuscation",
+                PermissionDefault.OP);
+        DefaultPermissions.registerPermission(
                 "poseidon.anticheat.quick-movement-flagging.bypass",
                 "Allows a player to bypass the server's quick movement flagging",
                 PermissionDefault.OP);

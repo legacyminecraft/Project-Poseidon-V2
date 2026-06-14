@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.PlayerInventory;
@@ -169,7 +170,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             }
         }
 
-        org.bukkit.entity.Player bukkitEntity = (org.bukkit.entity.Player) this.getBukkitEntity(); // Poseidon - cast to Player
+        Player bukkitEntity = (Player) this.getBukkitEntity(); // Poseidon - cast to Player
         CraftWorld bworld = this.world.getWorld();
         PlayerInventory inventoryToKeep = new CraftInventoryPlayer(new InventoryPlayer(null)); // Poseidon
 
@@ -276,7 +277,9 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                 long chunkPos = this.chunkCoordIntPairQueue.removeLong(0);
                 Chunk chunk = worldserver.chunkProviderServer.getChunkAt(ChunkPos.x(chunkPos), ChunkPos.z(chunkPos));
 
-                if (!chunk.done) {
+                if (!chunk.done
+                        || (worldserver.antiXrayEngine.isEnabled()
+                        && !worldserver.antiXrayEngine.areAdjacentChunksLoaded(chunk.x, chunk.z))) {
                     if (chunksToRequeue == null) {
                         chunksToRequeue = new LongArrayList();
                     }
@@ -285,7 +288,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                     continue;
                 }
 
-                this.netServerHandler.sendPacket(new Packet51MapChunk(chunk.x << 4, 0, chunk.z << 4, 16, 128, 16, worldserver));
+                boolean obfuscate = !((Player) this.getBukkitEntity()).hasPermission("poseidon.anticheat.anti-xray.exempt");
+                this.netServerHandler.sendPacket(new Packet51MapChunk(chunk, obfuscate));
                 worldserver.tracker.a(this, chunk);
                 chunk.tileEntities.values().forEach(this::a);
             }

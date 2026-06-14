@@ -2,14 +2,18 @@ package com.legacyminecraft.poseidon.config;
 
 import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.constraint.PositiveOrZero;
+import org.bukkit.Material;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.PostProcess;
+import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static com.legacyminecraft.poseidon.config.PoseidonConfigurations.CONFIG_FOLDER;
 import static com.legacyminecraft.poseidon.config.PoseidonConfigurations.WORLD_CONFIG_FILE_NAME;
@@ -33,7 +37,7 @@ public final class PoseidonWorldConfig {
     private static final String WORLD_HEADER = """
         This is a world configuration file for Poseidon.
         This file may start empty but can be filled with settings to override ones in %s/%s
-        
+
         World: %s""";
 
     private static @Nullable PoseidonWorldConfig defaults;
@@ -83,6 +87,57 @@ public final class PoseidonWorldConfig {
 
     @ConfigSerializable
     public static final class Anticheat {
+        public AntiXray antiXray;
+
+        @ConfigSerializable
+        public static final class AntiXray {
+            public boolean enabled = false;
+            @Positive
+            public int minSegmentSize = 3;
+            @Positive
+            public int maxSegmentSize = 64;
+            public List<Material> obfuscatedBlocks = List.of(
+                    Material.STONE,
+                    Material.DIRT,
+                    Material.GRAVEL,
+                    Material.GOLD_ORE,
+                    Material.IRON_ORE,
+                    Material.COAL_ORE,
+                    Material.LAPIS_ORE,
+                    Material.DIAMOND_ORE,
+                    Material.REDSTONE_ORE,
+                    Material.GLOWING_REDSTONE_ORE
+            );
+            public List<Material> replacementBlocks = List.of(
+                    Material.GOLD_ORE,
+                    Material.IRON_ORE,
+                    Material.COAL_ORE,
+                    Material.LAPIS_ORE,
+                    Material.DIAMOND_ORE,
+                    Material.REDSTONE_ORE,
+                    Material.MOSSY_COBBLESTONE
+            );
+
+            @PostProcess
+            private void postProcess() throws SerializationException {
+                if (this.maxSegmentSize < this.minSegmentSize) {
+                    throw new SerializationException("max-segment-size must not be smaller than min-segment-size");
+                }
+
+                for (Material material : this.obfuscatedBlocks) {
+                    if (material.getId() <= 0 || material.getId() > 96) {
+                        throw new SerializationException(material + " is not a valid material for obfuscated-blocks");
+                    }
+                }
+
+                for (Material material : this.replacementBlocks) {
+                    if (material.getId() <= 0 || material.getId() > 96) {
+                        throw new SerializationException(material + " is not a valid material for replacement-blocks");
+                    }
+                }
+            }
+        }
+
         public QuickMovementFlagging quickMovementFlagging;
 
         @ConfigSerializable
