@@ -83,9 +83,16 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         // CraftBukkit end */
         this.s = new NetworkReaderThread(this, s + " read thread");
         this.r = new NetworkWriterThread(this, s + " write thread");
+        // Poseidon start
+        /*this.s.start();
+        this.r.start();*/
+    }
+
+    void startThreads() {
         this.s.start();
         this.r.start();
     }
+    // Poseidon end
 
     public void a(NetHandler nethandler) {
         this.p = nethandler;

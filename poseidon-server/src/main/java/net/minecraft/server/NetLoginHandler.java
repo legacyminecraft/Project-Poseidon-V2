@@ -34,6 +34,7 @@ public class NetLoginHandler extends NetHandler {
         this.server = minecraftserver;
         this.networkManager = new NetworkManager(socket, s, this);
         this.networkManager.f = 0;
+        this.networkManager.startThreads(); // Poseidon
     }
 
     // CraftBukkit start
