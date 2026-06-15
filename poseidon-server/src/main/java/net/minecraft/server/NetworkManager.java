@@ -7,7 +7,6 @@ import com.legacyminecraft.poseidon.event.network.ServerSendPacketEvent;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
-import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedOutputStream;
@@ -92,6 +91,11 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         this.s.start();
         this.r.start();
     }
+
+    @Override
+    public NetHandler getNetHandler() {
+        return this.p;
+    }
     // Poseidon end
 
     public void a(NetHandler nethandler) {
@@ -100,25 +104,8 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
 
     // Poseidon start - network API
     @Override
-    public @Nullable Player getPlayer() {
-        NetHandler netHandler = this.p;
-        return netHandler instanceof NetServerHandler netServerHandler ? netServerHandler.getPlayer() : null;
-    }
-
-    @Override
     public void sendPacket(OutboundPacket packet) {
         queue(packet);
-    }
-
-    @Override
-    public void disconnect(String message) {
-        Preconditions.checkArgument(message != null, "message cannot be null");
-        this.p.disconnect(message);
-    }
-
-    @Override
-    public boolean isConnected() {
-        return this.p.isConnected();
     }
 
     @Override

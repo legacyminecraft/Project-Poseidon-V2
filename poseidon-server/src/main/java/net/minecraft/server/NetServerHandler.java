@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,7 +38,7 @@ import java.util.regex.Pattern;
 public class NetServerHandler extends NetHandler implements ICommandListener {
 
     public static Logger a = Logger.getLogger("Minecraft");
-    public NetworkManager networkManager;
+    public AbstractPlayerConnection networkManager; // Poseidon - NetworkManager -> AbstractPlayerConnection
     public AtomicBoolean disconnected = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
     private MinecraftServer minecraftServer;
     public EntityPlayer player; // CraftBukkit - private -> public
@@ -56,7 +57,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     private int ticks = 0;
     // Poseidon end
 
-    public NetServerHandler(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
+    // Poseidon - change signature
+    public NetServerHandler(MinecraftServer minecraftserver, AbstractPlayerConnection networkmanager, EntityPlayer entityplayer) {
         this.minecraftServer = minecraftserver;
         this.networkManager = networkmanager;
         networkmanager.a(this);
@@ -98,6 +100,10 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
     public boolean isConnected() {
         return !this.disconnected.get();
+    }
+
+    public void tick() {
+        a();
     }
     // Poseidon end
 

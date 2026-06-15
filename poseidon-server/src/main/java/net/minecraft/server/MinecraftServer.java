@@ -2,6 +2,9 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
+import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
+import com.legacyminecraft.poseidon.network.connection.ConnectionManager;
+import com.legacyminecraft.poseidon.network.netty.NettyConnectionManager;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import joptsimple.OptionSet;
 import org.bukkit.World.Environment;
@@ -38,7 +41,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
 
     public static Logger log = Logger.getLogger("Minecraft");
     //public static HashMap<String, Integer> trackerList = new HashMap<>(); // Poseidon - remove
-    public NetworkListenThread networkListenThread;
+    public ConnectionManager<? extends AbstractPlayerConnection> connectionManager; // Poseidon - rename, NetworkListenThread -> ConnectionManager
     public PropertyManager propertyManager;
     // public WorldServer[] worldServer; // CraftBukkit - removed!
     public ServerConfigurationManager serverConfigurationManager;
@@ -129,7 +132,15 @@ public class MinecraftServer implements Runnable, ICommandListener {
         log.info("Starting Minecraft server on " + (s.isEmpty() ? "*" : s) + ":" + i);
 
         try {
-            this.networkListenThread = new NetworkListenThread(this, inetaddress, i);
+            // Poseidon start - Netty I/O
+            if (Poseidon.getConfig().network.nettyIo.enabled) {
+                int threads = Poseidon.getConfig().network.nettyIo.threads;
+                boolean useNativeTransport = Poseidon.getConfig().network.nettyIo.useNativeTransport;
+                this.connectionManager = new NettyConnectionManager(this, inetaddress, i, threads, useNativeTransport);
+            } else {
+                // Poseidon end
+                this.connectionManager = new NetworkListenThread(this, inetaddress, i);
+            }
         } catch (Throwable ioexception) { // CraftBukkit - IOException -> Throwable
             log.warning("**** FAILED TO BIND TO PORT!");
             log.log(Level.WARNING, "The exception was: " + ioexception);
@@ -493,7 +504,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
             }
         // } // CraftBukkit
 
-        this.networkListenThread.a();
+        this.connectionManager.tickConnections(); // Poseidon
         this.serverConfigurationManager.b();
 
         for (j = 0; j < this.r.size(); ++j) {

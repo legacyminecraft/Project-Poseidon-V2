@@ -1,9 +1,12 @@
 package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.login.LoginProcessHandler;
 import com.legacyminecraft.poseidon.network.login.LoginState;
+import com.legacyminecraft.poseidon.network.netty.NettyPlayerConnection;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
+import io.netty.channel.socket.SocketChannel;
 import org.jspecify.annotations.Nullable;
 
 import java.net.Socket;
@@ -17,7 +20,7 @@ public class NetLoginHandler extends NetHandler {
 
     public static Logger a = Logger.getLogger("Minecraft");
     private static Random d = new Random();
-    public NetworkManager networkManager;
+    public AbstractPlayerConnection networkManager; // Poseidon - NetworkManager -> AbstractPlayerConnection
     public AtomicBoolean c = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
     private MinecraftServer server;
     private int f = 0;
@@ -32,16 +35,20 @@ public class NetLoginHandler extends NetHandler {
 
     public NetLoginHandler(MinecraftServer minecraftserver, Socket socket, String s) {
         this.server = minecraftserver;
-        this.networkManager = new NetworkManager(socket, s, this);
-        this.networkManager.f = 0;
-        this.networkManager.startThreads(); // Poseidon
+        // Poseidon start
+        NetworkManager networkManager = new NetworkManager(socket, s, this);
+        networkManager.f = 0;
+        this.networkManager = networkManager;
+        networkManager.startThreads();
+        // Poseidon end
     }
 
-    // CraftBukkit start
-    public @Nullable Socket getSocket() {
-        return this.networkManager.socket;
+    // Poseidon start - Netty I/O
+    public NetLoginHandler(MinecraftServer server, SocketChannel channel) {
+        this.server = server;
+        this.networkManager = new NettyPlayerConnection(channel, this);
     }
-    // CraftBukkit end
+    // Poseidon end
 
     // Poseidon start
     public MinecraftServer getServer() {
@@ -50,6 +57,10 @@ public class NetLoginHandler extends NetHandler {
 
     public boolean isConnected() {
         return !this.c.get();
+    }
+
+    public void tick() {
+        a();
     }
     // Poseidon end
 
@@ -151,7 +162,7 @@ public class NetLoginHandler extends NetHandler {
             // this.server.serverConfigurationManager.sendAll(new Packet3Chat("\u00A7e" + entityplayer.name + " joined the game."));  // CraftBukkit - message moved to join event
             this.server.serverConfigurationManager.c(entityplayer);
             netserverhandler.a(entityplayer.locX, entityplayer.locY, entityplayer.locZ, entityplayer.yaw, entityplayer.pitch);
-            this.server.networkListenThread.a(netserverhandler);
+            //this.server.networkListenThread.a(netserverhandler); // Poseidon
             netserverhandler.sendPacket(new Packet4UpdateTime(entityplayer.getPlayerTime())); // CraftBukkit - add support for player specific time
             entityplayer.syncInventory();
         }

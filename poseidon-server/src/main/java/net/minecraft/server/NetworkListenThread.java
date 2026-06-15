@@ -1,23 +1,25 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.network.connection.ConnectionManager;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class NetworkListenThread {
+public class NetworkListenThread implements ConnectionManager<NetworkManager> { // Poseidon - implements ConnectionManager<NetworkManager>
 
     public static Logger a = Logger.getLogger("Minecraft");
     private ServerSocket d;
     private Thread e;
     public volatile boolean b = false;
     private int f = 0;
-    private ArrayList<NetLoginHandler> g = new ArrayList<>();
-    private ArrayList<NetServerHandler> h = new ArrayList<>();
+    private List<NetworkManager> g = new CopyOnWriteArrayList<>(); // Poseidon - ArrayList<NetLoginHandler> -> CopyOnWriteArrayList<NetworkManager>
+    //private ArrayList<NetServerHandler> h = new ArrayList<>(); // Poseidon - remove
     public MinecraftServer c;
 
     public NetworkListenThread(MinecraftServer minecraftserver, @Nullable InetAddress inetaddress, int i) throws IOException {
@@ -29,39 +31,46 @@ public class NetworkListenThread {
         this.e.start();
     }
 
-    public void a(NetServerHandler netserverhandler) {
+    // Poseidon start - remove
+    /*public void a(NetServerHandler netserverhandler) {
         this.h.add(netserverhandler);
-    }
+    }*/
+    // Poseidon end
 
     private void a(NetLoginHandler netloginhandler) {
         if (netloginhandler == null) {
             throw new IllegalArgumentException("Got null pendingconnection!");
         } else {
-            this.g.add(netloginhandler);
+            this.g.add((NetworkManager) netloginhandler.networkManager); // Poseidon
         }
     }
 
+    // Poseidon start
+    public Iterable<NetworkManager> getConnections() {
+        return this.g::iterator;
+    }
+
+    public void tickConnections() {
+        a();
+    }
+    // Poseidon end
+
     public void a() {
-        int i;
-
-        for (i = 0; i < this.g.size(); ++i) {
-            NetLoginHandler netloginhandler = this.g.get(i);
-
+        // Poseidon start
+        for (NetworkManager networkManager : this.g) {
             try {
-                netloginhandler.a();
-            } catch (Exception exception) {
-                netloginhandler.disconnect("Internal server error");
-                a.log(Level.WARNING, "Failed to handle packet: " + exception, exception);
+                networkManager.getNetHandler().tick();
+            } catch (Exception e) {
+                a.log(Level.WARNING, "Failed to tick connection", e);
+                networkManager.disconnect("Internal server error");
             }
 
-            if (netloginhandler.c.get()) {
-                this.g.remove(i--);
+            if (!networkManager.isConnected()) {
+                this.g.remove(networkManager);
             }
-
-            netloginhandler.networkManager.a();
         }
 
-        for (i = 0; i < this.h.size(); ++i) {
+        /*for (i = 0; i < this.h.size(); ++i) {
             NetServerHandler netserverhandler = this.h.get(i);
 
             try {
@@ -76,7 +85,8 @@ public class NetworkListenThread {
             }
 
             netserverhandler.networkManager.a();
-        }
+        }*/
+        // Poseidon end
     }
 
     static ServerSocket a(NetworkListenThread networklistenthread) {

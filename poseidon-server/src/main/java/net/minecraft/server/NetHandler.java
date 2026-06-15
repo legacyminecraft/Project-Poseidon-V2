@@ -13,6 +13,8 @@ public abstract class NetHandler {
 
     public abstract boolean isConnected();
 
+    public abstract void tick();
+
     public abstract void disconnect(String s);
     // Poseidon end
 

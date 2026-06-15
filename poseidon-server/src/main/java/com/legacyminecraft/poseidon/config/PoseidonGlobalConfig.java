@@ -150,6 +150,16 @@ public final class PoseidonGlobalConfig {
 
     @ConfigSerializable
     public static final class Network {
+        public NettyIo nettyIo;
+
+        @ConfigSerializable
+        public static final class NettyIo {
+            public boolean enabled = false;
+            public boolean useNativeTransport = true;
+            @Positive
+            public int threads = 4;
+        }
+
         public ProxySupport proxySupport;
 
         @ConfigSerializable

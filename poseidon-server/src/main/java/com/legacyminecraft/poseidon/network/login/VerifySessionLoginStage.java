@@ -22,7 +22,7 @@ public final class VerifySessionLoginStage implements LoginStage {
         NetLoginHandler netLoginHandler = loginProcessHandler.getNetLoginHandler();
         try {
             String serverId = NetLoginHandler.a(netLoginHandler);
-            InetAddress ipAddress = netLoginHandler.getSocket().getInetAddress();
+            InetAddress ipAddress = netLoginHandler.networkManager.getClientAddress().getAddress();
             if (!Poseidon.getSessionService().verifySession(name, serverId, ipAddress)) {
                 log.info("{} tried to login with an invalid session", name);
                 loginProcessHandler.disconnect("Invalid session");

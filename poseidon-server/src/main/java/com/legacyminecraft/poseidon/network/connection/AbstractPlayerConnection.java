@@ -5,19 +5,29 @@ import com.legacyminecraft.poseidon.network.login.LoginState;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.proxy.ProxyConnectionDetails;
 import com.legacyminecraft.poseidon.network.proxy.ProxyMessage;
+import net.minecraft.server.NetHandler;
+import net.minecraft.server.NetServerHandler;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class AbstractPlayerConnection implements PlayerConnection {
+public abstract class AbstractPlayerConnection implements PlayerConnection, INetworkManager {
 
     private final AtomicBoolean proxyConnection = new AtomicBoolean(false);
     private final PacketRateLimiter packetRateLimiter = new PacketRateLimiter(this);
     private final PingCalculator pingCalculator = new PingCalculator();
 
     private volatile LoginState loginState = LoginState.INITIAL;
+
+    public abstract NetHandler getNetHandler();
+
+    @Override
+    public @Nullable Player getPlayer() {
+        return getNetHandler() instanceof NetServerHandler netServerHandler ? netServerHandler.getPlayer() : null;
+    }
 
     @Override
     public abstract void sendPacket(OutboundPacket packet);
@@ -35,10 +45,15 @@ public abstract class AbstractPlayerConnection implements PlayerConnection {
     }
 
     @Override
-    public abstract void disconnect(String message);
+    public void disconnect(String message) {
+        Preconditions.checkArgument(message != null, "message cannot be null");
+        getNetHandler().disconnect(message);
+    }
 
     @Override
-    public abstract boolean isConnected();
+    public boolean isConnected() {
+        return getNetHandler().isConnected();
+    }
 
     @Override
     public boolean isProxyConnection() {
