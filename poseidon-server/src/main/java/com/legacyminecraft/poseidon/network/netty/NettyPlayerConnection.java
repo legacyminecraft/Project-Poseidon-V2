@@ -81,7 +81,15 @@ public final class NettyPlayerConnection extends AbstractPlayerConnection {
     @Override
     public void a(String s, Object... aobject) {
         getNetHandler().a(s, aobject);
-        this.channel.close();
+        if (this.channel.eventLoop().inEventLoop()) {
+            this.channel.flush();
+            this.channel.close();
+        } else {
+            this.channel.eventLoop().execute(() -> {
+                this.channel.flush();
+                this.channel.close();
+            });
+        }
     }
 
     public void handleException(Throwable t) {
@@ -100,7 +108,7 @@ public final class NettyPlayerConnection extends AbstractPlayerConnection {
 
     @Override
     public void d() {
-        this.channel.close();
+        a("disconnect.closed");
     }
 
     @Override
