@@ -9,6 +9,8 @@ import com.google.common.collect.MapMaker;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.command.InternalCommandMap;
+import com.legacyminecraft.poseidon.messaging.Messenger;
+import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
@@ -91,6 +93,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public final class CraftServer implements Server {
     private final String serverName = "Project Poseidon"; // Poseidon - rebrand
@@ -98,6 +102,7 @@ public final class CraftServer implements Server {
     private final String protocolVersion = "1.7.3";
     private final ServicesManager servicesManager = new SimpleServicesManager();
     private final BukkitScheduler scheduler = new CraftScheduler(this);
+    private final Messenger messenger; // Poseidon - implement plugin messaging
     private final InternalCommandMap commandMap = new InternalCommandMap(this); // Poseidon - SimpleCommandMap -> InternalCommandMap
     private final PluginManager pluginManager = new SimplePluginManager(this, commandMap);
     protected final MinecraftServer console;
@@ -122,6 +127,7 @@ public final class CraftServer implements Server {
         loadConfig();
 
         // Poseidon start
+        this.messenger = new StandardMessenger(console.connectionManager);
         poseidonServer.initialize();
         this.commandMap.setDefaultCommands(this);
         // Poseidon end
@@ -360,6 +366,25 @@ public final class CraftServer implements Server {
     public BukkitScheduler getScheduler() {
         return scheduler;
     }
+
+    // Poseidon start - implement plugin messaging
+    public Messenger getMessenger() {
+        return messenger;
+    }
+
+    public void sendPluginMessage(Plugin owningPlugin, String channel, byte[] message) {
+        StandardMessenger.validatePluginMessage(this.messenger, owningPlugin, channel, message);
+
+        this.console.connectionManager.getConnections().forEach(connection ->
+                connection.sendPluginMessage(owningPlugin, channel, message));
+    }
+
+    public Set<String> getListeningChannels() {
+        return StreamSupport.stream(this.console.connectionManager.getConnections().spliterator(), false)
+                .flatMap(connection -> connection.getListeningChannels().stream())
+                .collect(Collectors.toSet());
+    }
+    // Poseidon end
 
     public ServicesManager getServicesManager() {
         return servicesManager;

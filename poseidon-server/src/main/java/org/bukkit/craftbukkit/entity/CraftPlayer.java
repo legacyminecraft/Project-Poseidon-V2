@@ -30,6 +30,7 @@ import org.bukkit.craftbukkit.map.RenderData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.map.MapView;
+import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
@@ -123,6 +124,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public void sendMessage(String message) {
         this.sendRawMessage(message);
     }
+
+    // Poseidon start - implement plugin messaging
+    public void sendPluginMessage(Plugin owningPlugin, String channel, byte[] message) {
+        getConnection().sendPluginMessage(owningPlugin, channel, message);
+    }
+
+    public Set<String> getListeningChannels() {
+        return getConnection().getListeningChannels();
+    }
+    // Poseidon end
 
     public String getDisplayName() {
         return getHandle().displayName;

@@ -1,5 +1,6 @@
 package com.legacyminecraft.poseidon.network.connection;
 
+import com.legacyminecraft.poseidon.messaging.PluginMessageRecipient;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
@@ -9,7 +10,7 @@ import java.net.InetSocketAddress;
 /**
  * Represents a player's connection to the server.
  */
-public interface PlayerConnection {
+public interface PlayerConnection extends PluginMessageRecipient {
 
     /**
      * Returns the player associated with this connection.

@@ -1,5 +1,6 @@
 package org.bukkit.entity;
 
+import com.legacyminecraft.poseidon.messaging.PluginMessageRecipient;
 import com.legacyminecraft.poseidon.network.connection.PlayerConnection;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
@@ -19,7 +20,7 @@ import java.net.InetSocketAddress;
  * Represents a player, connected or not
  *
  */
-public interface Player extends HumanEntity, CommandSender, OfflinePlayer {
+public interface Player extends HumanEntity, CommandSender, OfflinePlayer, PluginMessageRecipient { // Poseidon - extends PluginMessageRecipient
     /**
      * Gets the "friendly" name to display of this player. This may include color.
      *

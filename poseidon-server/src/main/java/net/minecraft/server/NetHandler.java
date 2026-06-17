@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.messaging.StandardMessenger;
+import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import org.jspecify.annotations.Nullable;
 
 public abstract class NetHandler {
@@ -10,6 +12,8 @@ public abstract class NetHandler {
 
     // Poseidon start
     public abstract MinecraftServer getServer();
+
+    public abstract AbstractPlayerConnection getConnection();
 
     public abstract boolean isConnected();
 
@@ -219,4 +223,19 @@ public abstract class NetHandler {
     public void a(Packet61 packet61) {
         this.a((Packet) packet61);
     }
+
+    // Poseidon start - implement plugin messaging
+    public final void handlePluginMessage(Packet250PluginMessage pluginMessage) {
+        AbstractPlayerConnection connection = getConnection();
+        connection.sendPendingChannels();
+        String channel = pluginMessage.channel;
+        byte[] message = pluginMessage.message;
+
+        switch (channel) {
+            case "register" -> StandardMessenger.decodeChannels(message).forEach(connection::addChannel);
+            case "unregister" -> StandardMessenger.decodeChannels(message).forEach(connection::removeChannel);
+            default -> getServer().server.getMessenger().dispatchInboundMessage(connection, channel, pluginMessage.message);
+        }
+    }
+    // Poseidon end
 }

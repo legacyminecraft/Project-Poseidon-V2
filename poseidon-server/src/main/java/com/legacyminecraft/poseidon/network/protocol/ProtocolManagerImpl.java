@@ -232,6 +232,7 @@ public final class ProtocolManagerImpl implements ProtocolManager {
         registerOutboundPacket(131, Packet131.class, Packet131.ENCODER);
         registerOutboundPacket(200, Packet200Statistic.class, Packet200Statistic.ENCODER);
         registerDuplexPacket(249, ProxyMessage.class, ProxyMessage.CODEC);
+        registerDuplexPacket(250, Packet250PluginMessage.class, Packet250PluginMessage.CODEC);
         registerDuplexPacket(255, Packet255KickDisconnect.class, Packet255KickDisconnect.CODEC);
     }
 }

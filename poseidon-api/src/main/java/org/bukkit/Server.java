@@ -1,6 +1,8 @@
 package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
+import com.legacyminecraft.poseidon.messaging.Messenger;
+import com.legacyminecraft.poseidon.messaging.PluginMessageRecipient;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.command.CommandSender;
@@ -23,7 +25,7 @@ import java.util.logging.Logger;
 /**
  * Represents a server implementation
  */
-public interface Server {
+public interface Server extends PluginMessageRecipient { // Poseidon - extends PluginMessageRecipient
     /**
      * Used for all administrative messages, such as an operator using a command.
      *
@@ -206,6 +208,16 @@ public interface Server {
      * @return Scheduler for this Server instance
      */
     BukkitScheduler getScheduler();
+
+    // Poseidon start - implement plugin messaging
+    /**
+     * Gets this server's {@link Messenger} for managing registrations of
+     * plugin channels.
+     *
+     * @return this server's messenger
+     */
+    Messenger getMessenger();
+    // Poseidon end
 
     /**
      * Gets a services manager

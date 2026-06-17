@@ -1,6 +1,7 @@
 package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
+import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.World.Environment;
@@ -134,6 +135,12 @@ public final class Bukkit {
     public static BukkitScheduler getScheduler() {
         return server.getScheduler();
     }
+
+    // Poseidon start - implement plugin messaging
+    public static Messenger getMessenger() {
+        return server.getMessenger();
+    }
+    // Poseidon end
 
     public static ServicesManager getServicesManager() {
         return server.getServicesManager();

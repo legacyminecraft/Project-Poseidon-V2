@@ -55,6 +55,10 @@ public class NetLoginHandler extends NetHandler {
         return this.server;
     }
 
+    public AbstractPlayerConnection getConnection() {
+        return this.networkManager;
+    }
+
     public boolean isConnected() {
         return !this.c.get();
     }

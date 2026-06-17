@@ -98,6 +98,10 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         return this.minecraftServer;
     }
 
+    public AbstractPlayerConnection getConnection() {
+        return this.networkManager;
+    }
+
     public boolean isConnected() {
         return !this.disconnected.get();
     }
