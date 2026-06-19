@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
-public record ProxyHelloPacket(byte[] details, byte[] signature) {
+public record ProxyHelloMessage(byte[] details, byte[] signature) {
 
     public static final String MAC_ALGORITHM = "HmacSHA256";
 
@@ -20,7 +20,7 @@ public record ProxyHelloPacket(byte[] details, byte[] signature) {
             .registerTypeAdapter(ProxyConnectionDetails.class, new ProxyConnectionDetails.Serializer())
             .create();
 
-    public ProxyHelloPacket(DataInput input) throws IOException {
+    public ProxyHelloMessage(DataInput input) throws IOException {
         byte[] details = new byte[input.readUnsignedShort()];
         input.readFully(details);
         byte[] signature = new byte[input.readUnsignedShort()];

@@ -127,6 +127,10 @@ public class NetLoginHandler extends NetHandler {
             return;
         }
         this.networkManager.setLoginState(LoginState.LOGIN);
+
+        if ((packet1login.d & 128) != 0) {
+            this.networkManager.sendClientChannels();
+        }
         // Poseidon end
 
         this.g = packet1login.name;

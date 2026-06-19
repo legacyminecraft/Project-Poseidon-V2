@@ -27,16 +27,6 @@ public interface PlayerConnection extends PluginMessageRecipient {
     void sendPacket(OutboundPacket packet);
 
     /**
-     * Sends a proxy message to the proxy which the player is connected through.
-     *
-     * @param tag the message tag
-     * @param data the message data
-     * @throws UnsupportedOperationException if this connection is not a proxy
-     *         connection
-     */
-    void sendProxyMessage(String tag, byte[] data);
-
-    /**
      * Disconnects the player.
      *
      * @param message the disconnect message
@@ -68,7 +58,7 @@ public interface PlayerConnection extends PluginMessageRecipient {
     /**
      * Returns the client address of the player. If this is a proxy connection,
      * this will be the player's actual address extracted from the proxy hello
-     * packet.
+     * message.
      *
      * @return the client address
      */

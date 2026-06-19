@@ -1,5 +1,8 @@
 package com.legacyminecraft.poseidon.network.proxy;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -9,16 +12,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ProxyHelloPacketTest {
+class ProxyHelloMessageTest {
 
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
@@ -36,23 +35,22 @@ class ProxyHelloPacketTest {
         object.addProperty("sourcePort", sourcePort);
         byte[] detailsBytes = GSON.toJson(object).getBytes(StandardCharsets.UTF_8);
 
-        Mac mac = Mac.getInstance(ProxyHelloPacket.MAC_ALGORITHM);
+        Mac mac = Mac.getInstance(ProxyHelloMessage.MAC_ALGORITHM);
         byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
-        mac.init(new SecretKeySpec(secretBytes, ProxyHelloPacket.MAC_ALGORITHM));
+        mac.init(new SecretKeySpec(secretBytes, ProxyHelloMessage.MAC_ALGORITHM));
         byte[] signature = mac.doFinal(detailsBytes);
 
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        DataOutputStream output = new DataOutputStream(buffer);
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeShort(detailsBytes.length);
         output.write(detailsBytes);
         output.writeShort(signature.length);
         output.write(signature);
 
-        DataInputStream input = new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()));
-        ProxyHelloPacket hello = new ProxyHelloPacket(input);
-        assertThat(hello.isSignatureValid(secretBytes)).isTrue();
+        ByteArrayDataInput input = ByteStreams.newDataInput(output.toByteArray());
+        ProxyHelloMessage helloMessage = new ProxyHelloMessage(input);
+        assertThat(helloMessage.isSignatureValid(secretBytes)).isTrue();
 
-        ProxyConnectionDetails details = hello.deserializeDetails();
+        ProxyConnectionDetails details = helloMessage.deserializeDetails();
         assertThat(details.sourceHost()).isEqualTo(sourceHost);
         assertThat(details.sourcePort()).isEqualTo(sourcePort);
     }

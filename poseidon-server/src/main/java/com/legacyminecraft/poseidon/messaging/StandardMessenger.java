@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 
 public final class StandardMessenger implements Messenger {
 
+    public static final String REGISTER_CHANNEL = "register";
+    public static final String UNREGISTER_CHANNEL = "unregister";
+    public static final String PROXY_HELLO_CHANNEL = Messenger.PROXY_CHANNEL_PREFIX + "hello";
+
     private final ConnectionManager<? extends AbstractPlayerConnection> connectionManager;
     private final Map<String, PluginMessageListenerRegistration> inboundByChannel = new Object2ObjectOpenHashMap<>();
     private final Map<Plugin, Set<PluginMessageListenerRegistration>> inboundByPlugin = new Object2ObjectOpenHashMap<>();
@@ -246,6 +250,11 @@ public final class StandardMessenger implements Messenger {
 
     public static boolean isRestrictedChannel(String channel) {
         Preconditions.checkArgument(channel != null, "channel cannot be null");
-        return channel.equals("register") || channel.equals("unregister");
+        return channel.equals(REGISTER_CHANNEL) || channel.equals(UNREGISTER_CHANNEL);
+    }
+
+    public static boolean isProxyChannel(String channel) {
+        Preconditions.checkArgument(channel != null, "channel cannot be null");
+        return channel.startsWith(Messenger.PROXY_CHANNEL_PREFIX);
     }
 }

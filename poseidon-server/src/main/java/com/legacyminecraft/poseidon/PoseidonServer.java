@@ -1,9 +1,10 @@
 package com.legacyminecraft.poseidon;
 
+import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.connection.PacketRateLimiter;
 import com.legacyminecraft.poseidon.network.connection.PingCalculator;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManagerImpl;
-import com.legacyminecraft.poseidon.network.proxy.ProxyHelloPacketListener;
+import com.legacyminecraft.poseidon.network.proxy.ProxyHelloMessageListener;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.performance.WatchdogThread;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
@@ -15,7 +16,6 @@ import com.legacyminecraft.poseidon.version.PoseidonBuildInformation;
 import com.legacyminecraft.poseidon.version.PoseidonUpdateNotifier;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.permissions.DefaultPermissions;
 
 public final class PoseidonServer {
@@ -46,10 +46,10 @@ public final class PoseidonServer {
         getBuildInformation().load();
         getProfileCache().load();
         getProtocolManager().registerDefaults();
-        PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        pluginManager.registerEvents(PacketRateLimiter.LISTENER, InternalBukkitAccess.INSTANCE);
-        pluginManager.registerEvents(PingCalculator.LISTENER, InternalBukkitAccess.INSTANCE);
-        pluginManager.registerEvents(ProxyHelloPacketListener.INSTANCE, InternalBukkitAccess.INSTANCE);
+        Bukkit.getPluginManager().registerEvents(PacketRateLimiter.LISTENER, InternalBukkitAccess.INSTANCE);
+        Bukkit.getPluginManager().registerEvents(PingCalculator.LISTENER, InternalBukkitAccess.INSTANCE);
+        Bukkit.getMessenger().registerInboundChannel(InternalBukkitAccess.INSTANCE,
+                StandardMessenger.PROXY_HELLO_CHANNEL, ProxyHelloMessageListener.INSTANCE);
         DefaultPermissions.registerPermission(
                 "poseidon.anticheat.anti-xray.exempt",
                 "Makes a player exempt from the server's anti-xray obfuscation",

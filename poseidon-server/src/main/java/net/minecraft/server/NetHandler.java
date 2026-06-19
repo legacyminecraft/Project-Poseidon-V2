@@ -227,14 +227,16 @@ public abstract class NetHandler {
     // Poseidon start - implement plugin messaging
     public final void handlePluginMessage(Packet250PluginMessage pluginMessage) {
         AbstractPlayerConnection connection = getConnection();
-        connection.sendPendingChannels();
         String channel = pluginMessage.channel;
         byte[] message = pluginMessage.message;
 
         switch (channel) {
-            case "register" -> StandardMessenger.decodeChannels(message).forEach(connection::addChannel);
-            case "unregister" -> StandardMessenger.decodeChannels(message).forEach(connection::removeChannel);
-            default -> getServer().server.getMessenger().dispatchInboundMessage(connection, channel, pluginMessage.message);
+            case StandardMessenger.REGISTER_CHANNEL ->
+                    StandardMessenger.decodeChannels(message).forEach(connection::addChannel);
+            case StandardMessenger.UNREGISTER_CHANNEL ->
+                    StandardMessenger.decodeChannels(message).forEach(connection::removeChannel);
+            default ->
+                    getServer().server.getMessenger().dispatchInboundMessage(connection, channel, message);
         }
     }
     // Poseidon end

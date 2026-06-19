@@ -7,7 +7,6 @@ import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.login.LoginState;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.proxy.ProxyConnectionDetails;
-import com.legacyminecraft.poseidon.network.proxy.ProxyMessage;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.server.NetHandler;
 import net.minecraft.server.NetServerHandler;
@@ -18,20 +17,19 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class AbstractPlayerConnection implements PlayerConnection, INetworkManager {
 
     private final AtomicBoolean proxyConnection = new AtomicBoolean(false);
+    private final AtomicBoolean clientSupportsMessaging = new AtomicBoolean(false);
+    private final Set<String> channels = ConcurrentHashMap.newKeySet();
     private final PacketRateLimiter packetRateLimiter = new PacketRateLimiter(this);
     private final PingCalculator pingCalculator = new PingCalculator();
-
-    private final Set<String> channels = ConcurrentHashMap.newKeySet();
-    private final Set<String> pendingChannels = new ObjectOpenHashSet<>();
-    private boolean sentPendingChannels = false;
 
     private volatile LoginState loginState = LoginState.INITIAL;
 
@@ -72,49 +70,49 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     }
 
     public void notifyChannelsRegistered(Set<String> channels) {
-        synchronized (this.pendingChannels) {
-            if (this.sentPendingChannels) {
-                byte[] encodedChannels = StandardMessenger.encodeChannels(channels);
-                sendPacket(new Packet250PluginMessage("register", encodedChannels));
-            } else {
-                this.pendingChannels.addAll(channels);
-            }
-        }
+        notifyChannels(channels, true);
     }
 
     public void notifyChannelsUnregistered(Set<String> channels) {
-        synchronized (this.pendingChannels) {
-            if (this.sentPendingChannels) {
-                byte[] encodedChannels = StandardMessenger.encodeChannels(channels);
-                sendPacket(new Packet250PluginMessage("unregister", encodedChannels));
+        notifyChannels(channels, false);
+    }
+
+    private void notifyChannels(Set<String> channels, boolean register) {
+        Set<String> proxyChannels = new ObjectOpenHashSet<>();
+        Set<String> clientChannels = new ObjectOpenHashSet<>();
+
+        channels.forEach(channel -> {
+            if (StandardMessenger.isProxyChannel(channel)) {
+                proxyChannels.add(channel);
             } else {
-                this.pendingChannels.removeAll(channels);
+                clientChannels.add(channel);
             }
+        });
+
+        String channel = register ? StandardMessenger.REGISTER_CHANNEL : StandardMessenger.UNREGISTER_CHANNEL;
+
+        if (!proxyChannels.isEmpty() && this.proxyConnection.get()) {
+            byte[] encodedChannels = StandardMessenger.encodeChannels(proxyChannels);
+            sendPacket(new Packet250PluginMessage(channel, encodedChannels));
+        }
+
+        if (!clientChannels.isEmpty() && this.clientSupportsMessaging.get()) {
+            byte[] encodedChannels = StandardMessenger.encodeChannels(clientChannels);
+            sendPacket(new Packet250PluginMessage(channel, encodedChannels));
         }
     }
 
-    public void sendPendingChannels() {
-        synchronized (this.pendingChannels) {
-            if (!this.sentPendingChannels) {
-                this.sentPendingChannels = true;
-                if (!this.pendingChannels.isEmpty()) {
-                    byte[] encodedChannels = StandardMessenger.encodeChannels(this.pendingChannels);
-                    sendPacket(new Packet250PluginMessage("register", encodedChannels));
-                }
+    public void sendClientChannels() {
+        if (this.clientSupportsMessaging.compareAndSet(false, true)) {
+            Set<String> clientChannels = Bukkit.getMessenger().getInboundChannels().stream()
+                    .filter(Predicate.not(StandardMessenger::isProxyChannel))
+                    .collect(Collectors.toSet());
+
+            if (!clientChannels.isEmpty()) {
+                byte[] encodedChannels = StandardMessenger.encodeChannels(clientChannels);
+                sendPacket(new Packet250PluginMessage(StandardMessenger.REGISTER_CHANNEL, encodedChannels));
             }
         }
-    }
-
-    @Override
-    public void sendProxyMessage(String tag, byte[] data) {
-        Preconditions.checkArgument(tag != null, "tag cannot be null");
-        Preconditions.checkArgument(data != null, "data cannot be null");
-
-        if (!isProxyConnection()) {
-            String name = Optional.ofNullable(getPlayer()).map(Player::getName).orElse(null);
-            throw new UnsupportedOperationException("player " + name + " is not connected through a proxy");
-        }
-        sendPacket(new ProxyMessage(tag, data));
     }
 
     @Override
@@ -146,11 +144,18 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
 
     public abstract void setClientAddress(InetSocketAddress address);
 
-    public void onDetailsReceived(ProxyConnectionDetails details) {
-        if (!this.proxyConnection.compareAndSet(false, true)) {
-            return;
+    public void onConnectionDetailsReceived(ProxyConnectionDetails details) {
+        if (this.proxyConnection.compareAndSet(false, true)) {
+            setClientAddress(new InetSocketAddress(details.sourceHost(), details.sourcePort()));
+            Set<String> proxyChannels = Bukkit.getMessenger().getInboundChannels().stream()
+                    .filter(StandardMessenger::isProxyChannel)
+                    .collect(Collectors.toSet());
+
+            if (!proxyChannels.isEmpty()) {
+                byte[] encodedChannels = StandardMessenger.encodeChannels(proxyChannels);
+                sendPacket(new Packet250PluginMessage(StandardMessenger.REGISTER_CHANNEL, encodedChannels));
+            }
         }
-        setClientAddress(new InetSocketAddress(details.sourceHost(), details.sourcePort()));
     }
 
     public LoginState getLoginState() {
