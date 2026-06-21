@@ -11,29 +11,36 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      - name: Set up JDK 25
+      - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
-          java-version: "25"
+          distribution: 'temurin'
+          java-version: '25'
 
       - name: Set up Maven
         uses: stCarolas/setup-maven@v5.1
         with:
-          maven-version: 3.9.1
+          maven-version: '3.9.16'
 
-      - name: Build Application
-        run: mvn clean install
+      - name: Set Build Information
+        run: |
+          echo "PROJECT_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)" >> $GITHUB_ENV
+          echo "GIT_BRANCH=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+          echo "GIT_COMMIT=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+          echo "BUILD_TIMESTAMP=$(date --utc +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
+      - name: Build & Test Application
+        run: mvn clean package
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
           name: ${{ github.event.repository.name }}-artifact
-          path: poseidon-server/target/*.jar
+          path: poseidon-server/target/poseidon-server-*.jar

@@ -97,7 +97,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public final class CraftServer implements Server {
-    private final String serverName = "Project Poseidon"; // Poseidon - rebrand
+    private final String serverName;
     private final String serverVersion;
     private final String protocolVersion = "1.7.3";
     private final ServicesManager servicesManager = new SimpleServicesManager();
@@ -119,7 +119,10 @@ public final class CraftServer implements Server {
     public CraftServer(MinecraftServer console, ServerConfigurationManager server, PoseidonServer poseidonServer) {
         this.console = console;
         this.server = server;
-        this.serverVersion = CraftServer.class.getPackage().getImplementationVersion();
+        // Poseidon start - add build information
+        this.serverName = Poseidon.getBuildInformation().serverBrand();
+        this.serverVersion = Poseidon.getBuildInformation().asSimpleVersionString();
+        // Poseidon end
 
         Bukkit.setServer(this);
 
@@ -216,12 +219,18 @@ public final class CraftServer implements Server {
         }
     }
 
+    // Poseidon start - add build information
+    public String getVersionString() {
+        return "This server is running " + getName() + " version " + Poseidon.getBuildInformation().asFullVersionString();
+    }
+    // Poseidon end
+
     public String getName() {
         return serverName;
     }
 
     public String getVersion() {
-        return serverVersion + " (MC: " + protocolVersion + ")";
+        return serverVersion; // Poseidon
     }
 
     public Player[] getOnlinePlayers() {

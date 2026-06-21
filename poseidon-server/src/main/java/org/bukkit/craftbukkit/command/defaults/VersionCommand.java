@@ -23,10 +23,9 @@ public class VersionCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
-        
+
         if (args.length == 0) {
-            // Poseidon - change message
-            sender.sendMessage(ChatColor.GRAY + "This server is running " + ChatColor.AQUA + Bukkit.getName() + ChatColor.GRAY + " version " + ChatColor.YELLOW + Bukkit.getVersion());
+            sender.sendMessage(Bukkit.getVersionString()); // Poseidon - change message
             //sender.sendMessage("This server is also sporting some funky dev build of Bukkit!"); // Poseidon - remove
         } else {
             StringBuilder name = new StringBuilder();

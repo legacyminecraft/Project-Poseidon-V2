@@ -181,12 +181,12 @@
                     <archive>
                         <manifestEntries>
                             <Main-Class>org.bukkit.craftbukkit.Main</Main-Class>
-                            <Implementation-Title>Project Poseidon</Implementation-Title>
+                            <Implementation-Title>${server.brand}</Implementation-Title>
                             <Implementation-Version>${project.version}</Implementation-Version>
-                            <Implementation-Vendor>Poseidon Team</Implementation-Vendor>
-                            <Specification-Title>Bukkit</Specification-Title>
-                            <Specification-Version>unknown</Specification-Version>
-                            <Specification-Vendor>Bukkit Team</Specification-Vendor>
+                            <Implementation-Vendor>${server.vendor}</Implementation-Vendor>
+                            <Specification-Title>${server.brand}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Specification-Vendor>${server.vendor}</Specification-Vendor>
                             <Sealed>true</Sealed>
                         </manifestEntries>
                         <manifestSections>
@@ -214,5 +214,77 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>git-branch</id>
+            <activation>
+                <property>
+                    <name>env.GIT_BRANCH</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <Git-Branch>${env.GIT_BRANCH}</Git-Branch>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>git-commit</id>
+            <activation>
+                <property>
+                    <name>env.GIT_COMMIT</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <Git-Commit>${env.GIT_COMMIT}</Git-Commit>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>build-timestamp</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_TIMESTAMP</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <Build-Timestamp>${env.BUILD_TIMESTAMP}</Build-Timestamp>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

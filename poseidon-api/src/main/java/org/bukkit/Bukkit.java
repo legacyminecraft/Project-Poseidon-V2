@@ -55,8 +55,14 @@ public final class Bukkit {
         }
 
         Bukkit.server = server;
-        server.getLogger().info("This server is running " + getName() + " version " + getVersion());
+        // Poseidon start - add build information
+        server.getLogger().info(getVersionString());
     }
+
+    public static String getVersionString() {
+        return server.getVersionString();
+    }
+    // Poseidon end
 
     public static String getName() {
         return server.getName();

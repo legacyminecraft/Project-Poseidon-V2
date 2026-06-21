@@ -43,7 +43,6 @@ public final class PoseidonServer {
     }
 
     public void initialize() {
-        getBuildInformation().load();
         getProfileCache().load();
         getProtocolManager().registerDefaults();
         Bukkit.getPluginManager().registerEvents(PacketRateLimiter.LISTENER, InternalBukkitAccess.INSTANCE);

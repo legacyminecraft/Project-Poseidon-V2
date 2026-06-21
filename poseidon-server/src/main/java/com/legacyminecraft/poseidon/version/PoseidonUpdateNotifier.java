@@ -75,6 +75,6 @@ public final class PoseidonUpdateNotifier {
     }
 
     private String getCurrentBuild() {
-        return this.buildInformation.getVersion();
+        return this.buildInformation.implVersion();
     }
 }

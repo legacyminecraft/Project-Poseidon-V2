@@ -13,52 +13,28 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      - name: Set up JDK 25
+      - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
-          java-version: "25"
-          cache: maven
+          distribution: 'temurin'
+          java-version: '25'
+          server-id: 'johnymuffin-nexus'
+          server-username: 'NEXUS_USERNAME'
+          server-password: 'NEXUS_PASSWORD'
 
-      - name: Get Maven Project Version
-        run: echo "PROJECT_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)" >> $GITHUB_ENV
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5.1
+        with:
+          maven-version: '3.9.16'
 
-      - name: Create version.properties
+      - name: Set Build Information
         run: |
-          {
-            echo "app_name=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.name)"
-            echo "version=${{ env.PROJECT_VERSION }}"
-            if [[ ${{ env.PROJECT_VERSION }} == *"-SNAPSHOT"* ]]; then
-              BUILD_TYPE="snapshot"
-            else
-              BUILD_TYPE="release"
-            fi
-            echo "build_type=${BUILD_TYPE}"
-            echo "build_timestamp=$(date --utc +'%Y-%m-%dT%H:%M:%SZ')"
-            echo "git_commit=${GITHUB_SHA}"
-          } > poseidon-server/src/main/resources/version.properties
-
-      - name: Write Maven settings.xml for Nexus auth
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << 'EOF'
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <servers>
-              <server>
-                <id>johnymuffin-nexus</id>
-                <username>${env.NEXUS_USERNAME}</username>
-                <password>${env.NEXUS_PASSWORD}</password>
-              </server>
-            </servers>
-          </settings>
-          EOF
-        env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          echo "PROJECT_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)" >> $GITHUB_ENV
+          echo "GIT_BRANCH=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+          echo "GIT_COMMIT=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+          echo "BUILD_TIMESTAMP=$(date --utc +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
       - name: Build & Deploy to Nexus
         run: mvn -B -DskipTests clean deploy
@@ -68,12 +44,11 @@ jobs:
 
       - name: Create GitHub Release
         if: ${{ !endsWith(env.PROJECT_VERSION, '-SNAPSHOT') }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.PROJECT_VERSION }}
           name: ${{ env.PROJECT_VERSION }}
           files: |
-            poseidon-server/target/*.jar
-
+            poseidon-server/target/poseidon-server-*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

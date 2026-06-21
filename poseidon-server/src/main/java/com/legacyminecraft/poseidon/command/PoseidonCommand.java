@@ -1,6 +1,5 @@
 package com.legacyminecraft.poseidon.command;
 
-import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.config.PoseidonGlobalConfig;
 import com.legacyminecraft.poseidon.config.PoseidonWorldConfig;
 import com.mojang.brigadier.CommandDispatcher;
@@ -68,28 +67,7 @@ public final class PoseidonCommand extends Command {
     }
 
     private int displayVersion(CommandContext<CommandSender> context) {
-        String appName = Poseidon.getBuildInformation().getAppName();
-        String version = Poseidon.getBuildInformation().getVersion();
-        String buildTimestamp = Poseidon.getBuildInformation().getBuildTimestamp();
-        String gitCommit = Poseidon.getBuildInformation().getShortGitCommit();
-        String buildType = Poseidon.getBuildInformation().getBuildType();
-
-        if (version.equalsIgnoreCase("unknown")) {
-            context.getSource().sendMessage(ChatColor.RED + "Warning: version.properties not found. This is a local or unconfigured build.");
-            return 1;
-        }
-
-        context.getSource().sendMessage(ChatColor.GRAY + "This server is running " + ChatColor.AQUA + appName + ChatColor.GRAY + ":");
-        context.getSource().sendMessage(ChatColor.GRAY + " - Version: " + ChatColor.YELLOW + version);
-        context.getSource().sendMessage(ChatColor.GRAY + " - Built at: " + ChatColor.YELLOW + buildTimestamp);
-        context.getSource().sendMessage(ChatColor.GRAY + " - Git SHA: " + ChatColor.YELLOW + gitCommit);
-
-        if (buildType.equalsIgnoreCase("release")) {
-            context.getSource().sendMessage(ChatColor.GREEN + "This is a release build.");
-        } else {
-            context.getSource().sendMessage(ChatColor.GRAY + "This is a " + buildType + " build.");
-        }
-
+        context.getSource().sendMessage(Bukkit.getVersionString());
         return 1;
     }
 

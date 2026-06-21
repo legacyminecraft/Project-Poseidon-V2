@@ -40,6 +40,15 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
      */
     String BROADCAST_CHANNEL_USERS = "bukkit.broadcast.user";
 
+    // Poseidon start - add build information
+    /**
+     * Gets the message describing which version of the server is running.
+     *
+     * @return message describing which version of the server is running
+     */
+    String getVersionString();
+    // Poseidon end
+
     /**
      * Gets the name of this server implementation
      *

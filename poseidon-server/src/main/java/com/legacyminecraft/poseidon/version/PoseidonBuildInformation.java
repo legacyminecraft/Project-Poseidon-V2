@@ -1,54 +1,60 @@
 package com.legacyminecraft.poseidon.version;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.jar.Manifest;
 
-public final class PoseidonBuildInformation {
+public record PoseidonBuildInformation(
+        String serverBrand,
+        String implVersion,
+        Optional<String> gitBranch,
+        Optional<String> gitCommit,
+        Optional<Instant> buildTimestamp
+) {
+    private static final String ATTRIBUTE_SERVER_BRAND = "Implementation-Title";
+    private static final String ATTRIBUTE_IMPL_VERSION = "Implementation-Version";
+    public static final String ATTRIBUTE_GIT_BRANCH = "Git-Branch";
+    public static final String ATTRIBUTE_GIT_COMMIT = "Git-Commit";
+    public static final String ATTRIBUTE_BUILD_TIMESTAMP = "Build-Timestamp";
 
-    private static final Logger log = LoggerFactory.getLogger(PoseidonBuildInformation.class);
-
-    private final Properties versionProperties = new Properties();
-
-    public void load() {
-        try (InputStream in = PoseidonBuildInformation.class.getClassLoader().getResourceAsStream("version.properties")) {
-            if (in != null) {
-                this.versionProperties.load(in);
-            }
+    public PoseidonBuildInformation() {
+        Manifest manifest;
+        try (InputStream input = PoseidonBuildInformation.class.getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")) {
+            manifest = new Manifest(input);
         } catch (IOException e) {
-            log.warn("Failed to load version.properties", e);
+            throw new RuntimeException("Failed to load build information", e);
         }
+
+        this(
+                getManifestAttribute(manifest, ATTRIBUTE_SERVER_BRAND).orElseThrow(),
+                getManifestAttribute(manifest, ATTRIBUTE_IMPL_VERSION).orElseThrow(),
+                getManifestAttribute(manifest, ATTRIBUTE_GIT_BRANCH),
+                getManifestAttribute(manifest, ATTRIBUTE_GIT_COMMIT),
+                getManifestAttribute(manifest, ATTRIBUTE_BUILD_TIMESTAMP).map(Instant::parse)
+        );
     }
 
-    public String getAppName() {
-        return getProperty("app_name");
+    public String asSimpleVersionString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(implVersion());
+        gitBranch().ifPresentOrElse(gitBranch -> {
+            sb.append("-").append(gitBranch);
+            gitCommit().ifPresent(gitCommit -> sb.append("@").append(gitCommit));
+        }, () -> sb.append("-").append("DEV"));
+        return sb.toString();
     }
 
-    public String getVersion() {
-        return getProperty("version");
+    public String asFullVersionString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(asSimpleVersionString());
+        buildTimestamp().ifPresent(buildTimestamp -> sb.append(" (").append(buildTimestamp).append(")"));
+        return sb.toString();
     }
 
-    public String getBuildType() {
-        return getProperty("build_type");
-    }
-
-    public String getBuildTimestamp() {
-        return getProperty("build_timestamp");
-    }
-
-    public String getGitCommit() {
-        return getProperty("git_commit");
-    }
-
-    public String getShortGitCommit() {
-        String commitSha = getGitCommit();
-        return commitSha.length() <= 7 ? commitSha : commitSha.substring(0, 7);
-    }
-
-    private String getProperty(String key) {
-        return this.versionProperties.getProperty(key, "unknown");
+    private static Optional<String> getManifestAttribute(Manifest manifest, String attribute) {
+        String value = manifest.getMainAttributes().getValue(attribute);
+        return value == null || value.isEmpty() ? Optional.empty() : Optional.of(value);
     }
 }
