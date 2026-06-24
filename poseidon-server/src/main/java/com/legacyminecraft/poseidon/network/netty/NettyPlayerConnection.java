@@ -5,20 +5,24 @@ import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import net.minecraft.server.NetHandler;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class NettyPlayerConnection extends AbstractPlayerConnection {
 
     private static final Logger log = LoggerFactory.getLogger(NettyPlayerConnection.class);
 
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private final SocketChannel channel;
     private final InetSocketAddress rawAddress;
     private InetSocketAddress clientAddress;
     private NetHandler netHandler;
+    private volatile @Nullable String closeReason;
 
     public NettyPlayerConnection(SocketChannel channel, NetHandler netHandler) {
         this.channel = channel;
@@ -80,7 +84,11 @@ public final class NettyPlayerConnection extends AbstractPlayerConnection {
 
     @Override
     public void a(String s, Object... aobject) {
-        getNetHandler().a(s, aobject);
+        if (!this.closed.compareAndSet(false, true)) {
+            return;
+        }
+
+        this.closeReason = s;
         if (this.channel.eventLoop().inEventLoop()) {
             this.channel.flush();
             this.channel.close();
@@ -99,6 +107,9 @@ public final class NettyPlayerConnection extends AbstractPlayerConnection {
 
     @Override
     public void b() {
+        if (this.closed.get()) {
+            getNetHandler().a(this.closeReason, new Object[0]);
+        }
     }
 
     @Override

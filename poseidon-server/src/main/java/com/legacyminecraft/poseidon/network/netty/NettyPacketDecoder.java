@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
+import io.netty.handler.timeout.ReadTimeoutException;
 import net.minecraft.server.NetHandler;
 import net.minecraft.server.Packet;
 
@@ -21,7 +22,7 @@ public final class NettyPacketDecoder extends ReplayingDecoder<Void> {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
         try (ByteBufInputStream input = new ByteBufInputStream(buf)) {
             InboundPacket packet = Poseidon.getProtocolManager().decodePacket(input);
             if (packet != null) {
@@ -33,8 +34,6 @@ public final class NettyPacketDecoder extends ReplayingDecoder<Void> {
             } else {
                 this.connection.a("disconnect.endOfStream");
             }
-        } catch (Exception e) {
-            this.connection.handleException(e);
         }
     }
 
@@ -45,6 +44,10 @@ public final class NettyPacketDecoder extends ReplayingDecoder<Void> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        this.connection.handleException(cause);
+        if (cause instanceof ReadTimeoutException) {
+            this.connection.a("disconnect.timeout");
+        } else {
+            this.connection.handleException(cause);
+        }
     }
 }
