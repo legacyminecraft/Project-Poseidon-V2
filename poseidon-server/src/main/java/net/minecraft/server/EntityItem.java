@@ -71,9 +71,9 @@ public class EntityItem extends Entity {
                 || MathHelper.floor(this.lastZ) != MathHelper.floor(this.locZ);
 
         int rate = itemMoved ? 2 : 40;
-        if (this.ticksLived % rate == 0 && this.world.getConfig().entities.itemEntityMerging.enabled && this.isMergable()) {
-            double horizontalRadius = this.world.getConfig().entities.itemEntityMerging.horizontalRadius;
-            double verticalRadius = this.world.getConfig().entities.itemEntityMerging.verticalRadius;
+        if (this.ticksLived % rate == 0 && this.world.getConfig().items.merging.enabled && this.isMergable()) {
+            double horizontalRadius = this.world.getConfig().items.merging.horizontalRadius;
+            double verticalRadius = this.world.getConfig().items.merging.verticalRadius;
             for (Entity entity : this.world.a(EntityItem.class, this.boundingBox.b(horizontalRadius, verticalRadius, horizontalRadius))) {
                 EntityItem entityitem = (EntityItem) entity;
                 tryMerge(entityitem);

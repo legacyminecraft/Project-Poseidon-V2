@@ -212,10 +212,17 @@ public final class PoseidonWorldConfig {
         @PositiveOrZero
         public int mobSpawningRange = 8;
         public boolean perPlayerMobSpawning = false;
-        public ItemEntityMerging itemEntityMerging;
+        public boolean fixPlayerDeathAnimation = true;
+    }
+
+    public Items items;
+
+    @ConfigSerializable
+    public static final class Items {
+        public Merging merging;
 
         @ConfigSerializable
-        public static final class ItemEntityMerging {
+        public static final class Merging {
             public boolean enabled = false;
             @Positive
             public double horizontalRadius = 0.5;
@@ -223,7 +230,7 @@ public final class PoseidonWorldConfig {
             public double verticalRadius = 0.25;
         }
 
-        public boolean fixPlayerDeathAnimation = true;
+        public boolean expandVerticalPickupRange = true;
     }
 
     @PositiveOrZero

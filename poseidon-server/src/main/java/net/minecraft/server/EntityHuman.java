@@ -205,7 +205,10 @@ public abstract class EntityHuman extends EntityLiving {
         this.o += (f - this.o) * 0.4F;
         this.aj += (f1 - this.aj) * 0.8F;
         if (this.health > 0) {
-            List<Entity> list = this.world.b(this, this.boundingBox.b(1.0D, 0.0D, 1.0D));
+            // Poseidon start - add option to expand vertical item pickup range
+            double verticalRange = this.world.getConfig().items.expandVerticalPickupRange ? 0.5 : 0.0;
+            List<Entity> list = this.world.b(this, this.boundingBox.b(1.0D, verticalRange, 1.0D));
+            // Poseidon end
 
             if (list != null) {
                 for (int i = 0; i < list.size(); ++i) {
