@@ -151,6 +151,7 @@ public final class PoseidonGlobalConfig {
 
     @ConfigSerializable
     public static final class Network {
+        public Duration timeout = Duration.of("30000ms");
         public ConnectionThrottling connectionThrottling;
 
         @ConfigSerializable

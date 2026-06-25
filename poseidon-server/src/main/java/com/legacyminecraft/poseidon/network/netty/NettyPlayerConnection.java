@@ -1,5 +1,6 @@
 package com.legacyminecraft.poseidon.network.netty;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import io.netty.channel.socket.SocketChannel;
@@ -31,7 +32,7 @@ public final class NettyPlayerConnection extends AbstractPlayerConnection {
         this.netHandler = netHandler;
 
         this.channel.pipeline()
-                .addLast("timeout-handler", new ReadTimeoutHandler(30000, TimeUnit.MILLISECONDS))
+                .addLast("timeout-handler", new ReadTimeoutHandler(Poseidon.getConfig().network.timeout.getNanos(), TimeUnit.NANOSECONDS))
                 .addLast("packet-decoder", new NettyPacketDecoder(this))
                 .addLast("packet-encoder", new NettyPacketEncoder(this));
     }

@@ -67,7 +67,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
 
         try {
             // CraftBukkit start - cant compile these outside the try
-            socket.setSoTimeout(30000);
+            socket.setSoTimeout((int) Poseidon.getConfig().network.timeout.getMillis()); // Poseidon - configurable connection timeout
             socket.setTcpNoDelay(true); // Poseidon - disable Nagle's algorithm
             this.input = new DataInputStream(socket.getInputStream());
             this.output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream(), 5120));
