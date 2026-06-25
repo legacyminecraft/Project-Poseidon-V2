@@ -11,6 +11,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -150,6 +151,17 @@ public final class PoseidonGlobalConfig {
 
     @ConfigSerializable
     public static final class Network {
+        public ConnectionThrottling connectionThrottling;
+
+        @ConfigSerializable
+        public static final class ConnectionThrottling {
+            public boolean enabled = true;
+            public Duration interval = Duration.of("5000ms");
+            @Positive
+            public int threshold = 1;
+            public List<InetAddress> excludedAddresses;
+        }
+
         public NettyIo nettyIo;
 
         @ConfigSerializable

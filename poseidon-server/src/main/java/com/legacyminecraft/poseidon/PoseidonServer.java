@@ -1,6 +1,7 @@
 package com.legacyminecraft.poseidon;
 
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
+import com.legacyminecraft.poseidon.network.connection.ConnectionThrottle;
 import com.legacyminecraft.poseidon.network.connection.PacketRateLimiter;
 import com.legacyminecraft.poseidon.network.connection.PingCalculator;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManagerImpl;
@@ -28,6 +29,7 @@ public final class PoseidonServer {
     private final SessionService sessionService;
     private final TickRateManager tickRateManager;
     private final WatchdogThread watchdogThread;
+    private final ConnectionThrottle connectionThrottle;
     private final ProtocolManagerImpl protocolManager;
 
     public PoseidonServer() {
@@ -39,6 +41,7 @@ public final class PoseidonServer {
         this.sessionService = new SessionService(this.serviceClient);
         this.tickRateManager = new TickRateManager();
         this.watchdogThread = new WatchdogThread(Thread.currentThread());
+        this.connectionThrottle = new ConnectionThrottle();
         this.protocolManager = new ProtocolManagerImpl();
     }
 
@@ -107,6 +110,10 @@ public final class PoseidonServer {
 
     public WatchdogThread getWatchdogThread() {
         return this.watchdogThread;
+    }
+
+    public ConnectionThrottle getConnectionThrottle() {
+        return this.connectionThrottle;
     }
 
     public ProtocolManagerImpl getProtocolManager() {

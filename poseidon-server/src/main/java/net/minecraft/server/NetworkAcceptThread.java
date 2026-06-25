@@ -1,9 +1,10 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
 
 class NetworkAcceptThread extends Thread {
 
@@ -18,7 +19,7 @@ class NetworkAcceptThread extends Thread {
     }
 
     public void run() {
-        HashMap<InetAddress, Long> hashmap = new HashMap<>();
+        //HashMap<InetAddress, Long> hashmap = new HashMap<>(); // Poseidon - remove
 
         while (this.b.b) {
             try {
@@ -27,11 +28,11 @@ class NetworkAcceptThread extends Thread {
                 if (socket != null) {
                     InetAddress inetaddress = socket.getInetAddress();
 
-                    if (hashmap.containsKey(inetaddress) && !"127.0.0.1".equals(inetaddress.getHostAddress()) && System.currentTimeMillis() - hashmap.get(inetaddress) < 5000L) {
-                        hashmap.put(inetaddress, System.currentTimeMillis());
+                    // Poseidon start - improve connection throttling
+                    if (Poseidon.getConnectionThrottle().throttle(inetaddress)) {
                         socket.close();
                     } else {
-                        hashmap.put(inetaddress, System.currentTimeMillis());
+                        // Poseidon end
                         NetLoginHandler netloginhandler = new NetLoginHandler(this.a, socket, "Connection #" + NetworkListenThread.b(this.b));
 
                         NetworkListenThread.a(this.b, netloginhandler);

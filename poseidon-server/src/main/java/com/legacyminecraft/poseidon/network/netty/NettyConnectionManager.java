@@ -1,5 +1,6 @@
 package com.legacyminecraft.poseidon.network.netty;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.network.connection.ConnectionManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -57,6 +58,11 @@ public final class NettyConnectionManager implements ConnectionManager<NettyPlay
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel channel) {
+                        if (Poseidon.getConnectionThrottle().throttle(channel.remoteAddress().getAddress())) {
+                            channel.close();
+                            return;
+                        }
+
                         channel.setOption(ChannelOption.TCP_NODELAY, true);
                         NetLoginHandler netLoginHandler = new NetLoginHandler(server, channel);
                         addConnection((NettyPlayerConnection) netLoginHandler.networkManager);

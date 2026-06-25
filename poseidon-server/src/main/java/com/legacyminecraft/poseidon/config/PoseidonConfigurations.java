@@ -5,6 +5,7 @@ import com.legacyminecraft.poseidon.config.constraint.Min;
 import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.constraint.PositiveOrZero;
 import com.legacyminecraft.poseidon.config.type.Duration;
+import com.legacyminecraft.poseidon.config.type.InetAddressSerializer;
 import org.spongepowered.configurate.loader.HeaderMode;
 import org.spongepowered.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
@@ -31,6 +32,7 @@ public final class PoseidonConfigurations {
     private static Consumer<TypeSerializerCollection.Builder> registerSerializers() {
         return builder -> builder
                 .register(Duration.SERIALIZER)
+                .register(InetAddressSerializer.INSTANCE)
                 .registerAnnotatedObjects(ObjectMapper.factoryBuilder()
                         .addConstraint(Positive.class, Number.class, new Positive.Factory())
                         .addConstraint(PositiveOrZero.class, Number.class, new PositiveOrZero.Factory())
