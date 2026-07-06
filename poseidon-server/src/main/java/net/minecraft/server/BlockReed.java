@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.event.block.BlockGrowEvent;
+import org.bukkit.block.BlockState;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Random;
@@ -27,7 +29,16 @@ public class BlockReed extends Block {
                 int i1 = world.getData(i, j, k);
 
                 if (i1 == 15) {
-                    world.setTypeId(i, j + 1, k, this.id);
+                    // Poseidon start
+                    BlockState newState = world.getWorld().getBlockAt(i, j + 1, k).getState();
+                    newState.setTypeId(this.id);
+
+                    BlockGrowEvent event = new BlockGrowEvent(newState.getBlock(), newState);
+                    world.getServer().getPluginManager().callEvent(event);
+                    if (!event.isCancelled()) {
+                        newState.update(true);
+                    }
+                    // Poseidon end
                     world.setData(i, j, k, 0);
                 } else {
                     world.setData(i, j, k, i1 + 1);
