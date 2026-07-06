@@ -1,8 +1,8 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.event.player.PlayerItemDamageEvent;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.jspecify.annotations.Nullable;
 
 public final class ItemStack {

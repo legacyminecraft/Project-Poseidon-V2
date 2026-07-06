@@ -1,7 +1,8 @@
-package org.bukkit.event.entity;
+package com.legacyminecraft.poseidon.event.entity;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jspecify.annotations.Nullable;

@@ -1,9 +1,10 @@
-package org.bukkit.event.entity;
+package com.legacyminecraft.poseidon.event.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityEvent;
 
 /**
  * Called when an item is about to be removed from the world.

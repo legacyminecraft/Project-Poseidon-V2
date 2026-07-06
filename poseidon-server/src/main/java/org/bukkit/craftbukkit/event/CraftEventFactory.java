@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.event;
 
+import com.legacyminecraft.poseidon.event.entity.ItemDespawnEvent;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.EntityChicken;
 import net.minecraft.server.EntityCow;
@@ -43,7 +44,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;

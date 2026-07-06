@@ -1,4 +1,4 @@
-package org.bukkit.event.player;
+package com.legacyminecraft.poseidon.event.player;
 
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.event.Event;

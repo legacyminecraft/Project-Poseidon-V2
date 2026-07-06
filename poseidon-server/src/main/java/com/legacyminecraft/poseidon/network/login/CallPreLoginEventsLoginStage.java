@@ -1,8 +1,8 @@
 package com.legacyminecraft.poseidon.network.login;
 
+import com.legacyminecraft.poseidon.event.player.AsyncPlayerPreLoginEvent;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
