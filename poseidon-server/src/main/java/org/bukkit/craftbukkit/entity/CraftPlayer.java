@@ -186,6 +186,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
     }
 
+    // Poseidon start
+    public void clearPermissions() {
+        this.perm.clearPermissions();
+    }
+    // Poseidon end
+
     public void setCompassTarget(Location loc) {
         // Do not directly assign here, from the packethandler we'll assign it.
         getHandle().netServerHandler.sendPacket(new Packet6SpawnPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));

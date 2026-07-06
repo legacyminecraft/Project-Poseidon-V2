@@ -840,7 +840,7 @@ public final class CraftServer implements Server {
         Set<Permissible> permissibles = getPluginManager().getPermissionSubscriptions(permission);
 
         for (Permissible permissible : permissibles) {
-            if (permissible instanceof CommandSender user) {
+            if (permissible instanceof CommandSender user && user.hasPermission(permission)) { // Poseidon - add hasPermission check
                 user.sendMessage(message);
                 count++;
             }

@@ -167,7 +167,7 @@ public class PermissibleBase implements Permissible {
         }
     }
 
-    private synchronized void clearPermissions() {
+    public synchronized void clearPermissions() { // Poseidon - private -> public
         Set<String> perms = permissions.keySet();
 
         for (String name : perms) {

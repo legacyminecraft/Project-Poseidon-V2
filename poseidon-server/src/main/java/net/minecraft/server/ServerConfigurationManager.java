@@ -145,10 +145,15 @@ public class ServerConfigurationManager {
     }
 
     public @Nullable String disconnect(EntityPlayer entityplayer) { // CraftBukkit - changed return type
+        // Poseidon start - clear permissions when disconnecting
+        CraftPlayer player = (CraftPlayer) entityplayer.getBukkitEntity();
+        player.clearPermissions();
+        // Poseidon end
+
         // CraftBukkit start
         // Quitting must be before we do final save of data, in case plugins need to modify it
         this.getPlayerManager(entityplayer.dimension).removePlayer(entityplayer);
-        PlayerQuitEvent playerQuitEvent = new PlayerQuitEvent(this.cserver.getPlayer(entityplayer), "\u00A7e" + entityplayer.name + " left the game.");
+        PlayerQuitEvent playerQuitEvent = new PlayerQuitEvent(player, "\u00A7e" + entityplayer.name + " left the game.");
         this.cserver.getPluginManager().callEvent(playerQuitEvent);
         // CraftBukkit end
 
@@ -163,7 +168,6 @@ public class ServerConfigurationManager {
         this.getPlayerManager(entityplayer.dimension).removePlayer(entityplayer);
 
         // Poseidon start - backport vanish API
-        Player player = (Player) entityplayer.getBukkitEntity();
         this.players.forEach(entityplayer1 -> {
             CraftPlayer other = (CraftPlayer) entityplayer1.getBukkitEntity();
             if (!other.canSee(player)) {
