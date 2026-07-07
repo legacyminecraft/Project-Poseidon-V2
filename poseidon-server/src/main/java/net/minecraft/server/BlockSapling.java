@@ -1,7 +1,18 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.event.world.TreeGrowEvent;
+import com.legacyminecraft.poseidon.util.BlockPos;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.bukkit.BlockChangeDelegate;
+import org.bukkit.Location;
+import org.bukkit.TreeType;
+import org.bukkit.block.BlockState;
+import org.bukkit.craftbukkit.block.CraftBlockState;
+import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class BlockSapling extends BlockFlower {
@@ -22,7 +33,7 @@ public class BlockSapling extends BlockFlower {
                 if ((l & 8) == 0) {
                     world.setData(i, j, k, l | 8);
                 } else {
-                    this.b(world, i, j, k, random);
+                    this.b(world, i, j, k, random, null); // Poseidon
                 }
             }
         }
@@ -33,54 +44,92 @@ public class BlockSapling extends BlockFlower {
         return j == 1 ? 63 : (j == 2 ? 79 : super.a(i, j));
     }
 
-    public void b(World world, int i, int j, int k, Random random) {
+    // Poseidon - change signature
+    public void b(World world, int i, int j, int k, Random random, @Nullable Player player) {
         int l = world.getData(i, j, k) & 3;
 
         world.setRawTypeId(i, j, k, 0);
 
         // CraftBukkit start - fixes client updates on recently grown trees
         boolean grownTree;
-        BlockChangeWithNotify delegate = new BlockChangeWithNotify(world);
+        // Poseidon start
+        TreeType species;
+        CapturingBlockChangeDelegate delegate = new CapturingBlockChangeDelegate(world);
+        // Poseidon end
 
         if (l == 1) {
+            species = TreeType.REDWOOD; // Poseidon
             grownTree = new WorldGenTaiga2().generate(delegate, random, i, j, k);
         } else if (l == 2) {
+            species = TreeType.BIRCH; // Poseidon
             grownTree = new WorldGenForest().generate(delegate, random, i, j, k);
         } else {
             if (random.nextInt(10) == 0) {
+                species = TreeType.BIG_TREE; // Poseidon
                 grownTree = new WorldGenBigTree().generate(delegate, random, i, j, k);
             } else {
+                species = TreeType.TREE; // Poseidon
                 grownTree = new WorldGenTrees().generate(delegate, random, i, j, k);
             }
         }
 
         if (!grownTree) {
             world.setRawTypeIdAndData(i, j, k, this.id, l);
+            return; // Poseidon
         }
         // CraftBukkit end
+
+        // Poseidon start - add TreeGrowEvent
+        TreeGrowEvent event = new TreeGrowEvent(new Location(world.getWorld(), i, j, k), species, player, delegate.getBlockStates());
+        world.getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled()) {
+            event.getBlocks().forEach(blockState -> blockState.update(true));
+        }
+        // Poseidon end
     }
 
     protected int a_(int i) {
         return i & 3;
     }
 
-    // CraftBukkit start
-    private class BlockChangeWithNotify implements BlockChangeDelegate {
-        World world;
+    // Poseidon start - add TreeGrowEvent
+    private static final class CapturingBlockChangeDelegate implements BlockChangeDelegate {
+        private final World world;
+        private final Long2ObjectOpenHashMap<CraftBlockState> blockStates = new Long2ObjectOpenHashMap<>();
 
-        BlockChangeWithNotify(World world) { this.world = world; }
+        private CapturingBlockChangeDelegate(World world) {
+            this.world = world;
+        }
 
         public boolean setRawTypeId(int x, int y, int z, int type) {
-            return this.world.setTypeId(x, y, z, type);
+            CraftBlockState blockState = this.blockStates.computeIfAbsent(BlockPos.of(x, y, z), _ ->
+                    CraftBlockState.getBlockState(this.world, x, y, z));
+            blockState.setTypeId(type);
+            blockState.setData((byte) 0);
+            return true;
         }
 
         public boolean setRawTypeIdAndData(int x, int y, int z, int type, int data) {
-            return this.world.setTypeIdAndData(x, y, z, type, data);
+            CraftBlockState blockState = this.blockStates.computeIfAbsent(BlockPos.of(x, y, z), _ ->
+                    CraftBlockState.getBlockState(this.world, x, y, z));
+            blockState.setTypeId(type);
+            blockState.setData((byte) data);
+            return true;
         }
 
         public int getTypeId(int x, int y, int z) {
+            CraftBlockState blockState = this.blockStates.get(BlockPos.of(x, y, z));
+            if (blockState != null) {
+                return blockState.getTypeId();
+            }
             return this.world.getTypeId(x, y, z);
         }
+
+        public List<BlockState> getBlockStates() {
+            List<BlockState> blockStates = new ArrayList<>(this.blockStates.values());
+            this.blockStates.clear();
+            return blockStates;
+        }
     }
-    // CraftBukkit end
+    // Poseidon end
 }
