@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Explosive;
@@ -127,13 +129,16 @@ public class EntityFireball extends Entity {
         }
 
         if (movingobjectposition != null) {
+            ProjectileHitEvent phe;
+
             // CraftBukkit start
-            ProjectileHitEvent phe = new ProjectileHitEvent((Projectile) this.getBukkitEntity());
-            this.world.getServer().getPluginManager().callEvent(phe);
-            // CraftBukkit end
-            if (!this.world.isStatic) {
-                // CraftBukkit start
-                if (movingobjectposition.entity != null) {
+            if (movingobjectposition.entity != null) {
+                // Poseidon start - improve ProjectileHitEvent
+                phe = new ProjectileHitEvent((Projectile) this.getBukkitEntity(), movingobjectposition.entity.getBukkitEntity());
+                this.world.getServer().getPluginManager().callEvent(phe);
+                if (!phe.isCancelled()) {
+                    // Poseidon end
+
                     boolean stick;
                     if (movingobjectposition.entity instanceof EntityLiving) {
                         org.bukkit.entity.Entity damagee = movingobjectposition.entity.getBukkitEntity();
@@ -158,7 +163,16 @@ public class EntityFireball extends Entity {
                         ;
                     }
                 }
+            } else {
+                // Poseidon start - improve ProjectileHitEvent
+                org.bukkit.block.Block block = this.world.getWorld().getBlockAt(movingobjectposition.b, movingobjectposition.c, movingobjectposition.d);
+                BlockFace face = CraftBlock.notchToBlockFace(movingobjectposition.face);
+                phe = new ProjectileHitEvent((Projectile) this.getBukkitEntity(), block, face);
+                this.world.getServer().getPluginManager().callEvent(phe);
+                // Poseidon end
+            }
 
+            if (!phe.isCancelled() || phe.getHitEntity() == null) { // Poseidon
                 ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(this.world.getServer(), this));
                 this.world.getServer().getPluginManager().callEvent(event);
 
@@ -167,9 +181,9 @@ public class EntityFireball extends Entity {
                     this.world.createExplosion(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire());
                 }
                 // CraftBukkit end
-            }
 
-            this.die();
+                this.die();
+            }
         }
 
         this.locX += this.motX;
