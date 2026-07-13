@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
-import com.google.common.collect.Iterators;
 import com.legacyminecraft.poseidon.util.BlockPos;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Location;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -12,11 +12,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jspecify.annotations.Nullable;
 
-import java.util.AbstractSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class Explosion {
 
@@ -180,14 +177,16 @@ public class Explosion {
         Location location = new Location(bworld, this.posX, this.posY, this.posZ);
 
         // Poseidon start - optimize explosions
-        Set<org.bukkit.block.Block> blockList = new TransformingBlockSet();
-        /*for (int j = arraylist.size() - 1; j >= 0; j--) {
-            ChunkPosition cpos = arraylist.get(j);
-            org.bukkit.block.Block block = bworld.getBlockAt(cpos.x, cpos.y, cpos.z);
+        List<org.bukkit.block.Block> blockList = new ObjectArrayList<>();
+        this.blocks.forEach(blockPos -> {
+            int x = BlockPos.x(blockPos);
+            int y = BlockPos.y(blockPos);
+            int z = BlockPos.z(blockPos);
+            org.bukkit.block.Block block = bworld.getBlockAt(x, y, z);
             if (block.getType() != org.bukkit.Material.AIR) {
                 blockList.add(block);
             }
-        }*/
+        });
         // Poseidon end
 
         EntityExplodeEvent event = new EntityExplodeEvent(explode, location, blockList);
@@ -198,6 +197,15 @@ public class Explosion {
             return;
         }
         // CraftBukkit end
+
+        // Poseidon start - fix EntityExplodeEvent
+        this.blocks.clear();
+        event.blockList().forEach(block -> {
+            if (block.getWorld() == bworld && block.getType() != org.bukkit.Material.AIR) {
+                this.blocks.add(BlockPos.of(block.getX(), block.getY(), block.getZ()));
+            }
+        });
+        // Poseidon end
 
         // Poseidon start - ChunkPosition -> long
         this.blocks.forEach(blockPos -> {
@@ -268,46 +276,6 @@ public class Explosion {
         temp = Double.doubleToLongBits(aabb.f);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
-    }
-
-    private class TransformingBlockSet extends AbstractSet<org.bukkit.block.Block> {
-
-        @Override
-        public boolean add(org.bukkit.block.Block block) {
-            return Explosion.this.blocks.add(BlockPos.of(block.getX(), block.getY(), block.getZ()));
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            if (!(o instanceof org.bukkit.block.Block block)) {
-                return false;
-            }
-            return Explosion.this.blocks.remove(BlockPos.of(block.getX(), block.getY(), block.getZ()));
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            if (!(o instanceof org.bukkit.block.Block block)) {
-                return false;
-            }
-            return Explosion.this.blocks.contains(BlockPos.of(block.getX(), block.getY(), block.getZ()));
-        }
-
-        @Override
-        public void clear() {
-            Explosion.this.blocks.clear();
-        }
-
-        @Override
-        public int size() {
-            return Explosion.this.blocks.size();
-        }
-
-        @Override
-        public Iterator<org.bukkit.block.Block> iterator() {
-            return Iterators.transform(Explosion.this.blocks.iterator(), blockPos ->
-                    Explosion.this.world.getWorld().getBlockAt(BlockPos.x(blockPos), BlockPos.y(blockPos), BlockPos.z(blockPos)));
-        }
     }
 
     static {
