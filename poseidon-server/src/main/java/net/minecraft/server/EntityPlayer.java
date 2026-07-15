@@ -201,7 +201,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                     this.b.getTracker(this.dimension).a(this, new Packet5EntityEquipment(this.id, i, null));
                 }
             }
-            this.world.a(this, (byte) 3);
+            this.b.getTracker(this.dimension).a(this, new Packet38EntityStatus(this.id, (byte) 3));
         }
         // Poseidon end
 
