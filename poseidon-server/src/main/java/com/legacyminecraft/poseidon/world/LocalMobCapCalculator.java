@@ -56,8 +56,7 @@ public final class LocalMobCapCalculator {
     }
 
     private static @Nullable EnumCreatureType getCreatureType(Entity entity) {
-        for (int i = 0; i < EnumCreatureType.values().length; i++) {
-            EnumCreatureType creatureType = EnumCreatureType.values()[i];
+        for (EnumCreatureType creatureType : EnumCreatureType.values()) {
             if (creatureType.a().isAssignableFrom(entity.getClass())) {
                 return creatureType;
             }

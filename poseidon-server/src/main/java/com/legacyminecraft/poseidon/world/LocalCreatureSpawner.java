@@ -1,6 +1,7 @@
 package com.legacyminecraft.poseidon.world;
 
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import com.legacyminecraft.poseidon.util.ChunkPos;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.BiomeMeta;
 import net.minecraft.server.Block;
@@ -17,25 +18,26 @@ import net.minecraft.server.World;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.jspecify.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public final class LocalCreatureSpawner {
 
     private static final LocalMobCapCalculator calculator = new LocalMobCapCalculator();
-    private static final IntOpenHashSet creatureTypePerChunk = new IntOpenHashSet();
+    private static final Map<EnumCreatureType, LongOpenHashSet> chunksPerCreatureType = new EnumMap<>(EnumCreatureType.class);
 
     private LocalCreatureSpawner() {
     }
 
     public static void spawnCreatures(World world, boolean spawnMonsters, boolean spawnAnimals) {
-        creatureTypePerChunk.clear();
+        chunksPerCreatureType.forEach((_, chunks) -> chunks.clear());
         calculator.prepare(world);
         calculator.forEachEntry((player, chunks) -> spawnForPlayer(world, player, chunks, spawnMonsters, spawnAnimals));
     }
 
     private static void spawnForPlayer(World world, EntityPlayer player, List<Chunk> chunksNearPlayer, boolean spawnMonsters, boolean spawnAnimals) {
-        for (int i = 0; i < EnumCreatureType.values().length; i++) {
-            EnumCreatureType creatureType = EnumCreatureType.values()[i];
+        for (EnumCreatureType creatureType : EnumCreatureType.values()) {
             if ((!creatureType.d() || spawnAnimals) && (creatureType.d() || spawnMonsters) && calculator.canSpawnForPlayer(creatureType, player)) {
                 chunksNearPlayer.forEach(chunk -> spawnCreatureTypeForChunk(creatureType, world, chunk));
             }
@@ -43,7 +45,8 @@ public final class LocalCreatureSpawner {
     }
 
     private static void spawnCreatureTypeForChunk(EnumCreatureType creatureType, World world, Chunk chunk) {
-        if (!creatureTypePerChunk.add(getKey(creatureType, chunk.x, chunk.z))) {
+        if (!chunksPerCreatureType.computeIfAbsent(creatureType, _ -> new LongOpenHashSet())
+                .add(ChunkPos.of(chunk.x, chunk.z))) {
             return;
         }
         int x = (chunk.x << 4) + world.random.nextInt(16);
@@ -90,13 +93,6 @@ public final class LocalCreatureSpawner {
                 }
             }
         }
-    }
-
-    private static int getKey(EnumCreatureType creatureType, int x, int z) {
-        int key = creatureType.ordinal();
-        key = 31 * key + x;
-        key = 31 * key + z;
-        return key;
     }
 
     private static int getTypeId(Chunk chunk, int x, int y, int z) {
