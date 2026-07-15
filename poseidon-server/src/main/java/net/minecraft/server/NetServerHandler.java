@@ -250,7 +250,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             }
         }
 
-        // Poseidon - fix disconnect spawm
+        // Poseidon - fix disconnect spam
         if ((Double.isNaN(packet10flying.x) || Double.isNaN(packet10flying.y) || Double.isNaN(packet10flying.z) || Double.isNaN(packet10flying.stance)) && player.isOnline() && !this.disconnected.get()) {
             player.teleport(player.getWorld().getSpawnLocation());
             System.err.println(player.getName() + " was caught trying to crash the server with an invalid position.");
@@ -377,7 +377,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             if (worldserver.getConfig().anticheat.quickMovementFlagging.enabled
                     && d8 > worldserver.getConfig().anticheat.quickMovementFlagging.threshold
                     && this.checkMovement // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
-                    && !getPlayer().hasPermission("poseidon.anticheat.quick-movement-flagging.bypass")) {
+                    && !getPlayer().hasPermission("poseidon.anticheat.quick-movement-flagging.exempt")) {
 
                 a.warning(this.player.name + " moved too quickly! " + d4 + "," + d6 + "," + d7 + " (" + d4 + ", " + d6 + ", " + d7 + ")");
                 switch (worldserver.getConfig().anticheat.quickMovementFlagging.action) {
@@ -406,7 +406,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
             if (worldserver.getConfig().anticheat.wrongMovementFlagging.enabled
                     && d8 > worldserver.getConfig().anticheat.wrongMovementFlagging.threshold
                     && !this.player.isSleeping()
-                    && !getPlayer().hasPermission("poseidon.anticheat.wrong-movement-flagging.bypass")) {
+                    && !getPlayer().hasPermission("poseidon.anticheat.wrong-movement-flagging.exempt")) {
 
                 a.warning(this.player.name + " moved wrongly!");
                 a.warning("Got position " + d1 + ", " + d2 + ", " + d3);
@@ -431,7 +431,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
             if (!this.minecraftServer.allowFlight
                     && !worldserver.b(axisalignedbb)
-                    && !getPlayer().hasPermission("poseidon.anticheat.flight-flagging.bypass")) { // Poseidon - add bypass permission
+                    && !getPlayer().hasPermission("poseidon.anticheat.flight-flagging.exempt")) { // Poseidon - add exempt permission
                 if (d6 >= -0.03125D) {
                     ++this.h;
                     if (this.h > 80) {

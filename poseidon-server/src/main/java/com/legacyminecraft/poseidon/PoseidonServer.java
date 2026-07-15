@@ -57,16 +57,16 @@ public final class PoseidonServer {
                 "Makes a player exempt from the server's anti-xray obfuscation",
                 PermissionDefault.OP);
         DefaultPermissions.registerPermission(
-                "poseidon.anticheat.quick-movement-flagging.bypass",
-                "Allows a player to bypass the server's quick movement flagging",
+                "poseidon.anticheat.quick-movement-flagging.exempt",
+                "Makes a player exempt from the server's quick movement flagging",
                 PermissionDefault.OP);
         DefaultPermissions.registerPermission(
-                "poseidon.anticheat.wrong-movement-flagging.bypass",
-                "Allows a player to bypass the server's wrong movement flagging",
+                "poseidon.anticheat.wrong-movement-flagging.exempt",
+                "Makes a player exempt from the server's wrong movement flagging",
                 PermissionDefault.OP);
         DefaultPermissions.registerPermission(
-                "poseidon.anticheat.flight-flagging.bypass",
-                "Allows a player to bypass the server's flight flagging",
+                "poseidon.anticheat.flight-flagging.exempt",
+                "Makes a player exempt from the server's flight flagging",
                 PermissionDefault.OP);
     }
 
