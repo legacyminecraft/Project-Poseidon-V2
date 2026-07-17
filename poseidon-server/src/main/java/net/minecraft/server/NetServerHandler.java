@@ -1012,7 +1012,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     public void a(Packet102WindowClick packet102windowclick) {
         if (this.player.dead) return; // CraftBukkit
 
-        if (this.player.activeContainer.windowId == packet102windowclick.a && this.player.activeContainer.c(this.player)) {
+        // Poseidon - check if player can use container
+        if (this.player.activeContainer.windowId == packet102windowclick.a && this.player.activeContainer.c(this.player) && this.player.activeContainer.b(this.player)) {
             ItemStack itemstack = this.player.activeContainer.a(packet102windowclick.b, packet102windowclick.c, packet102windowclick.f, this.player);
 
             if (ItemStack.equals(packet102windowclick.e, itemstack)) {

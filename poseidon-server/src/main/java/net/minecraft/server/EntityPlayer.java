@@ -140,6 +140,20 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         --this.bM;
         this.activeContainer.a();
 
+        // Poseidon start
+        if (!this.world.isStatic && this.activeContainer != null && !this.activeContainer.b(this)) {
+            this.y();
+            this.activeContainer = this.defaultContainer;
+        }
+
+        int length = Math.min(this.removeQueue.size(), 127);
+        for (int i = 0; i < length; i++) {
+            int entityId = this.removeQueue.getInt(i);
+            this.netServerHandler.sendPacket(new Packet29DestroyEntity(entityId));
+        }
+        this.removeQueue.removeElements(0, length);
+        // Poseidon end
+
         for (int i = 0; i < 5; ++i) {
             ItemStack itemstack = this.c_(i);
 
@@ -245,15 +259,6 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     public void a(boolean flag) {
         super.m_();
-
-        // Poseidon start
-        int length = Math.min(this.removeQueue.size(), 127);
-        for (int i = 0; i < length; i++) {
-            int entityId = this.removeQueue.getInt(i);
-            this.netServerHandler.sendPacket(new Packet29DestroyEntity(entityId));
-        }
-        this.removeQueue.removeElements(0, length);
-        // Poseidon end
 
         for (int i = 0; i < this.inventory.getSize(); ++i) {
             ItemStack itemstack = this.inventory.getItem(i);
