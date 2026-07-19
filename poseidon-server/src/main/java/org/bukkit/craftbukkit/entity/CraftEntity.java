@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityAnimal;
 import net.minecraft.server.EntityArrow;
@@ -294,4 +295,11 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public UUID getUniqueId() {
         return getHandle().getUniqueId(); // Poseidon
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return getHandle().container;
+    }
+    // Poseidon end
 }

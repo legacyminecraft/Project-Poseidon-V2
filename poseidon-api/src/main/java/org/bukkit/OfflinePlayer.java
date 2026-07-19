@@ -1,5 +1,6 @@
 package org.bukkit;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataHolder;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.ServerOperator;
@@ -7,7 +8,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-public interface OfflinePlayer extends ServerOperator {
+/**
+ * Represents an offline player.
+ */
+public interface OfflinePlayer extends ServerOperator, PersistentDataHolder { // Poseidon - extends PersistentDataHolder
 
     /**
      * Checks if this player is currently online
@@ -46,8 +50,7 @@ public interface OfflinePlayer extends ServerOperator {
      *
      * @return Online player
      */
-    @Nullable
-    Player getPlayer();
+    @Nullable Player getPlayer();
     // Poseidon end
 
     /**

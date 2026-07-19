@@ -1,5 +1,6 @@
 package org.bukkit.block;
 
+import com.legacyminecraft.poseidon.block.TileState;
 import org.bukkit.entity.CreatureType;
 import org.jspecify.annotations.Nullable;
 
@@ -9,7 +10,7 @@ import org.jspecify.annotations.Nullable;
  * @author sk89q
  * @author Cogito
  */
-public interface CreatureSpawner extends BlockState {
+public interface CreatureSpawner extends TileState { // Poseidon - extends TileState
 
     /**
      * Get the spawner's creature type.

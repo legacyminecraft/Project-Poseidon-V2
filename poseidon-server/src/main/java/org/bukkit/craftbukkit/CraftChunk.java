@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.ChunkPosition;
 import net.minecraft.server.WorldChunkManager;
@@ -213,4 +214,11 @@ public class CraftChunk implements Chunk {
         }
         return new EmptyChunkSnapshot(x, z, world.getName(), world.getFullTime(), biome, biomeTemp, biomeRain);
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return getHandle().container;
+    }
+    // Poseidon end
 }

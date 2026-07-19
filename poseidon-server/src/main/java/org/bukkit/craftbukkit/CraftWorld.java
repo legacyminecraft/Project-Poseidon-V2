@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.util.ChunkPos;
 import net.minecraft.server.BiomeBase;
 import net.minecraft.server.ChunkCoordinates;
@@ -874,4 +875,11 @@ public class CraftWorld implements World {
             }
         }
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return getHandle().worldData.container;
+    }
+    // Poseidon end
 }

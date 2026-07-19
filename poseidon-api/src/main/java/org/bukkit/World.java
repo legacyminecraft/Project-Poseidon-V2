@@ -1,5 +1,6 @@
 package org.bukkit;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataHolder;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -23,7 +24,7 @@ import java.util.UUID;
 /**
  * Represents a world, which may contain entities, chunks and blocks
  */
-public interface World {
+public interface World extends PersistentDataHolder { // Poseidon - extends PersistentDataHolder
 
     /**
      * Gets the {@link Block} at the given coordinates

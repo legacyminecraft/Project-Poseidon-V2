@@ -177,18 +177,20 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
     }
 
     public void a(EntityHuman entityhuman) {
-        try {
-            NBTTagCompound nbttagcompound = new NBTTagCompound();
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        entityhuman.d(nbttagcompound);
+        // Poseidon start
+        saveData(entityhuman.name, entityhuman.getUniqueId(), nbttagcompound);
+    }
 
-            entityhuman.d(nbttagcompound);
+    public void saveData(String name, UUID uniqueId, NBTTagCompound nbttagcompound) {
+        try {
             File file1 = new File(this.c, "_tmp_.dat");
-            // Poseidon start
             File file2;
             if (Poseidon.getConfig().uuidSupport.storePlayerDataByUuid) {
-                file2 = new File(this.c, entityhuman.getUniqueId() + ".dat");
+                file2 = new File(this.c, uniqueId + ".dat");
             } else {
-                // Poseidon end
-                file2 = new File(this.c, entityhuman.name + ".dat");
+                file2 = new File(this.c, name + ".dat");
             }
 
             CompressedStreamTools.a(nbttagcompound, (OutputStream) (new FileOutputStream(file1)));
@@ -198,9 +200,10 @@ public class PlayerNBTManager implements PlayerFileData, IDataManager {
 
             file1.renameTo(file2);
         } catch (Exception exception) {
-            a.warning("Failed to save player data for " + entityhuman.name);
+            a.warning("Failed to save player data for " + name);
         }
     }
+    // Poseidon end
 
     public void b(EntityHuman entityhuman) {
         // Poseidon start

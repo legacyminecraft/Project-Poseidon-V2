@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -160,6 +161,8 @@ public class ChunkLoader implements IChunkLoader {
         }
 
         nbttagcompound.a("TileEntities", nbttaglist1);
+
+        nbttagcompound.a(PersistentDataContainerImpl.TAG_KEY, chunk.container.getCompound()); // Poseidon - PersistentDataContainer API
     }
 
     public static Chunk a(World world, NBTTagCompound nbttagcompound) {
@@ -214,6 +217,11 @@ public class ChunkLoader implements IChunkLoader {
                 }
             }
         }
+
+        // Poseidon start - PersistentDataContainer API
+        PersistentDataContainerImpl container = new PersistentDataContainerImpl(nbttagcompound.k(PersistentDataContainerImpl.TAG_KEY));
+        container.copyTo(chunk.container, true);
+        // Poseidon end
 
         return chunk;
     }

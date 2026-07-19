@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -14,6 +15,8 @@ public class TileEntity {
     public int y;
     public int z;
     protected boolean h;
+
+    public final PersistentDataContainerImpl container = new PersistentDataContainerImpl(); // Poseidon
 
     public TileEntity() {}
 
@@ -30,6 +33,11 @@ public class TileEntity {
         this.x = nbttagcompound.e("x");
         this.y = nbttagcompound.e("y");
         this.z = nbttagcompound.e("z");
+
+        // Poseidon start - PersistentDataContainer API
+        PersistentDataContainerImpl container = new PersistentDataContainerImpl(nbttagcompound.k(PersistentDataContainerImpl.TAG_KEY));
+        container.copyTo(this.container, true);
+        // Poseidon end
     }
 
     public void b(NBTTagCompound nbttagcompound) {
@@ -42,6 +50,7 @@ public class TileEntity {
             nbttagcompound.a("x", this.x);
             nbttagcompound.a("y", this.y);
             nbttagcompound.a("z", this.z);
+            nbttagcompound.a(PersistentDataContainerImpl.TAG_KEY, this.container.getCompound()); // Poseidon - PersistentDataContainer API
         }
     }
 

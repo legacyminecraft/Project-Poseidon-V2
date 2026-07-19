@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.BlockDispenser;
 import net.minecraft.server.TileEntityDispenser;
 import org.bukkit.Material;
@@ -51,4 +52,11 @@ public class CraftDispenser extends CraftBlockState implements Dispenser {
 
         return result;
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return this.dispenser.container;
+    }
+    // Poseidon end
 }

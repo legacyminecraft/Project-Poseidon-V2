@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.TileEntityMobSpawner;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -47,4 +48,10 @@ public class CraftCreatureSpawner extends CraftBlockState implements CreatureSpa
         spawner.spawnDelay = delay;
     }
 
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return this.spawner.container;
+    }
+    // Poseidon end
 }

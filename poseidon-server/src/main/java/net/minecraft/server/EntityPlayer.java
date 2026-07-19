@@ -110,8 +110,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     // Poseidon start
     public void a(NBTTagCompound nbttagcompound) {
         super.a(nbttagcompound);
-        NBTTagCompound bukkitData = nbttagcompound.k("bukkit");
-        String lastKnownName = bukkitData.getString("lastKnownName");
+        String lastKnownName = nbttagcompound.getString("lastKnownName");
         if (lastKnownName != null && !lastKnownName.isEmpty() && !this.profile.name().equals(lastKnownName)) {
             MinecraftServer.log.info(lastKnownName + " has changed their name to " + this.profile.name() + " (UUID: " + this.profile.id() + ")");
             new PlayerProfileNameChangedEvent(new PlayerProfileImpl(this.profile), lastKnownName).callEvent();

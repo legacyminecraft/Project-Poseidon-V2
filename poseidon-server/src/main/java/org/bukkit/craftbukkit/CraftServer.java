@@ -12,6 +12,8 @@ import com.legacyminecraft.poseidon.command.InternalCommandMap;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
@@ -967,6 +969,13 @@ public final class CraftServer implements Server {
     // Poseidon start
     public boolean isPrimaryThread() {
         return console.isPrimaryThread();
+    }
+    // Poseidon end
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer createPersistentDataContainer() {
+        return new PersistentDataContainerImpl();
     }
     // Poseidon end
 }

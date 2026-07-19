@@ -1,11 +1,13 @@
 package org.bukkit.block;
 
+import com.legacyminecraft.poseidon.block.TileState;
+
 /**
  * Represents a dispenser.
  *
  * @author sk89q
  */
-public interface Dispenser extends BlockState, ContainerBlock {
+public interface Dispenser extends TileState, ContainerBlock { // Poseidon - extends TileState
 
     /**
      * Attempts to dispense the contents of this block<br />

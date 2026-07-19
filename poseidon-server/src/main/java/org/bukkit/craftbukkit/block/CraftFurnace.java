@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.TileEntityFurnace;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
@@ -48,4 +49,11 @@ public class CraftFurnace extends CraftBlockState implements Furnace {
     public void setCookTime(short cookTime) {
         furnace.cookTime = cookTime;
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return this.furnace.container;
+    }
+    // Poseidon end
 }

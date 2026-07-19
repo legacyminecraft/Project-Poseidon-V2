@@ -1,5 +1,6 @@
 package org.bukkit;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataHolder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -7,7 +8,7 @@ import org.bukkit.entity.Entity;
 /**
  * Represents a chunk of blocks
  */
-public interface Chunk {
+public interface Chunk extends PersistentDataHolder { // Poseidon - extends PersistentDataHolder
 
     /**
      * Gets the X-coordinate of this chunk

@@ -3,6 +3,7 @@ package org.bukkit;
 import com.avaje.ebean.config.ServerConfig;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
@@ -311,6 +312,12 @@ public final class Bukkit {
     // Poseidon start
     public static boolean isPrimaryThread() {
         return server.isPrimaryThread();
+    }
+    // Poseidon end
+
+    // Poseidon start - PersistentDataContainer API
+    public static PersistentDataContainer createPersistentDataContainer() {
+        return server.createPersistentDataContainer();
     }
     // Poseidon end
 }

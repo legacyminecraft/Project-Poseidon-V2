@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class WorldData {
     private boolean n;
     private int o;
 
+    public final PersistentDataContainerImpl container = new PersistentDataContainerImpl(); // Poseidon
+
     public WorldData(NBTTagCompound nbttagcompound) {
         this.a = nbttagcompound.getLong("RandomSeed");
         this.b = nbttagcompound.e("SpawnX");
@@ -40,6 +43,11 @@ public class WorldData {
             this.h = nbttagcompound.k("Player");
             this.i = this.h.e("Dimension");
         }
+
+        // Poseidon start - PersistentDataContainer API
+        PersistentDataContainerImpl container = new PersistentDataContainerImpl(nbttagcompound.k(PersistentDataContainerImpl.TAG_KEY));
+        container.copyTo(this.container, true);
+        // Poseidon end
     }
 
     public WorldData(long i, String s) {
@@ -107,6 +115,7 @@ public class WorldData {
         if (nbttagcompound1 != null) {
             nbttagcompound.a("Player", nbttagcompound1);
         }
+        nbttagcompound.a(PersistentDataContainerImpl.TAG_KEY, this.container.getCompound()); // Poseidon - PersistentDataContainer API
     }
 
     public long getSeed() {

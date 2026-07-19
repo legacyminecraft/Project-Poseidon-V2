@@ -1,12 +1,13 @@
 package org.bukkit.block;
 
+import com.legacyminecraft.poseidon.block.TileState;
 import org.bukkit.Instrument;
 import org.bukkit.Note;
 
 /**
  * Represents a note.
  */
-public interface NoteBlock extends BlockState {
+public interface NoteBlock extends TileState { // Poseidon - extends TileState
 
     /**
      * Gets the note.

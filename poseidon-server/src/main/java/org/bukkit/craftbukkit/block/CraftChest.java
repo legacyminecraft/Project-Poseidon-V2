@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.TileEntityChest;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -32,4 +33,11 @@ public class CraftChest extends CraftBlockState implements Chest {
 
         return result;
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return this.chest.container;
+    }
+    // Poseidon end
 }

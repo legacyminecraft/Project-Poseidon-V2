@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import com.legacyminecraft.poseidon.world.ChunkSection;
 import org.jspecify.annotations.Nullable;
 
@@ -31,7 +32,10 @@ public class Chunk {
     public boolean q;
     public long r;
 
-    private final ChunkSection[] sections; // Poseidon
+    // Poseidon start
+    private final ChunkSection[] sections;
+    public final PersistentDataContainerImpl container = new PersistentDataContainerImpl();
+    // Poseidon end
 
     public Chunk(World world, int i, int j) {
         this.tileEntities = new HashMap<>();

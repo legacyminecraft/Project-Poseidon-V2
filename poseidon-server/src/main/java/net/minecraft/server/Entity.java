@@ -1,5 +1,6 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -98,6 +99,7 @@ public abstract class Entity {
 
     // Poseidon start
     public boolean airBorne;
+    public final PersistentDataContainerImpl container = new PersistentDataContainerImpl();
     // Poseidon end
 
     public Entity(World world) {
@@ -924,6 +926,7 @@ public abstract class Entity {
         nbttagcompound.setLong("UUIDMost", this.uniqueId.getMostSignificantBits());
         // CraftBukkit end
         this.b(nbttagcompound);
+        nbttagcompound.a(PersistentDataContainerImpl.TAG_KEY, this.container.getCompound()); // Poseidon - PersistentDataContainer API
     }
 
     public void e(NBTTagCompound nbttagcompound) {
@@ -1010,6 +1013,11 @@ public abstract class Entity {
             this.spawnIn(bworld == null ? null : ((org.bukkit.craftbukkit.CraftWorld) bworld).getHandle());
         }
         // CraftBukkit end
+
+        // Poseidon start - PersistentDataContainer API
+        PersistentDataContainerImpl container = new PersistentDataContainerImpl(nbttagcompound.k(PersistentDataContainerImpl.TAG_KEY));
+        container.copyTo(this.container, true);
+        // Poseidon end
     }
 
     protected final @Nullable String ag() {

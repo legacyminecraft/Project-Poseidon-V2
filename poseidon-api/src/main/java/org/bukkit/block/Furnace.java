@@ -1,11 +1,13 @@
 package org.bukkit.block;
 
+import com.legacyminecraft.poseidon.block.TileState;
+
 /**
  * Represents a furnace.
  *
  * @author sk89q
  */
-public interface Furnace extends BlockState, ContainerBlock {
+public interface Furnace extends TileState, ContainerBlock { // Poseidon - extends TileState
 
     /**
      * Get burn time.

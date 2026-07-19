@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.TileEntityNote;
 import org.bukkit.Instrument;
 import org.bukkit.Material;
@@ -73,4 +74,11 @@ public class CraftNoteBlock extends CraftBlockState implements NoteBlock {
             }
         }
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return this.note.container;
+    }
+    // Poseidon end
 }

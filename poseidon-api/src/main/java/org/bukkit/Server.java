@@ -4,6 +4,7 @@ import com.avaje.ebean.config.ServerConfig;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.messaging.PluginMessageRecipient;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -549,5 +550,14 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
      *     false otherwise
      */
     boolean isPrimaryThread();
+    // Poseidon end
+
+    // Poseidon start - PersistentDataContainer API
+    /**
+     * Creates a new persistent data container.
+     *
+     * @return the created persistent data container
+     */
+    PersistentDataContainer createPersistentDataContainer();
     // Poseidon end
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class NBTTagCompound extends NBTBase {
 
-    private Map<String, NBTBase> a = new HashMap<>();
+    public Map<String, NBTBase> a = new HashMap<>(); // Poseidon - private -> public
 
     public NBTTagCompound() {}
 

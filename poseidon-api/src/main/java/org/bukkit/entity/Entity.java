@@ -1,5 +1,6 @@
 package org.bukkit.entity;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataHolder;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -13,7 +14,7 @@ import java.util.UUID;
 /**
  * Represents a base entity in the world
  */
-public interface Entity {
+public interface Entity extends PersistentDataHolder { // Poseidon - extends PersistentDataHolder
 
     /**
      * Gets the entity's current position

@@ -1,9 +1,11 @@
 package org.bukkit.block;
 
+import com.legacyminecraft.poseidon.block.TileState;
+
 /**
  * Represents either a SignPost or a WallSign
  */
-public interface Sign extends BlockState {
+public interface Sign extends TileState { // Poseidon - extends TileState
 
     /**
      * Gets all the lines of text currently on this sign.

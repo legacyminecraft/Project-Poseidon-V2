@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import net.minecraft.server.TileEntitySign;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -38,4 +39,11 @@ public class CraftSign extends CraftBlockState implements Sign {
 
         return result;
     }
+
+    // Poseidon start - PersistentDataContainer API
+    @Override
+    public PersistentDataContainer getPersistentDataContainer() {
+        return this.sign.container;
+    }
+    // Poseidon end
 }

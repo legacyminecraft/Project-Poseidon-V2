@@ -8,7 +8,7 @@ import java.util.List;
 
 public class NBTTagList extends NBTBase {
 
-    private List<NBTBase> a = new ArrayList<>();
+    public List<NBTBase> a = new ArrayList<>(); // Poseidon - private -> public
     private byte b;
 
     public NBTTagList() {}
