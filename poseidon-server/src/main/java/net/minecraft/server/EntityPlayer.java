@@ -472,6 +472,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.activeContainer.a((ICrafting) this);
     }
 
+    // Poseidon start - check if player editing sign is the same player who placed the sign
+    public void a(TileEntitySign tileentitysign) {
+        tileentitysign.setEditingPlayer(this);
+    }
+    // Poseidon end
+
     public void a(Container container, int i, @Nullable ItemStack itemstack) {
         if (!(container.b(i) instanceof SlotResult)) {
             if (!this.h) {
