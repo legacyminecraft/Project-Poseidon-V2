@@ -3,6 +3,7 @@ package org.bukkit;
 import com.avaje.ebean.config.ServerConfig;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.messaging.PluginMessageRecipient;
+import com.legacyminecraft.poseidon.network.ping.ServerIcon;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
@@ -113,6 +114,36 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
      * @return The ID of this server
      */
     String getServerId();
+
+    // Poseidon start - implement server list ping protocol
+    /**
+     * Returns the message that is displayed on the server list.
+     *
+     * @return the message of the day
+     */
+    String getMotd();
+
+    /**
+     * Sets the message that is displayed on the server list.
+     *
+     * @param motd the message of the day
+     */
+    void setMotd(String motd);
+
+    /**
+     * Returns the server icon that is displayed on the server list.
+     *
+     * @return the server icon, or {@code null} if not set
+     */
+    @Nullable ServerIcon getServerIcon();
+
+    /**
+     * Sets the server icon that is displayed on the server list.
+     *
+     * @param serverIcon the server icon, or {@code null} to remove
+     */
+    void setServerIcon(@Nullable ServerIcon serverIcon);
+    // Poseidon end
 
     /**
      * Gets whether this server allows the Nether or not.

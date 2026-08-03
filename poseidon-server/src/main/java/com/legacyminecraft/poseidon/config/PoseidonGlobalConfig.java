@@ -4,6 +4,7 @@ import com.legacyminecraft.poseidon.config.constraint.Max;
 import com.legacyminecraft.poseidon.config.constraint.Min;
 import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.type.Duration;
+import org.bukkit.ChatColor;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
@@ -191,6 +192,22 @@ public final class PoseidonGlobalConfig {
                             .map(String::valueOf)
                             .collect(Collectors.joining());
                 }
+            }
+        }
+
+        public PingProtocol pingProtocol;
+
+        @ConfigSerializable
+        public static final class PingProtocol {
+            public boolean enabled = false;
+            public String motd = "A Minecraft Server";
+            public boolean sendPlayerSample = true;
+            @Positive
+            public int maxSampleSize = 10;
+
+            @PostProcess
+            private void postProcess() {
+                this.motd = ChatColor.translateAlternateColorCodes('&', this.motd);
             }
         }
 

@@ -11,6 +11,7 @@ import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.command.InternalCommandMap;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
+import com.legacyminecraft.poseidon.network.ping.ServerIcon;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
@@ -84,6 +85,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -115,6 +117,8 @@ public final class CraftServer implements Server {
 
     // Poseidon start
     private final Map<UUID, OfflinePlayer> offlinePlayers = new MapMaker().weakValues().makeMap();
+    private String motd;
+    private @Nullable ServerIcon serverIcon;
     // Poseidon end
 
     // Poseidon - change signature
@@ -135,6 +139,12 @@ public final class CraftServer implements Server {
         this.messenger = new StandardMessenger(console.connectionManager);
         poseidonServer.initialize();
         this.commandMap.setDefaultCommands(this);
+
+        this.motd = Poseidon.getConfig().network.pingProtocol.motd;
+        try {
+            this.serverIcon = ServerIcon.load(Paths.get("server-icon.png"));
+        } catch (IOException _) {
+        }
         // Poseidon end
 
         loadPlugins();
@@ -342,6 +352,25 @@ public final class CraftServer implements Server {
     public String getServerId() {
         return this.getConfigString("server-id", "unnamed");
     }
+
+    // Poseidon start - implement server list ping protocol
+    public String getMotd() {
+        return this.motd;
+    }
+
+    public void setMotd(String motd) {
+        Preconditions.checkArgument(motd != null, "motd cannot be null");
+        this.motd = motd;
+    }
+
+    public @Nullable ServerIcon getServerIcon() {
+        return this.serverIcon;
+    }
+
+    public void setServerIcon(@Nullable ServerIcon serverIcon) {
+        this.serverIcon = serverIcon;
+    }
+    // Poseidon end
 
     public boolean getAllowNether() {
         return this.getConfigBoolean("allow-nether", true);

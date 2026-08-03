@@ -2,6 +2,7 @@ package org.bukkit;
 
 import com.avaje.ebean.config.ServerConfig;
 import com.legacyminecraft.poseidon.messaging.Messenger;
+import com.legacyminecraft.poseidon.network.ping.ServerIcon;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
@@ -100,6 +101,24 @@ public final class Bukkit {
     public static String getServerId() {
         return server.getServerId();
     }
+
+    // Poseidon start - implement server list ping protocol
+    public static String getMotd() {
+        return server.getMotd();
+    }
+
+    public static void setMotd(String motd) {
+        server.setMotd(motd);
+    }
+
+    public static @Nullable ServerIcon getServerIcon() {
+        return server.getServerIcon();
+    }
+
+    public static void setServerIcon(@Nullable ServerIcon serverIcon) {
+        server.setServerIcon(serverIcon);
+    }
+    // Poseidon end
 
     public static boolean getAllowNether() {
         return server.getAllowNether();

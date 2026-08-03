@@ -5,13 +5,17 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.event.network.ServerReceivePacketEvent;
 import com.legacyminecraft.poseidon.event.network.ServerSendPacketEvent;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
+import com.legacyminecraft.poseidon.network.login.LoginState;
+import com.legacyminecraft.poseidon.network.ping.ServerListPingHandler;
 import com.legacyminecraft.poseidon.network.protocol.InboundPacket;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import org.jspecify.annotations.Nullable;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -69,7 +73,7 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             // CraftBukkit start - cant compile these outside the try
             socket.setSoTimeout((int) Poseidon.getConfig().network.timeout.getMillis()); // Poseidon - configurable connection timeout
             socket.setTcpNoDelay(true); // Poseidon - disable Nagle's algorithm
-            this.input = new DataInputStream(socket.getInputStream());
+            this.input = new DataInputStream(new BufferedInputStream(socket.getInputStream(), 5120)); // Poseidon - wrap in BufferedInputStream
             this.output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream(), 5120));
         } catch (java.io.IOException socketexception) {
             // CraftBukkit end
@@ -208,6 +212,14 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
         boolean flag = false;
 
         try {
+            // Poseidon start - implement server list ping protocol
+            if (Poseidon.getConfig().network.pingProtocol.enabled
+                    && getLoginState() == LoginState.INITIAL
+                    && tryHandlePing()) {
+                return true;
+            }
+            // Poseidon end
+
             // Poseidon start
             InboundPacket packet = Poseidon.getProtocolManager().decodePacket(this.input);
 
@@ -232,6 +244,31 @@ public class NetworkManager extends AbstractPlayerConnection { // Poseidon - ext
             return false;
         }
     }
+
+    // Poseidon start - implement server list ping protocol
+    private boolean tryHandlePing() throws IOException {
+        ServerListPingHandler pingHandler = getPingHandler();
+        if (pingHandler == null) {
+            this.input.mark(1);
+            int packetId = this.input.readUnsignedByte();
+            this.input.reset();
+            if (packetId > 2 && packetId != 250) {
+                pingHandler = enablePingProtocol();
+            }
+        }
+
+        if (pingHandler != null) {
+            pingHandler.handlePing(this.input, this.output);
+            this.output.flush();
+            if (pingHandler.isClosed()) {
+                this.a("disconnect.endOfStream");
+            }
+            return true;
+        }
+
+        return false;
+    }
+    // Poseidon end
 
     // Poseidon start
     private void handleReadPacket(InboundPacket packet) {

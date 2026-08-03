@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Provides various utility methods for interacting with the network protocol.
@@ -17,26 +18,12 @@ public final class ProtocolUtil {
      */
     public static final int MAX_STRING_LENGTH = Short.MAX_VALUE;
 
-    private ProtocolUtil() {
-    }
-
     /**
-     * Writes a string to a data output.
-     *
-     * @param string the string
-     * @param output the data output
-     * @throws IllegalArgumentException if the string length exceeds
-     *         {@link #MAX_STRING_LENGTH}
-     * @throws IOException if an I/O error occurs
+     * The maximum length of a VarInt in bytes.
      */
-    public static void writeString(String string, DataOutput output) throws IOException {
-        Preconditions.checkArgument(string != null, "string cannot be null");
-        Preconditions.checkArgument(output != null, "output cannot be null");
-        Preconditions.checkArgument(string.length() <= MAX_STRING_LENGTH,
-                "string cannot be longer than " + MAX_STRING_LENGTH + " characters");
+    public static final int MAX_VARINT_LENGTH = 5;
 
-        output.writeShort(string.length());
-        output.writeChars(string);
+    private ProtocolUtil() {
     }
 
     /**
@@ -65,5 +52,101 @@ public final class ProtocolUtil {
             }
             return sb.toString();
         }
+    }
+
+    /**
+     * Writes a string to a data output.
+     *
+     * @param string the string
+     * @param output the data output
+     * @throws IllegalArgumentException if the string length exceeds
+     *         {@link #MAX_STRING_LENGTH}
+     * @throws IOException if an I/O error occurs
+     */
+    public static void writeString(String string, DataOutput output) throws IOException {
+        Preconditions.checkArgument(string != null, "string cannot be null");
+        Preconditions.checkArgument(output != null, "output cannot be null");
+        Preconditions.checkArgument(string.length() <= MAX_STRING_LENGTH,
+                "string cannot be longer than " + MAX_STRING_LENGTH + " characters");
+
+        output.writeShort(string.length());
+        output.writeChars(string);
+    }
+
+    /**
+     * Reads a VarInt from a data input.
+     *
+     * @param input the data input
+     * @return the read VarInt
+     * @throws IOException if the received VarInt is longer than
+     *         {@link #MAX_VARINT_LENGTH} bytes, or if an I/O error occurs
+     */
+    public static int readVarInt(DataInput input) throws IOException {
+        Preconditions.checkArgument(input != null, "input cannot be null");
+
+        int value = 0;
+        int i = 0;
+        int b;
+        while (((b = input.readUnsignedByte()) & 0x80) != 0) {
+            value |= (b & 0x7F) << i;
+            i += 7;
+            if (i > 7 * MAX_VARINT_LENGTH) {
+                throw new IOException("received VarInt is longer than maximum " + MAX_VARINT_LENGTH + " bytes");
+            }
+        }
+        return value | (b << i);
+    }
+
+    /**
+     * Writes a VarInt to a data output.
+     *
+     * @param value the VarInt
+     * @param output the data output
+     * @throws IOException if an I/O error occurs
+     */
+    public static void writeVarInt(int value, DataOutput output) throws IOException {
+        Preconditions.checkArgument(output != null, "output cannot be null");
+
+        while ((value & 0xFFFFFF80) != 0L) {
+            output.write((value & 0x7F) | 0x80);
+            value >>>= 7;
+        }
+        output.write(value & 0x7F);
+    }
+
+    /**
+     * Reads a VarInt length-prefixed UTF-8 string from a data input.
+     *
+     * @param input the data input
+     * @return the string
+     * @throws IOException if an I/O error occurs
+     */
+    public static String readUtf8String(DataInput input) throws IOException {
+        Preconditions.checkArgument(input != null, "input cannot be null");
+
+        int length = readVarInt(input);
+        byte[] bytes = new byte[length];
+        input.readFully(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Writes a VarInt length-prefixed UTF-8 string to a data output.
+     *
+     * @param string the string
+     * @param output the data output
+     * @throws IllegalArgumentException if the string length exceeds
+     *         {@link #MAX_STRING_LENGTH}
+     * @throws IOException if an I/O error occurs
+     */
+    public static void writeUtf8String(String string, DataOutput output) throws IOException {
+        Preconditions.checkArgument(string != null, "string cannot be null");
+        Preconditions.checkArgument(output != null, "output cannot be null");
+        Preconditions.checkArgument(string.length() <= MAX_STRING_LENGTH,
+                "string cannot be longer than " + MAX_STRING_LENGTH + " characters");
+
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+        writeVarInt(bytes.length, output);
+        output.write(bytes);
     }
 }

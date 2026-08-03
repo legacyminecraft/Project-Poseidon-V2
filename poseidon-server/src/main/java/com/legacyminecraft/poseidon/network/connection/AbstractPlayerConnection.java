@@ -5,6 +5,7 @@ import com.legacyminecraft.poseidon.event.messaging.PlayerRegisterChannelEvent;
 import com.legacyminecraft.poseidon.event.messaging.PlayerUnregisterChannelEvent;
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.login.LoginState;
+import com.legacyminecraft.poseidon.network.ping.ServerListPingHandler;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.proxy.ProxyConnectionDetails;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -32,6 +33,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     private final PingCalculator pingCalculator = new PingCalculator();
 
     private volatile LoginState loginState = LoginState.INITIAL;
+    private @Nullable ServerListPingHandler pingHandler;
 
     public abstract NetHandler getNetHandler();
 
@@ -165,6 +167,16 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     public void setLoginState(LoginState newState) {
         Preconditions.checkArgument(newState != null, "newState cannot be null");
         this.loginState = newState;
+    }
+
+    public @Nullable ServerListPingHandler getPingHandler() {
+        return this.pingHandler;
+    }
+
+    public ServerListPingHandler enablePingProtocol() {
+        ServerListPingHandler pingHandler = new ServerListPingHandler(getClientAddress());
+        this.pingHandler = pingHandler;
+        return pingHandler;
     }
 
     public PacketRateLimiter getPacketRateLimiter() {
