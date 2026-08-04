@@ -497,19 +497,13 @@ public final class SimplePluginManager implements PluginManager {
      */
     public void callEvent(Event event) { // Poseidon - not synchronized
         // Poseidon start
-        if (event.isAsynchronous()) {
-            if (Thread.holdsLock(this)) {
-                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.");
-            }
-            if (server.isPrimaryThread()) {
-                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from primary server thread.");
-            }
-            fireEvent(event);
-        } else {
-            synchronized (this) {
-                fireEvent(event);
-            }
+        if (event.isAsynchronous() && server.isPrimaryThread()) {
+            throw new IllegalStateException(event.getEventName() + " may only be triggered asynchronously.");
+        } else if (!event.isAsynchronous() && !server.isPrimaryThread()) {
+            throw new IllegalStateException(event.getEventName() + " may only be triggered synchronously.");
         }
+
+        fireEvent(event);
     }
 
     private void fireEvent(Event event) {
