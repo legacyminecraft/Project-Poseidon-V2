@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.legacyminecraft</groupId>
-    <artifactId>project-poseidon-v2</artifactId>
+    <artifactId>poseidon-parent</artifactId>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <name>${server.brand}</name>
 
     <modules>
         <module>poseidon-api</module>
@@ -18,6 +18,7 @@
         <server.brand>Project Poseidon</server.brand>
         <server.vendor>legacyminecraft</server.vendor>
         <java.version>25</java.version>
+        <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
@@ -25,7 +26,12 @@
         <maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <slf4j.version>2.0.18</slf4j.version>
+        <junit.version>6.1.2</junit.version>
+        <assertj.version>3.27.7</assertj.version>
+        <mockito.version>5.23.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <argLine/>
     </properties>
 
     <scm>
