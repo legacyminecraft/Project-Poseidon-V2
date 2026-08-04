@@ -1,11 +1,5 @@
 package org.bukkit.plugin.java;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
-import com.avaje.ebean.config.DataSourceConfig;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,8 +13,6 @@ import org.bukkit.util.config.Configuration;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -38,7 +30,7 @@ public abstract class JavaPlugin implements Plugin {
     private ClassLoader classLoader = null;
     private Configuration config = null;
     private boolean naggable = true;
-    private EbeanServer ebean = null;
+    //private EbeanServer ebean = null; // Poseidon
 
     public JavaPlugin() {}
 
@@ -175,7 +167,8 @@ public abstract class JavaPlugin implements Plugin {
             this.config = new Configuration(new File(dataFolder, "config.yml"));
             this.config.load();
 
-            if (description.isDatabaseEnabled()) {
+            // Poseidon start - remove built-in database
+            /*if (description.isDatabaseEnabled()) {
                 ServerConfig db = new ServerConfig();
 
                 db.setDefaultServer(false);
@@ -194,24 +187,25 @@ public abstract class JavaPlugin implements Plugin {
                 Thread.currentThread().setContextClassLoader(classLoader);
                 ebean = EbeanServerFactory.create(db);
                 Thread.currentThread().setContextClassLoader(previous);
-            }
+            }*/
         }
     }
 
-    /**
-     * Provides a list of all classes that should be persisted in the database
-     *
-     * @return List of Classes that are Ebeans
-     */
-    public List<Class<?>> getDatabaseClasses() {
-        return new ArrayList<>();
-    }
+//    /**
+//     * Provides a list of all classes that should be persisted in the database
+//     *
+//     * @return List of Classes that are Ebeans
+//     */
+//    public List<Class<?>> getDatabaseClasses() {
+//        return new ArrayList<>();
+//    }
 
-    private String replaceDatabaseString(String input) {
+    /*private String replaceDatabaseString(String input) {
         input = input.replaceAll("\\{DIR\\}", getDataFolder().getPath().replaceAll("\\\\", "/") + "/");
         input = input.replaceAll("\\{NAME\\}", getDescription().getName().replaceAll("[^\\w_-]", ""));
         return input;
-    }
+    }*/
+    // Poseidon end
 
     /**
      * Gets the initialization status of this plugin
@@ -265,7 +259,8 @@ public abstract class JavaPlugin implements Plugin {
         this.naggable = canNag;
     }
 
-    public EbeanServer getDatabase() {
+    // Poseidon start - remove built-in database
+    /*public EbeanServer getDatabase() {
         return ebean;
     }
 
@@ -281,7 +276,8 @@ public abstract class JavaPlugin implements Plugin {
         DdlGenerator gen = serv.getDdlGenerator();
 
         gen.runScript(true, gen.generateDropDdl());
-    }
+    }*/
+    // Poseidon end
 
     @Override
     public String toString() {

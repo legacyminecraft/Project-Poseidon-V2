@@ -1,9 +1,5 @@
 package org.bukkit.craftbukkit;
 
-import com.avaje.ebean.config.DataSourceConfig;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.SQLitePlatform;
-import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import com.legacyminecraft.poseidon.Poseidon;
@@ -155,11 +151,13 @@ public final class CraftServer implements Server {
 
     private void loadConfig() {
         configuration.load();
-        configuration.getString("database.url", "jdbc:sqlite:{DIR}{NAME}.db");
+        // Poseidon start - remove built-in database
+        /*configuration.getString("database.url", "jdbc:sqlite:{DIR}{NAME}.db");
         configuration.getString("database.username", "bukkit");
         configuration.getString("database.password", "walrus");
         configuration.getString("database.driver", "org.sqlite.JDBC");
-        configuration.getString("database.isolation", "SERIALIZABLE");
+        configuration.getString("database.isolation", "SERIALIZABLE");*/
+        // Poseidon end
 
         configuration.getString("settings.update-folder", "update");
         configuration.getInt("settings.spawn-radius", 16);
@@ -746,7 +744,8 @@ public final class CraftServer implements Server {
         server.savePlayers();
     }
 
-    public void configureDbConfig(ServerConfig config) {
+    // Poseidon start - remove built-in database
+    /*public void configureDbConfig(ServerConfig config) {
         DataSourceConfig ds = new DataSourceConfig();
         ds.setDriver(configuration.getString("database.driver"));
         ds.setUrl(configuration.getString("database.url"));
@@ -760,7 +759,8 @@ public final class CraftServer implements Server {
         }
 
         config.setDataSourceConfig(ds);
-    }
+    }*/
+    // Poseidon end
 
     public boolean addRecipe(Recipe recipe) {
         CraftRecipe toAdd;

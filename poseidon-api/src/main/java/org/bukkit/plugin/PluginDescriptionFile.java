@@ -32,7 +32,7 @@ public final class PluginDescriptionFile {
     private @Nullable String prefix = null; // Poseidon
     private ArrayList<String> authors = new ArrayList<>();
     private @Nullable String website = null;
-    private boolean database = false;
+    //private boolean database = false; // Poseidon
     private PluginLoadOrder order = PluginLoadOrder.POSTWORLD;
     private ArrayList<Permission> permissions = new ArrayList<>();
 
@@ -157,13 +157,15 @@ public final class PluginDescriptionFile {
         return website;
     }
 
-    public boolean isDatabaseEnabled() {
+    // Poseidon start - remove built-in database
+    /*public boolean isDatabaseEnabled() {
         return database;
     }
 
     public void setDatabaseEnabled(boolean database) {
         this.database = database;
-    }
+    }*/
+    // Poseidon end
 
     public ArrayList<Permission> getPermissions() {
         return permissions;
@@ -235,13 +237,15 @@ public final class PluginDescriptionFile {
         }
         // Poseidon end
 
-        if (map.containsKey("database")) {
+        // Poseidon start - remove built-in database
+        /*if (map.containsKey("database")) {
             try {
                 database = (Boolean) map.get("database");
             } catch (ClassCastException ex) {
                 throw new InvalidDescriptionException(ex, "database is of wrong type");
             }
-        }
+        }*/
+        // Poseidon end
 
         if (map.containsKey("website")) {
             try {
@@ -316,7 +320,7 @@ public final class PluginDescriptionFile {
         map.put("name", name);
         map.put("main", main);
         map.put("version", version);
-        map.put("database", database);
+        //map.put("database", database); // Poseidon - remove built-in database
         map.put("order", order.toString());
 
         if (commands != null) {

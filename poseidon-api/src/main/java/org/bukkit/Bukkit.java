@@ -1,6 +1,5 @@
 package org.bukkit;
 
-import com.avaje.ebean.config.ServerConfig;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.network.ping.ServerIcon;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
@@ -242,9 +241,11 @@ public final class Bukkit {
         return server.dispatchCommand(sender, commandLine);
     }
 
-    public static void configureDbConfig(ServerConfig config) {
+    // Poseidon start - remove built-in database
+    /*public static void configureDbConfig(ServerConfig config) {
         server.configureDbConfig(config);
-    }
+    }*/
+    // Poseidon end
 
     public static boolean addRecipe(Recipe recipe) {
         return server.addRecipe(recipe);

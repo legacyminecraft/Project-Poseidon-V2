@@ -1,6 +1,5 @@
 package com.legacyminecraft.poseidon.util;
 
-import com.avaje.ebean.EbeanServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -83,11 +82,6 @@ public final class InternalBukkitAccess implements Plugin {
 
     @Override
     public void setNaggable(boolean canNag) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public EbeanServer getDatabase() {
         throw new UnsupportedOperationException();
     }
 

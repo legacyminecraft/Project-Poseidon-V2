@@ -1,6 +1,5 @@
 package org.bukkit;
 
-import com.avaje.ebean.config.ServerConfig;
 import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.messaging.PluginMessageRecipient;
 import com.legacyminecraft.poseidon.network.ping.ServerIcon;
@@ -416,12 +415,14 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
      */
     boolean dispatchCommand(CommandSender sender, String commandLine);
 
-    /**
-     * Populates a given {@link ServerConfig} with values attributes to this server
-     *
-     * @param config ServerConfig to populate
-     */
-    void configureDbConfig(ServerConfig config);
+    // Poseidon start - remove built-in database
+//    /**
+//     * Populates a given {@link ServerConfig} with values attributes to this server
+//     *
+//     * @param config ServerConfig to populate
+//     */
+//    void configureDbConfig(ServerConfig config);
+    // Poseidon end
 
     /**
      * Adds a recipe to the crafting manager.

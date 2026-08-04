@@ -1,6 +1,5 @@
 package org.bukkit.plugin;
 
-import com.avaje.ebean.EbeanServer;
 import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.generator.ChunkGenerator;
@@ -97,12 +96,14 @@ public interface Plugin extends CommandExecutor {
      */
     void setNaggable(boolean canNag);
 
-    /**
-     * Gets the {@link EbeanServer} tied to this plugin
-     *
-     * @return Ebean server instance
-     */
-    EbeanServer getDatabase();
+    // Poseidon start - remove built-in database
+//    /**
+//     * Gets the {@link EbeanServer} tied to this plugin
+//     *
+//     * @return Ebean server instance
+//     */
+//    EbeanServer getDatabase();
+    // Poseidon end
 
     /**
      * Gets a {@link ChunkGenerator} for use in a default world, as specified in the server configuration
