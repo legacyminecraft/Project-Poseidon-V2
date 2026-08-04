@@ -32,7 +32,7 @@ public class PluginsCommand extends Command {
         StringBuilder pluginList = new StringBuilder();
         // Poseidon start
         List<Plugin> plugins = Arrays.stream(Bukkit.getPluginManager().getPlugins())
-                .filter(plugin -> !Poseidon.getConfig().plugins.hiddenPlugins.contains(plugin.getDescription().getName()))
+                .filter(plugin -> !Poseidon.getConfig().commands.hiddenPlugins.contains(plugin.getDescription().getName()))
                 .sorted(Comparator.comparing(plugin -> plugin.getDescription().getName()))
                 .toList();
         int enabled = 0;

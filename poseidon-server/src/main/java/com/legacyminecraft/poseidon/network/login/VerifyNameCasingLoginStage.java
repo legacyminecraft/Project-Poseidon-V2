@@ -18,7 +18,7 @@ public final class VerifyNameCasingLoginStage implements LoginStage {
         String name = loginProcessHandler.getPlayerName();
         MinecraftProfile profile = loginProcessHandler.getProfile();
         if (!name.equals(profile.name())) {
-            switch (Poseidon.getConfig().profiles.handleLoginsWithWrongNameCasing) {
+            switch (Poseidon.getConfig().profiles.handleWrongNameCasing) {
                 case KEEP -> {
                     MinecraftProfile newProfile = new MinecraftProfile(profile.id(), name, profile.onlineMode());
                     loginProcessHandler.setProfile(newProfile);

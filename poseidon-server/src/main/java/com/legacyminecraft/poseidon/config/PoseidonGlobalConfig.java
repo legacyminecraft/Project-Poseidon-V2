@@ -242,7 +242,7 @@ public final class PoseidonGlobalConfig {
     public static final class Profiles {
         public boolean allowOfflineProfiles = true;
         public Duration invalidateCachedProfilesAfter = Duration.of("30d");
-        public WrongNameCasingHandlingMode handleLoginsWithWrongNameCasing = WrongNameCasingHandlingMode.KEEP;
+        public WrongNameCasingHandlingMode handleWrongNameCasing = WrongNameCasingHandlingMode.KEEP;
 
         public enum WrongNameCasingHandlingMode {
             KEEP,
@@ -272,10 +272,10 @@ public final class PoseidonGlobalConfig {
         public Pattern allowedCharacters = Pattern.compile("[A-Za-z0-9_]*");
     }
 
-    public Plugins plugins;
+    public Commands commands;
 
     @ConfigSerializable
-    public static final class Plugins {
+    public static final class Commands {
         public List<String> hiddenPlugins = List.of();
     }
 }

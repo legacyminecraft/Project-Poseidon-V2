@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.command.defaults;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -39,6 +40,11 @@ public class VersionCommand extends Command {
             }
 
             Plugin plugin = Bukkit.getPluginManager().getPlugin(name.toString());
+            // Poseidon start
+            if (plugin != null && Poseidon.getConfig().commands.hiddenPlugins.contains(plugin.getDescription().getName())) {
+                plugin = null;
+            }
+            // Poseidon end
 
             if (plugin != null) {
                 PluginDescriptionFile desc = plugin.getDescription();
