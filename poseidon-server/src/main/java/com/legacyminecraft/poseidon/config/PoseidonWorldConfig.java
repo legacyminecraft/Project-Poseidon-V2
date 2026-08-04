@@ -2,6 +2,7 @@ package com.legacyminecraft.poseidon.config;
 
 import com.legacyminecraft.poseidon.config.constraint.Positive;
 import com.legacyminecraft.poseidon.config.constraint.PositiveOrZero;
+import com.legacyminecraft.poseidon.config.transformation.world.WorldConfigTransformations;
 import org.bukkit.Material;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurateException;
@@ -11,6 +12,7 @@ import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -50,13 +52,20 @@ public final class PoseidonWorldConfig {
     }
 
     public static synchronized void loadDefaults() {
+        Path path = Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME);
+        boolean isFirstLoad = Files.notExists(path);
+
         YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
-                .path(Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME))
+                .path(path)
                 .defaultOptions(opt -> opt.header(DEFAULTS_HEADER))
                 .build();
 
         try {
-            PoseidonWorldConfig worldDefaults = loader.load().get(PoseidonWorldConfig.class);
+            ConfigurationNode node = loader.load();
+            if (!isFirstLoad) {
+                WorldConfigTransformations.applyToDefaults(node);
+            }
+            PoseidonWorldConfig worldDefaults = node.require(PoseidonWorldConfig.class);
             loader.save(loader.createNode().set(worldDefaults));
             defaults = worldDefaults;
         } catch (ConfigurateException e) {
@@ -65,23 +74,30 @@ public final class PoseidonWorldConfig {
     }
 
     public static synchronized PoseidonWorldConfig load(Path worldFolder) {
+        Path path = worldFolder.resolve(WORLD_CONFIG_FILE_NAME);
+        boolean isFirstLoad = Files.notExists(path);
+
         YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
-                .path(worldFolder.resolve(WORLD_CONFIG_FILE_NAME))
+                .path(path)
                 .defaultOptions(opt -> opt.header(
                         WORLD_HEADER.formatted(CONFIG_FOLDER, WORLD_DEFAULTS_FILE_NAME, worldFolder.getFileName())))
                 .build();
 
         try {
-            ConfigurationNode worldDefaults = loader.createNode().set(getDefaults());
-            ConfigurationNode worldConfig = loader.load();
-            loader.save(worldConfig);
-
-            worldConfig.mergeFrom(worldDefaults);
-            return worldConfig.require(PoseidonWorldConfig.class);
+            ConfigurationNode defaultsNode = loader.createNode().set(getDefaults());
+            ConfigurationNode node = loader.load();
+            if (!isFirstLoad) {
+                WorldConfigTransformations.applyToWorld(node);
+            }
+            loader.save(node);
+            node.mergeFrom(defaultsNode);
+            return node.require(PoseidonWorldConfig.class);
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public int version = WorldConfigTransformations.LATEST_VERSION;
 
     public Anticheat anticheat;
 

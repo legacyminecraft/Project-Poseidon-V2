@@ -3,11 +3,13 @@ package com.legacyminecraft.poseidon.config;
 import com.legacyminecraft.poseidon.config.constraint.Max;
 import com.legacyminecraft.poseidon.config.constraint.Min;
 import com.legacyminecraft.poseidon.config.constraint.Positive;
+import com.legacyminecraft.poseidon.config.transformation.global.GlobalConfigTransformations;
 import com.legacyminecraft.poseidon.config.type.Duration;
 import org.bukkit.ChatColor;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
 import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -51,22 +53,28 @@ public final class PoseidonGlobalConfig {
     }
 
     public static synchronized void load() {
-        Path globalConfigPath = Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME);
-        isFirstLoad = Files.notExists(globalConfigPath);
+        Path path = Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME);
+        isFirstLoad = Files.notExists(path);
 
         YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
-                .path(globalConfigPath)
+                .path(path)
                 .defaultOptions(opt -> opt.header(HEADER))
                 .build();
 
         try {
-            PoseidonGlobalConfig globalConfig = loader.load().get(PoseidonGlobalConfig.class);
+            ConfigurationNode node = loader.load();
+            if (!isFirstLoad) {
+                GlobalConfigTransformations.apply(node);
+            }
+            PoseidonGlobalConfig globalConfig = node.require(PoseidonGlobalConfig.class);
             loader.save(loader.createNode().set(globalConfig));
             instance = globalConfig;
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public int version = GlobalConfigTransformations.LATEST_VERSION;
 
     public UpdateNotifier updateNotifier;
 
