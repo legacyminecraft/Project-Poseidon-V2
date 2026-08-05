@@ -121,7 +121,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.AnnotationTypeMismatchException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -261,13 +260,10 @@ public class JavaPluginLoader implements PluginLoader {
             URL[] urls = new URL[1];
 
             urls[0] = file.toURI().toURL();
-            loader = new PluginClassLoader(this, urls, getClass().getClassLoader());
-            Class<?> jarClass = Class.forName(description.getMain(), true, loader);
-            Class<? extends JavaPlugin> plugin = jarClass.asSubclass(JavaPlugin.class);
-
-            Constructor<? extends JavaPlugin> constructor = plugin.getConstructor();
-
-            result = constructor.newInstance();
+            // Poseidon start
+            loader = new PluginClassLoader(this, urls, getClass().getClassLoader(), description);
+            result = loader.plugin;
+            // Poseidon end
 
             result.initialize(this, server, description, dataFolder, file, loader);
         } catch (Throwable ex) {

@@ -65,8 +65,7 @@ public class InternalCommandMap extends SimpleCommandMap {
         register("bukkit", new ReloadCommand("reload"));
         register("bukkit", new PluginsCommand("plugins"));
         register("poseidon", new PoseidonCommand());
-        register("poseidon", new TpsCommand());
-        register("poseidon", new MsptCommand());
+        register("poseidon", new SparkCommand(server));
     }
 
     private void setFallbackCommand(Command command) {

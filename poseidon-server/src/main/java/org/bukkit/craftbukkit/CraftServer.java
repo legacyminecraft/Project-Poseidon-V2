@@ -9,6 +9,7 @@ import com.legacyminecraft.poseidon.messaging.Messenger;
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.ping.ServerIcon;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
+import com.legacyminecraft.poseidon.performance.spark.PoseidonSpark;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainerImpl;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
@@ -112,6 +113,7 @@ public final class CraftServer implements Server {
     private final Yaml yaml = new Yaml(new SafeConstructor());
 
     // Poseidon start
+    public final PoseidonSpark spark;
     private final Map<UUID, OfflinePlayer> offlinePlayers = new MapMaker().weakValues().makeMap();
     private String motd;
     private @Nullable ServerIcon serverIcon;
@@ -133,8 +135,10 @@ public final class CraftServer implements Server {
 
         // Poseidon start
         this.messenger = new StandardMessenger(console.connectionManager);
+        this.spark = new PoseidonSpark(this);
         poseidonServer.initialize();
         this.commandMap.setDefaultCommands(this);
+        this.spark.enable();
 
         this.motd = Poseidon.getConfig().network.pingProtocol.motd;
         try {

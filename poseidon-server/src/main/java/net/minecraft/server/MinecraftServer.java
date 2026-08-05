@@ -357,7 +357,10 @@ public class MinecraftServer implements Runnable, ICommandListener {
         }
         // CraftBukkit end
 
-        this.poseidonServer.shutdown(); // Poseidon
+        // Poseidon start
+        this.server.spark.disable();
+        this.poseidonServer.shutdown();
+        // Poseidon end
     }
 
     public void a() {
@@ -384,8 +387,10 @@ public class MinecraftServer implements Runnable, ICommandListener {
                     tickRateManager.startTick();
                     MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit
                     Poseidon.getWatchdogThread().tick();
+                    this.server.spark.onTickStart();
                     this.h();
-                    tickRateManager.recordTick();
+                    double duration = (double) (System.nanoTime() - tickRateManager.getCurrentTickStart()) / 1_000_000;
+                    this.server.spark.onTickEnd(duration);
 
                     long nextTickTime = tickRateManager.getNextTickTime();
                     Runnable task;
