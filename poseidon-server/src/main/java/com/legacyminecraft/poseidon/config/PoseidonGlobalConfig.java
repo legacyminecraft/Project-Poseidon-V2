@@ -236,18 +236,20 @@ public final class PoseidonGlobalConfig {
         public int maxChunkPacketsPerTick = 3;
     }
 
-    public Services services;
+    public Sessions sessions;
 
     @ConfigSerializable
-    public static final class Services {
-        public String profileHost = "https://api.minecraftservices.com";
-        public String sessionHost = "https://sessionserver.mojang.com";
+    public static final class Sessions {
+        public String verifySessionUrl = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
     }
 
     public Profiles profiles;
 
     @ConfigSerializable
     public static final class Profiles {
+        public String lookupByNameUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/name/{name}";
+        public String lookupByIdUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/{uuid}";
+        public String lookupBulkByNameUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/bulk/byname";
         public boolean allowOfflineProfiles = true;
         public Duration invalidateCachedProfilesAfter = Duration.of("30d");
         public WrongNameCasingHandlingMode handleWrongNameCasing = WrongNameCasingHandlingMode.KEEP;

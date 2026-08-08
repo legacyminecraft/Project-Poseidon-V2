@@ -7,6 +7,8 @@ import com.legacyminecraft.poseidon.service.ServiceClientException;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public final class SessionService {
 
@@ -17,17 +19,19 @@ public final class SessionService {
     }
 
     public boolean verifySession(String name, String serverId, @Nullable InetAddress ipAddress) throws ServiceClientException {
-        String url = getSessionHost() + "/session/minecraft/hasJoined?username=" + name + "&serverId=" + serverId;
+        StringBuilder sb = new StringBuilder(Poseidon.getConfig().sessions.verifySessionUrl);
+        sb.append("?username=").append(encode(name)).append("&serverId=").append(encode(serverId));
         InetAddress finalAddress = ipAddress == null || ipAddress.isLoopbackAddress() ? null : ipAddress;
         if (finalAddress != null) {
-            url += "&ip=" + finalAddress.getHostAddress();
+            sb.append("&ip=").append(encode(finalAddress.getHostAddress()));
         }
 
+        String url = sb.toString();
         JsonObject response = this.client.get(url, JsonObject.class);
         return response != null;
     }
 
-    private String getSessionHost() {
-        return Poseidon.getConfig().services.sessionHost;
+    private static String encode(String str) {
+        return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 }

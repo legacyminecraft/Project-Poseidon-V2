@@ -7,7 +7,9 @@ import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import com.legacyminecraft.poseidon.service.ServiceClientHttpException;
 
+import java.net.URLEncoder;
 import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +33,7 @@ public final class ProfileService {
 
     public MinecraftProfile lookupProfileByName(String name) throws ProfileNotFoundException, ServiceClientException {
         try {
-            String url = getProfileHost() + "/minecraft/profile/lookup/name/" + name;
+            String url = Poseidon.getConfig().profiles.lookupByNameUrl.replace("{name}", encode(name));
             return this.client.get(url, MinecraftProfile.class);
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http &&
@@ -45,7 +47,7 @@ public final class ProfileService {
 
     public MinecraftProfile lookupProfileById(UUID id) throws ProfileNotFoundException, ServiceClientException {
         try {
-            String url = getProfileHost() + "/minecraft/profile/lookup/" + UuidUtil.toUndashedString(id);
+            String url = Poseidon.getConfig().profiles.lookupByIdUrl.replace("{uuid}", encode(UuidUtil.toUndashedString(id)));
             return this.client.get(url, MinecraftProfile.class);
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http && http.getResponse().statusCode() == 404) {
@@ -57,7 +59,7 @@ public final class ProfileService {
     }
 
     public void lookupProfilesByNames(Collection<String> names, ProfileLookupCallback callback) {
-        String url = getProfileHost() + "/minecraft/profile/lookup/bulk/byname";
+        String url = Poseidon.getConfig().profiles.lookupBulkByNameUrl;
         Set<String> uniqueNames = names.stream()
                 .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toSet());
@@ -109,7 +111,7 @@ public final class ProfileService {
         }
     }
 
-    private String getProfileHost() {
-        return Poseidon.getConfig().services.profileHost;
+    private static String encode(String str) {
+        return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 }
