@@ -9,16 +9,16 @@ import org.jspecify.annotations.Nullable;
  */
 public class ItemStack {
     private int type;
-    private int amount = 0;
+    private int amount;
     private @Nullable MaterialData data = null;
-    private short durability = 0;
+    private short durability;
 
     public ItemStack(final int type) {
-        this(type, 0);
+        this(type, 1); // Poseidon - 0 -> 1
     }
 
     public ItemStack(final Material type) {
-        this(type, 0);
+        this(type, 1); // Poseidon - 0 -> 1
     }
 
     public ItemStack(final int type, final int amount) {
