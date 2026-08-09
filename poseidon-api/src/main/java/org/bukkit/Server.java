@@ -523,14 +523,14 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
 
     /**
      * Creates a new {@link PlayerProfile} from the specified UUID, name and
-     * online mode.
+     * online status.
      *
      * @param id the UUID
      * @param name the name
-     * @param onlineMode if the profile is an online profile
+     * @param online if the profile is an online profile
      * @return a PlayerProfile object
      */
-    PlayerProfile createProfile(UUID id, String name, boolean onlineMode);
+    PlayerProfile createProfile(UUID id, String name, boolean online);
 
     /**
      * Creates a new offline {@link PlayerProfile} from the specified name.

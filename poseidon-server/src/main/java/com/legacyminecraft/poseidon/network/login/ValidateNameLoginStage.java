@@ -12,13 +12,25 @@ public final class ValidateNameLoginStage implements LoginStage {
             int minLength = Poseidon.getConfig().nameValidation.minimumLength;
             int maxLength = Poseidon.getConfig().nameValidation.maximumLength;
             Pattern allowedChars = Poseidon.getConfig().nameValidation.allowedCharacters;
-            String name = loginProcessHandler.getPlayerName();
+            String name = loginProcessHandler.getProfile().name();
+
             if (name.length() < minLength) {
-                loginProcessHandler.disconnect("Name too short, minimum " + minLength + " characters allowed");
-            } else if (name.length() > maxLength) {
-                loginProcessHandler.disconnect("Name too long, maximum " + maxLength + " characters allowed");
-            } else if (!allowedChars.matcher(name).matches()) {
-                loginProcessHandler.disconnect("Name has invalid characters, allowed characters: " + allowedChars);
+                loginProcessHandler.disconnect("Your name is too short, minimum length: " + minLength);
+                return;
+            }
+
+            boolean prefixed = Poseidon.getConfig().profiles.prefixOfflineUsernames && name.startsWith(".");
+            if (name.length() > maxLength) {
+                loginProcessHandler.disconnect("Your name is too long, maximum length: " + (prefixed ? (maxLength - 1) : maxLength));
+                return;
+            }
+
+            if (prefixed) {
+                name = name.substring(1);
+            }
+
+            if (!allowedChars.matcher(name).matches()) {
+                loginProcessHandler.disconnect("Your name is invalid, allowed characters: " + allowedChars);
             }
         }
     }

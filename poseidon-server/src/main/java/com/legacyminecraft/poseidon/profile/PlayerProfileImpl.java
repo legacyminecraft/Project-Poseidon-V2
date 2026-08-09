@@ -25,8 +25,8 @@ public final class PlayerProfileImpl implements PlayerProfile {
     }
 
     @Override
-    public boolean isOnlineMode() {
-        return this.profile.onlineMode();
+    public boolean isOnlineProfile() {
+        return this.profile.online();
     }
 
     @Override

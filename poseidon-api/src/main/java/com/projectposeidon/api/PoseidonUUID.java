@@ -31,7 +31,7 @@ public final class PoseidonUUID {
     @Deprecated
     public static @Nullable UUID getPlayerMojangUUID(String username) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(username);
-        if (offlinePlayer != null && offlinePlayer.getPlayerProfile().isOnlineMode()) {
+        if (offlinePlayer != null && offlinePlayer.getPlayerProfile().isOnlineProfile()) {
             return offlinePlayer.getUniqueId();
         }
         return null;
@@ -60,7 +60,7 @@ public final class PoseidonUUID {
     @Deprecated
     public static @Nullable UUID getPlayerUUIDFromCache(String username, boolean onlineUUID) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(username);
-        if (offlinePlayer != null && offlinePlayer.getPlayerProfile().isOnlineMode() == onlineUUID) {
+        if (offlinePlayer != null && offlinePlayer.getPlayerProfile().isOnlineProfile() == onlineUUID) {
             return offlinePlayer.getUniqueId();
         }
         return null;
@@ -83,7 +83,7 @@ public final class PoseidonUUID {
     public static UUIDType getPlayerUUIDCacheStatus(String username) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(username);
         if (offlinePlayer != null) {
-            return offlinePlayer.getPlayerProfile().isOnlineMode() ? UUIDType.ONLINE : UUIDType.OFFLINE;
+            return offlinePlayer.getPlayerProfile().isOnlineProfile() ? UUIDType.ONLINE : UUIDType.OFFLINE;
         }
         return UUIDType.UNKNOWN;
     }

@@ -8,7 +8,7 @@ import org.bukkit.OfflinePlayer;
  * legacy methods of accessing cached player UUIDs by name and vice versa.
  *
  * @deprecated It is encouraged to use {@link OfflinePlayer#getPlayerProfile()}
- * and {@link PlayerProfile#isOnlineMode()} to determine whether a player
+ * and {@link PlayerProfile#isOnlineProfile()} to determine whether a player
  * profile is online or offline.
  */
 @Deprecated

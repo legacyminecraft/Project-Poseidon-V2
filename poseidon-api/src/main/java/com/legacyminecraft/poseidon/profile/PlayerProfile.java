@@ -28,5 +28,5 @@ public interface PlayerProfile {
      *
      * @return {@code true} if it is an online profile
      */
-    boolean isOnlineMode();
+    boolean isOnlineProfile();
 }

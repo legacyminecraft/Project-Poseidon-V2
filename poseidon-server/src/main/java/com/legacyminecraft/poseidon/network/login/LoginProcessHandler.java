@@ -1,7 +1,6 @@
 package com.legacyminecraft.poseidon.network.login;
 
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.NetLoginHandler;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 public final class LoginProcessHandler implements Runnable {
 
-    private static final List<LoginStage> LOGIN_STAGES = new ObjectArrayList<>();
+    private static final List<LoginStage> LOGIN_STAGES;
 
     private final MinecraftServer server;
     private final NetLoginHandler netLoginHandler;
@@ -58,12 +57,13 @@ public final class LoginProcessHandler implements Runnable {
     }
 
     static {
-        // order is important, do not change!
-        LOGIN_STAGES.add(new ValidateNameLoginStage());
-        LOGIN_STAGES.add(new VerifySessionLoginStage());
-        LOGIN_STAGES.add(new LookupProfileLoginStage());
-        LOGIN_STAGES.add(new VerifyNameCasingLoginStage());
-        LOGIN_STAGES.add(new CallPreLoginEventsLoginStage());
-        LOGIN_STAGES.add(new SetProfileLoginStage());
+        LOGIN_STAGES = List.of(
+                new VerifySessionLoginStage(),
+                new LookupProfileLoginStage(),
+                new ValidateNameLoginStage(),
+                new VerifyNameCasingLoginStage(),
+                new CallPreLoginEventsLoginStage(),
+                new SetProfileLoginStage()
+        );
     }
 }

@@ -135,9 +135,9 @@ public final class ProfileCache {
                     JsonObject object = element.getAsJsonObject();
                     UUID uuid = UUID.fromString(object.get("uuid").getAsString());
                     String name = object.get("name").getAsString();
-                    boolean onlineMode = object.get("onlineMode").getAsBoolean();
+                    boolean online = object.get("online").getAsBoolean();
                     ZonedDateTime expiresOn = ZonedDateTime.from(DATE_FORMAT.parse(object.get("expiresOn").getAsString()));
-                    return new ProfileCacheEntry(new MinecraftProfile(uuid, name, onlineMode), expiresOn);
+                    return new ProfileCacheEntry(new MinecraftProfile(uuid, name, online), expiresOn);
                 } catch (Exception e) {
                     throw new JsonSyntaxException("Failed to deserialize profile cache entry", e);
                 }
@@ -148,7 +148,7 @@ public final class ProfileCache {
                 JsonObject object = new JsonObject();
                 object.addProperty("uuid", entry.profile().id().toString());
                 object.addProperty("name", entry.profile().name());
-                object.addProperty("onlineMode", entry.profile().onlineMode());
+                object.addProperty("online", entry.profile().online());
                 object.addProperty("expiresOn", DATE_FORMAT.format(entry.expiration()));
                 return object;
             }

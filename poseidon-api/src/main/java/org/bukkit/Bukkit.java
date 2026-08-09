@@ -292,8 +292,8 @@ public final class Bukkit {
         return server.getOfflinePlayer(id);
     }
 
-    public static PlayerProfile createProfile(UUID id, String name, boolean onlineMode) {
-        return server.createProfile(id, name, onlineMode);
+    public static PlayerProfile createProfile(UUID id, String name, boolean online) {
+        return server.createProfile(id, name, online);
     }
 
     public static PlayerProfile createOfflineProfile(String name) {

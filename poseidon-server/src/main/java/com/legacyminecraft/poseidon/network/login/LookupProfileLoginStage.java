@@ -18,16 +18,19 @@ public final class LookupProfileLoginStage implements LoginStage {
         String name = loginProcessHandler.getPlayerName();
         MinecraftProfile profile;
         Optional<MinecraftProfile> optional = Poseidon.getProfileCache().getProfile(name, true);
-        if (optional.isPresent() && optional.get().onlineMode()) {
+        if (optional.isPresent() && optional.get().online()) {
             profile = optional.get();
         } else {
             try {
                 profile = Poseidon.getProfileService().lookupProfileByName(name);
             } catch (ProfileNotFoundException e) {
-                if (Poseidon.getConfig().profiles.allowOfflineProfiles) {
+                if (Poseidon.getConfig().profiles.allowOfflineAccounts) {
+                    if (Poseidon.getConfig().profiles.prefixOfflineUsernames && !name.startsWith(".")) {
+                        name = "." + name;
+                    }
                     profile = MinecraftProfile.createOffline(name);
                 } else {
-                    log.info("Disconnecting {} as they do not have an online profile and offline profiles are disallowed.", name);
+                    log.info("Disconnecting {} as they do not have an online profile and offline accounts are disallowed.", name);
                     loginProcessHandler.disconnect("Offline accounts are not supported");
                     return;
                 }

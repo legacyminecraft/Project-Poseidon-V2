@@ -40,7 +40,7 @@ public final class CallPreLoginEventsLoginStage implements LoginStage {
                     loginProcessHandler.disconnect(event.getKickMessage());
                 }
             } catch (InterruptedException | ExecutionException e) {
-                log.warn("Failed to call sync {} for {}", event.getClass().getSimpleName(), loginProcessHandler.getPlayerName(), e);
+                log.warn("Failed to call sync {} for {}", event.getClass().getSimpleName(), profile.name(), e);
                 loginProcessHandler.disconnect("Internal server error");
             }
         }

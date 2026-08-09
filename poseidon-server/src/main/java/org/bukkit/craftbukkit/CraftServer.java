@@ -945,10 +945,10 @@ public final class CraftServer implements Server {
         return offlinePlayer;
     }
 
-    public PlayerProfile createProfile(UUID id, String name, boolean onlineMode) {
+    public PlayerProfile createProfile(UUID id, String name, boolean online) {
         Preconditions.checkArgument(id != null, "id cannot be null");
         Preconditions.checkArgument(name != null, "name cannot be null");
-        return new PlayerProfileImpl(new MinecraftProfile(id, name, onlineMode));
+        return new PlayerProfileImpl(new MinecraftProfile(id, name, online));
     }
 
     public PlayerProfile createOfflineProfile(String name) {
