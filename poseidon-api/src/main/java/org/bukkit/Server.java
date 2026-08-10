@@ -535,9 +535,7 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
     /**
      * Creates a new offline {@link PlayerProfile} from the specified name.
      * <p>
-     * This will generate a UUID for the profile based on the name. The name
-     * is case-insensitive, meaning that the same UUID will be generated for
-     * names which only differ in casing.
+     * This will generate a UUID for the profile based on the name.
      *
      * @param name the name
      * @return a PlayerProfile object

@@ -9,8 +9,12 @@ public final class UuidUtil {
     private UuidUtil() {
     }
 
-    public static UUID createOfflineUuid(String name) {
+    public static UUID generateOfflineUuid(String name) {
         return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name.toLowerCase(Locale.ROOT)).getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static UUID generateLegacyOfflineUuid(String name) {
+        return UUID.nameUUIDFromBytes(name.getBytes());
     }
 
     public static UUID fromUndashedString(String string) {

@@ -252,6 +252,7 @@ public final class PoseidonGlobalConfig {
         public String lookupBulkByNameUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/bulk/byname";
         public boolean allowOfflineAccounts = true;
         public boolean prefixOfflineUsernames = false;
+        public boolean useLegacyUuidGeneration = false;
         public Duration invalidateCachedProfilesAfter = Duration.of("30d");
         public WrongNameCasingHandlingMode handleWrongNameCasing = WrongNameCasingHandlingMode.KEEP;
 
