@@ -42,7 +42,18 @@ public final class PoseidonWorldConfig {
 
         World: %s""";
 
+    private static final Path DEFAULTS_PATH;
+    private static final YamlConfigurationLoader DEFAULTS_LOADER;
+
     private static @Nullable PoseidonWorldConfig defaults;
+
+    static {
+        DEFAULTS_PATH = Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME);
+        DEFAULTS_LOADER = PoseidonConfigurations.createLoaderBuilder()
+                .path(DEFAULTS_PATH)
+                .defaultOptions(opt -> opt.header(DEFAULTS_HEADER))
+                .build();
+    }
 
     public static PoseidonWorldConfig getDefaults() {
         if (defaults == null) {
@@ -52,22 +63,23 @@ public final class PoseidonWorldConfig {
     }
 
     public static synchronized void loadDefaults() {
-        Path path = Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME);
-        boolean isFirstLoad = Files.notExists(path);
-
-        YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
-                .path(path)
-                .defaultOptions(opt -> opt.header(DEFAULTS_HEADER))
-                .build();
+        boolean isFirstLoad = Files.notExists(DEFAULTS_PATH);
 
         try {
-            ConfigurationNode node = loader.load();
+            ConfigurationNode node = DEFAULTS_LOADER.load();
             if (!isFirstLoad) {
                 WorldConfigTransformations.applyToDefaults(node);
             }
-            PoseidonWorldConfig worldDefaults = node.require(PoseidonWorldConfig.class);
-            loader.save(loader.createNode().set(worldDefaults));
-            defaults = worldDefaults;
+            defaults = node.require(PoseidonWorldConfig.class);
+            saveDefaults();
+        } catch (ConfigurateException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static synchronized void saveDefaults() {
+        try {
+            DEFAULTS_LOADER.save(DEFAULTS_LOADER.createNode().set(defaults));
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }

@@ -41,9 +41,20 @@ public final class PoseidonGlobalConfig {
         Wiki: https://github.com/legacyminecraft/Project-Poseidon-V2/wiki
         Discord: https://discord.gg/FwKg676""";
 
+    private static final Path PATH;
+    private static final YamlConfigurationLoader LOADER;
+
     public static boolean isFirstLoad = false;
 
     private static @Nullable PoseidonGlobalConfig instance;
+
+    static {
+        PATH = Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME);
+        LOADER = PoseidonConfigurations.createLoaderBuilder()
+                .path(PATH)
+                .defaultOptions(opt -> opt.header(HEADER))
+                .build();
+    }
 
     public static PoseidonGlobalConfig getInstance() {
         if (instance == null) {
@@ -53,22 +64,23 @@ public final class PoseidonGlobalConfig {
     }
 
     public static synchronized void load() {
-        Path path = Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME);
-        isFirstLoad = Files.notExists(path);
-
-        YamlConfigurationLoader loader = PoseidonConfigurations.createLoaderBuilder()
-                .path(path)
-                .defaultOptions(opt -> opt.header(HEADER))
-                .build();
+        isFirstLoad = Files.notExists(PATH);
 
         try {
-            ConfigurationNode node = loader.load();
+            ConfigurationNode node = LOADER.load();
             if (!isFirstLoad) {
                 GlobalConfigTransformations.apply(node);
             }
-            PoseidonGlobalConfig globalConfig = node.require(PoseidonGlobalConfig.class);
-            loader.save(loader.createNode().set(globalConfig));
-            instance = globalConfig;
+            instance = node.require(PoseidonGlobalConfig.class);
+            save();
+        } catch (ConfigurateException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static synchronized void save() {
+        try {
+            LOADER.save(LOADER.createNode().set(instance));
         } catch (ConfigurateException e) {
             throw new RuntimeException(e);
         }

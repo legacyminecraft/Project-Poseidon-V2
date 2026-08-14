@@ -2,6 +2,7 @@ package net.minecraft.server;
 
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
+import com.legacyminecraft.poseidon.migration.LegacyConfigMigration;
 import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.network.connection.ConnectionManager;
 import com.legacyminecraft.poseidon.network.netty.NettyConnectionManager;
@@ -24,6 +25,7 @@ import org.jline.reader.LineReaderBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -93,6 +95,12 @@ public class MinecraftServer implements Runnable, ICommandListener {
         long j = System.nanoTime(); // Poseidon - moved from below
 
         // Poseidon start
+        try {
+            LegacyConfigMigration.run();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         this.poseidonServer = new PoseidonServer();
         Poseidon.setServer(this.poseidonServer);
         // Poseidon end
