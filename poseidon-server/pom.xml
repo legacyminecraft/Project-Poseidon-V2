@@ -20,7 +20,7 @@
         <logback.version>1.6.1</logback.version>
         <spark.version>1.10.172-SNAPSHOT</spark.version>
         <sqlite-jdbc.version>3.53.2.1</sqlite-jdbc.version>
-        <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
+        <mysql-connector-j.version>26.7.0</mysql-connector-j.version>
         <netty.version>4.2.16.Final</netty.version>
     </properties>
 
