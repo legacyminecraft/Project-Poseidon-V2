@@ -25,7 +25,6 @@ import org.jline.reader.LineReaderBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -95,12 +94,7 @@ public class MinecraftServer implements Runnable, ICommandListener {
         long j = System.nanoTime(); // Poseidon - moved from below
 
         // Poseidon start
-        try {
-            LegacyConfigMigration.run();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        LegacyConfigMigration.run();
         this.poseidonServer = new PoseidonServer();
         Poseidon.setServer(this.poseidonServer);
         // Poseidon end

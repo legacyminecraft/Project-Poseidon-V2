@@ -9,11 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
@@ -22,7 +21,16 @@ public final class LegacyConfigMigration {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss-SSS");
     private static final Logger log = LoggerFactory.getLogger(LegacyConfigMigration.class);
 
-    public static void run() throws IOException {
+    public static void run() {
+        try {
+            runThrowing();
+        } catch (Exception e) {
+            log.error("Failed to migrate legacy configuration file");
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void runThrowing() throws Exception {
         Path legacyConfigPath = Paths.get("poseidon.yml");
         if (Files.notExists(legacyConfigPath)) {
             return;
@@ -77,7 +85,7 @@ public final class LegacyConfigMigration {
 
         PoseidonGlobalConfig.save();
         PoseidonWorldConfig.saveDefaults();
-        Files.move(legacyConfigPath, Paths.get("poseidon.yml." + FORMATTER.format(LocalDateTime.now()) + ".migrated"));
+        Files.move(legacyConfigPath, Paths.get("poseidon.yml." + FORMATTER.format(ZonedDateTime.now()) + ".migrated"));
 
         log.info("Successfully migrated legacy configuration file");
     }

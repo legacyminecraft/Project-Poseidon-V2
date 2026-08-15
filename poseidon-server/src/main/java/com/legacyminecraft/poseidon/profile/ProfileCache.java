@@ -12,6 +12,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.legacyminecraft.poseidon.Poseidon;
+import com.legacyminecraft.poseidon.migration.LegacyProfileCacheMigration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,9 +47,11 @@ public final class ProfileCache {
     private final ReentrantLock stateLock = new ReentrantLock();
 
     public void addProfile(MinecraftProfile profile) {
-        ZonedDateTime expiration = ZonedDateTime.now().plusNanos(Poseidon.getConfig().profiles.invalidateCachedProfilesAfter.getNanos());
-        ProfileCacheEntry entry = new ProfileCacheEntry(profile, expiration);
-        internalAdd(entry);
+        addProfile(profile, ZonedDateTime.now().plusNanos(Poseidon.getConfig().profiles.invalidateCachedProfilesAfter.getNanos()));
+    }
+
+    public void addProfile(MinecraftProfile profile, ZonedDateTime expiration) {
+        internalAdd(new ProfileCacheEntry(profile, expiration));
     }
 
     private void internalAdd(ProfileCacheEntry entry) {
@@ -114,6 +117,8 @@ public final class ProfileCache {
         } catch (Exception e) {
             log.error("Failed to load profile cache", e);
         }
+
+        LegacyProfileCacheMigration.run();
     }
 
     public void save() {
