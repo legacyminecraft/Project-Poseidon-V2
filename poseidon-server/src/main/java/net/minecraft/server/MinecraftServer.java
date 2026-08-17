@@ -22,6 +22,8 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginLoadOrder;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -610,11 +612,21 @@ public class MinecraftServer implements Runnable, ICommandListener {
         return minecraftserver.isRunning;
     }
 
-    // Poseidon start
+    // Poseidon start - initialize terminal
     static {
-        reader = LineReaderBuilder.builder()
-                .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
-                .build();
+        try {
+            Terminal terminal = TerminalBuilder.builder()
+                    .system(true)
+                    .graphemeCluster(false)
+                    .build();
+
+            reader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                    .build();
+        } catch (Exception e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
     // Poseidon end
 }
