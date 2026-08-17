@@ -105,7 +105,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             return 1.62D;
         } else {
             if (isSneaking()) {
-                return 1.42D;
+                return 1.54D; // Poseidon - 1.42 -> 1.54
             } else {
                 return 1.62D;
             }

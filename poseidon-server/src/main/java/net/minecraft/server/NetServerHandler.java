@@ -880,24 +880,13 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
         if (packet18armanimation.b == 1) {
             // CraftBukkit start - raytrace to look for 'rogue armswings'
-            float f = 1.0F;
-            float f1 = this.player.lastPitch + (this.player.pitch - this.player.lastPitch) * f;
-            float f2 = this.player.lastYaw + (this.player.yaw - this.player.lastYaw) * f;
-            double d0 = this.player.lastX + (this.player.locX - this.player.lastX) * (double) f;
-            double d1 = this.player.lastY + (this.player.locY - this.player.lastY) * (double) f + 1.62D - (double) this.player.height;
-            double d2 = this.player.lastZ + (this.player.locZ - this.player.lastZ) * (double) f;
-            Vec3D vec3d = Vec3D.create(d0, d1, d2);
-
-            float f3 = MathHelper.cos(-f2 * 0.017453292F - 3.1415927F);
-            float f4 = MathHelper.sin(-f2 * 0.017453292F - 3.1415927F);
-            float f5 = -MathHelper.cos(-f1 * 0.017453292F);
-            float f6 = MathHelper.sin(-f1 * 0.017453292F);
-            float f7 = f4 * f5;
-            float f8 = f3 * f5;
-            double d3 = 5.0D;
-            Vec3D vec3d1 = vec3d.add((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
-            MovingObjectPosition movingobjectposition = this.player.world.rayTrace(vec3d, vec3d1, true);
-
+            // Poseidon start - simplify
+            Vec3D origin = this.player.getEyeLocation();
+            Vec3D direction = this.player.getLookDirection();
+            double distance = 5.0D;
+            Vec3D destination = origin.add(direction.a * distance, direction.b * distance, direction.c * distance);
+            MovingObjectPosition movingobjectposition = this.player.world.rayTrace(origin, destination, true);
+            // Poseidon end
             if (movingobjectposition == null || movingobjectposition.type != EnumMovingObjectType.TILE) {
                 CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_AIR, this.player.inventory.getItemInHand());
             }
@@ -960,37 +949,42 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         Entity entity = worldserver.getEntity(packet7useentity.target);
         ItemStack itemInHand = this.player.inventory.getItemInHand();
 
-        if (entity != null && this.player.e(entity) && this.player.g(entity) < 36.0D) {
-            if (packet7useentity.c == 0) {
-                // Poseidon start - fix minecart dupe
-                Player player = this.getPlayer();
-                org.bukkit.entity.Entity interacted = entity.getBukkitEntity();
-                if (player.isInsideVehicle() && interacted instanceof StorageMinecart) {
-                    return;
-                }
-                // Poseidon end
+        // Poseidon start - raytrace to check if entity is within reach and line of sight
+        if (entity != null) {
+            MovingObjectPosition movingobjectposition = this.player.rayTrace(3.0);
+            if (movingobjectposition != null && movingobjectposition.entity == entity) {
+            // Poseidon end
+                if (packet7useentity.c == 0) {
+                    // Poseidon start - fix minecart dupe
+                    Player player = this.getPlayer();
+                    org.bukkit.entity.Entity interacted = entity.getBukkitEntity();
+                    if (player.isInsideVehicle() && interacted instanceof StorageMinecart) {
+                        return;
+                    }
+                    // Poseidon end
 
-                // CraftBukkit start
-                PlayerInteractEntityEvent event = new PlayerInteractEntityEvent(this.getPlayer(), entity.getBukkitEntity());
-                this.server.getPluginManager().callEvent(event);
+                    // CraftBukkit start
+                    PlayerInteractEntityEvent event = new PlayerInteractEntityEvent(this.getPlayer(), entity.getBukkitEntity());
+                    this.server.getPluginManager().callEvent(event);
 
-                if (event.isCancelled()) {
-                    return;
+                    if (event.isCancelled()) {
+                        return;
+                    }
+                    // CraftBukkit end
+                    this.player.c(entity);
+                    // CraftBukkit start - update the client if the item is an infinite one
+                    if (itemInHand != null && itemInHand.count <= -1) {
+                        this.player.updateInventory(this.player.activeContainer);
+                    }
+                    // CraftBukkit end
+                } else if (packet7useentity.c == 1) {
+                    this.player.d(entity);
+                    // CraftBukkit start - update the client if the item is an infinite one
+                    if (itemInHand != null && itemInHand.count <= -1) {
+                        this.player.updateInventory(this.player.activeContainer);
+                    }
+                    // CraftBukkit end
                 }
-                // CraftBukkit end
-                this.player.c(entity);
-                // CraftBukkit start - update the client if the item is an infinite one
-                if (itemInHand != null && itemInHand.count <= -1) {
-                    this.player.updateInventory(this.player.activeContainer);
-                }
-                // CraftBukkit end
-            } else if (packet7useentity.c == 1) {
-                this.player.d(entity);
-                // CraftBukkit start - update the client if the item is an infinite one
-                if (itemInHand != null && itemInHand.count <= -1) {
-                    this.player.updateInventory(this.player.activeContainer);
-                }
-                // CraftBukkit end
             }
         }
     }

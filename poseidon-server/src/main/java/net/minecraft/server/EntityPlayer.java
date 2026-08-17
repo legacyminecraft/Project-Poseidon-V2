@@ -131,7 +131,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     }
 
     public float t() {
-        return 1.62F;
+        return isSneaking() ? 1.54F : 1.62F; // Poseidon - account for sneaking
     }
 
     public void m_() {

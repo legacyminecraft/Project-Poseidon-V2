@@ -717,6 +717,68 @@ public abstract class EntityLiving extends Entity {
         }
     }
 
+    // Poseidon start
+    public Vec3D getEyeLocation() {
+        return Vec3D.create(this.locX, this.locY + this.t(), this.locZ);
+    }
+
+    public Vec3D getLookDirection() {
+        float f1 = MathHelper.cos(-this.yaw * 0.017453292F - 3.1415927F);
+        float f2 = MathHelper.sin(-this.yaw * 0.017453292F - 3.1415927F);
+        float f3 = -MathHelper.cos(-this.pitch * 0.017453292F);
+        float f4 = MathHelper.sin(-this.pitch * 0.017453292F);
+        return Vec3D.create(f2 * f3, f4, f1 * f3);
+    }
+
+    public @Nullable MovingObjectPosition rayTrace(double maxDistance) {
+        double distance = maxDistance;
+        Vec3D origin = getEyeLocation();
+        Vec3D direction = getLookDirection();
+        Vec3D destination = origin.add(direction.a * distance, direction.b * distance, direction.c * distance);
+
+        Vec3D position1 = Vec3D.create(origin.a, origin.b, origin.c);
+        MovingObjectPosition movingobjectposition = this.world.a(position1, destination);
+        if (movingobjectposition != null) {
+            distance = movingobjectposition.f.a(origin);
+            destination = Vec3D.create(movingobjectposition.f.a, movingobjectposition.f.b, movingobjectposition.f.c);
+        }
+
+        Entity entity = null;
+        List<Entity> list = this.world.b(this, this.boundingBox.a(direction.a * distance, direction.b * distance, direction.c * distance).b(1.0F, 1.0F, 1.0F));
+        double d3 = 0.0D;
+
+        for (int j = 0; j < list.size(); ++j) {
+            Entity entity1 = list.get(j);
+
+            if (entity1.l_()) {
+                float f = 0.1F;
+                AxisAlignedBB axisalignedbb = entity1.boundingBox.b(f, f, f);
+                MovingObjectPosition movingobjectposition1 = axisalignedbb.a(origin, destination);
+
+                if (axisalignedbb.a(origin)) {
+                    if (0.0D < d3 || d3 == 0.0D) {
+                        entity = entity1;
+                        d3 = 0.0D;
+                    }
+                } else if (movingobjectposition1 != null) {
+                    double d4 = origin.a(movingobjectposition1.f);
+
+                    if (d4 < d3 || d3 == 0.0D) {
+                        entity = entity1;
+                        d3 = d4;
+                    }
+                }
+            }
+        }
+
+        if (entity != null) {
+            movingobjectposition = new MovingObjectPosition(entity);
+        }
+
+        return movingobjectposition;
+    }
+    // Poseidon end
+
     protected boolean D() {
         return this.health <= 0;
     }
