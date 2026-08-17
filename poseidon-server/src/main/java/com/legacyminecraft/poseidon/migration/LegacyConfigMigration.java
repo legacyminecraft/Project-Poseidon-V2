@@ -67,7 +67,7 @@ public final class LegacyConfigMigration {
         globalConfig.nameValidation.maximumLength = legacyConfig.node("settings", "check-username-validity", "max-length").getInt();
         globalConfig.nameValidation.minimumLength = legacyConfig.node("settings", "check-username-validity", "min-length").getInt();
         globalConfig.updateNotifier.enabled = legacyConfig.node("settings", "update-checker", "enabled").getBoolean();
-        globalConfig.updateNotifier.notifyIsRunningLatestRelease = legacyConfig.node("settings", "update-checker", "notify-if-up-to-date", "enabled").getBoolean();
+        globalConfig.updateNotifier.notifyOnJoin = legacyConfig.node("settings", "update-checker", "notify-staff", "enabled").getBoolean();
         globalConfig.updateNotifier.interval = Duration.of((legacyConfig.node("settings", "update-checker", "interval", "ticks").getLong() / 20) + "s");
 
         worldDefaults.spawnRandomizationRadius = legacyConfig.node("world-settings", "randomize-spawn").getBoolean() ? 10 : 0;

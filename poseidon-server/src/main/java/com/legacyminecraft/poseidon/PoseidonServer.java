@@ -68,6 +68,10 @@ public final class PoseidonServer {
                 "poseidon.anticheat.flight-flagging.exempt",
                 "Makes a player exempt from the server's flight flagging",
                 PermissionDefault.OP);
+        DefaultPermissions.registerPermission(
+                "poseidon.update.notify",
+                "Allows a player to receive notifications about new releases",
+                PermissionDefault.OP);
     }
 
     public void postInitialize() {

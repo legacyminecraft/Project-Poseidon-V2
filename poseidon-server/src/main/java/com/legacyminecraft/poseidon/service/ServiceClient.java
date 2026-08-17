@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.MinecraftProfileDeserializer;
 import com.legacyminecraft.poseidon.profile.ProfileBulkLookupResponse;
+import com.legacyminecraft.poseidon.version.GitHubRelease;
 import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
@@ -27,6 +28,7 @@ public final class ServiceClient {
                 .disableHtmlEscaping()
                 .registerTypeAdapter(MinecraftProfile.class, new MinecraftProfileDeserializer())
                 .registerTypeAdapter(ProfileBulkLookupResponse.class, new ProfileBulkLookupResponse.Deserializer())
+                .registerTypeAdapter(GitHubRelease.class, new GitHubRelease.Deserializer())
                 .create();
     }
 

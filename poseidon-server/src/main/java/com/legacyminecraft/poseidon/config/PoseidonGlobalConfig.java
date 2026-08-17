@@ -93,8 +93,9 @@ public final class PoseidonGlobalConfig {
     @ConfigSerializable
     public static final class UpdateNotifier {
         public boolean enabled = true;
+        public String githubRepository = "legacyminecraft/Project-Poseidon-V2";
         public Duration interval = Duration.of("6h");
-        public boolean notifyIsRunningLatestRelease = true;
+        public boolean notifyOnJoin = true;
     }
 
     public Logging logging;

@@ -1,9 +1,12 @@
 package net.minecraft.server;
 
+import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.PoseidonServer;
 import com.legacyminecraft.poseidon.event.player.PlayerChangedWorldEvent;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
+import com.legacyminecraft.poseidon.version.GitHubRelease;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -126,7 +129,8 @@ public class ServerConfigurationManager {
         }
 
         // CraftBukkit start
-        PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent(this.cserver.getPlayer(entityplayer), "\u00A7e" + entityplayer.name + " joined the game.");
+        Player player = this.cserver.getPlayer(entityplayer); // Poseidon
+        PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent(player, "\u00A7e" + entityplayer.name + " joined the game.");
         this.cserver.getPluginManager().callEvent(playerJoinEvent);
 
         String joinMessage = playerJoinEvent.getJoinMessage();
@@ -135,6 +139,17 @@ public class ServerConfigurationManager {
             this.server.serverConfigurationManager.sendAll(new Packet3Chat(joinMessage));
         }
         // CraftBukkit end
+
+        // Poseidon start - notify if new release is available
+        if (Poseidon.getConfig().updateNotifier.notifyOnJoin
+                && Poseidon.getUpdateNotifier().isUpdateAvailable()
+                && player.hasPermission("poseidon.update.notify")) {
+            String repository = Poseidon.getConfig().updateNotifier.githubRepository;
+            GitHubRelease latestRelease = Poseidon.getUpdateNotifier().getLatestRelease();
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "A new release of " + repository + " is available: " + latestRelease.tag());
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "Download the latest release here: " + latestRelease.url());
+        }
+        // Poseidon end
 
         worldserver.addEntity(entityplayer);
         this.getPlayerManager(entityplayer.dimension).addPlayer(entityplayer);

@@ -1,10 +1,10 @@
 package com.legacyminecraft.poseidon.version;
 
-import com.google.gson.JsonObject;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import com.legacyminecraft.poseidon.service.ServiceClientHttpException;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,27 +14,25 @@ import java.util.concurrent.TimeUnit;
 
 public final class PoseidonUpdateNotifier {
 
-    private static final String GITHUB_API_URL = "https://api.github.com/repos/legacyminecraft/Project-Poseidon-V2/releases/latest";
-    private static final String RELEASE_URL = "https://github.com/legacyminecraft/Project-Poseidon-V2/releases";
     private static final Logger log = LoggerFactory.getLogger(PoseidonUpdateNotifier.class);
 
     private final ScheduledExecutorService executor;
     private final ServiceClient client;
     private final PoseidonBuildInformation buildInformation;
-    private volatile String latestRelease;
+
+    private volatile @Nullable GitHubRelease latestRelease;
 
     public PoseidonUpdateNotifier(ServiceClient client, PoseidonBuildInformation buildInformation) {
         this.executor = Executors.newSingleThreadScheduledExecutor(
                 Thread.ofPlatform().name("Update Notifier").factory());
         this.client = client;
         this.buildInformation = buildInformation;
-        this.latestRelease = getCurrentBuild();
     }
 
     public void start() {
         if (Poseidon.getConfig().updateNotifier.enabled) {
             long interval = Poseidon.getConfig().updateNotifier.interval.getNanos();
-            this.executor.scheduleAtFixedRate(this::getLatestRelease, 0, interval, TimeUnit.NANOSECONDS);
+            this.executor.scheduleAtFixedRate(this::fetchLatestRelease, 0, interval, TimeUnit.NANOSECONDS);
         } else {
             log.info("The update notifier is disabled. The server will not check for new releases.");
         }
@@ -49,17 +47,16 @@ public final class PoseidonUpdateNotifier {
         }
     }
 
-    public void getLatestRelease() {
+    public void fetchLatestRelease() {
         try {
-            JsonObject object = this.client.get(GITHUB_API_URL, JsonObject.class);
-            this.latestRelease = object.get("tag_name").getAsString();
+            String repository = Poseidon.getConfig().updateNotifier.githubRepository;
+            String url = "https://api.github.com/repos/" + repository + "/releases/latest";
+            this.latestRelease = this.client.get(url, GitHubRelease.class);
 
             if (isUpdateAvailable()) {
-                log.info("A new release is available: {}", this.latestRelease);
+                log.info("A new release of {} is available: {}", repository, this.latestRelease.tag());
                 log.info("You are currently running release: {}", getCurrentBuild());
-                log.info("Download the latest release here: {}", RELEASE_URL);
-            } else if (Poseidon.getConfig().updateNotifier.notifyIsRunningLatestRelease) {
-                log.info("You are running the latest release: {}", getCurrentBuild());
+                log.info("Download the latest release here: {}", this.latestRelease.url());
             }
         } catch (ServiceClientException e) {
             if (e instanceof ServiceClientHttpException http) {
@@ -70,8 +67,13 @@ public final class PoseidonUpdateNotifier {
         }
     }
 
+    public @Nullable GitHubRelease getLatestRelease() {
+        return this.latestRelease;
+    }
+
     public boolean isUpdateAvailable() {
-        return !this.latestRelease.equalsIgnoreCase(getCurrentBuild());
+        GitHubRelease latestRelease = this.latestRelease;
+        return latestRelease != null && !latestRelease.tag().equalsIgnoreCase(getCurrentBuild());
     }
 
     private String getCurrentBuild() {
