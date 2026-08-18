@@ -21,7 +21,7 @@
         <spark.version>1.10.172-SNAPSHOT</spark.version>
         <sqlite-jdbc.version>3.53.2.1</sqlite-jdbc.version>
         <mysql-connector-j.version>26.7.0</mysql-connector-j.version>
-        <netty.version>4.2.16.Final</netty.version>
+        <netty.version>4.2.17.Final</netty.version>
     </properties>
 
     <repositories>
