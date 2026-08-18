@@ -83,7 +83,7 @@ public class World implements IBlockAccess {
     public boolean isStatic;
 
     // Poseidon start
-    private PoseidonWorldConfig worldConfig;
+    private volatile PoseidonWorldConfig worldConfig;
     private final List<Entity> S;
     public final Int2DoubleOpenHashMap explosionDensityCache = new Int2DoubleOpenHashMap();
     private final FifoChunkCache chunkCache = new FifoChunkCache(4);

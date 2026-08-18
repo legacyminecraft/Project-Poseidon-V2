@@ -46,7 +46,7 @@ public final class PoseidonGlobalConfig {
 
     public static boolean isFirstLoad = false;
 
-    private static @Nullable PoseidonGlobalConfig instance;
+    private static volatile @Nullable PoseidonGlobalConfig instance;
 
     static {
         PATH = Paths.get(CONFIG_FOLDER).resolve(GLOBAL_CONFIG_FILE_NAME);

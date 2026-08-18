@@ -45,7 +45,7 @@ public final class PoseidonWorldConfig {
     private static final Path DEFAULTS_PATH;
     private static final YamlConfigurationLoader DEFAULTS_LOADER;
 
-    private static @Nullable PoseidonWorldConfig defaults;
+    private static volatile @Nullable PoseidonWorldConfig defaults;
 
     static {
         DEFAULTS_PATH = Paths.get(CONFIG_FOLDER).resolve(WORLD_DEFAULTS_FILE_NAME);
