@@ -260,6 +260,7 @@ public final class PoseidonGlobalConfig {
 
     @ConfigSerializable
     public static final class Profiles {
+        public LookupMethod lookupMethod = LookupMethod.GET;
         public String lookupByNameUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/name/{name}";
         public String lookupByIdUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/{uuid}";
         public String lookupBulkByNameUrl = "https://api.minecraftservices.com/minecraft/profile/lookup/bulk/byname";
@@ -268,6 +269,11 @@ public final class PoseidonGlobalConfig {
         public boolean useLegacyUuidGeneration = false;
         public Duration invalidateCachedProfilesAfter = Duration.of("30d");
         public WrongNameCasingHandlingMode handleWrongNameCasing = WrongNameCasingHandlingMode.KEEP;
+
+        public enum LookupMethod {
+            GET,
+            POST
+        }
 
         public enum WrongNameCasingHandlingMode {
             KEEP,

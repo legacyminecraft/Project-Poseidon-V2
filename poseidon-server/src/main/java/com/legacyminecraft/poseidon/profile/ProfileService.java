@@ -6,17 +6,16 @@ import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.service.ServiceClient;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import com.legacyminecraft.poseidon.service.ServiceClientHttpException;
+import com.legacyminecraft.poseidon.util.CaseInsensitiveSet;
 
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public final class ProfileService {
 
@@ -60,11 +59,7 @@ public final class ProfileService {
 
     public void lookupProfilesByNames(Collection<String> names, ProfileLookupCallback callback) {
         String url = Poseidon.getConfig().profiles.lookupBulkByNameUrl;
-        Set<String> uniqueNames = names.stream()
-                .map(s -> s.toLowerCase(Locale.ROOT))
-                .collect(Collectors.toSet());
-
-        for (List<String> subList : Iterables.partition(uniqueNames, ENTRIES_PER_PAGE)) {
+        for (List<String> subList : Iterables.partition(names, ENTRIES_PER_PAGE)) {
             JsonArray array = new JsonArray();
             subList.forEach(array::add);
             HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(array.toString());
@@ -78,7 +73,7 @@ public final class ProfileService {
                     ProfileBulkLookupResponse response = this.client.post(url, body, ProfileBulkLookupResponse.class);
                     failCount = 0;
 
-                    Set<String> received = new HashSet<>();
+                    Set<String> received = new CaseInsensitiveSet();
                     for (MinecraftProfile profile : response.profiles()) {
                         received.add(profile.name().toLowerCase(Locale.ROOT));
                         callback.onLookupSuccess(profile);

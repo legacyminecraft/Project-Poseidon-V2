@@ -54,6 +54,9 @@ public final class LegacyConfigMigration {
         globalConfig.profiles.handleWrongNameCasing = legacyConfig.node("settings", "uuid-fetcher", "get", "enforce-case-sensitivity", "enabled").getBoolean()
                 ? PoseidonGlobalConfig.Profiles.WrongNameCasingHandlingMode.REJECT
                 : PoseidonGlobalConfig.Profiles.WrongNameCasingHandlingMode.KEEP;
+        globalConfig.profiles.lookupMethod = legacyConfig.node("settings", "uuid-fetcher", "method", "value").getString().equalsIgnoreCase("POST")
+                ? PoseidonGlobalConfig.Profiles.LookupMethod.POST
+                : PoseidonGlobalConfig.Profiles.LookupMethod.GET;
         globalConfig.profiles.allowOfflineAccounts = legacyConfig.node("settings", "uuid-fetcher", "allow-graceful-uuids", "value").getBoolean();
         globalConfig.profiles.prefixOfflineUsernames = legacyConfig.node("settings", "cracked-username-prefix", "enabled").getBoolean();
         globalConfig.performance.watchdog.enabled = legacyConfig.node("settings", "watchdog", "enable").getBoolean();

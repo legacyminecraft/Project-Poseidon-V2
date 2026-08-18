@@ -2,12 +2,16 @@ package com.legacyminecraft.poseidon.network.login;
 
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
+import com.legacyminecraft.poseidon.profile.ProfileLookupCallback;
 import com.legacyminecraft.poseidon.profile.ProfileNotFoundException;
 import com.legacyminecraft.poseidon.service.ServiceClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public final class LookupProfileLoginStage implements LoginStage {
 
@@ -22,7 +26,7 @@ public final class LookupProfileLoginStage implements LoginStage {
             profile = optional.get();
         } else {
             try {
-                profile = Poseidon.getProfileService().lookupProfileByName(name);
+                profile = lookupProfile(name);
             } catch (ProfileNotFoundException e) {
                 if (Poseidon.getConfig().profiles.allowOfflineAccounts) {
                     if (Poseidon.getConfig().profiles.prefixOfflineUsernames && !name.startsWith(".")) {
@@ -44,5 +48,36 @@ public final class LookupProfileLoginStage implements LoginStage {
         log.info("UUID of player {} is {}", name, profile.id());
         Poseidon.getProfileCache().addProfile(profile);
         loginProcessHandler.setProfile(profile);
+    }
+
+    private static MinecraftProfile lookupProfile(String name) throws ProfileNotFoundException, ServiceClientException {
+        CompletableFuture<MinecraftProfile> future = new CompletableFuture<>();
+        switch (Poseidon.getConfig().profiles.lookupMethod) {
+            case GET -> future.complete(Poseidon.getProfileService().lookupProfileByName(name));
+            case POST -> Poseidon.getProfileService().lookupProfilesByNames(Set.of(name), new ProfileLookupCallback() {
+                @Override
+                public void onLookupSuccess(MinecraftProfile profile) {
+                    future.complete(profile);
+                }
+
+                @Override
+                public void onLookupFailure(Throwable cause) {
+                    future.completeExceptionally(cause);
+                }
+            });
+        }
+
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            switch (cause) {
+                case ProfileNotFoundException profileNotFound -> throw profileNotFound;
+                case ServiceClientException clientException -> throw clientException;
+                default -> throw new RuntimeException(cause);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
