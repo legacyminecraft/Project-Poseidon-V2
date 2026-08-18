@@ -75,6 +75,7 @@ public final class LegacyConfigMigration {
 
         worldDefaults.spawnRandomizationRadius = legacyConfig.node("world-settings", "randomize-spawn").getBoolean() ? 10 : 0;
         worldDefaults.teleportToHighestSafeBlockOnJoin = legacyConfig.node("world-settings", "teleport-to-highest-safe-block").getBoolean();
+        worldDefaults.blocks.fixFallingBlockDuplication = legacyConfig.node("world", "settings", "pistons", "sand-gravel-duping-fix", "enabled").getBoolean();
         worldDefaults.anticheat.quickMovementFlagging.enabled = legacyConfig.node("world", "settings", "speed-hack-check", "enable").getBoolean();
         worldDefaults.anticheat.quickMovementFlagging.action = legacyConfig.node("world", "settings", "speed-hack-check", "teleport").getBoolean()
                 ? PoseidonWorldConfig.Anticheat.MovementFlagAction.TELEPORT_BACK

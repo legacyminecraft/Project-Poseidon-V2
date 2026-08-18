@@ -197,6 +197,7 @@ public final class PoseidonWorldConfig {
     @ConfigSerializable
     public static final class Blocks {
         public boolean fixPistonPhysics = true;
+        public boolean fixFallingBlockDuplication = true;
         public boolean spongesTriggerBlockUpdates = false;
         public boolean lockedChestsDecay = true;
     }

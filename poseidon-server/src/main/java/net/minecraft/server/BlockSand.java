@@ -28,7 +28,7 @@ public class BlockSand extends Block {
 
             if (!instaFall && world.a(i - b0, j - b0, k - b0, i + b0, j + b0, k + b0)) {
                 // Poseidon start - fix gravity block dupes using pistons
-                if (world.getConfig().blocks.fixPistonPhysics) {
+                if (world.getConfig().blocks.fixFallingBlockDuplication) {
                     world.setTypeId(i, j, k, 0);
                 }
                 // Poseidon end
