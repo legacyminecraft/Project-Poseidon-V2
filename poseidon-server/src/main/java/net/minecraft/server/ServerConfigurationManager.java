@@ -200,8 +200,8 @@ public class ServerConfigurationManager {
         // in the event, check with plugins to see if it's ok, and THEN kick
         // depending on the outcome. Also change any reference to this.e.c to entity.world
         String s = profile.name(); // Poseidon
-        // Poseidon - pass profile
-        EntityPlayer entity = new EntityPlayer(this.server, this.server.getWorldServer(0), profile, new ItemInWorldManager(this.server.getWorldServer(0)));
+        // Poseidon - pass profile and connection
+        EntityPlayer entity = new EntityPlayer(this.server, this.server.getWorldServer(0), profile, netloginhandler.getConnection());
         Player player = (entity == null) ? null : (Player) entity.getBukkitEntity();
         PlayerLoginEvent event = new PlayerLoginEvent(player, netloginhandler.networkManager.getClientAddress().getAddress()); // Poseidon - pass IP address
 

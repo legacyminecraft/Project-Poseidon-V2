@@ -3,6 +3,7 @@ package net.minecraft.server;
 import com.legacyminecraft.poseidon.Poseidon;
 import com.legacyminecraft.poseidon.event.entity.PlayerDeathEvent;
 import com.legacyminecraft.poseidon.event.profile.PlayerProfileNameChangedEvent;
+import com.legacyminecraft.poseidon.network.connection.AbstractPlayerConnection;
 import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import com.legacyminecraft.poseidon.profile.PlayerProfileImpl;
 import com.legacyminecraft.poseidon.util.ChunkPos;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class EntityPlayer extends EntityHuman implements ICrafting {
 
-    public NetServerHandler netServerHandler;
+    public final NetServerHandler netServerHandler; // Poseidon - final
     public MinecraftServer b;
     public ItemInWorldManager itemInWorldManager;
     public double d;
@@ -41,10 +42,13 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     // Poseidon end
 
     // Poseidon - change signature
-    public EntityPlayer(MinecraftServer minecraftserver, World world, MinecraftProfile profile, ItemInWorldManager iteminworldmanager) {
+    public EntityPlayer(MinecraftServer minecraftserver, World world, MinecraftProfile profile, AbstractPlayerConnection connection) {
         super(world);
-        iteminworldmanager.player = this;
-        this.itemInWorldManager = iteminworldmanager;
+        // Poseidon start - improve EntityPlayer initialization
+        this.netServerHandler = new NetServerHandler(minecraftserver, connection, this);
+        //iteminworldmanager.player = this;
+        //this.itemInWorldManager = iteminworldmanager;
+        // Poseidon end
         ChunkCoordinates chunkcoordinates = world.getSpawn();
         int i = chunkcoordinates.x;
         int j = chunkcoordinates.z;
@@ -103,8 +107,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
         this.dimension = ((WorldServer) this.world).dimension;
         // CraftBukkit end
-        this.itemInWorldManager = new ItemInWorldManager((WorldServer) world);
-        this.itemInWorldManager.player = this;
+        this.itemInWorldManager = new ItemInWorldManager((WorldServer) world, this); // Poseidon - pass player
+        //this.itemInWorldManager.player = this; // Poseidon
     }
 
     // Poseidon start
