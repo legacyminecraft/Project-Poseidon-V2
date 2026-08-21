@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class LoggerOutputStream extends ByteArrayOutputStream {
 
-    private final String separator = System.lineSeparator(); // Poseidon - System.lineSeparator()
+    private static final String separator = System.lineSeparator(); // Poseidon - System.lineSeparator(), static
     private final Logger logger;
     private final Level level;
 
@@ -22,12 +22,12 @@ public class LoggerOutputStream extends ByteArrayOutputStream {
         reset();
 
         // Poseidon start - fix duplicate newlines when using System.out.println()
-        if (!record.isEmpty() && record.charAt(record.length() - 1) == '\n') {
-            record = record.substring(0, record.length() - 1);
+        if (!record.isEmpty() && record.endsWith(separator)) {
+            record = record.substring(0, record.length() - separator.length());
         }
         // Poseidon end
 
-        if (!record.isEmpty() && !record.equals(this.separator)) {
+        if (!record.isEmpty() && !record.equals(separator)) {
             this.logger.logp(this.level, "", "", record);
         }
     }
