@@ -17,7 +17,7 @@
         <joptsimple.version>6.0-alpha-3</joptsimple.version>
         <jline.version>4.3.1</jline.version>
         <kyori-ansi.version>1.1.1</kyori-ansi.version>
-        <logback.version>1.6.1</logback.version>
+        <logback.version>1.6.3</logback.version>
         <spark.version>1.10.172-SNAPSHOT</spark.version>
         <sqlite-jdbc.version>3.53.2.1</sqlite-jdbc.version>
         <mysql-connector-j.version>26.7.0</mysql-connector-j.version>
