@@ -129,7 +129,7 @@ public class NetLoginHandler extends NetHandler {
         this.networkManager.setLoginState(LoginState.LOGIN);
 
         if ((packet1login.d & 128) != 0) {
-            this.networkManager.sendClientChannels();
+            this.networkManager.enablePluginMessaging();
         }
         // Poseidon end
 
@@ -165,6 +165,7 @@ public class NetLoginHandler extends NetHandler {
             NetServerHandler netserverhandler = entityplayer.netServerHandler; // Poseidon - initialize in EntityPlayer constructor
 
             netserverhandler.sendPacket(new Packet1Login("", entityplayer.id, worldserver.getSeed(), (byte) worldserver.worldProvider.dimension));
+            netserverhandler.getConnection().sendSupportedChannels(); // Poseidon
             netserverhandler.sendPacket(new Packet6SpawnPosition(chunkcoordinates.x, chunkcoordinates.y, chunkcoordinates.z));
             this.server.serverConfigurationManager.a(entityplayer, worldserver);
             // this.server.serverConfigurationManager.sendAll(new Packet3Chat("\u00A7e" + entityplayer.name + " joined the game."));  // CraftBukkit - message moved to join event

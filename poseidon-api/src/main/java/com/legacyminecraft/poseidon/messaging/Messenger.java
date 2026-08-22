@@ -23,12 +23,6 @@ public interface Messenger {
     int MAX_MESSAGE_LENGTH = 32767;
 
     /**
-     * The special prefix which denotes that a plugin channel may only be used
-     * to communicate with a proxy.
-     */
-    String PROXY_CHANNEL_PREFIX = "proxy#";
-
-    /**
      * Registers an inbound plugin channel to this messenger, allowing it to
      * receive plugin messages on that channel.
      * <p>

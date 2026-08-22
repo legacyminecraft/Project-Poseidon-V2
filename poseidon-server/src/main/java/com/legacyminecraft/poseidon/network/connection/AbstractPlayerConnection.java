@@ -1,6 +1,7 @@
 package com.legacyminecraft.poseidon.network.connection;
 
 import com.google.common.base.Preconditions;
+import com.google.common.net.InetAddresses;
 import com.legacyminecraft.poseidon.event.messaging.PlayerRegisterChannelEvent;
 import com.legacyminecraft.poseidon.event.messaging.PlayerUnregisterChannelEvent;
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
@@ -8,7 +9,6 @@ import com.legacyminecraft.poseidon.network.login.LoginState;
 import com.legacyminecraft.poseidon.network.ping.ServerListPingHandler;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
 import com.legacyminecraft.poseidon.network.proxy.ProxyConnectionDetails;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.server.NetHandler;
 import net.minecraft.server.NetServerHandler;
 import net.minecraft.server.Packet250PluginMessage;
@@ -21,13 +21,12 @@ import java.net.InetSocketAddress;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class AbstractPlayerConnection implements PlayerConnection, INetworkManager {
 
     private final AtomicBoolean proxyConnection = new AtomicBoolean(false);
-    private final AtomicBoolean clientSupportsMessaging = new AtomicBoolean(false);
+    private final AtomicBoolean supportsMessaging = new AtomicBoolean(false);
     private final Set<String> channels = ConcurrentHashMap.newKeySet();
     private final PacketRateLimiter packetRateLimiter = new PacketRateLimiter(this);
     private final PingCalculator pingCalculator = new PingCalculator();
@@ -52,6 +51,10 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
         if (this.channels.contains(channel)) {
             sendPacket(new Packet250PluginMessage(channel, message));
         }
+    }
+
+    public void enablePluginMessaging() {
+        this.supportsMessaging.compareAndSet(false, true);
     }
 
     @Override
@@ -80,38 +83,21 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     }
 
     private void notifyChannels(Set<String> channels, boolean register) {
-        Set<String> proxyChannels = new ObjectOpenHashSet<>();
-        Set<String> clientChannels = new ObjectOpenHashSet<>();
-
-        channels.forEach(channel -> {
-            if (StandardMessenger.isProxyChannel(channel)) {
-                proxyChannels.add(channel);
-            } else {
-                clientChannels.add(channel);
-            }
-        });
-
         String channel = register ? StandardMessenger.REGISTER_CHANNEL : StandardMessenger.UNREGISTER_CHANNEL;
-
-        if (!proxyChannels.isEmpty() && this.proxyConnection.get()) {
-            byte[] encodedChannels = StandardMessenger.encodeChannels(proxyChannels);
-            sendPacket(new Packet250PluginMessage(channel, encodedChannels));
-        }
-
-        if (!clientChannels.isEmpty() && this.clientSupportsMessaging.get()) {
-            byte[] encodedChannels = StandardMessenger.encodeChannels(clientChannels);
+        if (!channels.isEmpty() && this.supportsMessaging.get()) {
+            byte[] encodedChannels = StandardMessenger.encodeChannels(channels);
             sendPacket(new Packet250PluginMessage(channel, encodedChannels));
         }
     }
 
-    public void sendClientChannels() {
-        if (this.clientSupportsMessaging.compareAndSet(false, true)) {
-            Set<String> clientChannels = Bukkit.getMessenger().getInboundChannels().stream()
-                    .filter(Predicate.not(StandardMessenger::isProxyChannel))
+    public void sendSupportedChannels() {
+        if (this.supportsMessaging.get()) {
+            Set<String> channels = Bukkit.getMessenger().getInboundChannels().stream()
+                    .filter(channel -> !channel.equals(StandardMessenger.PROXY_HELLO_CHANNEL))
                     .collect(Collectors.toSet());
 
-            if (!clientChannels.isEmpty()) {
-                byte[] encodedChannels = StandardMessenger.encodeChannels(clientChannels);
+            if (!channels.isEmpty()) {
+                byte[] encodedChannels = StandardMessenger.encodeChannels(channels);
                 sendPacket(new Packet250PluginMessage(StandardMessenger.REGISTER_CHANNEL, encodedChannels));
             }
         }
@@ -148,15 +134,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
 
     public void onConnectionDetailsReceived(ProxyConnectionDetails details) {
         if (this.proxyConnection.compareAndSet(false, true)) {
-            setClientAddress(new InetSocketAddress(details.sourceHost(), details.sourcePort()));
-            Set<String> proxyChannels = Bukkit.getMessenger().getInboundChannels().stream()
-                    .filter(StandardMessenger::isProxyChannel)
-                    .collect(Collectors.toSet());
-
-            if (!proxyChannels.isEmpty()) {
-                byte[] encodedChannels = StandardMessenger.encodeChannels(proxyChannels);
-                sendPacket(new Packet250PluginMessage(StandardMessenger.REGISTER_CHANNEL, encodedChannels));
-            }
+            setClientAddress(new InetSocketAddress(InetAddresses.forString(details.sourceHost()), details.sourcePort()));
         }
     }
 
