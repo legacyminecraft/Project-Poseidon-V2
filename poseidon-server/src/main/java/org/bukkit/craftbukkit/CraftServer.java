@@ -74,6 +74,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.jline.reader.LineReader;
 import org.jspecify.annotations.Nullable;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
@@ -110,7 +111,7 @@ public final class CraftServer implements Server {
     protected final ServerConfigurationManager server;
     private final Map<String, World> worlds = new LinkedHashMap<>();
     private final Configuration configuration;
-    private final Yaml yaml = new Yaml(new SafeConstructor());
+    private final Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions())); // Poseidon - upgrade snakeyaml
 
     // Poseidon start
     public final PoseidonSpark spark;

@@ -3,6 +3,7 @@ package org.bukkit.plugin;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.jspecify.annotations.Nullable;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
@@ -20,7 +21,7 @@ import java.util.logging.Level;
  * Provides access to a Plugins description file, plugin.yaml
  */
 public final class PluginDescriptionFile {
-    private static final Yaml yaml = new Yaml(new SafeConstructor());
+    private static final Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions())); // Poseidon - upgrade snakeyaml
     private String name = null;
     private String main = null;
     private List<String> depend = List.of(); // Poseidon - ArrayList -> List

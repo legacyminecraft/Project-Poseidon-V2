@@ -2,6 +2,7 @@ package org.bukkit.util.config;
 
 import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.introspector.Property;
@@ -68,7 +69,7 @@ public class Configuration extends ConfigurationNode {
         options.setIndent(4);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        yaml = new Yaml(new SafeConstructor(), new EmptyNullRepresenter(), options);
+        yaml = new Yaml(new SafeConstructor(new LoaderOptions()), new EmptyNullRepresenter(), options); // Poseidon - upgrade snakeyaml
 
         this.file = file;
     }
@@ -196,7 +197,7 @@ public class Configuration extends ConfigurationNode {
 class EmptyNullRepresenter extends Representer {
 
     public EmptyNullRepresenter() {
-        super();
+        super(new DumperOptions()); // Poseidon - upgrade snakeyaml
         this.nullRepresenter = new EmptyRepresentNull();
     }
 
