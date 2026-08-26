@@ -49,6 +49,6 @@ jobs:
           tag_name: ${{ env.PROJECT_VERSION }}
           name: ${{ env.PROJECT_VERSION }}
           files: |
-            poseidon-server/target/poseidon-server-*.jar
+            poseidon-server/target/poseidon-server-*-shaded.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

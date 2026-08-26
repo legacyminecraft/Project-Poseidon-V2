@@ -43,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ${{ github.event.repository.name }}-artifact
-          path: poseidon-server/target/poseidon-server-*.jar
+          path: poseidon-server/target/poseidon-server-*-shaded.jar

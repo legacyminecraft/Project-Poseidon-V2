@@ -50,6 +50,13 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <repositories>
+        <repository>
+            <id>johnymuffin-nexus</id>
+            <url>https://repository.johnymuffin.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
