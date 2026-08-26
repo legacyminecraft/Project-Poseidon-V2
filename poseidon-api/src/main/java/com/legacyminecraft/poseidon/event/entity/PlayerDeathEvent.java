@@ -1,7 +1,6 @@
 package com.legacyminecraft.poseidon.event.entity;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -13,8 +12,6 @@ import java.util.List;
  * Called whenever a {@link Player} dies.
  */
 public class PlayerDeathEvent extends EntityDeathEvent {
-
-    private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private final PlayerInventory inventoryToKeep;
 
@@ -66,14 +63,5 @@ public class PlayerDeathEvent extends EntityDeathEvent {
      */
     public PlayerInventory getInventoryToKeep() {
         return this.inventoryToKeep;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
     }
 }
