@@ -41,6 +41,16 @@ public interface PlayerConnection extends PluginMessageRecipient {
     boolean isConnected();
 
     /**
+     * Returns the connection flags the client sent when logging in.
+     * <p>
+     * If the most significant bit is set to <code>1</code>, the client is
+     * expected to support plugin messaging.
+     *
+     * @return the connection flags
+     */
+    byte getConnectionFlags();
+
+    /**
      * Returns if this connection was established through a proxy.
      *
      * @return {@code true} if this connection is a proxy connection

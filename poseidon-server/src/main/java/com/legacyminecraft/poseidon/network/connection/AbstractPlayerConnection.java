@@ -33,6 +33,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
 
     private volatile LoginState loginState = LoginState.INITIAL;
     private @Nullable ServerListPingHandler pingHandler;
+    private byte connectionFlags;
 
     public abstract NetHandler getNetHandler();
 
@@ -112,6 +113,15 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     @Override
     public boolean isConnected() {
         return getNetHandler().isConnected();
+    }
+
+    @Override
+    public byte getConnectionFlags() {
+        return this.connectionFlags;
+    }
+
+    public void setConnectionFlags(byte connectionFlags) {
+        this.connectionFlags = connectionFlags;
     }
 
     @Override

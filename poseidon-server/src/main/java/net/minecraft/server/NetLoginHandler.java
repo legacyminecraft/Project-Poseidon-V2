@@ -128,7 +128,9 @@ public class NetLoginHandler extends NetHandler {
         }
         this.networkManager.setLoginState(LoginState.LOGIN);
 
-        if ((packet1login.d & 128) != 0) {
+        byte connectionFlags = packet1login.d;
+        this.networkManager.setConnectionFlags(connectionFlags);
+        if ((connectionFlags & 128) != 0) {
             this.networkManager.enablePluginMessaging();
         }
         // Poseidon end
