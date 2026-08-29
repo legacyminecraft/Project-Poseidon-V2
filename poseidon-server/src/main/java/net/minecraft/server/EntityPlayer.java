@@ -42,9 +42,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     // Poseidon end
 
     // Poseidon - change signature
-    public EntityPlayer(MinecraftServer minecraftserver, World world, MinecraftProfile profile, AbstractPlayerConnection connection) {
+    public EntityPlayer(MinecraftServer minecraftserver, WorldServer world, MinecraftProfile profile, AbstractPlayerConnection connection) {
         super(world);
         // Poseidon start - improve EntityPlayer initialization
+        this.itemInWorldManager = new ItemInWorldManager(world, this);
         this.netServerHandler = new NetServerHandler(minecraftserver, connection, this);
         //iteminworldmanager.player = this;
         //this.itemInWorldManager = iteminworldmanager;
