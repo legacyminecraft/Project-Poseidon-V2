@@ -422,12 +422,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public void setPassengerOf(@Nullable Entity entity) {
         // mount(null) doesn't really fly for overloaded methods,
         // so this method is needed
-
+        Entity vehicle = this.vehicle; // Poseidon
         super.setPassengerOf(entity);
         // CraftBukkit end
 
-        this.netServerHandler.sendPacket(new Packet39AttachEntity(this, this.vehicle));
-        this.netServerHandler.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
+        if (this.vehicle != vehicle) { // Poseidon
+            this.netServerHandler.sendPacket(new Packet39AttachEntity(this, this.vehicle));
+            this.netServerHandler.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
+        }
     }
 
     protected void a(double d0, boolean flag) {}
