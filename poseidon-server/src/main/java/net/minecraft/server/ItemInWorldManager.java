@@ -10,8 +10,8 @@ import org.jspecify.annotations.Nullable;
 
 public class ItemInWorldManager {
 
-    private final WorldServer world; // Poseidon - final
-    public final EntityHuman player; // Poseidon - final
+    private WorldServer world;
+    public EntityHuman player;
     private float c = 0.0F;
     private int lastDigTick;
     private int e;
@@ -24,10 +24,8 @@ public class ItemInWorldManager {
     private int l;
     private int m;
 
-    // Poseidon - change signature
-    public ItemInWorldManager(WorldServer worldserver, EntityHuman entityhuman) {
+    public ItemInWorldManager(WorldServer worldserver) {
         this.world = worldserver;
-        this.player = entityhuman; // Poseidon
     }
 
     public void a() {

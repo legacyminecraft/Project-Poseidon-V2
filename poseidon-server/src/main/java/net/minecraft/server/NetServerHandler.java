@@ -40,8 +40,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     public static Logger a = Logger.getLogger("Minecraft");
     public AbstractPlayerConnection networkManager; // Poseidon - NetworkManager -> AbstractPlayerConnection
     public AtomicBoolean disconnected = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
-    private final MinecraftServer minecraftServer; // Poseidon - final
-    public final EntityPlayer player; // CraftBukkit - private -> public // Poseidon - final
+    private MinecraftServer minecraftServer;
+    public EntityPlayer player; // CraftBukkit - private -> public
     private int f;
     private int g;
     private int h;
@@ -63,7 +63,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         this.networkManager = networkmanager;
         networkmanager.a(this);
         this.player = entityplayer;
-        //entityplayer.netServerHandler = this; // Poseidon - set in EntityPlayer constructor
+        entityplayer.netServerHandler = this;
 
         // CraftBukkit start
         this.server = minecraftserver.server;
@@ -991,7 +991,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
     public void a(Packet9Respawn packet9respawn) {
         if (this.player.health <= 0) {
-            this.minecraftServer.serverConfigurationManager.moveToWorld(this.player, 0); // Poseidon - don't reassign player field
+            this.player = this.minecraftServer.serverConfigurationManager.moveToWorld(this.player, 0);
 
             this.getPlayer().setHandle(this.player); // CraftBukkit
         }

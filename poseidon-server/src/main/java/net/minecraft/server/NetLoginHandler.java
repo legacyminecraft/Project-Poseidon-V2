@@ -164,7 +164,7 @@ public class NetLoginHandler extends NetHandler {
             a.info(this.b() + " logged in with entity id " + entityplayer.id + " at ([" + entityplayer.world.worldData.name + "] " + entityplayer.locX + ", " + entityplayer.locY + ", " + entityplayer.locZ + ")");
             WorldServer worldserver = (WorldServer) entityplayer.world; // CraftBukkit
             ChunkCoordinates chunkcoordinates = worldserver.getSpawn();
-            NetServerHandler netserverhandler = entityplayer.netServerHandler; // Poseidon - initialize in EntityPlayer constructor
+            NetServerHandler netserverhandler = new NetServerHandler(this.server, this.networkManager, entityplayer);
 
             netserverhandler.sendPacket(new Packet1Login("", entityplayer.id, worldserver.getSeed(), (byte) worldserver.worldProvider.dimension));
             netserverhandler.getConnection().sendSupportedChannels(); // Poseidon
