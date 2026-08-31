@@ -949,42 +949,44 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
         Entity entity = worldserver.getEntity(packet7useentity.target);
         ItemStack itemInHand = this.player.inventory.getItemInHand();
 
-        // Poseidon start - raytrace to check if entity is within reach and line of sight
+        // Poseidon start - allow for some leniency if view to head of target is obstructed
         if (entity != null) {
-            MovingObjectPosition movingobjectposition = this.player.rayTrace(3.0);
-            if (movingobjectposition != null && movingobjectposition.entity == entity) {
+            double distance = this.player.e(entity) ? 36.0 : 9.0;
+            if (this.player.g(entity) > distance) {
+                return;
+            }
             // Poseidon end
-                if (packet7useentity.c == 0) {
-                    // Poseidon start - fix minecart dupe
-                    Player player = this.getPlayer();
-                    org.bukkit.entity.Entity interacted = entity.getBukkitEntity();
-                    if (player.isInsideVehicle() && interacted instanceof StorageMinecart) {
-                        return;
-                    }
-                    // Poseidon end
 
-                    // CraftBukkit start
-                    PlayerInteractEntityEvent event = new PlayerInteractEntityEvent(this.getPlayer(), entity.getBukkitEntity());
-                    this.server.getPluginManager().callEvent(event);
-
-                    if (event.isCancelled()) {
-                        return;
-                    }
-                    // CraftBukkit end
-                    this.player.c(entity);
-                    // CraftBukkit start - update the client if the item is an infinite one
-                    if (itemInHand != null && itemInHand.count <= -1) {
-                        this.player.updateInventory(this.player.activeContainer);
-                    }
-                    // CraftBukkit end
-                } else if (packet7useentity.c == 1) {
-                    this.player.d(entity);
-                    // CraftBukkit start - update the client if the item is an infinite one
-                    if (itemInHand != null && itemInHand.count <= -1) {
-                        this.player.updateInventory(this.player.activeContainer);
-                    }
-                    // CraftBukkit end
+            if (packet7useentity.c == 0) {
+                // Poseidon start - fix minecart dupe
+                Player player = this.getPlayer();
+                org.bukkit.entity.Entity interacted = entity.getBukkitEntity();
+                if (player.isInsideVehicle() && interacted instanceof StorageMinecart) {
+                    return;
                 }
+                // Poseidon end
+
+                // CraftBukkit start
+                PlayerInteractEntityEvent event = new PlayerInteractEntityEvent(this.getPlayer(), entity.getBukkitEntity());
+                this.server.getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) {
+                    return;
+                }
+                // CraftBukkit end
+                this.player.c(entity);
+                // CraftBukkit start - update the client if the item is an infinite one
+                if (itemInHand != null && itemInHand.count <= -1) {
+                    this.player.updateInventory(this.player.activeContainer);
+                }
+                // CraftBukkit end
+            } else if (packet7useentity.c == 1) {
+                this.player.d(entity);
+                // CraftBukkit start - update the client if the item is an infinite one
+                if (itemInHand != null && itemInHand.count <= -1) {
+                    this.player.updateInventory(this.player.activeContainer);
+                }
+                // CraftBukkit end
             }
         }
     }
