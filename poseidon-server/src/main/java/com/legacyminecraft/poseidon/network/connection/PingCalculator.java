@@ -25,29 +25,29 @@ public final class PingCalculator {
     }
 
     public void onSendPacket(ServerSendPacketEvent event) {
-        if (!(event.getPacket() instanceof Packet106Transaction transaction)) {
-            return;
-        }
-
-        if (!transaction.c && transaction.b < 0) {
-            this.pings.put(transaction.b, System.nanoTime());
+        if (event.getPacket() instanceof Packet106Transaction packet && isPingPacket(packet)) {
+            this.pings.put(packet.b, System.nanoTime());
         }
     }
 
     public void onReceivePacket(ServerReceivePacketEvent event) {
-        if (!(event.getPacket() instanceof Packet106Transaction transaction)) {
-            return;
-        }
-
-        if (transaction.c && transaction.b < 0) {
+        if (event.getPacket() instanceof Packet106Transaction packet && isPongPacket(packet)) {
             long now = System.nanoTime();
-            long start = this.pings.remove(transaction.b);
+            long start = this.pings.remove(packet.b);
             if (start != Long.MIN_VALUE) {
                 event.setCancelled(true);
                 int delta = (int) (now - start);
                 this.ping.updateAndGet(ping -> (ping * 3 + delta) / 4);
             }
         }
+    }
+
+    private static boolean isPingPacket(Packet106Transaction packet) {
+        return packet.a == 0 && packet.b < 0 && !packet.c;
+    }
+
+    private static boolean isPongPacket(Packet106Transaction packet) {
+        return packet.a == 0 && packet.b < 0 && packet.c;
     }
 
     public static final class Listener implements org.bukkit.event.Listener {

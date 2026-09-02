@@ -30,7 +30,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -53,8 +52,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
     private Map<Integer, Short> n = new HashMap<>();
 
     // Poseidon start
-    private final Random idGenerator = new Random();
     private int ticks = 0;
+    private short pingId = -1;
     // Poseidon end
 
     // Poseidon - change signature
@@ -120,8 +119,12 @@ public class NetServerHandler extends NetHandler implements ICommandListener {
 
         // Poseidon start - ping every 2 seconds
         if (this.ticks % 40 == 0) {
-            short id = (short) this.idGenerator.nextInt(Short.MIN_VALUE, 0);
-            this.sendPacket(new Packet106Transaction(0, id, false));
+            if (this.pingId == Short.MIN_VALUE) {
+                this.pingId = -1;
+            }
+
+            this.sendPacket(new Packet106Transaction(0, this.pingId, false));
+            this.pingId--;
         }
         this.ticks++;
         // Poseidon end
