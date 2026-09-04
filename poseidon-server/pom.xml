@@ -15,7 +15,7 @@
 
     <properties>
         <joptsimple.version>6.0-alpha-3</joptsimple.version>
-        <jline.version>4.3.1</jline.version>
+        <jline.version>4.4.1</jline.version>
         <kyori-ansi.version>1.1.1</kyori-ansi.version>
         <logback.version>1.6.3</logback.version>
         <spark.version>1.10.172-SNAPSHOT</spark.version>
