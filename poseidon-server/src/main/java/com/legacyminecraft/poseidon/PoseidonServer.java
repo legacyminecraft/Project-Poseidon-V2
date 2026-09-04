@@ -1,11 +1,11 @@
 package com.legacyminecraft.poseidon;
 
-import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.connection.ConnectionThrottle;
 import com.legacyminecraft.poseidon.network.connection.PacketRateLimiter;
 import com.legacyminecraft.poseidon.network.connection.PingCalculator;
 import com.legacyminecraft.poseidon.network.protocol.ProtocolManagerImpl;
-import com.legacyminecraft.poseidon.network.proxy.ProxyHelloMessageListener;
+import com.legacyminecraft.poseidon.network.proxy.ForwardedPlayerDataListener;
+import com.legacyminecraft.poseidon.network.proxy.PlayerDataForwarding;
 import com.legacyminecraft.poseidon.performance.TickRateManager;
 import com.legacyminecraft.poseidon.performance.WatchdogThread;
 import com.legacyminecraft.poseidon.profile.ProfileCache;
@@ -51,7 +51,7 @@ public final class PoseidonServer {
         Bukkit.getPluginManager().registerEvents(PacketRateLimiter.LISTENER, InternalBukkitAccess.INSTANCE);
         Bukkit.getPluginManager().registerEvents(PingCalculator.LISTENER, InternalBukkitAccess.INSTANCE);
         Bukkit.getMessenger().registerInboundChannel(InternalBukkitAccess.INSTANCE,
-                StandardMessenger.PROXY_HELLO_CHANNEL, ProxyHelloMessageListener.INSTANCE);
+                PlayerDataForwarding.CHANNEL, ForwardedPlayerDataListener.INSTANCE);
         DefaultPermissions.registerPermission(
                 "poseidon.anticheat.anti-xray.exempt",
                 "Makes a player exempt from the server's anti-xray obfuscation",

@@ -19,10 +19,13 @@ public final class LookupProfileLoginStage implements LoginStage {
 
     @Override
     public void run(LoginProcessHandler loginProcessHandler) {
-        String name = loginProcessHandler.getPlayerName();
         MinecraftProfile profile;
-        Optional<MinecraftProfile> optional = Poseidon.getProfileCache().getProfile(name, true);
-        if (optional.isPresent() && optional.get().online()) {
+        Optional<MinecraftProfile> optional = loginProcessHandler.getNetLoginHandler().getConnection().getForwardedProfile()
+                .or(() -> Poseidon.getProfileCache().getProfile(loginProcessHandler.getPlayerName(), true)
+                        .filter(MinecraftProfile::online));
+
+        String name = loginProcessHandler.getPlayerName();
+        if (optional.isPresent()) {
             profile = optional.get();
         } else {
             try {

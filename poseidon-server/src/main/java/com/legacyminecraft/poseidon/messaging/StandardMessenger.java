@@ -21,7 +21,6 @@ public final class StandardMessenger implements Messenger {
 
     public static final String REGISTER_CHANNEL = "register";
     public static final String UNREGISTER_CHANNEL = "unregister";
-    public static final String PROXY_HELLO_CHANNEL = "proxy_hello";
 
     private final ConnectionManager<? extends AbstractPlayerConnection> connectionManager;
     private final Map<String, PluginMessageListenerRegistration> inboundByChannel = new Object2ObjectOpenHashMap<>();

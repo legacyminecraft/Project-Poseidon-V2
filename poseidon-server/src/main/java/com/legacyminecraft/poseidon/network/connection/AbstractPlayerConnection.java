@@ -1,14 +1,15 @@
 package com.legacyminecraft.poseidon.network.connection;
 
 import com.google.common.base.Preconditions;
-import com.google.common.net.InetAddresses;
 import com.legacyminecraft.poseidon.event.messaging.PlayerRegisterChannelEvent;
 import com.legacyminecraft.poseidon.event.messaging.PlayerUnregisterChannelEvent;
 import com.legacyminecraft.poseidon.messaging.StandardMessenger;
 import com.legacyminecraft.poseidon.network.login.LoginState;
 import com.legacyminecraft.poseidon.network.ping.ServerListPingHandler;
 import com.legacyminecraft.poseidon.network.protocol.OutboundPacket;
-import com.legacyminecraft.poseidon.network.proxy.ProxyConnectionDetails;
+import com.legacyminecraft.poseidon.network.proxy.ForwardedPlayerData;
+import com.legacyminecraft.poseidon.network.proxy.PlayerDataForwarding;
+import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 import net.minecraft.server.NetHandler;
 import net.minecraft.server.NetServerHandler;
 import net.minecraft.server.Packet250PluginMessage;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,6 +34,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     private final PingCalculator pingCalculator = new PingCalculator();
 
     private volatile LoginState loginState = LoginState.INITIAL;
+    private @Nullable MinecraftProfile forwardedProfile;
     private @Nullable ServerListPingHandler pingHandler;
     private byte connectionFlags;
 
@@ -94,7 +97,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     public void sendSupportedChannels() {
         if (this.supportsMessaging.get()) {
             Set<String> channels = Bukkit.getMessenger().getInboundChannels().stream()
-                    .filter(channel -> !channel.equals(StandardMessenger.PROXY_HELLO_CHANNEL))
+                    .filter(channel -> !channel.equals(PlayerDataForwarding.CHANNEL))
                     .collect(Collectors.toSet());
 
             if (!channels.isEmpty()) {
@@ -142,10 +145,15 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
 
     public abstract void setClientAddress(InetSocketAddress address);
 
-    public void onConnectionDetailsReceived(ProxyConnectionDetails details) {
+    public void receivedPlayerData(ForwardedPlayerData playerData) {
         if (this.proxyConnection.compareAndSet(false, true)) {
-            setClientAddress(new InetSocketAddress(InetAddresses.forString(details.sourceHost()), details.sourcePort()));
+            setClientAddress(new InetSocketAddress(playerData.address(), getRawAddress().getPort()));
+            this.forwardedProfile = playerData.profile();
         }
+    }
+
+    public Optional<MinecraftProfile> getForwardedProfile() {
+        return Optional.ofNullable(this.forwardedProfile);
     }
 
     public LoginState getLoginState() {

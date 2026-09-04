@@ -67,8 +67,7 @@ public interface PlayerConnection extends PluginMessageRecipient {
 
     /**
      * Returns the client address of the player. If this is a proxy connection,
-     * this will be the player's actual address extracted from the proxy hello
-     * message.
+     * this will be the player's actual address forwarded by the proxy.
      *
      * @return the client address
      */
