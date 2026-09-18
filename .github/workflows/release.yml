@@ -20,7 +20,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-          server-id: 'johnymuffin-nexus'
+          server-id: 'legacyminecraft-nexus'
           server-username: 'NEXUS_USERNAME'
           server-password: 'NEXUS_PASSWORD'
 

@@ -40,20 +40,20 @@
 
     <distributionManagement>
         <repository>
-            <id>johnymuffin-nexus</id>
-            <url>https://repository.johnymuffin.com/repository/maven-releases/</url>
+            <id>legacyminecraft-nexus</id>
+            <url>https://repository.legacyminecraft.com/repository/maven-releases/</url>
         </repository>
 
         <snapshotRepository>
-            <id>johnymuffin-nexus</id>
-            <url>https://repository.johnymuffin.com/repository/maven-snapshots/</url>
+            <id>legacyminecraft-nexus</id>
+            <url>https://repository.legacyminecraft.com/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>johnymuffin-nexus</id>
-            <url>https://repository.johnymuffin.com/repository/maven-public/</url>
+            <id>legacyminecraft-nexus</id>
+            <url>https://repository.legacyminecraft.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
