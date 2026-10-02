@@ -202,6 +202,24 @@ public class ItemInWorldManager {
         }
     }
 
+    // Poseidon start
+    public boolean useItem(EntityHuman entityhuman, World world, ItemStack itemstack, int i, int j, int k, int l) {
+        int count = itemstack.count;
+        ItemStack itemstack1 = itemstack.a(world, entityhuman, i, j, k, l);
+
+        if (itemstack1 == itemstack && (itemstack1 == null || itemstack1.count == count)) {
+            return false;
+        } else {
+            entityhuman.inventory.items[entityhuman.inventory.itemInHandIndex] = itemstack1;
+            if (itemstack1.count == 0) {
+                entityhuman.inventory.items[entityhuman.inventory.itemInHandIndex] = null;
+            }
+
+            return true;
+        }
+    }
+    // Poseidon end
+
     public boolean interact(EntityHuman entityhuman, World world, @Nullable ItemStack itemstack, int i, int j, int k, int l) {
         int i1 = world.getTypeId(i, j, k);
 
@@ -226,7 +244,7 @@ public class ItemInWorldManager {
 
             // If we have 'true' and no explicit deny *or* an explicit allow -- run the item part of the hook
             if (itemstack != null && ((!result && event.useItemInHand() != Event.Result.DENY) || event.useItemInHand() == Event.Result.ALLOW)) {
-                this.useItem(entityhuman, world, itemstack);
+                this.useItem(entityhuman, world, itemstack, i, j, k, l); // Poseidon - pass coordinates and face
             }
         }
         return result;

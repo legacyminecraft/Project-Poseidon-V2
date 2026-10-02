@@ -159,6 +159,12 @@ public class Item {
         return itemstack;
     }
 
+    // Poseidon start
+    public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman, int i, int j, int k, int l) {
+        return this.a(itemstack, world, entityhuman);
+    }
+    // Poseidon end
+
     public int getMaxStackSize() {
         return this.maxStackSize;
     }

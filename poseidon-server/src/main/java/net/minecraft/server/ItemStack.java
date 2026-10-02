@@ -75,6 +75,12 @@ public final class ItemStack {
         return this.getItem().a(this, world, entityhuman);
     }
 
+    // Poseidon start
+    public ItemStack a(World world, EntityHuman entityhuman, int i, int j, int k, int l) {
+        return this.getItem().a(this, world, entityhuman, i, j, k, l);
+    }
+    // Poseidon end
+
     public NBTTagCompound a(NBTTagCompound nbttagcompound) {
         nbttagcompound.a("id", (short) this.id);
         nbttagcompound.a("Count", (byte) this.count);

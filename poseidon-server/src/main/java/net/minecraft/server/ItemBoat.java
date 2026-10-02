@@ -31,30 +31,39 @@ public class ItemBoat extends Item {
 
         if (movingobjectposition != null) {
             if (movingobjectposition.type == EnumMovingObjectType.TILE) {
+                // Poseidon start - delegate
                 int i = movingobjectposition.b;
                 int j = movingobjectposition.c;
                 int k = movingobjectposition.d;
-
-                if (!world.isStatic) {
-                    // CraftBukkit start - Boat placement
-                    PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(entityhuman, Action.RIGHT_CLICK_BLOCK, i, j, k, movingobjectposition.face, itemstack);
-
-                    if (event.isCancelled()) {
-                        return itemstack;
-                    }
-                    // CraftBukkit end
-
-                    if (world.getTypeId(i, j, k) == Block.SNOW.id) {
-                        --j;
-                    }
-
-                    world.addEntity(new EntityBoat(world, (float) i + 0.5F, (float) j + 1.0F, (float) k + 0.5F));
-                }
-
-                --itemstack.count;
+                int l = movingobjectposition.face;
+                return this.a(itemstack, world, entityhuman, i, j, k, l);
+                // Poseidon end
             }
         }
 
         return itemstack;
     }
+
+    // Poseidon start - extract block interaction logic
+    public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman, int i, int j, int k, int l) {
+        if (!world.isStatic) {
+            // CraftBukkit start - Boat placement
+            PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(entityhuman, Action.RIGHT_CLICK_BLOCK, i, j, k, l, itemstack);
+
+            if (event.isCancelled()) {
+                return itemstack;
+            }
+            // CraftBukkit end
+
+            if (world.getTypeId(i, j, k) == Block.SNOW.id) {
+                --j;
+            }
+
+            world.addEntity(new EntityBoat(world, (float) i + 0.5F, (float) j + 1.0F, (float) k + 0.5F));
+        }
+
+        --itemstack.count;
+        return itemstack;
+    }
+    // Poseidon end
 }
