@@ -69,7 +69,11 @@ public class Configuration extends ConfigurationNode {
         options.setIndent(4);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        yaml = new Yaml(new SafeConstructor(new LoaderOptions()), new EmptyNullRepresenter(), options); // Poseidon - upgrade snakeyaml
+        // Poseidon start - upgrade snakeyaml
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setCodePointLimit(10 * 1024 * 1024);
+        yaml = new Yaml(new SafeConstructor(loaderOptions), new EmptyNullRepresenter(), options);
+        // Poseidon end
 
         this.file = file;
     }
