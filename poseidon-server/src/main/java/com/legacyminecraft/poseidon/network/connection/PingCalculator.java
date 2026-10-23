@@ -7,36 +7,41 @@ import net.minecraft.server.Packet106Transaction;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class PingCalculator {
 
     public static final Listener LISTENER = new Listener();
 
     private final Int2LongOpenHashMap pings = new Int2LongOpenHashMap();
-    private final AtomicInteger ping = new AtomicInteger(0);
+    private final AtomicLong ping = new AtomicLong(0);
 
     public PingCalculator() {
         this.pings.defaultReturnValue(Long.MIN_VALUE);
     }
 
     public int getPing() {
-        return this.ping.get() / 1_000_000;
+        return (int) (this.ping.get() / 1_000_000);
     }
 
     public void onSendPacket(ServerSendPacketEvent event) {
         if (event.getPacket() instanceof Packet106Transaction packet && isPingPacket(packet)) {
-            this.pings.put(packet.b, System.nanoTime());
+            synchronized (this.pings) {
+                this.pings.put(packet.b, System.nanoTime());
+            }
         }
     }
 
     public void onReceivePacket(ServerReceivePacketEvent event) {
         if (event.getPacket() instanceof Packet106Transaction packet && isPongPacket(packet)) {
             long now = System.nanoTime();
-            long start = this.pings.remove(packet.b);
+            long start;
+            synchronized (this.pings) {
+                start = this.pings.remove(packet.b);
+            }
             if (start != Long.MIN_VALUE) {
                 event.setCancelled(true);
-                int delta = (int) (now - start);
+                long delta = now - start;
                 this.ping.updateAndGet(ping -> (ping * 3 + delta) / 4);
             }
         }
