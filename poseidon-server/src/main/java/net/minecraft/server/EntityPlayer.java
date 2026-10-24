@@ -37,6 +37,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     // Poseidon start
     public final MinecraftProfile profile;
+    public boolean authenticated; // Poseidon - session verified by the session server
     public final IntArrayList removeQueue = new IntArrayList();
     // Poseidon end
 

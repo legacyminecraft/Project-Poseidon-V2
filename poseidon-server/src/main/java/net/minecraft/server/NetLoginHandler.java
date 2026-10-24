@@ -10,7 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import org.jspecify.annotations.Nullable;
 
 import java.net.Socket;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class NetLoginHandler extends NetHandler {
 
     public static Logger a = Logger.getLogger("Minecraft");
-    private static Random d = new Random();
+    private static final SecureRandom d = new SecureRandom(); // Poseidon - Security uplift as java.util.Random is predictable
     public AbstractPlayerConnection networkManager; // Poseidon - NetworkManager -> AbstractPlayerConnection
     public AtomicBoolean c = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
     private MinecraftServer server;
@@ -27,6 +27,10 @@ public class NetLoginHandler extends NetHandler {
     private @Nullable String g = null;
     private volatile @Nullable MinecraftProfile h = null; // Poseidon - volatile, Packet1Login -> MinecraftProfile
     private String i = "";
+    // Poseidon start - hybrid auth
+    private volatile boolean hybridAuthRequested = false;
+    private volatile boolean authenticated = false;
+    // Poseidon end
 
     // Poseidon start
     private static final Executor ASYNC_EXECUTOR = Executors.newCachedThreadPool(
@@ -58,6 +62,16 @@ public class NetLoginHandler extends NetHandler {
     public AbstractPlayerConnection getConnection() {
         return this.networkManager;
     }
+
+    // Poseidon start - hybrid auth
+    public boolean isHybridAuthRequested() {
+        return this.hybridAuthRequested;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+    }
+    // Poseidon end
 
     public boolean isConnected() {
         return !this.c.get();
@@ -111,7 +125,15 @@ public class NetLoginHandler extends NetHandler {
         this.networkManager.setLoginState(LoginState.HANDSHAKE);
         // Poseidon end
 
-        if (this.server.onlineMode) {
+        // Poseidon start - hybrid auth: a client that sends "<name>;a..." has a working session and can authenticate even in offline mode
+        // The name before the ';' is ignored, the real username always comes from the login packet
+        this.networkManager.setHandshakeName(packet2handshake.a);
+        this.hybridAuthRequested = !this.server.onlineMode
+                && Poseidon.getConfig().sessions.hybridAuth
+                && this.networkManager.hasHandshakeFlag('a');
+        // Poseidon end
+
+        if (this.server.onlineMode || this.hybridAuthRequested) { // Poseidon
             this.i = Long.toHexString(d.nextLong());
             this.networkManager.queue(new Packet2Handshake(this.i));
         } else {
@@ -158,6 +180,7 @@ public class NetLoginHandler extends NetHandler {
         EntityPlayer entityplayer = this.server.serverConfigurationManager.a(this, profile); // Poseidon - pass profile
 
         if (entityplayer != null) {
+            entityplayer.authenticated = this.authenticated; // Poseidon
             this.server.serverConfigurationManager.b(entityplayer);
             // entityplayer.a((World) this.server.a(entityplayer.dimension)); // CraftBukkit - set by Entity
             // CraftBukkit - add world and location to 'logged in' message.

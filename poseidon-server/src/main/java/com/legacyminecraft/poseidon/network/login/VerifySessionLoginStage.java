@@ -14,22 +14,35 @@ public final class VerifySessionLoginStage implements LoginStage {
 
     @Override
     public void run(LoginProcessHandler loginProcessHandler) {
-        if (!loginProcessHandler.getServer().onlineMode) {
+        NetLoginHandler netLoginHandler = loginProcessHandler.getNetLoginHandler();
+        boolean onlineMode = loginProcessHandler.getServer().onlineMode;
+        // Hybrid auth: offline-mode servers still verify clients that announced a session in the handshake
+        boolean hybrid = !onlineMode && netLoginHandler.isHybridAuthRequested();
+        if (!onlineMode && !hybrid) {
             return;
         }
 
+        boolean kickOnFailure = onlineMode || Poseidon.getConfig().sessions.kickOnInvalidHybridSession;
         String name = loginProcessHandler.getPlayerName();
-        NetLoginHandler netLoginHandler = loginProcessHandler.getNetLoginHandler();
         try {
             String serverId = NetLoginHandler.a(netLoginHandler);
             InetAddress ipAddress = netLoginHandler.networkManager.getClientAddress().getAddress();
-            if (!Poseidon.getSessionService().verifySession(name, serverId, ipAddress)) {
-                log.info("{} tried to login with an invalid session", name);
+            if (Poseidon.getSessionService().verifySession(name, serverId, ipAddress)) {
+                netLoginHandler.setAuthenticated(true);
+                if (hybrid) {
+                    log.info("{} authenticated with the session server (hybrid auth)", name);
+                }
+                return;
+            }
+            log.info("{} tried to login with an invalid session", name);
+            if (kickOnFailure) {
                 loginProcessHandler.disconnect("Invalid session");
             }
         } catch (ServiceClientException e) {
             log.warn("Failed to verify session for {}", name, e);
-            loginProcessHandler.disconnect("Failed to verify session");
+            if (kickOnFailure) {
+                loginProcessHandler.disconnect("Failed to verify session");
+            }
         }
     }
 }

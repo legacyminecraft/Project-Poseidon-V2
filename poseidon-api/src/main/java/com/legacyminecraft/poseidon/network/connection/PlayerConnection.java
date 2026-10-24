@@ -51,6 +51,26 @@ public interface PlayerConnection extends PluginMessageRecipient {
     byte getConnectionFlags();
 
     /**
+     * Returns the flag letters the client appended to its handshake name after the {@code ;}, such as
+     * {@code Name;ab}.
+     *
+     * Known flags: {@code a} (the client has a session and can authenticate) and {@code b} (the client is
+     * Beta Evolutions).
+     *
+     * @return the flags in lowercase, or an empty string if the client sent none
+     */
+    String getHandshakeFlags();
+
+    /**
+     * Returns if the client sent the given flag in its handshake name.
+     *
+     * @param flag the flag letter, case insensitive
+     * @return {@code true} if the client sent the flag
+     * @see #getHandshakeFlags()
+     */
+    boolean hasHandshakeFlag(char flag);
+
+    /**
      * Returns if this connection was established through a proxy.
      *
      * @return {@code true} if this connection is a proxy connection

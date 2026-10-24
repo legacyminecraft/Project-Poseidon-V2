@@ -143,6 +143,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         getHandle().displayName = name;
     }
 
+    // Poseidon start - authentication API
+    public boolean isAuthenticated() {
+        return getHandle().authenticated;
+    }
+    // Poseidon end
+
     // Poseidon start - implement name tag API
     public String getNameTag() {
         return getHandle().nameTag;

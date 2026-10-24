@@ -19,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +38,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     private @Nullable MinecraftProfile forwardedProfile;
     private @Nullable ServerListPingHandler pingHandler;
     private byte connectionFlags;
+    private volatile String handshakeName = "";
 
     public abstract NetHandler getNetHandler();
 
@@ -125,6 +127,25 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
 
     public void setConnectionFlags(byte connectionFlags) {
         this.connectionFlags = connectionFlags;
+    }
+
+    public String getHandshakeName() {
+        return this.handshakeName;
+    }
+
+    public void setHandshakeName(String handshakeName) {
+        this.handshakeName = handshakeName == null ? "" : handshakeName;
+    }
+
+    @Override
+    public String getHandshakeFlags() {
+        int separator = this.handshakeName.indexOf(';');
+        return separator < 0 ? "" : this.handshakeName.substring(separator + 1).toLowerCase(Locale.ROOT);
+    }
+
+    @Override
+    public boolean hasHandshakeFlag(char flag) {
+        return getHandshakeFlags().indexOf(Character.toLowerCase(flag)) >= 0;
     }
 
     @Override
