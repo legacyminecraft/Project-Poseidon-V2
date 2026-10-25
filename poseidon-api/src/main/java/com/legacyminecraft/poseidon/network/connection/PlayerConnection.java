@@ -51,24 +51,25 @@ public interface PlayerConnection extends PluginMessageRecipient {
     byte getConnectionFlags();
 
     /**
-     * Returns the flag letters the client appended to its handshake name after the {@code ;}, such as
-     * {@code Name;ab}.
+     * Returns the flag bitmask the client appended to its handshake name after the {@code ;}. The mask is
+     * written in base 36, so {@code Name;hra0ht} means bits 0 and 30 are set. The handshake name is capped at 32
+     * characters, so keep the mask short to leave room for the username.
      *
-     * Known flags: {@code a} (the client has a session and can authenticate) and {@code b} (the client is
-     * Beta Evolutions).
+     * Bits 0 to 29 are features and bits 30 and up are client identities.
+     * Known bits: 0 (the client has a session and can authenticate) and 30 (the client is Beta Evolutions).
      *
-     * @return the flags in lowercase, or an empty string if the client sent none
+     * @return the flag bitmask, or 0 if the client sent none
      */
-    String getHandshakeFlags();
+    long getHandshakeFlags();
 
     /**
-     * Returns if the client sent the given flag in its handshake name.
+     * Returns if the client set the given bit in its handshake flags.
      *
-     * @param flag the flag letter, case insensitive
-     * @return {@code true} if the client sent the flag
+     * @param bit the bit number, from 0 to 61
+     * @return {@code true} if the client set the bit
      * @see #getHandshakeFlags()
      */
-    boolean hasHandshakeFlag(char flag);
+    boolean hasHandshakeFlag(int bit);
 
     /**
      * Returns if this connection was established through a proxy.

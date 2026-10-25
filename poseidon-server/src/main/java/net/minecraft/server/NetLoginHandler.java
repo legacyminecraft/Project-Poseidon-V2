@@ -125,12 +125,12 @@ public class NetLoginHandler extends NetHandler {
         this.networkManager.setLoginState(LoginState.HANDSHAKE);
         // Poseidon end
 
-        // Poseidon start - hybrid auth: a client that sends "<name>;a..." has a working session and can authenticate even in offline mode
+        // Poseidon start - hybrid auth: a client that sends "<name>;<base 36 flags>" with bit 0 set has a working session and can authenticate even in offline mode
         // The name before the ';' is ignored, the real username always comes from the login packet
         this.networkManager.setHandshakeName(packet2handshake.a);
         this.hybridAuthRequested = !this.server.onlineMode
                 && Poseidon.getConfig().sessions.hybridAuth
-                && this.networkManager.hasHandshakeFlag('a');
+                && this.networkManager.hasHandshakeFlag(0);
         // Poseidon end
 
         if (this.server.onlineMode || this.hybridAuthRequested) { // Poseidon

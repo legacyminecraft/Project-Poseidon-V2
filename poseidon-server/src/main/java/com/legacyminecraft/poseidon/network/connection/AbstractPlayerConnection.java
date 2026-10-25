@@ -19,7 +19,6 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -138,14 +137,26 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     }
 
     @Override
-    public String getHandshakeFlags() {
-        int separator = this.handshakeName.indexOf(';');
-        return separator < 0 ? "" : this.handshakeName.substring(separator + 1).toLowerCase(Locale.ROOT);
+    public long getHandshakeFlags() {
+        String[] tokens = this.handshakeName.split(";");
+        // tokens[0] is the username; the first token after it that is a base 36 mask of at most 12 digits (62 bits) is the flags.
+        // Longer named tokens that other clients append are never read as a mask
+        for (int i = 1; i < tokens.length; i++) {
+            String token = tokens[i];
+            if (token.isEmpty() || token.length() > 12) {
+                continue;
+            }
+            try {
+                return Long.parseLong(token, 36);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return 0L;
     }
 
     @Override
-    public boolean hasHandshakeFlag(char flag) {
-        return getHandshakeFlags().indexOf(Character.toLowerCase(flag)) >= 0;
+    public boolean hasHandshakeFlag(int bit) {
+        return bit >= 0 && bit < 62 && (getHandshakeFlags() & (1L << bit)) != 0;
     }
 
     @Override
