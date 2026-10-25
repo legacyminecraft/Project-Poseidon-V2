@@ -130,7 +130,7 @@ public class CraftWorld implements World {
     // Poseidon end
 
     public Block getBlockAt(int x, int y, int z) {
-        return getChunkAt(x >> 4, z >> 4).getBlock(x & 0xF, y & 0x7F, z & 0xF);
+        return getChunkAt(x >> 4, z >> 4).getBlock(x & 0xF, y, z & 0xF); // Poseidon - don't apply mask to y coordinate
     }
 
     public int getBlockTypeIdAt(int x, int y, int z) {

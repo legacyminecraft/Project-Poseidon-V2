@@ -69,7 +69,7 @@ public class CraftBlock implements Block {
     }
 
     public byte getData() {
-        return (byte) chunk.getHandle().getData(this.x & 0xF, this.y & 0x7F, this.z & 0xF);
+        return (byte) chunk.getHandle().world.getData(x, y, z); // Poseidon - use World::getData
     }
 
     public void setType(final Material type) {
@@ -105,7 +105,7 @@ public class CraftBlock implements Block {
     }
 
     public int getTypeId() {
-        return chunk.getHandle().getTypeId(this.x & 0xF, this.y & 0x7F, this.z & 0xF);
+        return chunk.getHandle().world.getTypeId(x, y, z); // Poseidon - use World::getTypeId
     }
 
     public byte getLightLevel() {

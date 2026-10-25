@@ -64,7 +64,7 @@ public class CraftChunk implements Chunk {
 
     public Block getBlock(int x, int y, int z) {
         // Poseidon - don't cache CraftBlock instances
-        return new CraftBlock(this, (getX() << 4) | (x & 0xF), y & 0x7F, (getZ() << 4) | (z & 0xF));
+        return new CraftBlock(this, (getX() << 4) | (x & 0xF), y, (getZ() << 4) | (z & 0xF)); // Poseidon - don't apply mask to y coordinate
     }
 
     public Entity[] getEntities() {
