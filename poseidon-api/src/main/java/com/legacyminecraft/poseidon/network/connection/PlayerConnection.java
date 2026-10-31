@@ -43,7 +43,7 @@ public interface PlayerConnection extends PluginMessageRecipient {
     /**
      * Returns the connection flags the client sent when logging in.
      * <p>
-     * If the most significant bit is set to <code>1</code>, the client is
+     * If the most significant bit is set to {@code 1}, the client is
      * expected to support plugin messaging.
      *
      * @return the connection flags
@@ -51,12 +51,18 @@ public interface PlayerConnection extends PluginMessageRecipient {
     byte getConnectionFlags();
 
     /**
-     * Returns the flag bitmask the client appended to its handshake name after the {@code ;}. The mask is
-     * written in base 36, so {@code Name;hra0ht} means bits 0 and 30 are set. The handshake name is capped at 32
-     * characters, so keep the mask short to leave room for the username.
-     *
+     * Returns the flag bitmask the client appended to its handshake name after
+     * a {@code ;}. The mask is written in base 36 and never exceeds 12
+     * characters in length. For example, {@code Name;hra0ht} means bits
+     * {@code 0} and {@code 30} are set.
+     * <p>
      * Bits 0 to 29 are features and bits 30 and up are client identities.
-     * Known bits: 0 (the client has a session and can authenticate) and 30 (the client is Beta Evolutions).
+     * <p>
+     * Known bits:
+     * <ul>
+     *     <li>{@code 0}: The client has a session and can authenticate
+     *     <li>{@code 30}: The client is Beta Evolutions
+     * </ul>
      *
      * @return the flag bitmask, or 0 if the client sent none
      */

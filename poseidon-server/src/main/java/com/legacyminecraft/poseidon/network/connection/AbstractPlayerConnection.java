@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractPlayerConnection implements PlayerConnection, INetworkManager {
 
+    private final AtomicBoolean authenticated = new AtomicBoolean(false);
     private final AtomicBoolean proxyConnection = new AtomicBoolean(false);
     private final AtomicBoolean supportsMessaging = new AtomicBoolean(false);
     private final Set<String> channels = ConcurrentHashMap.newKeySet();
@@ -37,7 +38,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     private @Nullable MinecraftProfile forwardedProfile;
     private @Nullable ServerListPingHandler pingHandler;
     private byte connectionFlags;
-    private volatile String handshakeName = "";
+    private String handshakeName = "";
 
     public abstract NetHandler getNetHandler();
 
@@ -133,7 +134,8 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     }
 
     public void setHandshakeName(String handshakeName) {
-        this.handshakeName = handshakeName == null ? "" : handshakeName;
+        Preconditions.checkArgument(handshakeName != null, "handshakeName cannot be null");
+        this.handshakeName = handshakeName;
     }
 
     @Override
@@ -141,22 +143,33 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
         String[] tokens = this.handshakeName.split(";");
         // tokens[0] is the username; the first token after it that is a base 36 mask of at most 12 digits (62 bits) is the flags.
         // Longer named tokens that other clients append are never read as a mask
-        for (int i = 1; i < tokens.length; i++) {
-            String token = tokens[i];
-            if (token.isEmpty() || token.length() > 12) {
-                continue;
-            }
-            try {
-                return Long.parseLong(token, 36);
-            } catch (NumberFormatException ignored) {
-            }
+        if (tokens.length != 2) {
+            return 0L;
         }
-        return 0L;
+
+        String mask = tokens[1];
+        if (mask.isEmpty() || mask.length() > 12) {
+            return 0L;
+        }
+
+        try {
+            return Long.parseLong(mask, 36);
+        } catch (NumberFormatException _) {
+            return 0L;
+        }
     }
 
     @Override
     public boolean hasHandshakeFlag(int bit) {
         return bit >= 0 && bit < 62 && (getHandshakeFlags() & (1L << bit)) != 0;
+    }
+
+    public boolean isAuthenticated() {
+        return this.authenticated.get();
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated.set(authenticated);
     }
 
     @Override

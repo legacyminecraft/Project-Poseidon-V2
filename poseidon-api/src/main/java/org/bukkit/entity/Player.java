@@ -43,10 +43,11 @@ public interface Player extends HumanEntity, CommandSender, OfflinePlayer, Plugi
 
     // Poseidon start - authentication API
     /**
-     * Checks if the player's session was verified by the session server.
-     *
-     * Always true when the server runs in online mode. In offline mode with hybrid auth enabled it is true only for
-     * clients that announced a session and passed verification.
+     * Returns if the player's session was verified by the session server.
+     * <p>
+     * Always true when the server runs in online mode. In offline mode with
+     * hybrid auth enabled it is true only for clients that announced a session
+     * and passed verification.
      *
      * @return true if the player authenticated with the session server
      */

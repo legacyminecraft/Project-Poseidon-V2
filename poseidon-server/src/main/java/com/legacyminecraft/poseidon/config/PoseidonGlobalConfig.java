@@ -254,10 +254,13 @@ public final class PoseidonGlobalConfig {
     @ConfigSerializable
     public static final class Sessions {
         public String verifySessionUrl = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
-        // Only used when online-mode=false: clients that send ";a" in the handshake name are authenticated with the session server
-        public boolean hybridAuth = true;
-        // Disconnect hybrid clients whose session fails to verify. If false they join unauthenticated instead
-        public boolean kickOnInvalidHybridSession = true;
+        public HybridAuth hybridAuth;
+
+        @ConfigSerializable
+        public static final class HybridAuth {
+            public boolean enabled = true;
+            public boolean kickOnInvalidHybridSession = true;
+        }
     }
 
     public Profiles profiles;

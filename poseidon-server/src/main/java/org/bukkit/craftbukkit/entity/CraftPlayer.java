@@ -145,7 +145,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     // Poseidon start - authentication API
     public boolean isAuthenticated() {
-        return getHandle().authenticated;
+        return getHandle().netServerHandler.getConnection().isAuthenticated();
     }
     // Poseidon end
 
