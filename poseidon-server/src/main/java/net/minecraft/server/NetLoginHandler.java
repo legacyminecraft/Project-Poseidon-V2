@@ -10,7 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import org.jspecify.annotations.Nullable;
 
 import java.net.Socket;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class NetLoginHandler extends NetHandler {
 
     public static Logger a = Logger.getLogger("Minecraft");
-    private static Random d = new Random();
+    private static final SecureRandom d = new SecureRandom(); // Poseidon - final, Random -> SecureRandom
     public AbstractPlayerConnection networkManager; // Poseidon - NetworkManager -> AbstractPlayerConnection
     public AtomicBoolean c = new AtomicBoolean(false); // Poseidon - boolean -> AtomicBoolean
     private MinecraftServer server;
@@ -29,6 +29,7 @@ public class NetLoginHandler extends NetHandler {
     private String i = "";
 
     // Poseidon start
+    private volatile boolean hybridAuthRequested = false;
     private static final Executor ASYNC_EXECUTOR = Executors.newCachedThreadPool(
             Thread.ofPlatform().name("LoginThread-", 1).factory());
     // Poseidon end
@@ -57,6 +58,10 @@ public class NetLoginHandler extends NetHandler {
 
     public AbstractPlayerConnection getConnection() {
         return this.networkManager;
+    }
+
+    public boolean isHybridAuthRequested() {
+        return this.hybridAuthRequested;
     }
 
     public boolean isConnected() {
@@ -111,7 +116,16 @@ public class NetLoginHandler extends NetHandler {
         this.networkManager.setLoginState(LoginState.HANDSHAKE);
         // Poseidon end
 
-        if (this.server.onlineMode) {
+        // Poseidon start - hybrid auth: a client that sends "<name>;<base 36 flags>" with bit 0 set
+        // has a working session and can authenticate even in offline mode
+        // The name before the ';' is ignored, the real username always comes from the login packet
+        this.networkManager.setHandshakeName(packet2handshake.a);
+        this.hybridAuthRequested = !this.server.onlineMode
+                && Poseidon.getConfig().sessions.hybridAuth.enabled
+                && this.networkManager.hasHandshakeFlag(0);
+        // Poseidon end
+
+        if (this.server.onlineMode || this.hybridAuthRequested) { // Poseidon
             this.i = Long.toHexString(d.nextLong());
             this.networkManager.queue(new Packet2Handshake(this.i));
         } else {

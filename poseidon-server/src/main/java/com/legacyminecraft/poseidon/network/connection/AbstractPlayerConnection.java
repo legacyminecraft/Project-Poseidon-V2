@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractPlayerConnection implements PlayerConnection, INetworkManager {
 
+    private final AtomicBoolean authenticated = new AtomicBoolean(false);
     private final AtomicBoolean proxyConnection = new AtomicBoolean(false);
     private final AtomicBoolean supportsMessaging = new AtomicBoolean(false);
     private final Set<String> channels = ConcurrentHashMap.newKeySet();
@@ -37,6 +38,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
     private @Nullable MinecraftProfile forwardedProfile;
     private @Nullable ServerListPingHandler pingHandler;
     private byte connectionFlags;
+    private String handshakeName = "";
 
     public abstract NetHandler getNetHandler();
 
@@ -125,6 +127,49 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
 
     public void setConnectionFlags(byte connectionFlags) {
         this.connectionFlags = connectionFlags;
+    }
+
+    public String getHandshakeName() {
+        return this.handshakeName;
+    }
+
+    public void setHandshakeName(String handshakeName) {
+        Preconditions.checkArgument(handshakeName != null, "handshakeName cannot be null");
+        this.handshakeName = handshakeName;
+    }
+
+    @Override
+    public long getHandshakeFlags() {
+        String[] tokens = this.handshakeName.split(";");
+        // tokens[0] is the username; the first token after it that is a base 36 mask of at most 12 digits (62 bits) is the flags.
+        // Longer named tokens that other clients append are never read as a mask
+        if (tokens.length != 2) {
+            return 0L;
+        }
+
+        String mask = tokens[1];
+        if (mask.isEmpty() || mask.length() > 12) {
+            return 0L;
+        }
+
+        try {
+            return Long.parseLong(mask, 36);
+        } catch (NumberFormatException _) {
+            return 0L;
+        }
+    }
+
+    @Override
+    public boolean hasHandshakeFlag(int bit) {
+        return bit >= 0 && bit < 62 && (getHandshakeFlags() & (1L << bit)) != 0;
+    }
+
+    public boolean isAuthenticated() {
+        return this.authenticated.get();
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated.set(authenticated);
     }
 
     @Override

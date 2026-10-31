@@ -254,6 +254,13 @@ public final class PoseidonGlobalConfig {
     @ConfigSerializable
     public static final class Sessions {
         public String verifySessionUrl = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
+        public HybridAuth hybridAuth;
+
+        @ConfigSerializable
+        public static final class HybridAuth {
+            public boolean enabled = true;
+            public boolean kickOnInvalidHybridSession = true;
+        }
     }
 
     public Profiles profiles;
