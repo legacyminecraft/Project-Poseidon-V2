@@ -6,8 +6,6 @@ import net.minecraft.server.NetLoginHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
-
 public final class VerifySessionLoginStage implements LoginStage {
 
     private static final Logger log = LoggerFactory.getLogger(VerifySessionLoginStage.class);
@@ -26,8 +24,7 @@ public final class VerifySessionLoginStage implements LoginStage {
         String name = loginProcessHandler.getPlayerName();
         try {
             String serverId = NetLoginHandler.a(netLoginHandler);
-            InetAddress ipAddress = netLoginHandler.networkManager.getClientAddress().getAddress();
-            if (Poseidon.getSessionService().verifySession(name, serverId, ipAddress)) {
+            if (Poseidon.getSessionService().verifySession(name, serverId)) {
                 netLoginHandler.networkManager.setAuthenticated(true);
                 if (hybrid) {
                     log.info("{} authenticated with the session server (hybrid auth)", name);
