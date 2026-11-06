@@ -233,11 +233,11 @@ public abstract class JavaPlugin implements Plugin {
         String alias = name.toLowerCase();
         PluginCommand command = getServer().getPluginCommand(alias);
 
-        if ((command != null) && (command.getPlugin() != this)) {
+        if (command == null || command.getPlugin() != this) { // Poseidon - fix condition
             command = getServer().getPluginCommand(getDescription().getName().toLowerCase() + ":" + alias);
         }
 
-        if ((command != null) && (command.getPlugin() == this)) {
+        if (command != null && command.getPlugin() == this) {
             return command;
         } else {
             return null;
