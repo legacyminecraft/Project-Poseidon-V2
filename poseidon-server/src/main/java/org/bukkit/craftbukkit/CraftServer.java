@@ -41,6 +41,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.craftbukkit.inventory.CraftFurnaceRecipe;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
@@ -1001,6 +1002,10 @@ public final class CraftServer implements Server {
     }
 
     // Poseidon start
+    public ConsoleCommandSender getConsoleSender() {
+        return console.console;
+    }
+
     public boolean isPrimaryThread() {
         return console.isPrimaryThread();
     }

@@ -7,6 +7,7 @@ import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
@@ -330,6 +331,10 @@ public final class Bukkit {
     }
 
     // Poseidon start
+    public static ConsoleCommandSender getConsoleSender() {
+        return server.getConsoleSender();
+    }
+
     public static boolean isPrimaryThread() {
         return server.isPrimaryThread();
     }

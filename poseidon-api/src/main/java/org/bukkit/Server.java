@@ -7,6 +7,7 @@ import com.legacyminecraft.poseidon.network.protocol.ProtocolManager;
 import com.legacyminecraft.poseidon.persistence.PersistentDataContainer;
 import com.legacyminecraft.poseidon.profile.PlayerProfile;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
@@ -572,6 +573,14 @@ public interface Server extends PluginMessageRecipient { // Poseidon - extends P
     Set<OfflinePlayer> getBannedPlayers();
 
     // Poseidon start
+    /**
+     * Gets a {@link ConsoleCommandSender} that may be used as an input source
+     * for this server.
+     *
+     * @return a console command sender
+     */
+    ConsoleCommandSender getConsoleSender();
+
     /**
      * Checks the current thread against the expected primary thread for the
      * server.
