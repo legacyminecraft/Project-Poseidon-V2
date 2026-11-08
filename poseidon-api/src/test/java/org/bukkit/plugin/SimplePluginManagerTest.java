@@ -71,7 +71,7 @@ class SimplePluginManagerTest {
         doAnswer(invocation -> {
             File file = invocation.getArgument(0);
             PluginDescriptionFile description = new PluginDescriptionFile(
-                    file.getPath().replaceAll("plugins/|\\.jar", ""),
+                    file.getName().replaceAll("\\.jar$", ""),
                     "1.0",
                     "test"
             );
