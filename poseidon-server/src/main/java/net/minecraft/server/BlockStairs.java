@@ -23,7 +23,10 @@ public class BlockStairs extends Block {
     }
 
     public @Nullable AxisAlignedBB e(World world, int i, int j, int k) {
-        return super.e(world, i, j, k);
+        if (world.getConfig().blocks.fixStairPlacement) { // Poseidon
+            return AxisAlignedBB.b(i, j, k, i + 1.0D, j + 0.5D, k + 1.0D); // Placement collision box (1 x 0.5 x 1)
+        }
+        return super.e(world, i, j, k); // 1 x 1 x 1 Box
     }
 
     public boolean a() {
