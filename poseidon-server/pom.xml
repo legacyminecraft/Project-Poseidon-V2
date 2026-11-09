@@ -20,7 +20,7 @@
         <sqlite-jdbc.version>3.53.4.0</sqlite-jdbc.version>
         <mysql-connector-j.version>26.10.0</mysql-connector-j.version>
         <postgresql.version>42.7.14</postgresql.version>
-        <netty.version>4.2.19.Final</netty.version>
+        <netty.version>4.2.20.Final</netty.version>
     </properties>
 
     <dependencies>
