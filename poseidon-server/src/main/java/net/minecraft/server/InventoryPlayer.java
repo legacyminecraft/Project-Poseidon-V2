@@ -121,19 +121,19 @@ public class InventoryPlayer implements IInventory {
         }
     }
 
-    public boolean b(int i) {
+    // Poseidon start - return the slot the item was taken from
+    public int b(int i) {
         int j = this.d(i);
 
-        if (j < 0) {
-            return false;
-        } else {
+        if (j >= 0) {
             if (--this.items[j].count <= 0) {
                 this.items[j] = null;
             }
-
-            return true;
         }
+
+        return j;
     }
+    // Poseidon end
 
     public boolean pickup(ItemStack itemstack) {
         int i;
