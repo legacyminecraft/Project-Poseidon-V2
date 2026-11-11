@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 public final class StandardMessenger implements Messenger {
 
-    public static final String REGISTER_CHANNEL = "register";
-    public static final String UNREGISTER_CHANNEL = "unregister";
+    public static final String REGISTER_CHANNEL = "REGISTER";
+    public static final String UNREGISTER_CHANNEL = "UNREGISTER";
 
     private final ConnectionManager<? extends AbstractPlayerConnection> connectionManager;
     private final Map<String, PluginMessageListenerRegistration> inboundByChannel = new Object2ObjectOpenHashMap<>();
