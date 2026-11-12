@@ -26,23 +26,27 @@ class PlayerDataForwardingTest {
     void canVerifySignatureAndDeserialize(
             String secret,
             InetAddress address,
-            MinecraftProfile profile
+            MinecraftProfile profile,
+            boolean authenticated
     ) throws Exception {
         byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
-        byte[] payload = createForwardingData(secretBytes, address, profile);
+        byte[] payload = createForwardingData(secretBytes, address, profile, authenticated);
         byte[] forwardedData = PlayerDataForwarding.verifySignature(payload, secretBytes);
         ForwardedPlayerData playerData = PlayerDataForwarding.readForwardedData(forwardedData);
         assertThat(playerData.address()).isEqualTo(address);
         assertThat(playerData.profile()).isEqualTo(profile);
+        assertThat(playerData.authenticated()).isEqualTo(authenticated);
     }
 
-    private byte[] createForwardingData(byte[] secret, InetAddress address, MinecraftProfile profile) {
+    private byte[] createForwardingData(byte[] secret, InetAddress address, MinecraftProfile profile, boolean authenticated) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeByte(PlayerDataForwarding.VERSION);
         output.writeUTF(address.getHostAddress());
         output.writeLong(profile.id().getMostSignificantBits());
         output.writeLong(profile.id().getLeastSignificantBits());
         output.writeUTF(profile.name());
         output.writeBoolean(profile.online());
+        output.writeBoolean(authenticated);
         byte[] forwardedData = output.toByteArray();
 
         try {
@@ -60,9 +64,9 @@ class PlayerDataForwardingTest {
 
     static Stream<Arguments> arguments() {
         return Stream.of(
-                Arguments.of("DfMZrNpXnSzRBnJWfwfJ", InetAddresses.forString("192.168.0.1"), new MinecraftProfile(UUID.fromString("142d3862-e360-419b-9ab3-421fed84f565"), "zavdav", true)),
-                Arguments.of("6bFznsKTrqYdSvVSfDGk", InetAddresses.forString("10.0.0.1"), new MinecraftProfile(UUID.fromString("2cfc6452-a6b4-4c49-982e-492eaa3a14ec"), "JohnyMuffin", true)),
-                Arguments.of("U4LKwH9dkvg8Y2ckufC2", InetAddresses.forString("172.16.0.1"), new MinecraftProfile(UUID.fromString("5d89d7c0-f301-302f-bb85-e7c5d8575d66"), ".offline", false))
+                Arguments.of("DfMZrNpXnSzRBnJWfwfJ", InetAddresses.forString("192.168.0.1"), new MinecraftProfile(UUID.fromString("142d3862-e360-419b-9ab3-421fed84f565"), "zavdav", true), true),
+                Arguments.of("6bFznsKTrqYdSvVSfDGk", InetAddresses.forString("10.0.0.1"), new MinecraftProfile(UUID.fromString("2cfc6452-a6b4-4c49-982e-492eaa3a14ec"), "JohnyMuffin", true), true),
+                Arguments.of("U4LKwH9dkvg8Y2ckufC2", InetAddresses.forString("172.16.0.1"), new MinecraftProfile(UUID.fromString("5d89d7c0-f301-302f-bb85-e7c5d8575d66"), ".offline", false), false)
         );
     }
 }

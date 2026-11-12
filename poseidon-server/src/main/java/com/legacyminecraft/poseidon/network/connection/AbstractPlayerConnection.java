@@ -194,6 +194,7 @@ public abstract class AbstractPlayerConnection implements PlayerConnection, INet
         if (this.proxyConnection.compareAndSet(false, true)) {
             setClientAddress(new InetSocketAddress(playerData.address(), getRawAddress().getPort()));
             this.forwardedProfile = playerData.profile();
+            setAuthenticated(playerData.authenticated());
         }
     }
 

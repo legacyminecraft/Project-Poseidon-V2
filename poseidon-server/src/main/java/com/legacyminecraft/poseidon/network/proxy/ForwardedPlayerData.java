@@ -4,5 +4,5 @@ import com.legacyminecraft.poseidon.profile.MinecraftProfile;
 
 import java.net.InetAddress;
 
-public record ForwardedPlayerData(InetAddress address, MinecraftProfile profile) {
+public record ForwardedPlayerData(InetAddress address, MinecraftProfile profile, boolean authenticated) {
 }

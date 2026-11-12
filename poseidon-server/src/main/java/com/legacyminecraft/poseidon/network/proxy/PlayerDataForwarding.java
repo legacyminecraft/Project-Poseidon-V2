@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public final class PlayerDataForwarding {
 
+    public static final int VERSION = 1;
     public static final String CHANNEL = "proxy:forward_player_data";
     public static final String MAC_ALGORITHM = "HmacSHA256";
 
@@ -43,10 +44,12 @@ public final class PlayerDataForwarding {
 
     public static ForwardedPlayerData readForwardedData(byte[] forwardedData) {
         ByteArrayDataInput input = ByteStreams.newDataInput(forwardedData);
+        int version = input.readUnsignedByte();
         InetAddress address = InetAddresses.forString(input.readUTF());
         UUID id = new UUID(input.readLong(), input.readLong());
         String name = input.readUTF();
         boolean online = input.readBoolean();
-        return new ForwardedPlayerData(address, new MinecraftProfile(id, name, online));
+        boolean authenticated = input.readBoolean();
+        return new ForwardedPlayerData(address, new MinecraftProfile(id, name, online), authenticated);
     }
 }
