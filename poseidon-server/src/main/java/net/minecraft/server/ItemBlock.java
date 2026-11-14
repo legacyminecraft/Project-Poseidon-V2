@@ -120,6 +120,12 @@ public class ItemBlock extends Item {
                     return true;
 
                 }
+
+                // Rerun onBlockAdded here: suppressPhysics muted it during the raw place above
+                if (world.getTypeId(i, j, k) == this.id) {
+                    Block.byId[this.id].c(world, i, j, k);
+                }
+
                 // CraftBukkit end
 
                 // Poseidon start - fix postPlace piston glitches
