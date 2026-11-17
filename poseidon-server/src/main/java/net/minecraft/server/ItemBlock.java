@@ -121,8 +121,10 @@ public class ItemBlock extends Item {
 
                 }
 
-                // Rerun onBlockAdded here: suppressPhysics muted it during the raw place above
-                if (world.getTypeId(i, j, k) == this.id) {
+                // Redstone torches (id: 75, 76) and repeaters block (id: 93, 94) have their own applyPhysics methods (it doesn't rerun the block placement)
+                if (world.getTypeId(i, j, k) == this.id
+                        && (Block.byId[this.id] instanceof BlockRedstoneTorch
+                        || Block.byId[this.id] instanceof BlockDiode)) {
                     Block.byId[this.id].c(world, i, j, k);
                 }
 
