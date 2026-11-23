@@ -43,6 +43,8 @@ public final class ServerLoggingConfigurator extends ContextAwareBase implements
             TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
             rollingPolicy.setContext(context);
             rollingPolicy.setFileNamePattern(Poseidon.getConfig().logging.rollingLogFile.fileNamePattern);
+            rollingPolicy.setMaxHistory(Poseidon.getConfig().logging.rollingLogFile.maxHistory);
+            rollingPolicy.setCleanHistoryOnStart(Poseidon.getConfig().logging.rollingLogFile.cleanHistoryOnStart);
 
             RollingFileAppender<ILoggingEvent> rollingFileAppender = new RollingFileAppender<>();
             rollingFileAppender.setName("rolling-file-appender");

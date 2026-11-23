@@ -113,6 +113,9 @@ public final class PoseidonGlobalConfig {
             public boolean enabled = false;
             public String latestFile = "logs/latest.log";
             public String fileNamePattern = "logs/%d{yyyy-MM-dd}.log.gz";
+            @Min(0)
+            public int maxHistory = 0;
+            public boolean cleanHistoryOnStart = true;
         }
 
         public List<String> redactedCommands = List.of();
