@@ -200,6 +200,7 @@ public final class PoseidonWorldConfig {
         public boolean fixFallingBlockDuplication = true;
         public boolean spongesTriggerBlockUpdates = false;
         public boolean lockedChestsDecay = true;
+        public boolean fixStairPlacement = true;
     }
 
     public Chunks chunks;
